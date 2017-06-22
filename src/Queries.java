@@ -52,11 +52,14 @@ public class Queries {
      * @return
      */
     public static String queryNodes(){
-        String query = "SELECT distinct ?n ?c ?typeComp ?isConcrete ?rule WHERE{"
+        String query = "SELECT distinct ?n ?c ?typeComp ?isConcrete ?rule ?inport ?outport WHERE{"
                 + "?n a <"+Constants.WINGS_NODE+">."
+                +"OPTIONAL{?n <"+Constants.WINGS_PROP_HAS_INPUT_PORT+"> ?inport}"
+                +"OPTIONAL{?n <"+Constants.WINGS_PROP_HAS_OUTPUT_PORT+"> ?outport}"
                 + "?n <"+Constants.WINGS_PROP_HAS_COMPONENT+"> ?c."
                 + "?c <"+Constants.WINGS_PROP_HAS_COMPONENT_BINDING+"> ?cb."
                 + "?cb a ?typeComp."
+               
                 //filter rdfs:resource and component, which don't add any new knowledge
                 + "FILTER(<http://www.wings-workflows.org/ontology/component.owl#Component> !=?typeComp)."
                 + "FILTER(<http://www.w3.org/2000/01/rdf-schema#Resource> !=?typeComp)."
@@ -78,6 +81,15 @@ public class Queries {
                 
         return query;
     }
+    
+    public static String componentCatalogQuery()
+    {
+    	String query="SELECT "
+    			+"";
+    	return query;
+    }
+    
+    
     
     public static String queryNodesforTemplateCondition(){
         String query = "SELECT distinct ?n ?c ?cb ?isConcrete WHERE{"
@@ -129,7 +141,8 @@ public class Queries {
     }
     
     
-    public static String queryDataV2forExpandedTemplates(){
+    public static String queryDataV2forExpandedTemplates()
+    {
         String query = "SELECT distinct ?type ?d ?db ?derivedFrom WHERE{"
                 + "?d a <"+Constants.WINGS_DATA_VARIABLE+">."
                 + "?d <"+Constants.WINGS_PROP_HAS_DATA_BINDING +"> ?db."

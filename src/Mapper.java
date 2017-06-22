@@ -17,6 +17,7 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.reasoner.rulesys.impl.Generator;
 import org.apache.jena.util.FileManager;
 
 
@@ -30,7 +31,15 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
+
+class Gen
+{
+	int input;
+	int output;
+	String className;
+}
 
 public class Mapper {
     private OntModel WINGSModelTemplate;
@@ -40,6 +49,7 @@ public class Mapper {
     private String taxonomyURL;
     private OntModel ExpandedTemplateModel;
     private OntModel TemplateModelforCondition;
+    private OntModel ComponentCatalog;
     public Mapper(){
 
     }
@@ -75,6 +85,12 @@ public class Mapper {
     private ResultSet queryLocalWINGSTemplateModelRepository(String queryIn) {
         return queryLocalRepository(queryIn, WINGSModelTemplate);
     }
+    
+    
+    private ResultSet queryComponentCatalog(String queryIn) {
+        return queryLocalRepository(queryIn, ComponentCatalog);
+    }
+    
     
     //function to query just the expanded template model
     private ResultSet queryLocalExpandedTemplateRepository(String queryIn) {
@@ -173,7 +189,17 @@ public void loadedTemplateFileCondition(String template, String modeFile){
         //since this is NOT included in the template per se, we need to download it
         System.out.println("Importing taxonomy at: "+ getTaxonomyURL(m));
         m.read(getTaxonomyURL(m));
+        
+        //reading the taxonomy separately in a new Model
+        ComponentCatalog.read(getTaxonomyURL(m));
         System.out.println("Done changes here");
+        System.out.println("-------------------------");
+        if(ComponentCatalog!=null)
+        	System.out.println("not null");
+        //ComponentCatalog.write(System.out,"RDF/XML");
+        System.out.println("Exporting the componentCatalog to a separate file outside");
+        exportRDFFile2("componentCatalog2", ComponentCatalog);
+        System.out.println("-------------------------");
     }
 
     /**
@@ -203,6 +229,11 @@ public void loadedTemplateFileCondition(String template, String modeFile){
     public String transformWINGSElaboratedTemplateToOPMW(String template,String mode, String outFile, String templateName){
         //clean previous transformations
     	
+    	
+    	if(ComponentCatalog!=null){
+        	ComponentCatalog.removeAll();            
+        }
+        ComponentCatalog = ModelFactory.createOntologyModel();
 
         if(WINGSModelTemplate!=null){
             WINGSModelTemplate.removeAll();
@@ -210,6 +241,9 @@ public void loadedTemplateFileCondition(String template, String modeFile){
         if(OPMWModel!=null){
             OPMWModel.removeAll();            
         }
+        
+        
+        
         OPMWModel = ModelFactory.createOntologyModel(); //inicialization of the model        
         try{
             //load the template file to WINGSModel (already loads the taxonomy as well
@@ -218,6 +252,7 @@ public void loadedTemplateFileCondition(String template, String modeFile){
             System.err.println("Error "+e.getMessage());
             return "";
         }
+        
         
     	
         //retrieval of the name of the workflowTemplate
@@ -306,6 +341,51 @@ public void loadedTemplateFileCondition(String template, String modeFile){
         String queryNodes = Queries.queryNodes();
         r = null;
         r = queryLocalWINGSTemplateModelRepository(queryNodes);
+        
+        //-----------------------------------------
+        //Creating a replication of the result set to populate an arrayList with the number of input and output sectors:
+        ResultSet replica=r;
+        ResultSet replica2=r;
+        ArrayList<Gen> inputOutputs=new ArrayList<>();
+        
+    	
+  
+    	
+    	while(replica.hasNext()){
+        QuerySolution qs = replica.next();
+        Resource res = qs.getResource("?n");
+        Resource comp = qs.getResource("?c");
+        Resource typeComp = qs.getResource("?typeComp");
+        Literal rule = qs.getLiteral("?rule");
+        Literal isConcrete = qs.getLiteral("?isConcrete");
+        
+        Resource inport = qs.getResource("?inport");
+        Resource outport = qs.getResource("?outport");
+     
+        //------------ADDITION BY TIRTH-----------------
+        //obtaining the className
+        String className="";
+        int indexOf=typeComp.toString().indexOf('#');
+        className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
+        //System.out.println("type class is: "+className);
+        
+        
+        replica2=null;
+        replica2 = queryLocalWINGSTemplateModelRepository(queryNodes);
+        Gen x=InputOutputGenerator(replica2,className);
+        inputOutputs.add(x);    
+    }
+       System.out.println("ArrayLIST GENERATED---------"); 
+        for(Gen y:inputOutputs)
+        {
+        	System.out.println("class: "+y.className+" inputs: "+y.input+" ouputs: "+y.output);
+        }
+        
+       System.out.println("ArrayLIST PRINTING ENDS---------");
+        //------------------------------------------
+       r = null;
+       r = queryLocalWINGSTemplateModelRepository(queryNodes);
+
         while(r.hasNext()){
             QuerySolution qs = r.next();
             Resource res = qs.getResource("?n");
@@ -313,15 +393,26 @@ public void loadedTemplateFileCondition(String template, String modeFile){
             Resource typeComp = qs.getResource("?typeComp");
             Literal rule = qs.getLiteral("?rule");
             Literal isConcrete = qs.getLiteral("?isConcrete");
+            
+            Resource inport = qs.getResource("?inport");
+            Resource outport = qs.getResource("?outport");
+            
             System.out.println("Node work starts here");
             System.out.println(res+" Node has component "+comp+" of type: "+ typeComp);//+ " which is concrete: "+isConcrete.getBoolean()
-            
+            System.out.println("Node has inport "+inport.getLocalName());
+            System.out.println("Node has outport "+outport.getLocalName());
             //------------ADDITION BY TIRTH-----------------
             //obtaining the className
             String className="";
             int indexOf=typeComp.toString().indexOf('#');
             className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
             System.out.println("type class is: "+className);
+            
+            
+            
+            
+            
+            
             
           //------------ADDITION BY TIRTH-----------------
             //obtaining the className
@@ -339,6 +430,20 @@ public void loadedTemplateFileCondition(String template, String modeFile){
             //p-plan interop
             OntClass cStep = OPMWModel.createClass(Constants.P_PLAN_STEP);
             cStep.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+encode(templateName_+res.getLocalName()));
+            
+            
+            //Have to start querying the component catalog for checking the number of inputs and outputs:
+//            String componentCatalogQuery = Queries.componentCatalogQuery();
+//            ResultSet rnew = null;
+//            rnew = queryComponentCatalog(componentCatalogQuery);
+//            
+//            while(rnew.hasNext())
+//            {
+//            	
+//            }
+            
+            
+            
             
             if(typeComp.isURIResource()){ //only adds the type if the type is a uRI (not a blank node)
             	System.out.println("--------------------");
@@ -372,7 +477,8 @@ public void loadedTemplateFileCondition(String template, String modeFile){
             this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(),
                     Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,                    
                         Constants.P_PLAN_PROP_IS_STEP_OF_PLAN);
-   
+            
+            
         }
         //retrieval of the dataVariables
         String queryDataV = Queries.queryDataV2();
@@ -1228,6 +1334,59 @@ public void loadedTemplateFileCondition(String template, String modeFile){
         return (Constants.PREFIX_EXPORT_RESOURCE+accname);
     }
     
+    
+    public Gen InputOutputGenerator(ResultSet replica,String classNamegiven)
+    {
+    	HashSet<String> input=new HashSet<>();
+    	HashSet<String> output=new HashSet<>();
+    while(replica.hasNext()){
+        QuerySolution qs = replica.next();
+        Resource res = qs.getResource("?n");
+        Resource comp = qs.getResource("?c");
+        Resource typeComp = qs.getResource("?typeComp");
+        Literal rule = qs.getLiteral("?rule");
+        Literal isConcrete = qs.getLiteral("?isConcrete");
+        
+        Resource inport = qs.getResource("?inport");
+        Resource outport = qs.getResource("?outport");
+        
+
+        
+        
+      
+        //------------ADDITION BY TIRTH-----------------
+        //obtaining the className
+        String className="";
+        int indexOf=typeComp.toString().indexOf('#');
+        className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
+        
+        
+        if(className.equals(classNamegiven))
+        {
+        	
+        	  input.add(inport.getLocalName());
+              output.add(outport.getLocalName());
+        }
+      
+        
+        
+        
+      //------------ADDITION BY TIRTH-----------------
+        //obtaining the domainName
+        
+        
+        
+
+
+    }
+    Gen g=new Gen();
+    g.input=input.size();
+    g.output=output.size();
+    g.className=classNamegiven;
+    return g;
+    
+    }
+    
     public String getRunUrl(String suffix) {
         String accname = encode(Constants.CONCEPT_WORKFLOW_EXECUTION_ACCOUNT+"/"+"Account-"+suffix);
         return (Constants.PREFIX_EXPORT_RESOURCE+accname);
@@ -1252,6 +1411,18 @@ public void loadedTemplateFileCondition(String template, String modeFile){
             out = new FileOutputStream(outFile);
             model.write(out,"TURTLE");
             //model.write(out,"RDF/XML");
+            out.close();
+        } catch (Exception ex) {
+            System.out.println("Error while writing the model to file "+ex.getMessage());
+        }
+    }
+    
+    private void exportRDFFile2(String outFile, OntModel model){
+        OutputStream out;
+        try {
+            out = new FileOutputStream(outFile);
+            //model.write(out,"TURTLE");
+            model.write(out,"RDF/XML");
             out.close();
         } catch (Exception ex) {
             System.out.println("Error while writing the model to file "+ex.getMessage());

@@ -176,6 +176,9 @@ public class Constants {
     public static final String WINGS_PROP_HAS_EXPANDED_TEMPLATE = PREFIX_WEXEC + "hasExpandedTemplate";
     public static final String WINGS_PROP_HAS_PLAN = PREFIX_WEXEC + "hasPlan";
     public static final String WINGS_PROP_DERIVED_FROM = PREFIX_WFLOW + "derivedFrom";
+    
+    public static final String WINGS_PROP_HAS_INPUT_PORT = PREFIX_WFLOW + "hasInputPort";
+    public static final String WINGS_PROP_HAS_OUTPUT_PORT = PREFIX_WFLOW + "hasOutputPort";
 //    public static final String WINGS_PROP_HAS_ARGUMENT_ID = AC + "hasArgumentID";
     
     //execution properties
