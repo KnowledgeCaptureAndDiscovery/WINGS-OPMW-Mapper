@@ -68,6 +68,13 @@ public class Constants {
     public static final String OPM_ACCOUNT = PREFIX_OPMO+CONCEPT_ACCOUNT;
     
     /*****
+    Taxonomy classes
+    *****/
+    public static final String TAXONOMY_CLASS = PREFIX_COMPONENT_CATALOG;
+    
+    
+    
+    /*****
     OPMW classes
     *****/
     public static final String OPMW_WORKFLOW_EXECUTION_PROCESS = PREFIX_OPMW+CONCEPT_WORKFLOW_EXECUTION_PROCESS;

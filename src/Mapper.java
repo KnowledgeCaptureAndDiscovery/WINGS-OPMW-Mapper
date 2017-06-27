@@ -236,7 +236,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         	System.out.println("not null");
         //ComponentCatalog.write(System.out,"RDF/XML");
         System.out.println("Exporting the componentCatalog to a separate file outside");
-        exportRDFFile2("componentCatalog2", ComponentCatalog);
+        exportRDFFile("componentCatalog2", ComponentCatalog);
         System.out.println("-------------------------");
     }
 
@@ -620,7 +620,41 @@ public void loadTaxonomyExport(String template, String modeFile){
                 if(existsInTaxonomyModel==false)
                 {
                 	System.out.println("you will have to export it now");
-                	
+                	//starting to export now
+                	//this.addIndividual(Taxonomy_Export,templateName, Constants.OPMW_WORKFLOW_TEMPLATE, templateName);
+                	//this.addIndividual(Taxonomy_Export,className, Constants.TAXONOMY_CLASS, className);
+                	String nameOfIndividualEnc = encode(className);
+                    OntClass c = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+                    c.createIndividual(Constants.TAXONOMY_CLASS+nameOfIndividualEnc);
+//                    this.addProperty(Taxonomy_Export,Constants.TAXONOMY_CLASS+nameOfIndividualEnc,
+//                    		Constants.TAXONOMY_CLASS+AbstractSuperClass,                    
+//                                Constants.PREFIX_RDFS+"subClassOf"); 
+                    
+                    String nameOfIndividualEnc2 = encode(AbstractSuperClass.getLocalName());
+                    OntClass c2 = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+                    c2.createIndividual(Constants.TAXONOMY_CLASS+nameOfIndividualEnc2);
+                    
+                    //for component
+                    OntProperty propSelec = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+                    Resource source = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(className) );
+                    Individual instance = (Individual) source.as( Individual.class );
+                    if((AbstractSuperClass.getLocalName()).contains("http://")){//it is a URI
+                        instance.addProperty(propSelec,(Constants.TAXONOMY_CLASS+AbstractSuperClass.getLocalName()));            
+                    }else{//it is a local resource
+                        instance.addProperty(propSelec, Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName())));
+                    }
+                    
+                    //for abstract component
+                    OntProperty propSelec2 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+                    Resource source2 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName()) );
+                    Individual instance2 = (Individual) source2.as( Individual.class );
+                    if(("Component").contains("http://")){//it is a URI
+                        instance2.addProperty(propSelec,Constants.PREFIX_COMPONENT+"Component");            
+                    }else{//it is a local resource
+                        instance2.addProperty(propSelec, Taxonomy_Export.getResource(Constants.PREFIX_COMPONENT+encode("Component")));
+                    }
+                    
+                    
                 }
             	
             	
@@ -631,7 +665,10 @@ public void loadTaxonomyExport(String template, String modeFile){
             	
             }
             else
-            	System.out.println("create a new class now");
+            	{
+            		System.out.println("create a new class now");
+            		//START EXPORTING A NEW CLASS AND LINK ITS CI's
+            	}
             
             }
             
@@ -1602,6 +1639,8 @@ public void loadTaxonomyExport(String template, String modeFile){
             this.addDataProperty(m,nameOfIndividualEnc,label,Constants.RDFS_LABEL);
         }
     }
+    
+    
 
     /**
      * Funtion to add a property between two individuals. If the property does not exist, it is created.
