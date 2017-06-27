@@ -53,6 +53,7 @@ public class Mapper {
     private OntModel ExpandedTemplateModel;
     private OntModel TemplateModelforCondition;
     private OntModel ComponentCatalog;
+    private OntModel Taxonomy_Export;
     public Mapper(){
 
     }
@@ -195,6 +196,18 @@ public void loadedTemplateFileCondition(String template, String modeFile){
         System.out.println("Template File Condition"+template+" loaded into the new template model");
 
     }
+
+public void loadTaxonomyExport(String template, String modeFile){
+    
+	InputStream in2 = FileManager.get().open(template.replaceAll("#.*$", ""));
+    if (in2 == null){
+        throw new IllegalArgumentException("File: " + template + " not found");
+    }
+    
+    Taxonomy_Export.read(in2, null, modeFile);
+    System.out.println("Taxonomy_Export File Condition"+template+" loaded into the new template model");
+
+}
     
     
     
@@ -246,10 +259,10 @@ public void loadedTemplateFileCondition(String template, String modeFile){
      * @return Template URI assigned to identify the template
      */
     //public String transformWINGSElaboratedTemplateToOPMW(String template,String mode, String outFile){
-    public String transformWINGSElaboratedTemplateToOPMW(String template,String mode, String outFile, String templateName){
+    public String transformWINGSElaboratedTemplateToOPMW(String template,String mode, String outFile, String templateName,String taxonomy_export){
         //clean previous transformations
     	
-    	
+    	//loading the component catalog
     	if(ComponentCatalog!=null){
         	ComponentCatalog.removeAll();            
         }
@@ -261,6 +274,12 @@ public void loadedTemplateFileCondition(String template, String modeFile){
         if(OPMWModel!=null){
             OPMWModel.removeAll();            
         }
+        
+        //loading the taxonomy file that is also going to be exported
+        if(Taxonomy_Export!=null){
+        	Taxonomy_Export.removeAll();            
+        }
+        Taxonomy_Export = ModelFactory.createOntologyModel();
         
         
         
@@ -405,6 +424,10 @@ public void loadedTemplateFileCondition(String template, String modeFile){
         //------------------------------------------
        r = null;
        r = queryLocalWINGSTemplateModelRepository(queryNodes);
+       
+       //created this hashset since some of the components repeat and we dont want to continuously find them in the
+       //component catalog
+       HashSet<String> hsforComps=new HashSet<>();
 
         while(r.hasNext()){
             QuerySolution qs = r.next();
@@ -453,27 +476,78 @@ public void loadedTemplateFileCondition(String template, String modeFile){
             
             
             //Have to start querying the component catalog for checking the number of inputs and outputs:
-//            String componentCatalogQuery = Queries.componentCatalogQuery(className);
-//            ResultSet rnew = null;
-//            rnew = queryComponentCatalog(componentCatalogQuery);
-//            
-//            HashSet<String> hsi=new HashSet<>();
-//            HashSet<String> hso=new HashSet<>();
-//            while(rnew.hasNext())
-//            {
-//            	QuerySolution qsnew = rnew.next();
-//                Resource nodenew = qsnew.getResource("?n");
-//                Resource i = qsnew.getResource("?i");
-//                Resource o = qsnew.getResource("?o");
-//                
-//                hsi.add(i.getLocalName());
-//                hso.add(o.getLocalName());
-//                System.out.println("node : "+nodenew.getLocalName());
-//            }
-//            System.out.println("component catalog:");
-//            System.out.println("className : "+className);
-//            System.out.println("input size: "+hsi.size());
-//            System.out.println("output size: "+hso.size());
+
+            if(!hsforComps.contains(className))
+            {
+            	System.out.println("inside outermost condition");
+            String componentCatalogQueryforSubclassCheck = Queries.componentCatalogQueryforSubclassCheckfinal(className);
+            ResultSet rnew1 = null;
+            rnew1 = queryComponentCatalog(componentCatalogQueryforSubclassCheck);	
+            int deciderpoint=0;
+            System.out.println("Finallllll");
+            Resource AbstractSuperClass=null;
+            while(rnew1.hasNext())
+            {
+            	
+            	QuerySolution qsnew = rnew1.next();
+                Resource nodenew = qsnew.getResource("?n");
+                Resource x = qsnew.getResource("?x");
+                if(x!=null)
+                {
+
+                	if(nodenew.getLocalName().equals(className))
+                	{
+                		
+    
+                			AbstractSuperClass=x;
+                			System.out.println("x is "+x.getLocalName());
+                			deciderpoint=1;
+                			break;
+                		
+                	}
+                	
+                }
+                else
+                	System.out.println("x is null");
+                
+
+            }
+            System.out.println("ULTIMATE WORTH IT SUPER CLASS IS "+AbstractSuperClass.getLocalName());
+            
+            
+            	
+            if(deciderpoint==1)
+            {
+            String componentCatalogQueryforInputsandOutputs = Queries.componentCatalogQueryforInputsandOutputs(className);
+            ResultSet rnew2 = null;
+            rnew2 = queryComponentCatalog(componentCatalogQueryforInputsandOutputs);
+           
+            HashSet<String> hsi=new HashSet<>();
+            HashSet<String> hso=new HashSet<>();
+            while(rnew2.hasNext())
+            {
+            	QuerySolution qsnew = rnew2.next();
+                Resource nodenew = qsnew.getResource("?n");
+                Resource i = qsnew.getResource("?i");
+                Resource o = qsnew.getResource("?o");
+                
+                if(nodenew.getLocalName().equals(className.substring(0,className.length()-5)))
+                {
+                hsi.add(i.getLocalName());
+                hso.add(o.getLocalName());
+                System.out.println("node : "+nodenew.getLocalName());
+                }
+            }
+            System.out.println("component catalog for that particular component only:");
+            System.out.println("className : "+className);
+            System.out.println("input size: "+hsi.size());
+            System.out.println("output size: "+hso.size());
+            }
+            
+            
+            
+            hsforComps.add(className);
+            }
             
             
             if(typeComp.isURIResource()){ //only adds the type if the type is a uRI (not a blank node)
@@ -744,6 +818,12 @@ public void loadedTemplateFileCondition(String template, String modeFile){
          * FILE EXPORT. 
          ******************/        
         exportRDFFile(outFile, OPMWModel);
+        
+        
+        //exporting the taxonomy 
+        exportRDFFile(taxonomy_export, Taxonomy_Export);
+        
+        
         return Constants.PREFIX_EXPORT_RESOURCE+""+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(templateName);
     }
 

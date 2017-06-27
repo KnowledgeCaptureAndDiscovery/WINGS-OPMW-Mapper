@@ -19,6 +19,8 @@ public class Constants {
     public static final String PREFIX_WFINVOC = "http://purl.org/net/wf-invocation#";
     public static final String PREFIX_P_PLAN = "http://purl.org/net/p-plan#";
     public static final String PREFIX_COMPONENT="http://www.wings-workflows.org/ontology/component.owl#";
+    public static final String PREFIX_OWL="http://www.w3.org/2002/07/owl#";
+    public static final String PREFIX_RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     public static final String PREFIX_COMPONENT_CATALOG = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/components/library.owl#";
     
     /*****

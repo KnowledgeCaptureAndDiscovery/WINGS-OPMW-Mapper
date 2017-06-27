@@ -82,7 +82,9 @@ public class Queries {
         return query;
     }
     
-    public static String componentCatalogQuery(String className)
+    
+    //query for determining the number of inputs and outputs in the component catalog based class
+    public static String componentCatalogQueryforInputsandOutputs(String className)
     {
     	String query="SELECT ?n ?i ?o WHERE{"
     			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
@@ -91,6 +93,29 @@ public class Queries {
     			+"}";
     	return query;
     }
+    
+  
+    //query for determining if the class is a subclass of a superclass in the component catalog    
+  
+    public static String componentCatalogQueryforSubclassCheckfinal(String className)
+    {
+    	String query="SELECT ?n ?x WHERE{"
+    			+"?n a <"+Constants.PREFIX_OWL+"Class>."
+    			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
+    			+"}";
+    	return query;
+    }
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
     

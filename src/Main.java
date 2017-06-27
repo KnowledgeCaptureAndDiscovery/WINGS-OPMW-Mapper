@@ -15,9 +15,10 @@ String execution = "/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPOR
   String outFileOPMW = "testResultOPMW";
   String outFilePROV = "testResultPROV";
   String outFile = "testTemplateabstractTest1";
+  String taxonomy_export="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl";
     
-   //String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile, null);
-   String ans=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null);
+   String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile, null,taxonomy_export);
+   //String ans=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null);
     System.out.println("--------------------------");
     System.out.println("location is :"+ans);
  
