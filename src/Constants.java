@@ -19,7 +19,8 @@ public class Constants {
     public static final String PREFIX_WFINVOC = "http://purl.org/net/wf-invocation#";
     public static final String PREFIX_P_PLAN = "http://purl.org/net/p-plan#";
     public static final String PREFIX_COMPONENT="http://www.wings-workflows.org/ontology/component.owl#";
-
+    public static final String PREFIX_COMPONENT_CATALOG = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/components/library.owl#";
+    
     /*****
     OPM AND OPMW CONCEPTS
     *****/
@@ -161,6 +162,8 @@ public class Constants {
     public static final String WINGS_METADATA = PREFIX_WFLOW + "Metadata";
     public static final String WINGS_EXECUTION = PREFIX_WEXEC + "Execution";
     public static final String WINGS_EXECUTION_STEP= PREFIX_WEXEC + "ExecutionStep";
+   
+    
     /*****
     Wings properties
     *****/

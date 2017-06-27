@@ -82,10 +82,13 @@ public class Queries {
         return query;
     }
     
-    public static String componentCatalogQuery()
+    public static String componentCatalogQuery(String className)
     {
-    	String query="SELECT "
-    			+"";
+    	String query="SELECT ?n ?i ?o WHERE{"
+    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
+    			+"}";
     	return query;
     }
     
