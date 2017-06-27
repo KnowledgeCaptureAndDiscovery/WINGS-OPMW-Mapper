@@ -107,6 +107,18 @@ public class Queries {
     }
     
     
+    //query for determining if the class is a subclass of a superclass in the component catalog    
+    
+    public static String TaxonomyExportQueryforSubclassCheckfinal(String className)
+    {
+    	String query="SELECT ?n ?x WHERE{"
+    			+"OPTIONAL{?n a <"+Constants.PREFIX_OWL+"Class>.}"
+    			+"OPTIONAL{?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x.}"
+    			+"}";
+    	return query;
+    }
+    
+    
     
 
     

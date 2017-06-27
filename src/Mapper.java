@@ -107,7 +107,7 @@ public class Mapper {
         return queryLocalRepository(queryIn, WINGSModelTemplate);
     }
     
-    
+  //function to query just the component catalog model
     private ResultSet queryComponentCatalog(String queryIn) {
         return queryLocalRepository(queryIn, ComponentCatalog);
     }
@@ -116,6 +116,11 @@ public class Mapper {
     //function to query just the expanded template model
     private ResultSet queryLocalExpandedTemplateRepository(String queryIn) {
         return queryLocalRepository(queryIn, ExpandedTemplateModel);
+    }
+    
+    //function to query just the taxonomy model
+    private ResultSet queryLocalTaxonomyModelRepository(String queryIn) {
+        return queryLocalRepository(queryIn, Taxonomy_Export);
     }
     
     
@@ -576,7 +581,55 @@ public void loadTaxonomyExport(String template, String modeFile){
             System.out.println("output size: "+hso.size());
             
             if(hsAi.size()==hsi.size() && hsAo.size()==hso.size())
+            {
             	System.out.println("They are equal...now just export as a subclass if it does not exist");
+            	//PART 1: CHECKING CRITERIA
+            	//querying the Taxonomy Export Model to check whether this component already exists or not and if it 
+            	//exists if its a subclass of that abstract class only
+            	
+            	String checkifComponentExists = Queries.TaxonomyExportQueryforSubclassCheckfinal(className);
+                rnew2 = null;
+                rnew2 = queryLocalTaxonomyModelRepository(checkifComponentExists);
+                boolean existsInTaxonomyModel=false;
+                while(rnew2.hasNext())
+                {
+                	QuerySolution qsnew = rnew2.next();
+                	Resource nodenew = qsnew.getResource("?n");
+                    Resource x = qsnew.getResource("?x");
+                    if(nodenew!=null && x!=null)
+                    {
+                    	if(nodenew.getLocalName().equals(className) && x.getLocalName().equals(AbstractSuperClass.getLocalName()))
+                    	{
+                    		System.out.println("it exists");
+                    		existsInTaxonomyModel=true;
+                    		break;
+                    	}
+                    }
+  
+                }
+                
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            	//PART2: EXPORTING CRITERIA
+                if(existsInTaxonomyModel==false)
+                {
+                	System.out.println("you will have to export it now");
+                	
+                }
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            }
             else
             	System.out.println("create a new class now");
             
