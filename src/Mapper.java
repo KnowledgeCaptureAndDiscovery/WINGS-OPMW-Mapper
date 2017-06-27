@@ -497,13 +497,10 @@ public void loadTaxonomyExport(String template, String modeFile){
 
                 	if(nodenew.getLocalName().equals(className))
                 	{
-                		
-    
                 			AbstractSuperClass=x;
                 			System.out.println("x is "+x.getLocalName());
                 			deciderpoint=1;
-                			break;
-                		
+                			break;         		
                 	}
                 	
                 }
@@ -518,9 +515,11 @@ public void loadTaxonomyExport(String template, String modeFile){
             	
             if(deciderpoint==1)
             {
-            String componentCatalogQueryforInputsandOutputs = Queries.componentCatalogQueryforInputsandOutputs(className);
+            	
+            //QUERY-1 FOR THE RETRIEVAL OF INPUTS AND OUTPUTS OF THE PARTICULAR COMPONENT
+            String componentCatalogQueryforInputsandOutputsComponent = Queries.componentCatalogQueryforInputsandOutputs(className);
             ResultSet rnew2 = null;
-            rnew2 = queryComponentCatalog(componentCatalogQueryforInputsandOutputs);
+            rnew2 = queryComponentCatalog(componentCatalogQueryforInputsandOutputsComponent);
            
             HashSet<String> hsi=new HashSet<>();
             HashSet<String> hso=new HashSet<>();
@@ -538,10 +537,56 @@ public void loadTaxonomyExport(String template, String modeFile){
                 System.out.println("node : "+nodenew.getLocalName());
                 }
             }
+            
+            
+            
+          //QUERY-2 FOR THE RETRIEVAL OF INPUTS AND OUTPUTS OF THE PARTICULAR COMPONENT'S ABSTRACT CLASS
+            if(!AbstractSuperClass.getLocalName().equals("Component"))
+            {
+            String componentCatalogQueryforInputsandOutputsAbstractComponent = Queries.componentCatalogQueryforInputsandOutputs(AbstractSuperClass.getLocalName());
+            rnew2 = null;
+            rnew2 = queryComponentCatalog(componentCatalogQueryforInputsandOutputsAbstractComponent);
+           
+            HashSet<String> hsAi=new HashSet<>();
+            HashSet<String> hsAo=new HashSet<>();
+            while(rnew2.hasNext())
+            {
+            	QuerySolution qsnew = rnew2.next();
+                Resource nodenew = qsnew.getResource("?n");
+                Resource i = qsnew.getResource("?i");
+                Resource o = qsnew.getResource("?o");
+                
+                //System.out.println("nodenew "+nodenew.getLocalName()+" abstractclass "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
+                if(nodenew.getLocalName().equals(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)))
+                {
+                	System.out.println("node in abstract part : "+nodenew.getLocalName());
+                	hsAi.add(i.getLocalName());
+                	hsAo.add(o.getLocalName());
+                
+                }
+            }
+            System.out.println("component catalog for that Abstract component only:");
+            System.out.println("className : "+AbstractSuperClass.getLocalName());
+            System.out.println("input size: "+hsAi.size());
+            System.out.println("output size: "+hsAo.size());
+            
             System.out.println("component catalog for that particular component only:");
             System.out.println("className : "+className);
             System.out.println("input size: "+hsi.size());
             System.out.println("output size: "+hso.size());
+            
+            if(hsAi.size()==hsi.size() && hsAo.size()==hso.size())
+            	System.out.println("They are equal...now just export as a subclass if it does not exist");
+            else
+            	System.out.println("create a new class now");
+            
+            }
+            
+            
+            
+            
+            
+           
             }
             
             
