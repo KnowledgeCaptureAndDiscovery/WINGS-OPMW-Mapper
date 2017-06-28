@@ -23,6 +23,21 @@ public class Constants {
     public static final String PREFIX_RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     public static final String PREFIX_COMPONENT_CATALOG = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/components/library.owl#";
     
+    
+    /*****
+    COMPONENT CLASS AND ITS RELATIONS
+    *****/
+    public static final String COMPONENT_HAS_INPUT=PREFIX_COMPONENT+"hasInput";
+    public static final String COMPONENT_HAS_OUTPUT=PREFIX_COMPONENT+"hasOutput";
+    public static final String COMPONENT_HAS_LOCATION=PREFIX_COMPONENT+"hasLocation";
+    public static final String COMPONENT_IS_CONCRETE=PREFIX_COMPONENT+"isConcrete";
+
+    
+    
+    
+    
+    
+    
     /*****
     OPM AND OPMW CONCEPTS
     *****/

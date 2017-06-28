@@ -119,13 +119,28 @@ public class Queries {
     }
     
   //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc in the component catalog based class
-    public static String componentCatalogQueryforActualInputsandOutputs(String className)
+    public static String componentCatalogQueryforActualInputsandOutputsforComponent(String className)
     {
+    	System.out.println("className inside the query received "+className);
     	String query="SELECT ?n ?i ?o ?loc ?concr WHERE{"
     			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasLocation> ?loc."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr."
+    			+"}";
+    	return query;
+    }
+    
+    
+    //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc FOR ABSTRACT COMPONENTS ONLY!!!! in the component catalog based class
+    public static String componentCatalogQueryforActualInputsandOutputsforAbstractComponent(String className)
+    {
+    	System.out.println("className inside the query received "+className);
+    	String query="SELECT ?n ?i ?o ?concr WHERE{"
+    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
     			+"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr."
     			+"}";
     	return query;
