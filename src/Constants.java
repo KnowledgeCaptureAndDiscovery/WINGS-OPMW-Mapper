@@ -22,7 +22,7 @@ public class Constants {
     public static final String PREFIX_OWL="http://www.w3.org/2002/07/owl#";
     public static final String PREFIX_RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     public static final String PREFIX_COMPONENT_CATALOG = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/components/library.owl#";
-    
+    public static final String PREFIX_J1_ONTO = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#";
     
     /*****
     COMPONENT CLASS AND ITS RELATIONS
@@ -31,6 +31,10 @@ public class Constants {
     public static final String COMPONENT_HAS_OUTPUT=PREFIX_COMPONENT+"hasOutput";
     public static final String COMPONENT_HAS_LOCATION=PREFIX_COMPONENT+"hasLocation";
     public static final String COMPONENT_IS_CONCRETE=PREFIX_COMPONENT+"isConcrete";
+    public static final String COMPONENT_HAS_ARGUMENT_ID=PREFIX_COMPONENT+"hasArgumentID";
+    public static final String COMPONENT_HAS_ARGUMENT_NAME=PREFIX_COMPONENT+"hasArgumentName";
+    public static final String COMPONENT_HAS_DIMENSIONALITY=PREFIX_COMPONENT+"hasDimensionality";
+    public static final String COMPONENT_HAS_VALUE=PREFIX_COMPONENT+"hasValue";
 
     
     

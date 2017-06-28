@@ -147,6 +147,33 @@ public class Queries {
     }
     
     
+  //query for determining interiors of the INPUT PARAMETERS FOR COMPONENTS ONLY!!!! in the component catalog based class
+    public static String componentCatalogQueryforInteriorsofParametersComponents(String input)
+    {
+    	String query="SELECT ?i ?argID ?argName ?dim ?val WHERE{"
+    			
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> a <"+Constants.PREFIX_COMPONENT+"ParameterArgument>."
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentID> ?argID."
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentName> ?argName."
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasDimensionality> ?dim."
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasValue> ?val."
+    			+"}";
+    	return query;
+    }
+    
+  //query for determining interiors of the INPUT DATA FOR COMPONENTS ONLY!!!! in the component catalog based class
+    public static String componentCatalogQueryforInteriorsofDataComponents(String input)
+    {
+    	String query="SELECT ?i ?argID ?argName ?dim WHERE{"		
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> a <"+Constants.PREFIX_COMPONENT+"DataArgument>."
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentID> ?argID."
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentName> ?argName."
+    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasDimensionality> ?dim."
+    			+"}";
+    	return query;
+    }
+    
+    
     
 
     

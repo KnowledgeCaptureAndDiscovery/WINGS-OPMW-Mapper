@@ -628,15 +628,11 @@ public void loadTaxonomyExport(String template, String modeFile){
                     }
   
                 }
-                
+                if(existsInTaxonomyModel==true)
+                	System.out.println("IT ALREADY EXISTS SO NO NEED TO EVEN DO AN EXPORT");
             	
             	
-            	
-            	
-            	
-            	
-            	
-            	
+
             	//PART2: EXPORTING CRITERIA
                 if(existsInTaxonomyModel==false)
                 {
@@ -868,18 +864,485 @@ public void loadTaxonomyExport(String template, String modeFile){
                         instance24.addProperty(propSelec24, Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(out)));
                     }
                     }
+      
+                  ///*********************************///
+                    ///*********ENDS HERE*********///
+                    ///*****EXPORTING INPUTS,OUTPUTS AND OTHER CRITERIA FOR BOTH THE COMPONENTS*****///
+                    ///*********************************///
                     
-                    
-                    
-         
                     
                     
                     
                     
                     
                   ///*********************************///
+                    ///*********STARTS HERE*********///
+                    ///*****EXTRACTING THE INPUTS & OUTPUT INNER CRITERIA FOR BOTH THE COMPONENTS*****///
+                  //********AND EXTRACTION******************///
+                    ///*********************************///
+                    
+                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
+                    System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
+                    for(String inx:hsi)
+                    {
+	                    System.out.println(inx);
+	                    String componentCatalogQueryforInteriorsofParametersComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersComponents);
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="",valString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        Literal val=qsnew.getLiteral("?val");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+	                        if(val!=null)
+	                        {
+	                        	System.out.println(val.getString());
+	                        	valString=val.getString();
+	                        }
+	                        if(argID!=null && argName!=null && dim!=null && val!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"ParameterArgument");
+	                        c31.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                      //HAS VALUE EXPORTED
+	                        OntProperty propSelec34;
+	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
+	                        Resource orig34 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig34, propSelec34, valString);
+	                    }
+                    
+                    
+                    }
+                    
+                    
+                   //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                    System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
+                    for(String inx:hsi)
+                    {
+	                    System.out.println(inx);
+	                    String componentCatalogQueryforInteriorsofDataComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponents);
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+
+	                        if(argID!=null && argName!=null && dim!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR COMPONENT ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+	                        c31.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+	                        c331.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                    }
+                    
+                    
+                    }
+                    
+                  //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                    System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
+                    for(String outx:hso)
+                    {
+	                    System.out.println(outx);
+	                    String componentCatalogQueryforInteriorsofDataComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponentsOutput);
+	                    
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+
+	                        if(argID!=null && argName!=null && dim!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE OUTPUT DATA INTERIORS FOR COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+	                        c31.createIndividual(Constants.TAXONOMY_CLASS+outx.toUpperCase());
+	                        
+	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+	                        c331.createIndividual(Constants.TAXONOMY_CLASS+outx.toUpperCase());
+	                        
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                    }
+                    
+                    
+                    }
+ 
+                    
+                  //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
+                    System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
+                    for(String inx:hsAi)
+                    {
+	                    System.out.println(inx);
+	                    String componentCatalogQueryforInteriorsofParametersAbstractComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersAbstractComponents);
+	                    
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="",valString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        Literal val=qsnew.getLiteral("?val");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+	                        if(val!=null)
+	                        {
+	                        	System.out.println(val.getString());
+	                        	valString=val.getString();
+	                        }
+	                        if(argID!=null && argName!=null && dim!=null && val!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"ParameterArgument");
+	                        c31.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                      //HAS VALUE EXPORTED
+	                        OntProperty propSelec34;
+	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
+	                        Resource orig34 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig34, propSelec34, valString);
+	                    }
+                    
+                    
+                    }
+                    
+                  //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
+                    System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
+                    for(String inx:hsAi)
+                    {
+	                    System.out.println(inx);
+	                    String componentCatalogQueryforInteriorsofDataAbstractComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataAbstractComponents);
+	                    
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+
+	                        if(argID!=null && argName!=null && dim!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+	                        c31.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+	                        c331.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                    }
+                    
+                    
+                    }
+                    
+                  //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
+                    System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
+                    for(String outx:hsAo)
+                    {
+	                    System.out.println(outx);
+	                    String componentCatalogQueryforInteriorsofDataAbstractComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataAbstractComponentsOutput);
+	                    
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+
+	                        if(argID!=null && argName!=null && dim!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+	                        c31.createIndividual(Constants.TAXONOMY_CLASS+outx.toUpperCase());
+	                        
+	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+	                        c331.createIndividual(Constants.TAXONOMY_CLASS+outx.toUpperCase());
+	                        
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                    }
+                    
+                    
+                    }
+                    
+
+    
+                  ///*********************************///
                     ///*********ENDS HERE*********///
-                    ///*****EXPORTING INPUTS,OUTPUTS AND OTHER CRITERIA FOR BOTH THE COMPONENTS*****///
+                    ///*****EXTRACTING THE INPUTS & OUTPUT INNER CRITERIA FOR BOTH THE COMPONENTS FOR EXPORTING LATER*****///
+                    //********AND EXTRACTION******************///
                     ///*********************************///
                     
                     
