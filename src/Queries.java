@@ -112,8 +112,8 @@ public class Queries {
     public static String TaxonomyExportQueryforSubclassCheckfinal(String className)
     {
     	String query="SELECT ?n ?x WHERE{"
-    			+"OPTIONAL{?n a <"+Constants.PREFIX_OWL+"Class>.}"
-    			+"OPTIONAL{?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x.}"
+    			+"?n a <"+Constants.PREFIX_OWL+"Class>."
+    			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
     			+"}";
     	return query;
     }

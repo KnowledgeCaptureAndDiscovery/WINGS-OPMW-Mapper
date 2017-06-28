@@ -264,7 +264,7 @@ public void loadTaxonomyExport(String template, String modeFile){
      * @return Template URI assigned to identify the template
      */
     //public String transformWINGSElaboratedTemplateToOPMW(String template,String mode, String outFile){
-    public String transformWINGSElaboratedTemplateToOPMW(String template,String mode, String outFile, String templateName,String taxonomy_export){
+    public String transformWINGSElaboratedTemplateToOPMW(String template,String mode, String outFile, String templateName,String taxonomy_export,String mode2){
         //clean previous transformations
     	
     	//loading the component catalog
@@ -285,6 +285,15 @@ public void loadTaxonomyExport(String template, String modeFile){
         	Taxonomy_Export.removeAll();            
         }
         Taxonomy_Export = ModelFactory.createOntologyModel();
+        
+        //loading the existing taxonomy file
+        try{
+            //load the template file to WINGSModel (already loads the taxonomy as well
+            this.loadTaxonomyExport(taxonomy_export, mode);            
+        }catch(Exception e){
+            System.err.println("Error "+e.getMessage());
+            return "";
+        }
         
         
         
@@ -586,6 +595,9 @@ public void loadTaxonomyExport(String template, String modeFile){
             	//PART 1: CHECKING CRITERIA
             	//querying the Taxonomy Export Model to check whether this component already exists or not and if it 
             	//exists if its a subclass of that abstract class only
+            	Taxonomy_Export.write(System.out,"RDF/XML");
+            	
+            	
             	
             	String checkifComponentExists = Queries.TaxonomyExportQueryforSubclassCheckfinal(className);
                 rnew2 = null;
@@ -596,9 +608,12 @@ public void loadTaxonomyExport(String template, String modeFile){
                 	QuerySolution qsnew = rnew2.next();
                 	Resource nodenew = qsnew.getResource("?n");
                     Resource x = qsnew.getResource("?x");
+
+                    	
                     if(nodenew!=null && x!=null)
                     {
-                    	if(nodenew.getLocalName().equals(className) && x.getLocalName().equals(AbstractSuperClass.getLocalName()))
+                    	System.out.println("node "+nodenew.getLocalName()+" x "+x.getLocalName());
+                    	if(nodenew.getLocalName().equals(className.toUpperCase()) && x.getLocalName().equals(AbstractSuperClass.getLocalName().toUpperCase()))
                     	{
                     		System.out.println("it exists");
                     		existsInTaxonomyModel=true;
@@ -956,7 +971,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         
         
         //exporting the taxonomy 
-        exportRDFFile(taxonomy_export, Taxonomy_Export);
+        exportRDFFile2(taxonomy_export, Taxonomy_Export);
         
         
         return Constants.PREFIX_EXPORT_RESOURCE+""+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(templateName);
