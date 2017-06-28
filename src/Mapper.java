@@ -287,13 +287,13 @@ public void loadTaxonomyExport(String template, String modeFile){
         Taxonomy_Export = ModelFactory.createOntologyModel();
         
         //loading the existing taxonomy file
-        try{
-            //load the template file to WINGSModel (already loads the taxonomy as well
-            this.loadTaxonomyExport(taxonomy_export, mode);            
-        }catch(Exception e){
-            System.err.println("Error "+e.getMessage());
-            return "";
-        }
+//        try{
+//            //load the template file to WINGSModel (already loads the taxonomy as well
+//            this.loadTaxonomyExport(taxonomy_export, mode);            
+//        }catch(Exception e){
+//            System.err.println("Error "+e.getMessage());
+//            return "";
+//        }
         
         
         
@@ -635,21 +635,67 @@ public void loadTaxonomyExport(String template, String modeFile){
                 if(existsInTaxonomyModel==false)
                 {
                 	System.out.println("you will have to export it now");
-                	//starting to export now
-                	//this.addIndividual(Taxonomy_Export,templateName, Constants.OPMW_WORKFLOW_TEMPLATE, templateName);
-                	//this.addIndividual(Taxonomy_Export,className, Constants.TAXONOMY_CLASS, className);
+                	
+                	
+                	//extracting the actual inputs,outputs and other factors for the component
+                	
+                	String componentCatalogQueryforActualInputsandOutputs = Queries.componentCatalogQueryforActualInputsandOutputs(className.substring(0,className.length()-5));
+                    rnew2 = null;
+                    rnew2 = queryComponentCatalog(componentCatalogQueryforInputsandOutputsAbstractComponent);
+                   
+                    HashSet<String> inputsComp=new HashSet<>();
+                    HashSet<String> outputsComp=new HashSet<>();
+                    String compLoc="";
+                    boolean compConcrete=false;
+                    while(rnew2.hasNext())
+                    {
+                    	QuerySolution qsnew = rnew2.next();
+                    	Resource nodenew = qsnew.getResource("?n");
+                    	System.out.println("node part name"+nodenew.getLocalName());
+                        Resource input = qsnew.getResource("?i");
+                        Resource output = qsnew.getResource("?o");
+                        Literal concr=qsnew.getLiteral("?concr");
+                        Literal loc=qsnew.getLiteral("?loc");
+                        Resource loc2=qsnew.getResource("?loc");
+                        if(nodenew.getLocalName().equals(className.substring(0,className.length()-5)))
+                        {
+                        	inputsComp.add(input.getLocalName());
+                        	outputsComp.add(output.getLocalName());
+//                        	if(loc!=null && !compLoc.equals(""))
+//                        		compLoc=loc.getString();
+                        	System.out.println("Location is "+loc+" loc2 "+loc2);
+                        	if(concr!=null)
+                        		compConcrete=concr.getBoolean();
+                        }
+                    }
+                    for(String i:inputsComp)
+                    	System.out.println("inputs are: "+i);
+                    for(String o:outputsComp)
+                    	System.out.println("inputs are: "+o);
+                    System.out.println("Location is: "+compLoc);
+                    System.out.println("isConcrete is: "+compConcrete);
+                    
+                    
+                  //extracting the actual inputs,outputs and other factors for the Abstract component
+                	
+                	
+                	
+                	
+                	
+                	
+                	
+                	
+                	//component individual
                 	String nameOfIndividualEnc = encode(className);
                     OntClass c = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
                     c.createIndividual(Constants.TAXONOMY_CLASS+nameOfIndividualEnc);
-//                    this.addProperty(Taxonomy_Export,Constants.TAXONOMY_CLASS+nameOfIndividualEnc,
-//                    		Constants.TAXONOMY_CLASS+AbstractSuperClass,                    
-//                                Constants.PREFIX_RDFS+"subClassOf"); 
-                    
+
+                    //abstract component individual
                     String nameOfIndividualEnc2 = encode(AbstractSuperClass.getLocalName());
                     OntClass c2 = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
                     c2.createIndividual(Constants.TAXONOMY_CLASS+nameOfIndividualEnc2);
                     
-                    //for component
+                    //for component (property)
                     OntProperty propSelec = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
                     Resource source = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(className) );
                     Individual instance = (Individual) source.as( Individual.class );
@@ -659,7 +705,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                         instance.addProperty(propSelec, Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName())));
                     }
                     
-                    //for abstract component
+                    //for abstract component(property)
                     OntProperty propSelec2 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
                     Resource source2 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName()) );
                     Individual instance2 = (Individual) source2.as( Individual.class );
@@ -668,6 +714,8 @@ public void loadTaxonomyExport(String template, String modeFile){
                     }else{//it is a local resource
                         instance2.addProperty(propSelec, Taxonomy_Export.getResource(Constants.PREFIX_COMPONENT+encode("Component")));
                     }
+                    
+                    
                     
                     
                 }

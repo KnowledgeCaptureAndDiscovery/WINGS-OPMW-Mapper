@@ -118,6 +118,19 @@ public class Queries {
     	return query;
     }
     
+  //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc in the component catalog based class
+    public static String componentCatalogQueryforActualInputsandOutputs(String className)
+    {
+    	String query="SELECT ?n ?i ?o ?loc ?concr WHERE{"
+    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasLocation> ?loc."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr."
+    			+"}";
+    	return query;
+    }
+    
     
     
 
