@@ -54,6 +54,7 @@ public class Mapper {
     private OntModel TemplateModelforCondition;
     private OntModel ComponentCatalog;
     private OntModel Taxonomy_Export;
+    public static String UltimateDomainName;
     public Mapper(){
 
     }
@@ -128,6 +129,24 @@ public class Mapper {
     private ResultSet queryConditionTemplateModel(String queryIn) {
         return queryLocalRepository(queryIn, TemplateModelforCondition);
     }
+    
+    
+    //VARUNS SOLUTION FOR THE SIGNATURE
+    private String getTemplateMD5(String templateurl) throws Exception {
+//    	String tdbdir = this.config.getProperties().getProperty("tdb.repository.dir");
+//    	OntFactory fac = new OntFactory(OntFactory.JENA, tdbdir);
+//    	KBAPI kbapi = fac.getKB(templateurl, OntSpec.PLAIN);
+//    	ArrayList<String> triples = new ArrayList<String>();
+//    	for(KBTriple triple : kbapi.getAllTriples())
+//    	{ 
+//    		triples.add(triple.fullForm());
+//    	} 
+//    	Collections.sort(triples);
+//    	return MD5Util.MD5(triples.toString());
+    	//TAKE ALL THE TRIPLES
+    	//SORT THEM AND MAKE THEM HASHED
+    	return null;
+    	}
     
     
     /**
@@ -238,6 +257,14 @@ public void loadTaxonomyExport(String template, String modeFile){
         System.out.println("Exporting the componentCatalog to a separate file outside");
         exportRDFFile("componentCatalog2", ComponentCatalog);
         System.out.println("-------------------------");
+    }
+    
+    
+    //sending domain Name to Constants
+    public static String getDomainName()
+    {
+    	System.out.println("Ultimate Domain NAME IS: "+UltimateDomainName);
+    	return UltimateDomainName;
     }
 
     /**
@@ -484,6 +511,8 @@ public void loadTaxonomyExport(String template, String modeFile){
             String subDomain=typeComp.toString().substring(0,indexOf2);
             domainName=subDomain.substring(subDomain.lastIndexOf('/')+1,subDomain.length()); 
             System.out.println("domain name  is: "+domainName);
+            UltimateDomainName=domainName;
+            
             
             
             //add each of the nodes as a UniqueTemplateProcess
@@ -736,34 +765,38 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                 	//EXPORTING THE OWL CLASS PART FOR THE COMPONENT
                 	//component individual
-
+                    
+                    //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
+                    String NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
+                    
+                    
                 	String nameOfIndividualEnc = encode(className);
                     OntClass c = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
-                    c.createIndividual(Constants.TAXONOMY_CLASS+nameOfIndividualEnc.toUpperCase());
+                    c.createIndividual(NEW_TAXONOMY_CLASS+domainName+"#"+nameOfIndividualEnc.toUpperCase());
 
                     //EXPORTING THE OWL CLASS PART FOR THE ABSTRACT COMPONENT
                     //abstract component individual
                     String nameOfIndividualEnc2 = encode(AbstractSuperClass.getLocalName());
                     OntClass c2 = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
-                    c2.createIndividual(Constants.TAXONOMY_CLASS+nameOfIndividualEnc2.toUpperCase());
+                    c2.createIndividual(NEW_TAXONOMY_CLASS+nameOfIndividualEnc2.toUpperCase());
                     
                     
                     //EXPORTING THE SUBCLASS RELATION FOR THE COMPONENT
                     //for component (property)
                     OntProperty propSelec = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
-                    Resource source = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(className.toUpperCase()) );
+                    Resource source = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.toUpperCase()) );
                     Individual instance = (Individual) source.as( Individual.class );
                     if((AbstractSuperClass.getLocalName().toUpperCase()).contains("http://")){//it is a URI
-                        instance.addProperty(propSelec,(Constants.TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase()));            
+                        instance.addProperty(propSelec,(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase()));            
                     }else{//it is a local resource
-                        instance.addProperty(propSelec, Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().toUpperCase())));
+                        instance.addProperty(propSelec, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().toUpperCase())));
                     }
                     
                     
                     //EXPORTING THE SUBCLASS RELATION FOR THE ABSTRACT COMPONENT
                     //for abstract component(property)
                     OntProperty propSelec2 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
-                    Resource source2 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName()) );
+                    Resource source2 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName()) );
                     Individual instance2 = (Individual) source2.as( Individual.class );
                     if(("Component").contains("http://")){//it is a URI
                         instance2.addProperty(propSelec,Constants.PREFIX_COMPONENT+"Component");            
@@ -783,44 +816,44 @@ public void loadTaxonomyExport(String template, String modeFile){
                     ///*********************************///
                     
                     //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-                    OntClass c11 = Taxonomy_Export.createClass(Constants.TAXONOMY_CLASS+className.toUpperCase());
-                    c11.createIndividual(Constants.TAXONOMY_CLASS+className.substring(0,className.length()-5).toUpperCase());
+                    OntClass c11 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+className.toUpperCase());
+                    c11.createIndividual(NEW_TAXONOMY_CLASS+className.substring(0,className.length()-5).toUpperCase());
                     
                     //HAS LOCATION EXPORTED
                     OntProperty propSelec11;
                     propSelec11 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_LOCATION);
-                    Resource orig11 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()));
+                    Resource orig11 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()));
                     Taxonomy_Export.add(orig11, propSelec11, compLoc);
                     
                     //IS CONCRETE EXPORTED
                     OntProperty propSelec12;
                     propSelec12 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
-                    Resource orig12 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()));
+                    Resource orig12 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()));
                     Taxonomy_Export.add(orig11, propSelec12,compConcrete+"",XSDDatatype.XSDboolean);
                     
                     //INPUTS-- EXPORTED
                     OntProperty propSelec13 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
-                    Resource source13 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()) );
+                    Resource source13 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()) );
                     Individual instance13 = (Individual) source13.as( Individual.class );
                     for(String in:hsi)
                     {
                     if((in).contains("http://")){//it is a URI
-                        instance13.addProperty(propSelec13,Constants.TAXONOMY_CLASS+in);            
+                        instance13.addProperty(propSelec13,NEW_TAXONOMY_CLASS+in);            
                     }else{//it is a local resource
-                        instance13.addProperty(propSelec13, Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(in)));
+                        instance13.addProperty(propSelec13, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
                     }
                     }
                     
                     //OUTPUTS-- EXPORTED
                     OntProperty propSelec14 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
-                    Resource source14 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()) );
+                    Resource source14 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()) );
                     Individual instance14 = (Individual) source14.as( Individual.class );
                     for(String out:hso)
                     {
                     if((out).contains("http://")){//it is a URI
-                        instance14.addProperty(propSelec14,Constants.TAXONOMY_CLASS+out);            
+                        instance14.addProperty(propSelec14,NEW_TAXONOMY_CLASS+out);            
                     }else{//it is a local resource
-                        instance14.addProperty(propSelec14, Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(out)));
+                        instance14.addProperty(propSelec14, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
                     }
                     }
                     
@@ -829,39 +862,39 @@ public void loadTaxonomyExport(String template, String modeFile){
                   ///////*****************************///////
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-                    OntClass c21 = Taxonomy_Export.createClass(Constants.TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase());
-                    c21.createIndividual(Constants.TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase());
+                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase());
+                    c21.createIndividual(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase());
                     
                     
                     //IS CONCRETE EXPORTED
                     OntProperty propSelec22;
                     propSelec22 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
-                    Resource orig22 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()));
+                    Resource orig22 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()));
                     Taxonomy_Export.add(orig22, propSelec22,compConcrete+"",XSDDatatype.XSDboolean);
                     
                     //INPUTS-- EXPORTED
                     OntProperty propSelec23 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
-                    Resource source23 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()) );
+                    Resource source23 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()) );
                     Individual instance23 = (Individual) source23.as( Individual.class );
                     for(String in:hsAi)
                     {
                     if((in).contains("http://")){//it is a URI
-                        instance23.addProperty(propSelec23,Constants.TAXONOMY_CLASS+in);            
+                        instance23.addProperty(propSelec23,NEW_TAXONOMY_CLASS+in);            
                     }else{//it is a local resource
-                        instance23.addProperty(propSelec23, Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(in)));
+                        instance23.addProperty(propSelec23, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
                     }
                     }
                     
                     //OUTPUTS-- EXPORTED
                     OntProperty propSelec24 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
-                    Resource source24 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()) );
+                    Resource source24 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()) );
                     Individual instance24 = (Individual) source24.as( Individual.class );
                     for(String out:hsAo)
                     {
                     if((out).contains("http://")){//it is a URI
-                        instance24.addProperty(propSelec24,Constants.TAXONOMY_CLASS+out);            
+                        instance24.addProperty(propSelec24,NEW_TAXONOMY_CLASS+out);            
                     }else{//it is a local resource
-                        instance24.addProperty(propSelec24, Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(out)));
+                        instance24.addProperty(propSelec24, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
                     }
                     }
       
@@ -930,30 +963,30 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
 	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"ParameterArgument");
-	                        c31.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                      //HAS ARGUMENT ID EXPORTED
 	                        OntProperty propSelec31;
 	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
-	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
 	                        
 	                      //HAS ARGUMENT NAME EXPORTED
 	                        OntProperty propSelec32;
 	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
-	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
 	                        
 	                      //HAS DIMENSIONALITY EXPORTED
 	                        OntProperty propSelec33;
 	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
-	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
 	                        
 	                      //HAS VALUE EXPORTED
 	                        OntProperty propSelec34;
 	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
-	                        Resource orig34 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig34 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig34, propSelec34, valString);
 	                    }
                     
@@ -1005,28 +1038,28 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR COMPONENT ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
 	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
-	                        c31.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
-	                        c331.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                        
 	                      //HAS ARGUMENT ID EXPORTED
 	                        OntProperty propSelec31;
 	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
-	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
 	                        
 	                      //HAS ARGUMENT NAME EXPORTED
 	                        OntProperty propSelec32;
 	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
-	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
 	                        
 	                      //HAS DIMENSIONALITY EXPORTED
 	                        OntProperty propSelec33;
 	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
-	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
 	                        
 	                    }
@@ -1079,28 +1112,28 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    	System.out.println("NOW EXPORT THE OUTPUT DATA INTERIORS FOR COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
 	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
-	                        c31.createIndividual(Constants.TAXONOMY_CLASS+outx.toUpperCase());
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
 	                        
 	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
-	                        c331.createIndividual(Constants.TAXONOMY_CLASS+outx.toUpperCase());
+	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
 	                        
 	                        
 	                      //HAS ARGUMENT ID EXPORTED
 	                        OntProperty propSelec31;
 	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
-	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
 	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
 	                        
 	                      //HAS ARGUMENT NAME EXPORTED
 	                        OntProperty propSelec32;
 	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
-	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
 	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
 	                        
 	                      //HAS DIMENSIONALITY EXPORTED
 	                        OntProperty propSelec33;
 	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
-	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
 	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
 	                        
 	                    }
@@ -1159,30 +1192,30 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR ABSTRACT COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
 	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"ParameterArgument");
-	                        c31.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                      //HAS ARGUMENT ID EXPORTED
 	                        OntProperty propSelec31;
 	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
-	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
 	                        
 	                      //HAS ARGUMENT NAME EXPORTED
 	                        OntProperty propSelec32;
 	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
-	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
 	                        
 	                      //HAS DIMENSIONALITY EXPORTED
 	                        OntProperty propSelec33;
 	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
-	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
 	                        
 	                      //HAS VALUE EXPORTED
 	                        OntProperty propSelec34;
 	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
-	                        Resource orig34 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig34 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig34, propSelec34, valString);
 	                    }
                     
@@ -1234,28 +1267,28 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
 	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
-	                        c31.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
-	                        c331.createIndividual(Constants.TAXONOMY_CLASS+inx.toUpperCase());
+	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                        
 	                      //HAS ARGUMENT ID EXPORTED
 	                        OntProperty propSelec31;
 	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
-	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
 	                        
 	                      //HAS ARGUMENT NAME EXPORTED
 	                        OntProperty propSelec32;
 	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
-	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
 	                        
 	                      //HAS DIMENSIONALITY EXPORTED
 	                        OntProperty propSelec33;
 	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
-	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(inx));
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
 	                        
 	                    }
@@ -1308,28 +1341,28 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
 	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
-	                        c31.createIndividual(Constants.TAXONOMY_CLASS+outx.toUpperCase());
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
 	                        
 	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
-	                        c331.createIndividual(Constants.TAXONOMY_CLASS+outx.toUpperCase());
+	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
 	                        
 	                        
 	                      //HAS ARGUMENT ID EXPORTED
 	                        OntProperty propSelec31;
 	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
-	                        Resource orig31 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
 	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
 	                        
 	                      //HAS ARGUMENT NAME EXPORTED
 	                        OntProperty propSelec32;
 	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
-	                        Resource orig32 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
 	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
 	                        
 	                      //HAS DIMENSIONALITY EXPORTED
 	                        OntProperty propSelec33;
 	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
-	                        Resource orig33 = Taxonomy_Export.getResource(Constants.TAXONOMY_CLASS+encode(outx));
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
 	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
 	                        
 	                    }
@@ -1379,14 +1412,18 @@ public void loadTaxonomyExport(String template, String modeFile){
             
             
             if(typeComp.isURIResource()){ //only adds the type if the type is a uRI (not a blank node)
-            	System.out.println("--------------------");
-                String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName());
-                String newIdName="http://w3id.org/wings/"+domainName+"#"+className;
-                System.out.println("tempURI "+tempURI);
-            	//String tempURI = "http://w3id.org/wings/"+domainName+"#"+className;
-                System.out.println("temp uri :"+tempURI);
-                OntClass cAux = OPMWModel.createClass(newIdName);//repeated tuples will not be duplicated
+//            	System.out.println("--------------------");
+//                String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName());
+//                String newIdName="http://w3id.org/wings/"+domainName+"#"+className;
+//                System.out.println("tempURI "+tempURI);
+//            	//String tempURI = "http://w3id.org/wings/"+domainName+"#"+className;
+//                System.out.println("temp uri :"+tempURI);
+//                OntClass cAux = OPMWModel.createClass(newIdName);//repeated tuples will not be duplicated
+//                cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
+            	String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName());
+                OntClass cAux = OPMWModel.createClass(typeComp.getURI());//repeated tuples will not be duplicated
                 cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
+            	
             }else{
                 System.out.println("ANON RESOURCE "+typeComp.getURI()+" ignored");
             }

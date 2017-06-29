@@ -24,6 +24,8 @@ public class Constants {
     public static final String PREFIX_COMPONENT_CATALOG = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/components/library.owl#";
     public static final String PREFIX_J1_ONTO = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#";
     
+    
+
     /*****
     COMPONENT CLASS AND ITS RELATIONS
     *****/
@@ -89,7 +91,7 @@ public class Constants {
     /*****
     Taxonomy classes
     *****/
-    public static final String TAXONOMY_CLASS = PREFIX_COMPONENT_CATALOG;
+    public static final String TAXONOMY_CLASS = "http://w3id.org/wings/";
     
     
     
@@ -311,4 +313,6 @@ public class Constants {
     public static final String P_PLAN_PROP_CORRESPONDS_TO_STEP = PREFIX_P_PLAN+ "correspondsToStep";
     public static final String P_PLAN_PROP_CORRESPONDS_TO_VAR = PREFIX_P_PLAN+ "correspondsToVariable";
     public static final String P_PLAN_PROP_IS_STEP_OF_PLAN =  PREFIX_P_PLAN+ "isStepOfPlan";
+    
+    
 }
