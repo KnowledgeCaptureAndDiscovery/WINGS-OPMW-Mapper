@@ -401,42 +401,42 @@ public void loadTaxonomyExport(String template, String modeFile){
         
         //-----------------------------------------
         //Creating a replication of the result set to populate an arrayList with the number of input and output sectors:
-        ResultSet replica=r;
-        ResultSet replica2=r;
-        ArrayList<Gen> inputOutputs=new ArrayList<>();
-        
-    	
-  
-    	
-    	while(replica.hasNext()){
-        QuerySolution qs = replica.next();
-        Resource res = qs.getResource("?n");
-        Resource comp = qs.getResource("?c");
-        Resource typeComp = qs.getResource("?typeComp");
-        Literal rule = qs.getLiteral("?rule");
-        Literal isConcrete = qs.getLiteral("?isConcrete");
-        
-        Resource inport = qs.getResource("?inport");
-        Resource outport = qs.getResource("?outport");
-     
-        //------------ADDITION BY TIRTH-----------------
-        //obtaining the className
-        String className="";
-        int indexOf=typeComp.toString().indexOf('#');
-        className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
-        //System.out.println("type class is: "+className);
-        
-        
-        replica2=null;
-        replica2 = queryLocalWINGSTemplateModelRepository(queryNodes);
-        Gen x=InputOutputGenerator(replica2,className);
-        inputOutputs.add(x);    
-    }
-       System.out.println("ArrayLIST GENERATED---------"); 
-        for(Gen y:inputOutputs)
-        {
-        	System.out.println("class: "+y.className+" inputs: "+y.input+" ouputs: "+y.output);
-        }
+//        ResultSet replica=r;
+//        ResultSet replica2=r;
+//        ArrayList<Gen> inputOutputs=new ArrayList<>();
+//        
+//    	
+//  
+//    	
+//    	while(replica.hasNext()){
+//        QuerySolution qs = replica.next();
+//        Resource res = qs.getResource("?n");
+//        Resource comp = qs.getResource("?c");
+//        Resource typeComp = qs.getResource("?typeComp");
+//        Literal rule = qs.getLiteral("?rule");
+//        Literal isConcrete = qs.getLiteral("?isConcrete");
+//        
+//        Resource inport = qs.getResource("?inport");
+//        Resource outport = qs.getResource("?outport");
+//     
+//        //------------ADDITION BY TIRTH-----------------
+//        //obtaining the className
+//        String className="";
+//        int indexOf=typeComp.toString().indexOf('#');
+//        className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
+//        //System.out.println("type class is: "+className);
+//        
+//        
+//        replica2=null;
+//        replica2 = queryLocalWINGSTemplateModelRepository(queryNodes);
+//        Gen x=InputOutputGenerator(replica2,className);
+//        inputOutputs.add(x);    
+//    }
+//       System.out.println("ArrayLIST GENERATED---------"); 
+//        for(Gen y:inputOutputs)
+//        {
+//        	System.out.println("class: "+y.className+" inputs: "+y.input+" ouputs: "+y.output);
+//        }
         
        System.out.println("ArrayLIST PRINTING ENDS---------");
         //------------------------------------------
