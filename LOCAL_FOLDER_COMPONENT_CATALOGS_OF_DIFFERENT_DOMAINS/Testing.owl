@@ -1,0 +1,130 @@
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+        a       owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain#COUNTWORDS_OUTPUTTEXTFILE>
+        a       <http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#TextFile> , <http://www.wings-workflows.org/ontology/component.owl#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "OutputTextFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-o1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+        a       owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS_INPUTTEXTFILE>
+        a       <http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#TextFile> , <http://www.wings-workflows.org/ontology/component.owl#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "InputTextFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-i1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+        a       owl:DatatypeProperty .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+        a       owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS>
+        a       <http://w3id.org/wings/TestingDomain#COUNTINGWORDSCLASS> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_INPUTTEXTFILE> , <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_WORDINPUT> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasLocation>
+                "/opt/wings/storage/default/users/tirth/TestingDomain/code/library/countingWords" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_OUTPUTTEXTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                true .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+        a       rdf:Property .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasValue>
+        a       owl:DatatypeProperty .
+
+owl:Class  a    owl:Class .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasInput>
+        a       rdf:Property .
+
+<http://www.wings-workflows.org/ontology/component.owl#ParameterArgument>
+        a       owl:Class .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasLocation>
+        a       owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain#TestingDomain#COUNTINGWORDSCLASS>
+        a       owl:Class .
+
+<http://w3id.org/wings/TestingDomain#COUNTWORDS>
+        a       <http://w3id.org/wings/TestingDomain#COUNTWORDSCLASS> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#COUNTWORDS_INPUTTEXTFILE> , <http://w3id.org/wings/TestingDomain#COUNTWORDS_WORDINPUT> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#COUNTWORDS_OUTPUTTEXTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                true .
+
+rdfs:subClassOf  a  rdf:Property .
+
+<http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#TextFile>
+        a       owl:Class .
+
+<http://w3id.org/wings/TestingDomain#COUNTWORDS_INPUTTEXTFILE>
+        a       <http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#TextFile> , <http://www.wings-workflows.org/ontology/component.owl#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "InputTextFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-i1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://w3id.org/wings/TestingDomain#COUNTWORDSCLASS>
+        a                owl:Class ;
+        rdfs:subClassOf  <http://www.wings-workflows.org/ontology/component.owl#COMPONENT> .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS_WORDINPUT>
+        a       <http://www.wings-workflows.org/ontology/component.owl#ParameterArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "WordInput" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-p1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasValue>
+                "great" .
+
+<http://www.wings-workflows.org/ontology/component.owl#DataArgument>
+        a       owl:Class .
+
+<http://w3id.org/wings/TestingDomain#COUNTWORDS_WORDINPUT>
+        a       <http://www.wings-workflows.org/ontology/component.owl#ParameterArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "WordInput" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-p1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasValue>
+                "" .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS_OUTPUTTEXTFILE>
+        a       <http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#TextFile> , <http://www.wings-workflows.org/ontology/component.owl#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "OutputTextFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-o1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDSCLASS>
+        a                owl:Class ;
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#COUNTWORDSCLASS> .
