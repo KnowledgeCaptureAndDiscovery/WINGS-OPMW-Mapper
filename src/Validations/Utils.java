@@ -1,5 +1,6 @@
 package Validations;
 
+import java.util.*;
 import java.io.File;
 
 import org.apache.jena.ontology.OntModel;
@@ -57,8 +58,33 @@ public class Utils {
         while (r.hasNext()){
             QuerySolution qs = r.nextSolution();
             result+=qs.getLiteral("?"+varToQuery).getString();
+            System.out.println("result is "+result);
         }
+        
         return result;
+    }
+    public static ArrayList<Integer> queryresult (String query, OntModel m, String varToQuery1,String varToQuery2){
+        ResultSet r =  Utils.queryLocalRepository(query, m);
+        String result = "";
+        HashSet<String> hs1=new HashSet<>();
+        HashSet<String> hs2=new HashSet<>();
+        while (r.hasNext()){
+            QuerySolution qs = r.nextSolution();
+            String var1="";
+            String var2="";
+            var1=qs.getResource("?"+varToQuery1).getLocalName();
+            var2=qs.getResource("?"+varToQuery2).getLocalName();
+            System.out.println();
+            
+            System.out.println("var 1 "+var1);
+            System.out.println("var 2 "+var2);
+            hs1.add(var1);
+            hs2.add(var2);
+        }
+        ArrayList<Integer> arr=new ArrayList<>();
+        arr.add(hs1.size());
+        arr.add(hs2.size());
+        return arr;
     }
             
     

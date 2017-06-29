@@ -315,7 +315,33 @@ public class Queries {
             + "}";
     public static final String FIND_TEMPLATE_CONDITION_2=TEMPLATE_COUNT+TEMPL_WITHOUT_HAVING_TEMPLATE_DIAGRAM;
     
-
+    
+    
+    
+    //TIRTH ADDITION QUERY 1 (HOW MANY EXECUTIONS DOES THE TEMPLATE HAVE?)
+    public static final String HOW_MANY_EXECUTIONS_DOES_THE_TEMPLATE_HAVE =""
+    		+ "SELECT distinct ?t ?acc WHERE{"
+            + "?t a <http://www.opmw.org/ontology/WorkflowTemplate>."
+            + "?acc a <http://www.opmw.org/ontology/WorkflowExecutionAccount>."
+            + "?acc <http://www.opmw.org/ontology/correspondsToTemplate> ?t."
+            + "}";
+    
+  //TIRTH ADDITION QUERY 2 (HOW MANY EXPANDED TEMPLATES DOES THE TEMPLATE HAVE?)
+    public static final String HOW_MANY_EXPANDED_TEMPLATES_DOES_THE_TEMPLATE_HAVE =""
+    		+ "SELECT distinct ?t ?et WHERE{"
+    		+ "?t a <http://www.opmw.org/ontology/WorkflowTemplate>."
+            + "?et a <http://www.opmw.org/ontology/WorkflowExpandedTemplate>."
+            + "?et <http://www.opmw.org/ontology/isImplementationofAbstractTemplate> ?t."
+            + "}";
+    
+    
+    //TIRTH ADDITION QUERY 3 (HOW MANY EXECUTIONS DOES THE EXPANDED TEMPLATES HAVE?)
+    public static final String HOW_MANY_EXECUTIONS_DOES_THE_EXPANDED_TEMPLATES_HAVE =""
+    		+ "SELECT distinct ?et ?acc WHERE{"
+            + "?et a <http://www.opmw.org/ontology/WorkflowExpandedTemplate>."
+            + "?acc a <http://www.opmw.org/ontology/WorkflowExecutionAccount>."
+            + "?acc <http://www.opmw.org/ontology/correspondsToTemplate> ?et."
+            + "}";
     
     
     

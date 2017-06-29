@@ -18,9 +18,10 @@ public static void main(String[] args) {
         }
         i++;
     }
-    OntModel m = Utils.loadDirectory("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_ISI/test-directories/test_directory_abstractTest1");
+    OntModel m = Utils.loadDirectory("/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/VALIDATIONS");
 //    OntModel m = Utils.loadDirectory(path);
-    String s = Statistics.getStats(m);
+    String s = ""; 
+    //s+=Statistics.getStats(m);
     s+= Validator.validateRepo(m);
     System.out.println(s);
 }
