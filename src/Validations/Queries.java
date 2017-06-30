@@ -331,7 +331,7 @@ public class Queries {
     		+ "SELECT distinct ?t ?et WHERE{"
     		+ "?t a <http://www.opmw.org/ontology/WorkflowTemplate>."
             + "?et a <http://www.opmw.org/ontology/WorkflowExpandedTemplate>."
-            + "?et <http://www.opmw.org/ontology/isImplementationofAbstractTemplate> ?t."
+            + "?et <http://www.opmw.org/ontology/correspondsToAbstractTemplate> ?t."
             + "}";
     
     
@@ -339,6 +339,16 @@ public class Queries {
     public static final String HOW_MANY_EXECUTIONS_DOES_THE_EXPANDED_TEMPLATES_HAVE =""
     		+ "SELECT distinct ?et ?acc WHERE{"
             + "?et a <http://www.opmw.org/ontology/WorkflowExpandedTemplate>."
+            + "?acc a <http://www.opmw.org/ontology/WorkflowExecutionAccount>."
+            + "?acc <http://www.opmw.org/ontology/correspondsToTemplate> ?et."
+            + "}";
+    
+    //TIRTH ADDITION QUERY 4 ALL IN ONE
+    public static final String SCENARIO_1_SUMMARY_QUERY =""
+    		+ "SELECT distinct ?t ?et ?acc WHERE{"
+    		+ "?t a <http://www.opmw.org/ontology/WorkflowTemplate>."
+            + "?et a <http://www.opmw.org/ontology/WorkflowExpandedTemplate>."
+            + "?et <http://www.opmw.org/ontology/correspondsToAbstractTemplate> ?t."
             + "?acc a <http://www.opmw.org/ontology/WorkflowExecutionAccount>."
             + "?acc <http://www.opmw.org/ontology/correspondsToTemplate> ?et."
             + "}";

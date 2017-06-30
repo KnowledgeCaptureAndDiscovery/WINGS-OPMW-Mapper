@@ -18,7 +18,7 @@ public static void main(String[] args) {
         }
         i++;
     }
-    OntModel m = Utils.loadDirectory("/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/VALIDATIONS");
+    OntModel m = Utils.loadDirectory("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/OUTPUT_FROM_THE_MAPPER_FOR_SCENARIO-1_USE_THIS_FOR_VALIDATIONS");
 //    OntModel m = Utils.loadDirectory(path);
     String s = ""; 
     //s+=Statistics.getStats(m);

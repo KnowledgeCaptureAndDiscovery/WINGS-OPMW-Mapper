@@ -86,6 +86,36 @@ public class Utils {
         arr.add(hs2.size());
         return arr;
     }
+    public static ArrayList<Integer> queryresultALL (String query, OntModel m, String varToQuery1,String varToQuery2,String varToQuery3){
+        ResultSet r =  Utils.queryLocalRepository(query, m);
+        String result = "";
+        HashSet<String> hs1=new HashSet<>();
+        HashSet<String> hs2=new HashSet<>();
+        HashSet<String> hs3=new HashSet<>();
+        while (r.hasNext()){
+            QuerySolution qs = r.nextSolution();
+            String var1="";
+            String var2="";
+            String var3="";
+            var1=qs.getResource("?"+varToQuery1).getLocalName();
+            var2=qs.getResource("?"+varToQuery2).getLocalName();
+            var3=qs.getResource("?"+varToQuery3).getLocalName();
+            System.out.println();
+            
+            System.out.println("var 1 "+var1);
+            System.out.println("var 2 "+var2);
+            System.out.println("var 3 "+var3);
+            hs1.add(var1);
+            hs2.add(var2);
+            hs3.add(var3);
+        }
+        ArrayList<Integer> arr=new ArrayList<>();
+        arr.add(hs1.size());
+        arr.add(hs2.size());
+        arr.add(hs3.size());
+        return arr;
+    }
+    
             
     
     //given an online repository, perform a test against a template/run.
