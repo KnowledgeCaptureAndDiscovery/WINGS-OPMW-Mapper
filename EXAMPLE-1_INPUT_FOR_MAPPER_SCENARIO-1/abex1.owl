@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.wings-workflows.org/ontology/execution.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/executions/abstractTest1-91-e8ae84e5-671f-461b-b129-93b8ee36e8ca.owl">
+      <j.0:Execution rdf:ID="abstractTest1-91-e8ae84e5-671f-461b-b129-93b8ee36e8ca">
+            <j.0:hasPlan rdf:resource="abstractTest1-91-26208e6a-0b2b-4a00-9a9a-2bd02d5c21ce.owl#abstractTest1-91-26208e6a-0b2b-4a00-9a9a-2bd02d5c21ce"/>
+            <j.0:hasStep>
+                  <j.0:ExecutionStep rdf:about="abstractTest1-91-13a81842-fbb7-4b70-8429-cbeb504f1032.owl#htmltotextNode">
+                        <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-06-26T21:43:09.175Z</j.0:hasStartTime>
+                        <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-06-26T21:43:09.178Z</j.0:hasEndTime>
+                        <j.0:hasExecutionStatus rdf:datatype=
+                        "http://www.w3.org/2001/XMLSchema#string"
+                        >SUCCESS</j.0:hasExecutionStatus>
+                        <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >/opt/wings/storage/default/users/tirth/TestingDomain/code/library/htmltotext/run -i1 /opt/wings/storage/default/users/tirth/TestingDomain/data/test1.html -o1 /opt/wings/storage/default/users/tirth/TestingDomain/data/Intermediate_Result-dgkic20dcccli7po0vetzivc
+Outputs already exist. Not running job
+</j.0:hasLog>     </j.0:ExecutionStep>
+            </j.0:hasStep>
+            <j.0:hasStep>
+                  <j.0:ExecutionStep rdf:about="abstractTest1-91-13a81842-fbb7-4b70-8429-cbeb504f1032.owl#countingWordsNode">
+                        <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-06-26T21:43:09.182Z</j.0:hasStartTime>
+                        <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-06-26T21:43:09.186Z</j.0:hasEndTime>
+                        <j.0:hasExecutionStatus rdf:datatype=
+                        "http://www.w3.org/2001/XMLSchema#string"
+                        >SUCCESS</j.0:hasExecutionStatus>
+                        <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >/opt/wings/storage/default/users/tirth/TestingDomain/code/library/countingWords/run -i1 /opt/wings/storage/default/users/tirth/TestingDomain/data/Intermediate_Result-dgkic20dcccli7po0vetzivc -p1 great -o1 /opt/wings/storage/default/users/tirth/TestingDomain/data/Final_Output-d7ezuz03ey3kmk4bzb8gida6u
+Outputs already exist. Not running job
+</j.0:hasLog>     </j.0:ExecutionStep>
+            </j.0:hasStep>
+            <j.0:hasTemplate rdf:resource="../workflows/abstractTest1.owl#abstractTest1"/>
+            <j.0:hasExpandedTemplate rdf:resource="abstractTest1-91-13a81842-fbb7-4b70-8429-cbeb504f1032.owl#abstractTest1-91-13a81842-fbb7-4b70-8429-cbeb504f1032"/>
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-06-26T21:43:09.171Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-06-26T21:43:09.19Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+            <j.0:hasSeededTemplate rdf:resource="../workflows/abstractTest1-683dfe7b-5ec0-42f3-b312-3ae46d935aad.owl#abstractTest1-683dfe7b-5ec0-42f3-b312-3ae46d935aad"/>
+      </j.0:Execution>
+</rdf:RDF>
+
