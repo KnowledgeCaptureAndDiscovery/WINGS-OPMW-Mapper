@@ -22,12 +22,11 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.rulesys.impl.Generator;
 import org.apache.jena.util.FileManager;
 
-
-
-
-
-
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
@@ -204,6 +203,8 @@ public class Mapper {
         }
         
         ExpandedTemplateModel.read(in2, null, modeFile);
+        
+        //ExpandedTemplateModel.write(System.out,"RDF/XML");
         System.out.println("Expanded Template File "+template+" loaded into the execution results");
 
     }
@@ -2560,7 +2561,112 @@ public void loadTaxonomyExport(String template, String modeFile){
     
     }
     
-    //function to check to export the expanded template or not 
+    
+    //THE FUNCTION FOR OBTAINING THE EXPANDED TEMPLATE NAME
+    public String ObtainExpandedTemplateName(String expandedTemplateName)
+    {
+
+     	  String NAMESOFCOMPONENTSANDRELATIONS = Queries.queryNodesforExpandedTemplate();
+          ResultSet r1names=null;
+          //ExpandedTemplateModel.write(System.out,"RDF/XML");
+          r1names = queryLocalWINGSResultsRepository(NAMESOFCOMPONENTSANDRELATIONS);
+         
+          ArrayList<String> arrFinalExpandedTemplateNameRelations=new ArrayList<>();
+          while(r1names.hasNext()){
+              QuerySolution qs = r1names.next();
+              Resource res = qs.getResource("?n");
+              Resource derivedFrom = qs.getResource("?derivedFrom");
+              
+              if(res!=null && derivedFrom!=null)
+              {
+            	  arrFinalExpandedTemplateNameRelations.add(res.getLocalName()+" derivedFrom "+derivedFrom.getLocalName());
+              }
+          }
+
+          //DATA PARTS
+          String DATAPARTS = Queries.queryInputLinksforExpandedTemplate();
+          r1names = null;
+          r1names = queryLocalWINGSResultsRepository(DATAPARTS);
+          while(r1names.hasNext()){
+              QuerySolution qs = r1names.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?dest");
+              arrFinalExpandedTemplateNameRelations.add(resVar.getLocalName()+" has Node "+resNode.getLocalName());
+          }
+          //PARAMETER PARTS
+          String PARAMETERPARTS = Queries.querySelectParameterforExpandedTemplate();
+          r1names = null;
+          r1names = queryLocalWINGSResultsRepository(PARAMETERPARTS);
+          while(r1names.hasNext()){
+              QuerySolution qs = r1names.next();
+              Resource res = qs.getResource("?p");
+              Resource derivedFrom=qs.getResource("?derivedFrom"); 
+              arrFinalExpandedTemplateNameRelations.add("Parameter "+res.getLocalName()+" derived From "+derivedFrom.getLocalName());
+          }
+          //INPUT LINKS
+          String INPUTLINKS = Queries.queryInputLinksforExpandedTemplate();
+          r1names = null;
+          r1names = queryLocalWINGSResultsRepository(INPUTLINKS);
+          while(r1names.hasNext()){
+              QuerySolution qs = r1names.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?dest");
+              arrFinalExpandedTemplateNameRelations.add("Variable "+resVar.getLocalName()+" has Node "+resNode.getLocalName());
+          }
+          //INPUT-P LINKS
+          String INPUTLINKSP = Queries.queryInputLinksP();
+          r1names = null;
+          r1names = queryLocalWINGSResultsRepository(INPUTLINKSP);
+          while(r1names.hasNext()){
+              QuerySolution qs = r1names.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?dest");
+              arrFinalExpandedTemplateNameRelations.add("Parameter "+resVar.getLocalName()+" has Node "+resNode.getLocalName());
+          }
+          //OUTPUT LINKS
+          String OUTPUTLINKS = Queries.queryOutputLinks();
+          r1names = null;
+          r1names = queryLocalWINGSResultsRepository(OUTPUTLINKS);
+          while(r1names.hasNext()){
+              QuerySolution qs = r1names.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?orig");
+              arrFinalExpandedTemplateNameRelations.add("Variable "+resVar.getLocalName()+" has origin Node "+resNode.getLocalName());
+          }
+          //INOUTLINKS
+          String INOUTLINKS = Queries.queryInOutLinks();
+          r1names = null;
+          r1names = queryLocalWINGSResultsRepository(INOUTLINKS);
+          while(r1names.hasNext()){
+              QuerySolution qs = r1names.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?orig");
+              Resource resNodeD = qs.getResource("?dest");
+              arrFinalExpandedTemplateNameRelations.add("Variable "+resVar.getLocalName()+" has origin Node "+resNode.getLocalName()+" has Destination Node "+resNodeD.getLocalName());
+          }
+          
+     	   
+     	  String newExpandedTemplateName="";
+     	  Collections.sort(arrFinalExpandedTemplateNameRelations);
+          for(String x:arrFinalExpandedTemplateNameRelations)
+          {
+        	  newExpandedTemplateName+=x+"\n";
+          }
+
+
+     	  	int indexer=expandedTemplateName.indexOf('-');
+     	  	try{
+            newExpandedTemplateName=expandedTemplateName.substring(0, indexer)+"_"+MD5(newExpandedTemplateName);
+     	  	}catch(Exception e)
+     	  	{}
+            System.out.println("final expandedtemplatename is "+newExpandedTemplateName);
+
+            return newExpandedTemplateName;
+
+    }
+    
+    
+  //function to check to export the expanded template or not 
     public boolean ExportExpandedTemplate()
     {
         String queryNodes = Queries.queryNodesforTemplateCondition();
@@ -2584,38 +2690,11 @@ public void loadTaxonomyExport(String template, String modeFile){
     public String createExpandedTemplate(String accname,String expandedTemplateName,String expandedTemplateURI,String templateName)
     {
  	   System.out.println("expanded template name: "+expandedTemplateName);
-
- 	   //creates a new expandedtemplatename for unique identification based on the component names 
- 	   ///////////////////
- 	   ArrayList<String> componentNames = new ArrayList<>();
-        String nodes = Queries.queryNodesforExpandedTemplate();
-        ResultSet expandedComps=null;
-        //ExpandedTemplateModel.write(System.out,"RDF/XML");
-        expandedComps = queryLocalWINGSResultsRepository(nodes);
-       
-        while(expandedComps.hasNext()){
-            QuerySolution qs = expandedComps.next();
-            Resource res = qs.getResource("?n");
-            componentNames.add(res.getLocalName());
-        }
-        //SORT THE ARRAYLIST FOR THE NAMES OF THE COMPONENTS FOR FURTHER CONSISTENCY
-        Collections.sort(componentNames);
-        StringBuilder sb=new StringBuilder();
-        int indexer=expandedTemplateName.indexOf('-');
- 	   //sb.append(expandedTemplateName.substring(0, indexer)+"_");
-        for(String s:componentNames)
-     	   sb.append(s+"_"); 
-        String newExpandedTemplateName=sb.toString().substring(0,sb.toString().length()-1);
-        System.out.println(newExpandedTemplateName);
-        try{
-        newExpandedTemplateName=MD5(newExpandedTemplateName);
-        }
-        catch(Exception e)
-        {}
-        newExpandedTemplateName=expandedTemplateName.substring(0, indexer)+"_"+newExpandedTemplateName;
-        System.out.println("final expandedtemplatename is "+newExpandedTemplateName);
- 	   ///////////////////
+ 	   //UTILIZING THE FUNCTION FOR OBTAINING THE EXPANDED TEMPLATE NAME
+ 	   String newExpandedTemplateName=ObtainExpandedTemplateName(expandedTemplateName);
  	   
+ 	
+
  	 //capturing the relationship between the execution account and the expanded template
         this.addProperty(OPMWModel, accname, Constants.CONCEPT_WORKFLOW_EXPANDED_TEMPLATE+"/"+newExpandedTemplateName, Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE);
         this.addProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_EXPANDED_TEMPLATE+"/"+newExpandedTemplateName, Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName, Constants.OPMW_PROP_IS_IMPLEMENTATION_OF_TEMPLATE);

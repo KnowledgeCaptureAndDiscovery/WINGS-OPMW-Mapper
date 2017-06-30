@@ -1,3 +1,4 @@
+import java.util.*;
 public class Main {
 public static void main(String[] args) {
 	System.out.println("Transform an template to OPMW");
@@ -5,7 +6,9 @@ public static void main(String[] args) {
   String lib = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/spacer/ultimatelib.owl";
   //String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/spacer/spacer-ex.owl";
   //String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/parasimple/cpexe.owl";
-String execution = "/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/ab2ex.owl";
+  //String execution = "/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/ab2ex.owl";
+  String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/abex3.owl";
+  //String execution ="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/trial/hsex2.owl";
   
    //String template="/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/parasimple/CaesarCypherParallelSimple.owl";
    String template="/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/abstractTest1/abstractTest1.owl";
@@ -18,12 +21,12 @@ String execution = "/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPOR
   String taxonomy_export="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl";
  // /Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl
     
-   String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile, null,taxonomy_export,mode2);
-   //String ans=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null);
+   //String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile, null,taxonomy_export,mode2);
+   String ans=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null);
     System.out.println("--------------------------");
     System.out.println("location is :"+ans);
  
-    
+
     
     //http://datascience4all.org/wings-portal/export/users/tirth/TestingDomain/workflows/spacer.owl
     //http://datascience4all.org/wings-portal/export/users/tirth/TestingDomain/workflows/abstract.owl

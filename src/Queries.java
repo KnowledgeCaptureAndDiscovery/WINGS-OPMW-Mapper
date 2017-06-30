@@ -174,7 +174,14 @@ public class Queries {
     }
     
     
-    
+    //query for getting all the triples out:
+    public static String allTriples()
+    {
+    	String query="SELECT ?s ?p ?o WHERE {"		
+    			+"?s ?p ?o."
+    			+"}";
+    	return query;
+    }
 
     
 
