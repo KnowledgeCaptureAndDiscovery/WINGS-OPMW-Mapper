@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.wings-workflows.org/ontology/execution.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/executions/HashingConceptSc-fa410a81-23c2-42b2-a36e-c92498996401.owl">
+      <j.0:Execution rdf:ID="HashingConceptSc-fa410a81-23c2-42b2-a36e-c92498996401">
+            <j.0:hasPlan rdf:resource="HashingConceptSc-8a53f58a-4dc8-4173-a7c0-4d11438fa232.owl#HashingConceptSc-8a53f58a-4dc8-4173-a7c0-4d11438fa232"/>
+            <j.0:hasStep>
+                  <j.0:ExecutionStep rdf:about="HashingConceptSc-2779b46c-c5ed-4d9c-b4e1-d399780a8d93.owl#htmltotextNode">
+                        <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-06-30T17:26:46.858Z</j.0:hasStartTime>
+                        <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-06-30T17:26:46.861Z</j.0:hasEndTime>
+                        <j.0:hasExecutionStatus rdf:datatype=
+                        "http://www.w3.org/2001/XMLSchema#string"
+                        >SUCCESS</j.0:hasExecutionStatus>
+                        <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >/opt/wings/storage/default/users/tirth/TestingDomain/code/library/htmltotext/run -i1 /opt/wings/storage/default/users/tirth/TestingDomain/data/test1.html -o1 /opt/wings/storage/default/users/tirth/TestingDomain/data/OutputTextFile-dgkic20dcccli7po0vetzivc
+Outputs already exist. Not running job
+</j.0:hasLog>     </j.0:ExecutionStep>
+            </j.0:hasStep>
+            <j.0:hasTemplate rdf:resource="../workflows/HashingConceptScenario1.owl#HashingConceptScenario1"/>
+            <j.0:hasExpandedTemplate rdf:resource="HashingConceptSc-2779b46c-c5ed-4d9c-b4e1-d399780a8d93.owl#HashingConceptSc-2779b46c-c5ed-4d9c-b4e1-d399780a8d93"/>
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-06-30T17:26:46.851Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-06-30T17:26:46.864Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+            <j.0:hasSeededTemplate rdf:resource="../workflows/HashingConceptSc-1838f2e8-7c34-43e7-8df0-4f0ff461c234.owl#HashingConceptSc-1838f2e8-7c34-43e7-8df0-4f0ff461c234"/>
+      </j.0:Execution>
+</rdf:RDF>
+
