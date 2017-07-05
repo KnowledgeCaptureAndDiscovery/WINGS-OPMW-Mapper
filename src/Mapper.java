@@ -53,7 +53,8 @@ public class Mapper {
     private OntModel TemplateModelforCondition;
     private OntModel ComponentCatalog;
     private OntModel Taxonomy_Export;
-    public static String UltimateDomainName;
+    public static String NEW_TAXONOMY_CLASS="";
+    public static String NEW_TAXONOMY_CLASS_2="";
     public Mapper(){
 
     }
@@ -261,12 +262,7 @@ public void loadTaxonomyExport(String template, String modeFile){
     }
     
     
-    //sending domain Name to Constants
-    public static String getDomainName()
-    {
-    	System.out.println("Ultimate Domain NAME IS: "+UltimateDomainName);
-    	return UltimateDomainName;
-    }
+
 
     /**
      * Method to load an execution file to a local model.
@@ -427,44 +423,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         r = null;
         r = queryLocalWINGSTemplateModelRepository(queryNodes);
         
-        //-----------------------------------------
-        //Creating a replication of the result set to populate an arrayList with the number of input and output sectors:
-//        ResultSet replica=r;
-//        ResultSet replica2=r;
-//        ArrayList<Gen> inputOutputs=new ArrayList<>();
-//        
-//    	
-//  
-//    	
-//    	while(replica.hasNext()){
-//        QuerySolution qs = replica.next();
-//        Resource res = qs.getResource("?n");
-//        Resource comp = qs.getResource("?c");
-//        Resource typeComp = qs.getResource("?typeComp");
-//        Literal rule = qs.getLiteral("?rule");
-//        Literal isConcrete = qs.getLiteral("?isConcrete");
-//        
-//        Resource inport = qs.getResource("?inport");
-//        Resource outport = qs.getResource("?outport");
-//     
-//        //------------ADDITION BY TIRTH-----------------
-//        //obtaining the className
-//        String className="";
-//        int indexOf=typeComp.toString().indexOf('#');
-//        className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
-//        //System.out.println("type class is: "+className);
-//        
-//        
-//        replica2=null;
-//        replica2 = queryLocalWINGSTemplateModelRepository(queryNodes);
-//        Gen x=InputOutputGenerator(replica2,className);
-//        inputOutputs.add(x);    
-//    }
-//       System.out.println("ArrayLIST GENERATED---------"); 
-//        for(Gen y:inputOutputs)
-//        {
-//        	System.out.println("class: "+y.className+" inputs: "+y.input+" ouputs: "+y.output);
-//        }
+
         
        System.out.println("ArrayLIST PRINTING ENDS---------");
         //------------------------------------------
@@ -512,9 +471,10 @@ public void loadTaxonomyExport(String template, String modeFile){
             String subDomain=typeComp.toString().substring(0,indexOf2);
             domainName=subDomain.substring(subDomain.lastIndexOf('/')+1,subDomain.length()); 
             System.out.println("domain name  is: "+domainName);
-            UltimateDomainName=domainName;
-            
-            
+
+          //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
+            NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
+            NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
             
             //add each of the nodes as a UniqueTemplateProcess
             this.addIndividual(OPMWModel,templateName_+res.getLocalName(),Constants.OPMW_WORKFLOW_TEMPLATE_PROCESS, "Workflow template process "+res.getLocalName());
@@ -767,8 +727,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 	//EXPORTING THE OWL CLASS PART FOR THE COMPONENT
                 	//component individual
                     
-                    //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
-                    String NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
+                    
                     
                     
                 	String nameOfIndividualEnc = encode(className);
@@ -1413,19 +1372,15 @@ public void loadTaxonomyExport(String template, String modeFile){
             
             
             if(typeComp.isURIResource()){ //only adds the type if the type is a uRI (not a blank node)
-//            	System.out.println("--------------------");
-//                String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName());
-//                String newIdName="http://w3id.org/wings/"+domainName+"#"+className;
-//                System.out.println("tempURI "+tempURI);
-//            	//String tempURI = "http://w3id.org/wings/"+domainName+"#"+className;
-//                System.out.println("temp uri :"+tempURI);
-//                OntClass cAux = OPMWModel.createClass(newIdName);//repeated tuples will not be duplicated
-//                cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
+
+            	System.out.println("GOING FOR PRINTING THE COMPONENT HERE "+NEW_TAXONOMY_CLASS_2);
+            	System.out.println("type is "+typeComp.getURI());
+            	String newchangeforthetype=typeComp.getURI().substring(typeComp.getURI().lastIndexOf("/"),typeComp.getURI().length());
             	String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName());
-                OntClass cAux = OPMWModel.createClass(typeComp.getURI());//repeated tuples will not be duplicated
-                cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
-            	
-            }else{
+            	OntClass cAux = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype);//repeated tuples will not be duplicated
+            	cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);     	
+            }
+            else{
                 System.out.println("ANON RESOURCE "+typeComp.getURI()+" ignored");
             }
             if(rule!=null){
@@ -1487,10 +1442,12 @@ public void loadTaxonomyExport(String template, String modeFile){
                 //This will remove the blank nodes.
                 if(type.isURIResource()){
                     System.out.println(variable+" of type "+ type);
-                    //add the individual as an instance of another class, not as a new individual
-                    String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+variable.getLocalName());
-                    OntClass c = OPMWModel.createClass(type.getURI());
-                    c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);
+
+                	String newchangeforthetype=type.getURI().substring(type.getURI().lastIndexOf("/"),type.getURI().length());
+                	String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+variable.getLocalName());
+                	OntClass c = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Data"+newchangeforthetype);//repeated tuples will not be duplicated
+                	c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);    
+   
                 }else{
                     System.out.println("ANON RESOURCE "+type.getURI()+" ignored");
                 }
@@ -2704,7 +2661,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         //ADDED A PROPERTY FOR CONNECTING THE EXECUTION ACCOUNT TO THE EXPANDED TEMPLATE AND THE EXPANDED TEMPLATE TO THE TEMPLATE
         System.out.println("--------------------------");
         System.out.println("--------------------------");
-        System.out.println("EXPANDED TEMPLATE STARTS");
+        System.out.println("EXPANDED TEMPLATE BASICS STARTS");
         
         String queryNameWfTemplate = Queries.queryNameWfTemplate();
         String templateName_ = null;
@@ -2734,7 +2691,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     expandedTemplateURI,Constants.OPMW_DATA_PROP_HAS_NATIVE_SYSTEM_TEMPLATE, XSDDatatype.XSDanyURI);
             
         }    
-        System.out.println("EXPANDED TEMPLATE ENDS");
+        System.out.println("EXPANDED TEMPLATE BASICS ENDS");
         
         
         //THE EXPANDED TEMPLATE ONLY HAS METADATA-CONTRIBUTOR WHICH IS CAPTURED BELOW
@@ -2779,6 +2736,34 @@ public void loadTaxonomyExport(String template, String modeFile){
             Literal rule = qs.getLiteral("?rule");
             Resource res2=qs.getResource("?derivedFrom");
             
+            
+          //------------ADDITION BY TIRTH-----------------
+            //obtaining the className
+            String className="";
+            int indexOf=typeComp.toString().indexOf('#');
+            className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
+            System.out.println("type class is: "+className);
+
+          //------------ADDITION BY TIRTH-----------------
+            //obtaining the className
+            String domainName="";
+            int indexOf2=typeComp.toString().indexOf("/components");
+            System.out.println("domain name finding");
+            System.out.println(typeComp.toString().substring(0,indexOf2));
+            String subDomain=typeComp.toString().substring(0,indexOf2);
+            domainName=subDomain.substring(subDomain.lastIndexOf('/')+1,subDomain.length()); 
+            System.out.println("domain name  is: "+domainName);
+
+          //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
+            NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
+            NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
+            
+            
+            
+            
+            
+            
+            
             System.out.println("node is :"+res.getLocalName()+" derived from "+res2.getLocalName() +"the component is :"+comp);
             System.out.println("cb is :"+typeComp);
             System.out.println("this is inside the node linking new expanded");
@@ -2794,9 +2779,15 @@ public void loadTaxonomyExport(String template, String modeFile){
             
             
             if(typeComp.isURIResource()){ //only adds the type if the type is a uRI (not a blank node)
-                String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+"Expanded_"+newExpandedTemplateName+"_"+res.getLocalName());
-                OntClass cAux1 = OPMWModel.createClass(typeComp.getURI());//repeated tuples will not be duplicated
-                cAux1.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
+//                String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+"Expanded_"+newExpandedTemplateName+"_"+res.getLocalName());
+//                OntClass cAux1 = OPMWModel.createClass(typeComp.getURI());//repeated tuples will not be duplicated
+//                cAux1.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
+
+            	String newchangeforthetype=typeComp.getURI().substring(typeComp.getURI().lastIndexOf("/"),typeComp.getURI().length());
+            	String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+"Expanded_"+newExpandedTemplateName+"_"+res.getLocalName());
+            	OntClass cAux1 = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype);//repeated tuples will not be duplicated
+            	cAux1.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
+                
             }else{
                 System.out.println("ANON RESOURCE "+typeComp.getURI()+" ignored");
             }
@@ -2872,9 +2863,15 @@ public void loadTaxonomyExport(String template, String modeFile){
                 if(type.isURIResource()){
                     System.out.println(variable+" of type "+ type);
                     //add the individual as an instance of another class, not as a new individual
+//                    String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+variable.getLocalName());
+//                    OntClass c = OPMWModel.createClass(type.getURI());
+//                    c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);
+                    
+                    
+                    String newchangeforthetype=type.getURI().substring(type.getURI().lastIndexOf("/"),type.getURI().length());
                     String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+variable.getLocalName());
-                    OntClass c = OPMWModel.createClass(type.getURI());
-                    c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);
+                    OntClass c = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Data"+newchangeforthetype);
+                	c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);
                 }else{
                     System.out.println("ANON RESOURCE "+type.getURI()+" ignored");
                 }
