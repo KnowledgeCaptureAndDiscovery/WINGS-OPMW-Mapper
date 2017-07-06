@@ -646,7 +646,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+nodenew11.getLocalName().toUpperCase()+"_CLASS");
+                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+nodenew11.getLocalName().toUpperCase()+"_CLASSV1");
                     c21.createIndividual(NEW_TAXONOMY_CLASS+nodenew11.getLocalName().toUpperCase()+"_V1");
                     
                     
@@ -656,11 +656,17 @@ public void loadTaxonomyExport(String template, String modeFile){
                     Resource orig22 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(nodenew11.getLocalName().toUpperCase()+"_V1"));
                     Taxonomy_Export.add(orig22, propSelec22,compConcreteAbs+"",XSDDatatype.XSDboolean);
                     
-                    //RDFS LABEL EXPORTED
+                    //RDFS LABEL EXPORTED for canonical instance
                     OntProperty propSelec25;
                     propSelec25 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
                     Resource orig25 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(nodenew11.getLocalName().toUpperCase()+"_V1"));
                     Taxonomy_Export.add(orig25, propSelec25,nodenew11.getLocalName());
+                    
+                  //RDFS LABEL EXPORTED for class
+                    OntProperty propSelec28;
+                    propSelec28 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig28 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(nodenew11.getLocalName().toUpperCase()+"_CLASSV1"));
+                    Taxonomy_Export.add(orig28, propSelec28,nodenew11.getLocalName());
                     
                     
                     //INPUTS-- EXPORTED
@@ -1043,6 +1049,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     OntClass c2 = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
                     c2.createIndividual(NEW_TAXONOMY_CLASS+nameOfIndividualEnc2);
                     
+
                     //subclass relation
                     OntProperty propSelec2 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
                     Resource source2 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent) );
@@ -1108,7 +1115,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+nodenew11.getLocalName().toUpperCase()+"_CLASS");
+                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
                     c21.createIndividual(NEW_TAXONOMY_CLASS+nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent);
                     
                     
@@ -1119,11 +1126,17 @@ public void loadTaxonomyExport(String template, String modeFile){
                     Taxonomy_Export.add(orig22, propSelec22,compConcreteAbs+"",XSDDatatype.XSDboolean);
                     
                     
-                  //RDFS LABEL EXPORTED
+                  //RDFS LABEL EXPORTED for canonical instance
                     OntProperty propSelec25;
                     propSelec25 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
                     Resource orig25 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent));
                     Taxonomy_Export.add(orig25, propSelec25,nodenew11.getLocalName());
+                    
+                  //RDFS LABEL EXPORTED for class
+                    OntProperty propSelec28;
+                    propSelec28 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig28 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length())));
+                    Taxonomy_Export.add(orig28, propSelec28,nodenew11.getLocalName());
                     
                     //INPUTS-- EXPORTED
                     OntProperty propSelec23 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
