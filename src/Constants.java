@@ -288,6 +288,7 @@ public class Constants {
     public static final String PROV_STARTED_AT_TIME = PREFIX_PROV+ "startedAtTime";
     public static final String PROV_ENDED_AT_TIME = PREFIX_PROV+ "endedAtTime";
     public static final String PROV_WAS_DERIVED_FROM = PREFIX_PROV+ "wasDerivedFrom";
+    public static final String PROV_WAS_REVISION_OF = PREFIX_PROV+ "wasRevisionOf";
                 
     /*****
     other useful properties

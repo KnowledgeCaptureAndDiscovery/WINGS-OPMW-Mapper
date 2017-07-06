@@ -94,6 +94,19 @@ public class Queries {
     	return query;
     }
     
+  //query for determining the number of inputs and outputs in the TAXONOMY HIERARCHY MODEL based class
+    public static String componentTaxonomyHierarchyModelforInputsandOutputs(String tax,String className)
+    {
+    	String query="SELECT ?n ?i ?o WHERE{"
+    			+"?n a <"+tax+className+">."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
+    			+"}";
+    	return query;
+    }
+    
+    
+    
   
     //query for determining if the class is a subclass of a superclass in the component catalog    
   
@@ -109,14 +122,31 @@ public class Queries {
     
     //query for determining if the class is a subclass of a superclass in the component catalog    
     
-    public static String TaxonomyExportQueryforSubclassCheckfinal(String className)
+    public static String TaxonomyExportQueryforSubclassCheckfinal(String tax)
     {
-    	String query="SELECT ?n ?x WHERE{"
+    	String query="SELECT ?n ?x ?i ?o WHERE{"
     			+"?n a <"+Constants.PREFIX_OWL+"Class>."
     			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
     			+"}";
     	return query;
     }
+    
+//query for determining if the class is a subclass of a superclass in the component catalog    
+    
+    public static String TaxonomyExportQueryforSubclassCheckfinal22(String tax,String whatwehave)
+    {
+    	String query="SELECT ?n ?x ?i ?o WHERE{"
+    			+"?n a <"+Constants.PREFIX_OWL+"Class>."
+    			+"?n a <"+tax+whatwehave+">."
+    			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
+    			+"}";
+    	return query;
+    }
+    
     
   //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc in the component catalog based class
     public static String componentCatalogQueryforActualInputsandOutputsforComponent(String className)
@@ -145,6 +175,24 @@ public class Queries {
     			+"}";
     	return query;
     }
+    
+    
+    
+  //query for determining the inputs and outputs for the Abstract Component
+    public static String queryTaxonomyModelforAbstractCompsInputOutput(String tax,String className)
+    {
+    	System.out.println("className inside the query received "+className);
+    	String query="SELECT ?n ?i ?o ?concr WHERE{"
+    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr."
+    			+"}";
+    	return query;
+    }
+    
+    
+    
     
     
   //query for determining interiors of the INPUT PARAMETERS FOR COMPONENTS ONLY!!!! in the component catalog based class
