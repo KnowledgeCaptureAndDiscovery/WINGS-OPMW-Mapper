@@ -133,6 +133,23 @@ public class Queries {
     	return query;
     }
     
+    
+//query for determining if the class is a subclass of a superclass in the component catalog    
+    
+    public static String TaxonomyExportQueryforSubclassCheckfinalConcreteScenario(String tax)
+    {
+    	String query="SELECT ?n ?x ?y ?i ?o WHERE{"
+    			+"?n a <"+Constants.PREFIX_OWL+"Class>."
+    			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
+    			+"?x <"+Constants.PREFIX_RDFS+"subClassOf> ?y."
+    			+"?x <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?x <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
+    			+"}";
+    	return query;
+    }
+    
+    
+    
 //query for determining if the class is a subclass of a superclass in the component catalog    
     
     public static String TaxonomyExportQueryforSubclassCheckfinal22(String tax,String whatwehave)

@@ -476,6 +476,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             int deciderpoint=0;
             System.out.println("Finallllll");
             Resource AbstractSuperClass=null;
+            Resource concrComponent=null;
             while(rnew1.hasNext())
             {
             	
@@ -488,6 +489,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 	if(nodenew.getLocalName().equals(className))
                 	{
                 			AbstractSuperClass=x;
+                			concrComponent=nodenew;
                 			System.out.println("x is "+x.getLocalName());
                 			deciderpoint=1;
                 			break;         		
@@ -1409,6 +1411,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 
 
             }
+            
 
           //FIRST CASE ENDS: THE INCOMING COMPONENT IS AN ABSTRACT COMPONENT
             
@@ -1419,129 +1422,620 @@ public void loadTaxonomyExport(String template, String modeFile){
             
             
             
+            //INCOMING COMPONENT IS A CONCRETE COMPONENT
             
             
-            
-            
-            
-          //QUERY-2 FOR THE RETRIEVAL OF INPUTS AND OUTPUTS OF THE PARTICULAR COMPONENT'S ABSTRACT CLASS
+            								/////////********STARTS***********////////////
+            /////**************THIS IS THE ENTIRE PART WHERE WE THE INCOMING COMPONENT IS A CONCRETE COMPONENT**********////
+
             else if(!AbstractSuperClass.getLocalName().equals("Component"))
             {
-            String componentCatalogQueryforInputsandOutputsAbstractComponent = Queries.componentCatalogQueryforInputsandOutputs(AbstractSuperClass.getLocalName());
-            rnew2 = null;
-            rnew2 = queryComponentCatalog(componentCatalogQueryforInputsandOutputsAbstractComponent);
-           
-            HashSet<String> hsAi=new HashSet<>();
-            HashSet<String> hsAo=new HashSet<>();
-            while(rnew2.hasNext())
-            {
-            	QuerySolution qsnew = rnew2.next();
-                Resource nodenew = qsnew.getResource("?n");
-                Resource i = qsnew.getResource("?i");
-                Resource o = qsnew.getResource("?o");
-                
-                //System.out.println("nodenew "+nodenew.getLocalName()+" abstractclass "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
-                if(nodenew.getLocalName().equals(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)))
+            	
+            	
+            	
+            	
+            	System.out.println("NOW UR INSIDE CONCRETE COMPONENT CASE");
+            	String taxonomyModelforConcreteComponent = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+                ResultSet r2new = null;
+                r2new = queryLocalTaxonomyModelRepository(taxonomyModelforConcreteComponent);
+               
+                HashSet<String> namesOfConcreteCompswithSameNames=new HashSet<>();
+              
+                while(r2new.hasNext())
                 {
-                	System.out.println("node in abstract part : "+nodenew.getLocalName());
-                	hsAi.add(i.getLocalName());
-                	hsAo.add(o.getLocalName());
-                
-                }
-            }
-            System.out.println("component catalog for that Abstract component only:");
-            System.out.println("className : "+AbstractSuperClass.getLocalName());
-            System.out.println("input size: "+hsAi.size());
-            System.out.println("output size: "+hsAo.size());
-            
-            System.out.println("component catalog for that particular component only:");
-            System.out.println("className : "+className);
-            System.out.println("input size: "+hsi.size());
-            System.out.println("output size: "+hso.size());
-            
-            
-            
-            //CASE 1: WHENEVER THE NUMBER OF INPUTS AND OUTPUTS ARE THE SAME FOR BOTH THE COMPONENTS (NORMAL & ABSTRACT)
-            if(hsAi.size()==hsi.size() && hsAo.size()==hso.size())
-            {
-            	System.out.println("They are equal...now just export as a subclass if it does not exist");
-            	//PART 1: CHECKING CRITERIA
-            	//querying the Taxonomy Export Model to check whether this component already exists or not and if it 
-            	//exists if its a subclass of that abstract class only
-            	//Taxonomy_Export.write(System.out,"RDF/XML");
-            	
-            	
-            	
-            	String checkifComponentExists = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
-                rnew2 = null;
-                rnew2 = queryLocalTaxonomyModelRepository(checkifComponentExists);
-                boolean existsInTaxonomyModel=false;
-                while(rnew2.hasNext())
-                {
-                	QuerySolution qsnew = rnew2.next();
-                	Resource nodenew = qsnew.getResource("?n");
+                	System.out.println("Are you even inside this?");
+                	QuerySolution qsnew = r2new.next();
+                    Resource nodenew = qsnew.getResource("?n");
                     Resource x = qsnew.getResource("?x");
-
-                    	
-                    if(nodenew!=null && x!=null)
+                    System.out.println("What is nodenew? "+nodenew.getLocalName());
+                    System.out.println("What is x? "+x.getLocalName());
+                    
+                    if(!x.getLocalName().equals("COMPONENT"))
                     {
-                    	System.out.println("node "+nodenew.getLocalName()+" x "+x.getLocalName());
-                    	if(nodenew.getLocalName().equals(className.toUpperCase()) && x.getLocalName().equals(AbstractSuperClass.getLocalName().toUpperCase()))
+                    	System.out.println("UR CHECKING FOR NAMES HERE");
+                    	System.out.println(nodenew.getLocalName());
+                    	if(nodenew.getLocalName().toLowerCase().contains(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toLowerCase()))
                     	{
-                    		System.out.println("it exists");
-                    		existsInTaxonomyModel=true;
-                    		break;
+                    		//this means the name exists
+                    		//next step is to check the inputs and outputs based on that className
+                    		//saving all such cases in a HashSet
+                    		if(!namesOfConcreteCompswithSameNames.contains(nodenew.getLocalName()))
+                    		{
+                    			namesOfConcreteCompswithSameNames.add(nodenew.getLocalName());
+                    		}
+                    		
                     	}
                     }
-  
+                    
                 }
-                if(existsInTaxonomyModel==true)
-                	System.out.println("IT ALREADY EXISTS SO NO NEED TO EVEN DO AN EXPORT");
-            	
-            	
-
-            	//PART2: EXPORTING CRITERIA
-                if(existsInTaxonomyModel==false)
+                
+                System.out.println("THIS WILL IDENTIFY THE CONTENTS OF THE HASHSET");
+                System.out.println();
+                for(String x:namesOfConcreteCompswithSameNames)
+                	System.out.println(x);
+                System.out.println();
+                
+                
+                
+                
+                //PART-2: SEARCH IS ON
+                System.out.println("PART-2 BEGINS OF SEARCH");
+                System.out.println("FIND THE NAMES OF SIMILAR ABSTRACT COMPONENTS IN THE TAXONOMY HIERARCHY MODEL");
+                
+                System.out.println("NOW UR INSIDE CONCRETE COMPONENT CASE");
+            	String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+                r2new = null;
+                r2new = queryLocalTaxonomyModelRepository(taxonomyModelforAbstractComponent);
+               
+                HashSet<String> namesOfAbsCompswithSameNames=new HashSet<>();
+              
+                while(r2new.hasNext())
                 {
-                	System.out.println("you will have to export it now");
-                	
-                	
-                	///*********************************///
-                	///*********STARTS HERE*********///
-                	///*****EXTRACTION OF THE INPUTS,OUTPUTS AND OTHER PROPERTIES FOR BOTH THE COMPONENTS*****///
-                	///*********************************///
-                	
-                	
-                	//extracting the actual inputs,outputs and other factors for the component
+                	System.out.println("Are you even inside this?");
+                	QuerySolution qsnew = r2new.next();
+                    Resource nodenew = qsnew.getResource("?n");
+                    Resource x = qsnew.getResource("?x");
+                    System.out.println("What is nodenew? "+nodenew.getLocalName());
+                    System.out.println("What is x? "+x.getLocalName());
+                    
+                    if(x.getLocalName().equals("COMPONENT"))
+                    {
+                    	System.out.println("UR CHECKING FOR NAMES HERE");
+                    	System.out.println(nodenew.getLocalName());
+                    	if(nodenew.getLocalName().toLowerCase().contains(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toLowerCase()))
+                    	{
+                    		//this means the name exists
+                    		//next step is to check the inputs and outputs based on that className
+                    		//saving all such cases in a HashSet
+                    		if(!namesOfAbsCompswithSameNames.contains(nodenew.getLocalName()))
+                    		{
+                    			namesOfAbsCompswithSameNames.add(nodenew.getLocalName());
+                    		}
+                    		
+                    	}
+                    }
+                    
+                }
+                
+                System.out.println("THIS WILL IDENTIFY THE CONTENTS OF THE HASHSET");
+                System.out.println();
+                for(String x:namesOfAbsCompswithSameNames)
+                	System.out.println(x);
+                System.out.println();
+                
+                
+                //NOW THE IMPORTANT CLARIFICATION
+                //IF THE SIZE OF THE HASHSET namesOfConcreteCompswithSameNames IS !=0 THEN ITS DEALT WITH IN THE END
+                //IF THE SIZE OF BOTH HASHSETS IS 0, THIS MEANS A FRESH NEW EXPORT _V1
+                //IF THE SIZE OF namesOfConcreteCompswithSameNames==0 BUT namesOfAbsCompswithSameNames!=0 THEN WE CHECK FURTHER
+                //FOR INPS AND OUTPS
+                if(namesOfAbsCompswithSameNames.size()!=0 && namesOfConcreteCompswithSameNames.size()==0)
+                {
+                	System.out.println("WE ARE HERE WHERE THE namesOfAbsCompswithSameNames.size()!=0 && namesOfConcreteCompswithSameNames.size()==0");
+                	int clarifyToExportConcrComp=0;
+                	Resource Abs=null;
+                    for(String whatwehave:namesOfAbsCompswithSameNames)
+                    {
+                    	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+                        rnew2 = null;
+                        rnew2 = queryLocalTaxonomyModelRepository(inputsandoutputsforsimilarnamedComps);
+                       
+                        HashSet<String> similarAbsInps=new HashSet<>();
+                        HashSet<String> similarAbsOuts=new HashSet<>();
+                        System.out.println("what we have "+concrComponent.getLocalName());
+                        
+                        while(rnew2.hasNext())
+                        {
+                        	QuerySolution qsnew = rnew2.next();
+                        	Resource nodenew = qsnew.getResource("?n");
+                        	Resource x = qsnew.getResource("?x");
+                            Resource input = qsnew.getResource("?i");
+                            Resource output = qsnew.getResource("?o");
 
-                	String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(className);
+                            
+                            if(nodenew.getLocalName().toUpperCase().equals(whatwehave)  && x.getLocalName().equals("COMPONENT"))
+                            {
+                            	System.out.println("Node inside case2:? "+nodenew.getLocalName());
+                                System.out.println("x inside case2: ? "+x.getLocalName());
+                                System.out.println("input is :"+input.getLocalName());
+                                System.out.println("output is :"+output.getLocalName());
+                            	similarAbsInps.add(input.getLocalName());
+                            	similarAbsOuts.add(output.getLocalName());
+                            	Abs=nodenew;
+                            }
+                        }
+                        System.out.println("input size "+similarAbsInps.size());
+                        System.out.println("output size "+similarAbsOuts.size());
+                        
+                        if(similarAbsInps.size()==hsi.size() && similarAbsOuts.size()==hso.size())
+                        {
+                        	System.out.println("There is a match AND IT MEANS WE HAVE TO EXPORT THE CONCR COMP AS A SUBCLASS OF ABS COMP");
+                        	clarifyToExportConcrComp=1;
+                        	break;
+                        }
+                    }
+                    if(clarifyToExportConcrComp==1)
+                    {
+                    	//this means we export it as a subclass
+                    	System.out.println("ABS IS: "+Abs.getLocalName());
+                    	//concrete component individual
+                    	String nameOfIndividualEnc = encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                      OntClass c = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+                      c.createIndividual(NEW_TAXONOMY_CLASS+nameOfIndividualEnc.toUpperCase());
+                      
+                      
+                      //subclass relation
+                      OntProperty propSelec1 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+                      Resource source1 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1") );
+                      Individual instance1 = (Individual) source1.as( Individual.class );
+                      if((Abs.getLocalName()).contains("http://")){//it is a URI
+                          instance1.addProperty(propSelec1,NEW_TAXONOMY_CLASS+Abs.getLocalName());            
+                      }else{//it is a local resource
+                          instance1.addProperty(propSelec1, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(Abs.getLocalName())));
+                      }
+                      
+                    //extracting the actual inputs,outputs and other factors for the component
+                      
+                      String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                      rnew2 = null;
+                      rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
+
+                      HashSet<String> inputsComp=new HashSet<>();
+                      HashSet<String> outputsComp=new HashSet<>();
+                      String compLoc="";
+                      boolean compConcrete=false;
+                      while(rnew2.hasNext())
+                      {
+                      	QuerySolution qsnew = rnew2.next();
+                      	Resource nodenew = qsnew.getResource("?n");
+                      	Resource input = qsnew.getResource("?i");
+                      	Resource output = qsnew.getResource("?o");
+                      	Literal concr=qsnew.getLiteral("?concr");
+                      	Literal loc=qsnew.getLiteral("?loc");
+
+                      	if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
+                      	{
+                      		inputsComp.add(input.getLocalName());
+                      		outputsComp.add(output.getLocalName());
+                      		if(loc!=null && compLoc.equals(""))
+                      			compLoc=loc.getString();
+                      		if(concr!=null)
+                      		{
+                      			compConcrete=concr.getBoolean();
+                      		}
+                      	}
+                      }
+                      System.out.println("MAIN COMPONENT----------");
+                      for(String i:inputsComp)
+                      	System.out.println("inputs are: "+i);
+                      for(String o:outputsComp)
+                      	System.out.println("outputs are: "+o);
+                      System.out.println("Location is: "+compLoc);
+                      System.out.println("isConcrete is: "+compConcrete);
+                      
+                      
+
+                    //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+                      OntClass c11 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1");
+                      c11.createIndividual(NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
+                      
+                      
+                      //IS CONCRETE EXPORTED
+                      OntProperty propSelec12;
+                      propSelec12 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
+                      Resource orig12 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1"));
+                      Taxonomy_Export.add(orig12, propSelec12,compConcrete+"",XSDDatatype.XSDboolean);
+                      
+                      //RDFS LABEL EXPORTED for canonical instance
+                      OntProperty propSelec13;
+                      propSelec13 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                      Resource orig13 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1"));
+                      Taxonomy_Export.add(orig13, propSelec13,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+                      
+                    //RDFS LABEL EXPORTED for class
+                      OntProperty propSelec14;
+                      propSelec14 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                      Resource orig14 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1"));
+                      Taxonomy_Export.add(orig14, propSelec14,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+                      
+                      
+                      //INPUTS-- EXPORTED
+                      OntProperty propSelec15 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
+                      Resource source15 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1") );
+                      Individual instance15 = (Individual) source15.as( Individual.class );
+                      for(String in:inputsComp)
+                      {
+                      if((in).contains("http://")){//it is a URI
+                          instance15.addProperty(propSelec15,NEW_TAXONOMY_CLASS+in);            
+                      }else{//it is a local resource
+                          instance15.addProperty(propSelec15, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
+                      }
+                      }
+                      
+                      //OUTPUTS-- EXPORTED
+                      OntProperty propSelec16 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
+                      Resource source16 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1") );
+                      Individual instance16 = (Individual) source16.as( Individual.class );
+                      for(String out:outputsComp)
+                      {
+                      if((out).contains("http://")){//it is a URI
+                          instance16.addProperty(propSelec16,NEW_TAXONOMY_CLASS+out);            
+                      }else{//it is a local resource
+                          instance16.addProperty(propSelec16, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
+                      }
+                      }
+                      
+                    //HAS LOCATION EXPORTED
+                    OntProperty propSelec17;
+                    propSelec17 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_LOCATION);
+                    Resource orig17 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1"));
+                    Taxonomy_Export.add(orig17, propSelec17, compLoc);
+                      
+                    	
+                  //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
+                    System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
+                    for(String inx:hsi)
+                    {
+  	                    System.out.println(inx);
+  	                    String componentCatalogQueryforInteriorsofParametersComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+  	                    rnew2 = null;
+  	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersComponents);
+  	                    boolean exists=false;
+  	                    String argIDString="",argNameString="",valString="";
+  	                    int dimInt=0;
+  	                    
+  	                    while(rnew2.hasNext())
+  	                    {
+  	                    	QuerySolution qsnew = rnew2.next();
+  	                        Literal argID=qsnew.getLiteral("?argID");
+  	                        Literal argName=qsnew.getLiteral("?argName");
+  	                        Literal dim=qsnew.getLiteral("?dim");
+  	                        Literal val=qsnew.getLiteral("?val");
+  	                        
+  	                        if(argID!=null)
+  	                        {
+  	                        	System.out.println(argID.getString());
+  	                        	argIDString=argID.getString();
+  	                        }
+  	                        if(argName!=null)
+  	                        {
+  	                        	System.out.println(argName.getString());
+  	                        	argNameString=argName.getString();
+  	                        }
+  	                        if(dim!=null)
+  	                        {
+  	                        	System.out.println(dim.getInt());
+  	                        	dimInt=dim.getInt();
+  	                        }
+  	                        if(val!=null)
+  	                        {
+  	                        	System.out.println(val.getString());
+  	                        	valString=val.getString();
+  	                        }
+  	                        if(argID!=null && argName!=null && dim!=null && val!=null)
+  	                        	exists=true;
+  	                        
+  	                    }
+  	                    if(exists==true)
+  	                    {
+  	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR COMPONENTS ONLY");
+  	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+  	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"ParameterArgument");
+  	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+  	                        
+  	                      //HAS ARGUMENT ID EXPORTED
+  	                        OntProperty propSelec31;
+  	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+  	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+  	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+  	                        
+  	                      //HAS ARGUMENT NAME EXPORTED
+  	                        OntProperty propSelec32;
+  	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+  	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+  	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+  	                        
+  	                      //HAS DIMENSIONALITY EXPORTED
+  	                        OntProperty propSelec33;
+  	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+  	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+  	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+  	                        
+  	                      //HAS VALUE EXPORTED
+  	                        OntProperty propSelec34;
+  	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
+  	                        Resource orig34 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+  	                        Taxonomy_Export.add(orig34, propSelec34, valString);
+  	                    }
+                    
+                    
+                    }
+                    
+                    
+                   //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                    System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
+                    for(String inx:hsi)
+                    {
+  	                    System.out.println(inx);
+  	                    String componentCatalogQueryforInteriorsofDataComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+  	                    rnew2 = null;
+  	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponents);
+  	                    boolean exists=false;
+  	                    String argIDString="",argNameString="";
+  	                    int dimInt=0;
+  	                    
+  	                    while(rnew2.hasNext())
+  	                    {
+  	                    	QuerySolution qsnew = rnew2.next();
+  	                        Literal argID=qsnew.getLiteral("?argID");
+  	                        Literal argName=qsnew.getLiteral("?argName");
+  	                        Literal dim=qsnew.getLiteral("?dim");
+  	                        
+  	                        if(argID!=null)
+  	                        {
+  	                        	System.out.println(argID.getString());
+  	                        	argIDString=argID.getString();
+  	                        }
+  	                        if(argName!=null)
+  	                        {
+  	                        	System.out.println(argName.getString());
+  	                        	argNameString=argName.getString();
+  	                        }
+  	                        if(dim!=null)
+  	                        {
+  	                        	System.out.println(dim.getInt());
+  	                        	dimInt=dim.getInt();
+  	                        }
+
+  	                        if(argID!=null && argName!=null && dim!=null)
+  	                        	exists=true;
+  	                        
+  	                    }
+  	                    if(exists==true)
+  	                    {
+  	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR COMPONENT ONLY");
+  	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+  	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"DataArgument");
+  	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+  	                        
+  	                        OntClass c331 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"TextFile");
+  	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+  	                        
+  	                        
+  	                      //HAS ARGUMENT ID EXPORTED
+  	                        OntProperty propSelec31;
+  	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+  	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+  	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+  	                        
+  	                      //HAS ARGUMENT NAME EXPORTED
+  	                        OntProperty propSelec32;
+  	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+  	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+  	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+  	                        
+  	                      //HAS DIMENSIONALITY EXPORTED
+  	                        OntProperty propSelec33;
+  	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+  	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+  	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+  	                        
+  	                    }
+                    
+                    
+                    }
+                    
+                  //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                    System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
+                    for(String outx:hso)
+                    {
+  	                    System.out.println(outx);
+  	                    String componentCatalogQueryforInteriorsofDataComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+  	                    rnew2 = null;
+  	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponentsOutput);
+  	                    
+  	                    boolean exists=false;
+  	                    String argIDString="",argNameString="";
+  	                    int dimInt=0;
+  	                    
+  	                    while(rnew2.hasNext())
+  	                    {
+  	                    	QuerySolution qsnew = rnew2.next();
+  	                        Literal argID=qsnew.getLiteral("?argID");
+  	                        Literal argName=qsnew.getLiteral("?argName");
+  	                        Literal dim=qsnew.getLiteral("?dim");
+  	                        
+  	                        if(argID!=null)
+  	                        {
+  	                        	System.out.println(argID.getString());
+  	                        	argIDString=argID.getString();
+  	                        }
+  	                        if(argName!=null)
+  	                        {
+  	                        	System.out.println(argName.getString());
+  	                        	argNameString=argName.getString();
+  	                        }
+  	                        if(dim!=null)
+  	                        {
+  	                        	System.out.println(dim.getInt());
+  	                        	dimInt=dim.getInt();
+  	                        }
+
+  	                        if(argID!=null && argName!=null && dim!=null)
+  	                        	exists=true;
+  	                        
+  	                    }
+  	                    if(exists==true)
+  	                    {
+  	                    	System.out.println("NOW EXPORT THE OUTPUT DATA INTERIORS FOR COMPONENTS ONLY");
+  	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+  	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"DataArgument");
+  	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+  	                        
+  	                        OntClass c331 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"TextFile");
+  	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+  	                        
+  	                        
+  	                      //HAS ARGUMENT ID EXPORTED
+  	                        OntProperty propSelec31;
+  	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+  	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+  	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+  	                        
+  	                      //HAS ARGUMENT NAME EXPORTED
+  	                        OntProperty propSelec32;
+  	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+  	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+  	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+  	                        
+  	                      //HAS DIMENSIONALITY EXPORTED
+  	                        OntProperty propSelec33;
+  	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+  	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+  	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+  	                        
+  	                    }
+                    
+                    
+                    }
+                    
+                    
+                    	
+                    	
+                    	
+                  }
+                  if(clarifyToExportConcrComp==0)
+                  {
+                	  //this means we export both as a new version (LATEST VERSION) AND LINKING ALSO CANONICAL INSTANCES
+                	  System.out.println("THIS STARTS THE FIRST CASE PART-2");  
+                	  
+                	  
+                	String finalversionforNewAbstractComponent="";
+                	String finalversionforLatestAbstractComponent="";
+                  	int max=Integer.MIN_VALUE;
+                  	for(String x:namesOfAbsCompswithSameNames)
+                  	{
+                  		String temp=x.substring(x.lastIndexOf("_V"),x.length());
+                  		System.out.println("what is temp "+temp);
+                  		int temp2=Integer.parseInt(temp.substring(2,temp.length()));
+                  		if(max<temp2)
+                  		{
+                  			max=temp2;
+                  			
+                  		}
+                  	}
+                  	finalversionforLatestAbstractComponent="_V"+max;
+                  	max++;
+                  	finalversionforNewAbstractComponent="_V"+max;
+                  	System.out.println("THE MOST LATEST VERSION IS : "+finalversionforNewAbstractComponent);
+                  	//ABOVE TASK DONE BY HERE
+                  	
+                  //concrete component individual
+                	String nameOfIndividualEnc = encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                  OntClass c = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+                  c.createIndividual(NEW_TAXONOMY_CLASS+nameOfIndividualEnc.toUpperCase());
+                  
+                  
+                  //subclass relation
+                  OntProperty propSelec1 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+                  Resource source1 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                  Individual instance1 = (Individual) source1.as( Individual.class );
+                  if((AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)).contains("http://")){//it is a URI
+                      instance1.addProperty(propSelec1,NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent);            
+                  }else{//it is a local resource
+                      instance1.addProperty(propSelec1, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent)));
+                  }
+                	
+                	//abstract component individual
+                    String nameOfIndividualEnc2 = encode(AbstractSuperClass.getLocalName()+finalversionforNewAbstractComponent);
+                    OntClass c2 = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+                    c2.createIndividual(NEW_TAXONOMY_CLASS+nameOfIndividualEnc2);
+                    
+                    //subclass relation for abstract component
+                    OntProperty propSelec2 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+                    Resource source2 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                    Individual instance2 = (Individual) source2.as( Individual.class );
+                    if(("Component").contains("http://")){//it is a URI
+                        instance2.addProperty(propSelec2,NEW_TAXONOMY_CLASS+"Component");            
+                    }else{//it is a local resource
+                        instance2.addProperty(propSelec2, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode("Component")));
+                    }
+                    
+                    System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
+                    
+                    
+                    
+                  //EXPORTING THE PROV_WAS_REVISION_OF
+                    OntProperty propSelec255 = Taxonomy_Export.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                    Resource source255 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                    Individual instance255 = (Individual) source255.as( Individual.class );
+                    if((AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
+                        instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent);            
+                    }else{//it is a local resource
+                        instance255.addProperty(propSelec255, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
+                    }
+                    
+                    
+                    
+                    
+                    
+                    //export of ABSTRACT component ends
+                    
+                    
+                    
+                  //extracting the actual inputs,outputs and other factors for the component
+                    
+                    String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
-                   
+
                     HashSet<String> inputsComp=new HashSet<>();
                     HashSet<String> outputsComp=new HashSet<>();
                     String compLoc="";
                     boolean compConcrete=false;
+                    if(rnew2.hasNext()==false)
+                    	System.out.println("SOMETHING IS WRONG----");
                     while(rnew2.hasNext())
                     {
+                    	System.out.println("DO WE GO INSIDE THIS EVERRRRRRRRRR?");
                     	QuerySolution qsnew = rnew2.next();
                     	Resource nodenew = qsnew.getResource("?n");
-                        Resource input = qsnew.getResource("?i");
-                        Resource output = qsnew.getResource("?o");
-                        Literal concr=qsnew.getLiteral("?concr");
-                        Literal loc=qsnew.getLiteral("?loc");
-
-                        if(nodenew.getLocalName().equals(className.substring(0,className.length()-5)))
-                        {
-                        	inputsComp.add(input.getLocalName());
-                        	outputsComp.add(output.getLocalName());
-                        	if(loc!=null && compLoc.equals(""))
-                        		compLoc=loc.getString();
-                        	if(concr!=null)
-                        	{
-                        		compConcrete=concr.getBoolean();
-                        	}
-                        }
+                    	Resource input = qsnew.getResource("?i");
+                    	Resource output = qsnew.getResource("?o");
+                    	Literal concr=qsnew.getLiteral("?concr");
+                    	Literal loc=qsnew.getLiteral("?loc");
+                    	System.out.println("trying the nodenew comparison here: "+nodenew.getLocalName());
+                    	if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
+                    	{
+                    		inputsComp.add(input.getLocalName());
+                    		outputsComp.add(output.getLocalName());
+                    		if(loc!=null && compLoc.equals(""))
+                    			compLoc=loc.getString();
+                    		if(concr!=null)
+                    		{
+                    			compConcrete=concr.getBoolean();
+                    		}
+                    	}
                     }
                     System.out.println("MAIN COMPONENT----------");
                     for(String i:inputsComp)
@@ -1552,14 +2046,76 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("isConcrete is: "+compConcrete);
                     
                     
+
+                  //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+                    OntClass c11 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
+                    c11.createIndividual(NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
+                    
+                    
+                    //IS CONCRETE EXPORTED
+                    OntProperty propSelec12;
+                    propSelec12 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
+                    Resource orig12 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent));
+                    Taxonomy_Export.add(orig12, propSelec12,compConcrete+"",XSDDatatype.XSDboolean);
+                    
+                    //RDFS LABEL EXPORTED for canonical instance
+                    OntProperty propSelec13;
+                    propSelec13 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig13 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent));
+                    Taxonomy_Export.add(orig13, propSelec13,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+                    
+                  //RDFS LABEL EXPORTED for class
+                    OntProperty propSelec14;
+                    propSelec14 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig14 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length())));
+                    Taxonomy_Export.add(orig14, propSelec14,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+                    
+                    
+                    //INPUTS-- EXPORTED
+                    OntProperty propSelec15 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
+                    Resource source15 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                    Individual instance15 = (Individual) source15.as( Individual.class );
+                    for(String in:inputsComp)
+                    {
+                    if((in).contains("http://")){//it is a URI
+                        instance15.addProperty(propSelec15,NEW_TAXONOMY_CLASS+in);            
+                    }else{//it is a local resource
+                        instance15.addProperty(propSelec15, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
+                    }
+                    }
+                    
+                    //OUTPUTS-- EXPORTED
+                    OntProperty propSelec16 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
+                    Resource source16 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                    Individual instance16 = (Individual) source16.as( Individual.class );
+                    for(String out:outputsComp)
+                    {
+                    if((out).contains("http://")){//it is a URI
+                        instance16.addProperty(propSelec16,NEW_TAXONOMY_CLASS+out);            
+                    }else{//it is a local resource
+                        instance16.addProperty(propSelec16, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
+                    }
+                    }
+                    
+                  //HAS LOCATION EXPORTED
+                  OntProperty propSelec17;
+                  propSelec17 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_LOCATION);
+                  Resource orig17 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent));
+                  Taxonomy_Export.add(orig17, propSelec17, compLoc);
+                    
+
+                  
+                  
                   //extracting the actual inputs,outputs and other factors for the Abstract component
-                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(AbstractSuperClass.getLocalName());
+                    System.out.println("EXTRACTION BEGINS "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
+                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
                    
                     HashSet<String> inputsAbsComp=new HashSet<>();
                     HashSet<String> outputsAbsComp=new HashSet<>();
                     boolean compConcreteAbs=false;
+                    System.out.println("what we have "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
                     while(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
@@ -1568,7 +2124,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                         Resource output = qsnew.getResource("?o");
                         Literal concr=qsnew.getLiteral("?concr");
                         Literal loc=qsnew.getLiteral("?loc");
-
+                        System.out.println("nodenew inside now: "+nodenew.getLocalName());
                         if(nodenew.getLocalName().equals(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)))
                         {
                         	inputsAbsComp.add(input.getLocalName());
@@ -1585,135 +2141,37 @@ public void loadTaxonomyExport(String template, String modeFile){
                     for(String o:outputsAbsComp)
                     	System.out.println("outputs are: "+o);
                     System.out.println("isConcrete is: "+compConcreteAbs);
-                	
-                	
-                	
-                ///*********************************///
-                ///*********ENDS HERE*********///
-                ///*****EXTRACTION OF THE INPUTS,OUTPUTS AND OTHER PROPERTIES FOR BOTH THE COMPONENTS*****///
-                ///*********************************///
-
-                	
-                	
-                    ///*********************************///
-                    ///*********STARTS HERE*********///
-                    ///*****EXPORTING FOR BOTH THE COMPONENTS*****///
-                    ///*********************************///
-                    
-                    
-                	//EXPORTING THE OWL CLASS PART FOR THE COMPONENT
-                	//component individual
-                    
-                    
-                    
-                    
-                	String nameOfIndividualEnc = encode(className);
-                    OntClass c = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
-                    c.createIndividual(NEW_TAXONOMY_CLASS+"#"+nameOfIndividualEnc.toUpperCase());
-
-                    //EXPORTING THE OWL CLASS PART FOR THE ABSTRACT COMPONENT
-                    //abstract component individual
-                    String nameOfIndividualEnc2 = encode(AbstractSuperClass.getLocalName());
-                    OntClass c2 = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
-                    c2.createIndividual(NEW_TAXONOMY_CLASS+"#"+nameOfIndividualEnc2.toUpperCase());
-                    
-                    
-                    //EXPORTING THE SUBCLASS RELATION FOR THE COMPONENT
-                    //for component (property)
-                    OntProperty propSelec = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
-                    Resource source = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.toUpperCase()) );
-                    Individual instance = (Individual) source.as( Individual.class );
-                    if((AbstractSuperClass.getLocalName().toUpperCase()).contains("http://")){//it is a URI
-                        instance.addProperty(propSelec,(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase()));            
-                    }else{//it is a local resource
-                        instance.addProperty(propSelec, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().toUpperCase())));
-                    }
-                    
-                    
-                    //EXPORTING THE SUBCLASS RELATION FOR THE ABSTRACT COMPONENT
-                    //for abstract component(property)
-                    OntProperty propSelec2 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
-                    Resource source2 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName()) );
-                    Individual instance2 = (Individual) source2.as( Individual.class );
-                    if(("Component").contains("http://")){//it is a URI
-                        instance2.addProperty(propSelec2,Constants.PREFIX_COMPONENT+"Component");            
-                    }else{//it is a local resource
-                        instance2.addProperty(propSelec2, Taxonomy_Export.getResource(Constants.PREFIX_COMPONENT+encode("Component")));
-                    }
-                    
-                  ///*********************************///
-                    ///*********ENDS HERE*********///
-                    ///*****EXPORTING FOR BOTH THE COMPONENTS*****///
-                    ///*********************************///
-                    
-                    
-                  ///*********************************///
-                    ///*********STARTS HERE*********///
-                    ///*****EXPORTING INPUTS,OUTPUTS AND OTHER CRITERIA FOR BOTH THE COMPONENTS*****///
-                    ///*********************************///
-                    
-                    //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-                    OntClass c11 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+className.toUpperCase());
-                    c11.createIndividual(NEW_TAXONOMY_CLASS+className.substring(0,className.length()-5).toUpperCase());
-                    
-                    //HAS LOCATION EXPORTED
-                    OntProperty propSelec11;
-                    propSelec11 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_LOCATION);
-                    Resource orig11 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()));
-                    Taxonomy_Export.add(orig11, propSelec11, compLoc);
-                    
-                    //IS CONCRETE EXPORTED
-                    OntProperty propSelec12;
-                    propSelec12 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
-                    Resource orig12 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()));
-                    Taxonomy_Export.add(orig11, propSelec12,compConcrete+"",XSDDatatype.XSDboolean);
-                    
-                    //INPUTS-- EXPORTED
-                    OntProperty propSelec13 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
-                    Resource source13 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()) );
-                    Individual instance13 = (Individual) source13.as( Individual.class );
-                    for(String in:hsi)
-                    {
-                    if((in).contains("http://")){//it is a URI
-                        instance13.addProperty(propSelec13,NEW_TAXONOMY_CLASS+in);            
-                    }else{//it is a local resource
-                        instance13.addProperty(propSelec13, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
-                    }
-                    }
-                    
-                    //OUTPUTS-- EXPORTED
-                    OntProperty propSelec14 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
-                    Resource source14 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()) );
-                    Individual instance14 = (Individual) source14.as( Individual.class );
-                    for(String out:hso)
-                    {
-                    if((out).contains("http://")){//it is a URI
-                        instance14.addProperty(propSelec14,NEW_TAXONOMY_CLASS+out);            
-                    }else{//it is a local resource
-                        instance14.addProperty(propSelec14, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
-                    }
-                    }
-                    
-                  ///////*****************************///////
-                  //NOW EXPORTING FOR THE ABSTRACT COMPONENT/
-                  ///////*****************************///////
+                    System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase());
-                    c21.createIndividual(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase());
+                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
+                    c21.createIndividual(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
                     
                     
                     //IS CONCRETE EXPORTED
                     OntProperty propSelec22;
                     propSelec22 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
-                    Resource orig22 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()));
-                    Taxonomy_Export.add(orig22, propSelec22,compConcrete+"",XSDDatatype.XSDboolean);
+                    Resource orig22 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent));
+                    Taxonomy_Export.add(orig22, propSelec22,compConcreteAbs+"",XSDDatatype.XSDboolean);
+                    
+                    //RDFS LABEL EXPORTED for canonical instance
+                    OntProperty propSelec25;
+                    propSelec25 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig25 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent));
+                    Taxonomy_Export.add(orig25, propSelec25,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
+                    
+                  //RDFS LABEL EXPORTED for class
+                    OntProperty propSelec28;
+                    propSelec28 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig28 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length())));
+                    Taxonomy_Export.add(orig28, propSelec28,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
+                    
                     
                     //INPUTS-- EXPORTED
                     OntProperty propSelec23 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
-                    Resource source23 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()) );
+                    Resource source23 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
                     Individual instance23 = (Individual) source23.as( Individual.class );
-                    for(String in:hsAi)
+                    for(String in:inputsAbsComp)
                     {
                     if((in).contains("http://")){//it is a URI
                         instance23.addProperty(propSelec23,NEW_TAXONOMY_CLASS+in);            
@@ -1724,9 +2182,9 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                     //OUTPUTS-- EXPORTED
                     OntProperty propSelec24 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
-                    Resource source24 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()) );
+                    Resource source24 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
                     Individual instance24 = (Individual) source24.as( Individual.class );
-                    for(String out:hsAo)
+                    for(String out:outputsAbsComp)
                     {
                     if((out).contains("http://")){//it is a URI
                         instance24.addProperty(propSelec24,NEW_TAXONOMY_CLASS+out);            
@@ -1734,27 +2192,13 @@ public void loadTaxonomyExport(String template, String modeFile){
                         instance24.addProperty(propSelec24, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
                     }
                     }
-      
-                  ///*********************************///
-                    ///*********ENDS HERE*********///
-                    ///*****EXPORTING INPUTS,OUTPUTS AND OTHER CRITERIA FOR BOTH THE COMPONENTS*****///
-                    ///*********************************///
                     
+                    /////NEW ADDITION FOR THE CONCRETE COMPONENT
                     
-                    
-                    
-                    
-                    
-                  ///*********************************///
-                    ///*********STARTS HERE*********///
-                    ///*****EXTRACTING THE INPUTS & OUTPUT INNER CRITERIA FOR BOTH THE COMPONENTS*****///
-                  //********AND EXTRACTION******************///
-                    ///*********************************///
-                    
-                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
-                    System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                    for(String inx:hsi)
-                    {
+                  //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
+                  System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
+                  for(String inx:hsi)
+                  {
 	                    System.out.println(inx);
 	                    String componentCatalogQueryforInteriorsofParametersComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
 	                    rnew2 = null;
@@ -1799,7 +2243,7 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    {
 	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"ParameterArgument");
+	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"ParameterArgument");
 	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                      //HAS ARGUMENT ID EXPORTED
@@ -1826,15 +2270,15 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                        Resource orig34 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
 	                        Taxonomy_Export.add(orig34, propSelec34, valString);
 	                    }
-                    
-                    
-                    }
-                    
-                    
-                   //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
-                    System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                    for(String inx:hsi)
-                    {
+                  
+                  
+                  }
+                  
+                  
+                 //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                  System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
+                  for(String inx:hsi)
+                  {
 	                    System.out.println(inx);
 	                    String componentCatalogQueryforInteriorsofDataComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
 	                    rnew2 = null;
@@ -1874,10 +2318,10 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    {
 	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR COMPONENT ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"DataArgument");
 	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
-	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+	                        OntClass c331 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"TextFile");
 	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                        
@@ -1900,14 +2344,14 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
 	                        
 	                    }
-                    
-                    
-                    }
-                    
-                  //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
-                    System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                    for(String outx:hso)
-                    {
+                  
+                  
+                  }
+                  
+                //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                  System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
+                  for(String outx:hso)
+                  {
 	                    System.out.println(outx);
 	                    String componentCatalogQueryforInteriorsofDataComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
 	                    rnew2 = null;
@@ -1948,10 +2392,10 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    {
 	                    	System.out.println("NOW EXPORT THE OUTPUT DATA INTERIORS FOR COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"DataArgument");
 	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
 	                        
-	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+	                        OntClass c331 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"TextFile");
 	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
 	                        
 	                        
@@ -1974,14 +2418,21 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
 	                        
 	                    }
+                  
+                  
+                  }
+
                     
                     
-                    }
- 
                     
-                  //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
+                    
+                    
+                    
+                    
+                    
+                    //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                    for(String inx:hsAi)
+                    for(String inx:inputsAbsComp)
                     {
 	                    System.out.println(inx);
 	                    String componentCatalogQueryforInteriorsofParametersAbstractComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
@@ -2028,7 +2479,7 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    {
 	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR ABSTRACT COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"ParameterArgument");
+	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"ParameterArgument");
 	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                      //HAS ARGUMENT ID EXPORTED
@@ -2061,7 +2512,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    for(String inx:hsAi)
+                    for(String inx:inputsAbsComp)
                     {
 	                    System.out.println(inx);
 	                    String componentCatalogQueryforInteriorsofDataAbstractComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
@@ -2103,10 +2554,11 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    {
 	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+	                    	String datatype=NEW_TAXONOMY_CLASS.substring(0, NEW_TAXONOMY_CLASS.length()-1)+"/Data/";
+	                        OntClass c31 = Taxonomy_Export.createClass(datatype+"DataArgument");
 	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
-	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+	                        OntClass c331 = Taxonomy_Export.createClass(datatype+"TextFile");
 	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
 	                        
 	                        
@@ -2135,7 +2587,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    for(String outx:hsAo)
+                    for(String outx:outputsAbsComp)
                     {
 	                    System.out.println(outx);
 	                    String componentCatalogQueryforInteriorsofDataAbstractComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
@@ -2177,10 +2629,11 @@ public void loadTaxonomyExport(String template, String modeFile){
 	                    {
 	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
 	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+	                    	String datatype=NEW_TAXONOMY_CLASS.substring(0, NEW_TAXONOMY_CLASS.length()-1)+"/Data/";
+	                        OntClass c31 = Taxonomy_Export.createClass(datatype+"DataArgument");
 	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
 	                        
-	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+	                        OntClass c331 = Taxonomy_Export.createClass(datatype+"TextFile");
 	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
 	                        
 	                        
@@ -2206,33 +2659,1644 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                     
                     }
+
+                  	
+                	  
+                	  
+                	  
+                	System.out.println("THIS ENDS THE FIRST CASE PART-2");  
+                	  
+                	  
+                	  
+                	  
+                	  
+                	  
+                	  
+                	  
+                	  
+                	  
+                	  
+                  }
+                    	
+
+                	
+                	
+              }
+                
+                
+  
+              //Case2: Direct Export since the size of the found concr comps with similar names is 0
+                if(namesOfConcreteCompswithSameNames.size()==0 && namesOfAbsCompswithSameNames.size()==0)
+                {
+                	
+                	
+                	 
+                	
+                	//this means that there are no similarities anywhere and we need to export it
+                	System.out.println("NOW UR INSIDE EXPORTING A FRESH ONE");
+                	//EXPORTING IT NOW:
+                	System.out.println("ULTIMATE POINT ::::CHECK::::"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+                	
+                	//concrete component individual
+                	String nameOfIndividualEnc = encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                  OntClass c = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+                  c.createIndividual(NEW_TAXONOMY_CLASS+nameOfIndividualEnc.toUpperCase());
+                  
+                  
+                  //subclass relation
+                  OntProperty propSelec1 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+                  Resource source1 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1") );
+                  Individual instance1 = (Individual) source1.as( Individual.class );
+                  if((AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)).contains("http://")){//it is a URI
+                      instance1.addProperty(propSelec1,NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1");            
+                  }else{//it is a local resource
+                      instance1.addProperty(propSelec1, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1")));
+                  }
+                	
+                	//abstract component individual
+                    String nameOfIndividualEnc2 = encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1");
+                    OntClass c2 = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+                    c2.createIndividual(NEW_TAXONOMY_CLASS+nameOfIndividualEnc2);
+                    
+                    //subclass relation for abstract component
+                    OntProperty propSelec2 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+                    Resource source2 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1") );
+                    Individual instance2 = (Individual) source2.as( Individual.class );
+                    if(("Component").contains("http://")){//it is a URI
+                        instance2.addProperty(propSelec2,NEW_TAXONOMY_CLASS+"Component");            
+                    }else{//it is a local resource
+                        instance2.addProperty(propSelec2, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode("Component")));
+                    }
+                    
+                    System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
+                    //export of ABSTRACT component ends
+                    
+                    
+                    
+                  //extracting the actual inputs,outputs and other factors for the component
+                    
+                    String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    rnew2 = null;
+                    rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
+
+                    HashSet<String> inputsComp=new HashSet<>();
+                    HashSet<String> outputsComp=new HashSet<>();
+                    String compLoc="";
+                    boolean compConcrete=false;
+                    while(rnew2.hasNext())
+                    {
+                    	QuerySolution qsnew = rnew2.next();
+                    	Resource nodenew = qsnew.getResource("?n");
+                    	Resource input = qsnew.getResource("?i");
+                    	Resource output = qsnew.getResource("?o");
+                    	Literal concr=qsnew.getLiteral("?concr");
+                    	Literal loc=qsnew.getLiteral("?loc");
+
+                    	if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
+                    	{
+                    		inputsComp.add(input.getLocalName());
+                    		outputsComp.add(output.getLocalName());
+                    		if(loc!=null && compLoc.equals(""))
+                    			compLoc=loc.getString();
+                    		if(concr!=null)
+                    		{
+                    			compConcrete=concr.getBoolean();
+                    		}
+                    	}
+                    }
+                    System.out.println("MAIN COMPONENT----------");
+                    for(String i:inputsComp)
+                    	System.out.println("inputs are: "+i);
+                    for(String o:outputsComp)
+                    	System.out.println("outputs are: "+o);
+                    System.out.println("Location is: "+compLoc);
+                    System.out.println("isConcrete is: "+compConcrete);
+                    
                     
 
-    
-                  ///*********************************///
-                    ///*********ENDS HERE*********///
-                    ///*****EXTRACTING THE INPUTS & OUTPUT INNER CRITERIA FOR BOTH THE COMPONENTS FOR EXPORTING LATER*****///
-                    //********AND EXTRACTION******************///
-                    ///*********************************///
+                  //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+                    OntClass c11 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1");
+                    c11.createIndividual(NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
                     
                     
+                    //IS CONCRETE EXPORTED
+                    OntProperty propSelec12;
+                    propSelec12 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
+                    Resource orig12 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1"));
+                    Taxonomy_Export.add(orig12, propSelec12,compConcrete+"",XSDDatatype.XSDboolean);
+                    
+                    //RDFS LABEL EXPORTED for canonical instance
+                    OntProperty propSelec13;
+                    propSelec13 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig13 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1"));
+                    Taxonomy_Export.add(orig13, propSelec13,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+                    
+                  //RDFS LABEL EXPORTED for class
+                    OntProperty propSelec14;
+                    propSelec14 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig14 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1"));
+                    Taxonomy_Export.add(orig14, propSelec14,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+                    
+                    
+                    //INPUTS-- EXPORTED
+                    OntProperty propSelec15 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
+                    Resource source15 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1") );
+                    Individual instance15 = (Individual) source15.as( Individual.class );
+                    for(String in:inputsComp)
+                    {
+                    if((in).contains("http://")){//it is a URI
+                        instance15.addProperty(propSelec15,NEW_TAXONOMY_CLASS+in);            
+                    }else{//it is a local resource
+                        instance15.addProperty(propSelec15, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
+                    }
+                    }
+                    
+                    //OUTPUTS-- EXPORTED
+                    OntProperty propSelec16 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
+                    Resource source16 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1") );
+                    Individual instance16 = (Individual) source16.as( Individual.class );
+                    for(String out:outputsComp)
+                    {
+                    if((out).contains("http://")){//it is a URI
+                        instance16.addProperty(propSelec16,NEW_TAXONOMY_CLASS+out);            
+                    }else{//it is a local resource
+                        instance16.addProperty(propSelec16, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
+                    }
+                    }
+                    
+                  //HAS LOCATION EXPORTED
+                  OntProperty propSelec17;
+                  propSelec17 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_LOCATION);
+                  Resource orig17 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1"));
+                  Taxonomy_Export.add(orig17, propSelec17, compLoc);
+                    
+
+                  
+                  
+                  //extracting the actual inputs,outputs and other factors for the Abstract component
+                    System.out.println("EXTRACTION BEGINS "+AbstractSuperClass.getLocalName());
+                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(AbstractSuperClass.getLocalName());
+                    rnew2 = null;
+                    rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
+                   
+                    HashSet<String> inputsAbsComp=new HashSet<>();
+                    HashSet<String> outputsAbsComp=new HashSet<>();
+                    boolean compConcreteAbs=false;
+                    System.out.println("what we have "+AbstractSuperClass.getLocalName());
+                    while(rnew2.hasNext())
+                    {
+                    	QuerySolution qsnew = rnew2.next();
+                    	Resource nodenew = qsnew.getResource("?n");
+                        Resource input = qsnew.getResource("?i");
+                        Resource output = qsnew.getResource("?o");
+                        Literal concr=qsnew.getLiteral("?concr");
+                        Literal loc=qsnew.getLiteral("?loc");
+                        System.out.println("nodenew inside now: "+nodenew.getLocalName());
+                        if(nodenew.getLocalName().equals(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)))
+                        {
+                        	inputsAbsComp.add(input.getLocalName());
+                        	outputsAbsComp.add(output.getLocalName());
+                        	if(concr!=null)
+                        	{
+                        		compConcreteAbs=concr.getBoolean();
+                        	}
+                        }
+                    }
+                    System.out.println("ABSTRACT COMPONENT----------");
+                    for(String i:inputsAbsComp)
+                    	System.out.println("inputs are: "+i);
+                    for(String o:outputsAbsComp)
+                    	System.out.println("outputs are: "+o);
+                    System.out.println("isConcrete is: "+compConcreteAbs);
+                    System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
+                    
+                  //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1");
+                    c21.createIndividual(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1");
+                    
+                    
+                    //IS CONCRETE EXPORTED
+                    OntProperty propSelec22;
+                    propSelec22 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
+                    Resource orig22 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1"));
+                    Taxonomy_Export.add(orig22, propSelec22,compConcreteAbs+"",XSDDatatype.XSDboolean);
+                    
+                    //RDFS LABEL EXPORTED for canonical instance
+                    OntProperty propSelec25;
+                    propSelec25 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig25 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1"));
+                    Taxonomy_Export.add(orig25, propSelec25,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
+                    
+                  //RDFS LABEL EXPORTED for class
+                    OntProperty propSelec28;
+                    propSelec28 = Taxonomy_Export.createDatatypeProperty(Constants.RDFS_LABEL);
+                    Resource orig28 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASSV1"));
+                    Taxonomy_Export.add(orig28, propSelec28,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
+                    
+                    
+                    //INPUTS-- EXPORTED
+                    OntProperty propSelec23 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
+                    Resource source23 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1") );
+                    Individual instance23 = (Individual) source23.as( Individual.class );
+                    for(String in:inputsAbsComp)
+                    {
+                    if((in).contains("http://")){//it is a URI
+                        instance23.addProperty(propSelec23,NEW_TAXONOMY_CLASS+in);            
+                    }else{//it is a local resource
+                        instance23.addProperty(propSelec23, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
+                    }
+                    }
+                    
+                    //OUTPUTS-- EXPORTED
+                    OntProperty propSelec24 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
+                    Resource source24 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1") );
+                    Individual instance24 = (Individual) source24.as( Individual.class );
+                    for(String out:outputsAbsComp)
+                    {
+                    if((out).contains("http://")){//it is a URI
+                        instance24.addProperty(propSelec24,NEW_TAXONOMY_CLASS+out);            
+                    }else{//it is a local resource
+                        instance24.addProperty(propSelec24, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
+                    }
+                    }
+                    
+                    /////NEW ADDITION FOR THE CONCRETE COMPONENT
+                    
+                  //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
+                  System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
+                  for(String inx:hsi)
+                  {
+	                    System.out.println(inx);
+	                    String componentCatalogQueryforInteriorsofParametersComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersComponents);
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="",valString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        Literal val=qsnew.getLiteral("?val");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+	                        if(val!=null)
+	                        {
+	                        	System.out.println(val.getString());
+	                        	valString=val.getString();
+	                        }
+	                        if(argID!=null && argName!=null && dim!=null && val!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"ParameterArgument");
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                      //HAS VALUE EXPORTED
+	                        OntProperty propSelec34;
+	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
+	                        Resource orig34 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig34, propSelec34, valString);
+	                    }
+                  
+                  
+                  }
+                  
+                  
+                 //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                  System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
+                  for(String inx:hsi)
+                  {
+	                    System.out.println(inx);
+	                    String componentCatalogQueryforInteriorsofDataComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponents);
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+
+	                        if(argID!=null && argName!=null && dim!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR COMPONENT ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"DataArgument");
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                        OntClass c331 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"TextFile");
+	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                    }
+                  
+                  
+                  }
+                  
+                //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                  System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
+                  for(String outx:hso)
+                  {
+	                    System.out.println(outx);
+	                    String componentCatalogQueryforInteriorsofDataComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponentsOutput);
+	                    
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+
+	                        if(argID!=null && argName!=null && dim!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE OUTPUT DATA INTERIORS FOR COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"DataArgument");
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+	                        
+	                        OntClass c331 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"TextFile");
+	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+	                        
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                    }
+                  
+                  
+                  }
+
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
+                    System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
+                    for(String inx:inputsAbsComp)
+                    {
+	                    System.out.println(inx);
+	                    String componentCatalogQueryforInteriorsofParametersAbstractComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersAbstractComponents);
+	                    
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="",valString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        Literal val=qsnew.getLiteral("?val");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+	                        if(val!=null)
+	                        {
+	                        	System.out.println(val.getString());
+	                        	valString=val.getString();
+	                        }
+	                        if(argID!=null && argName!=null && dim!=null && val!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                        OntClass c31 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+"ParameterArgument");
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                      //HAS VALUE EXPORTED
+	                        OntProperty propSelec34;
+	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
+	                        Resource orig34 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig34, propSelec34, valString);
+	                    }
+                    
+                    
+                    }
+                    
+                  //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
+                    System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
+                    for(String inx:inputsAbsComp)
+                    {
+	                    System.out.println(inx);
+	                    String componentCatalogQueryforInteriorsofDataAbstractComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataAbstractComponents);
+	                    
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+
+	                        if(argID!=null && argName!=null && dim!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                    	String datatype=NEW_TAXONOMY_CLASS.substring(0, NEW_TAXONOMY_CLASS.length()-1)+"/Data/";
+	                        OntClass c31 = Taxonomy_Export.createClass(datatype+"DataArgument");
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                        OntClass c331 = Taxonomy_Export.createClass(datatype+"TextFile");
+	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+	                        
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                    }
+                    
+                    
+                    }
+                    
+                  //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
+                    System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
+                    for(String outx:outputsAbsComp)
+                    {
+	                    System.out.println(outx);
+	                    String componentCatalogQueryforInteriorsofDataAbstractComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+	                    rnew2 = null;
+	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataAbstractComponentsOutput);
+	                    
+	                    boolean exists=false;
+	                    String argIDString="",argNameString="";
+	                    int dimInt=0;
+	                    
+	                    while(rnew2.hasNext())
+	                    {
+	                    	QuerySolution qsnew = rnew2.next();
+	                        Literal argID=qsnew.getLiteral("?argID");
+	                        Literal argName=qsnew.getLiteral("?argName");
+	                        Literal dim=qsnew.getLiteral("?dim");
+	                        
+	                        if(argID!=null)
+	                        {
+	                        	System.out.println(argID.getString());
+	                        	argIDString=argID.getString();
+	                        }
+	                        if(argName!=null)
+	                        {
+	                        	System.out.println(argName.getString());
+	                        	argNameString=argName.getString();
+	                        }
+	                        if(dim!=null)
+	                        {
+	                        	System.out.println(dim.getInt());
+	                        	dimInt=dim.getInt();
+	                        }
+
+	                        if(argID!=null && argName!=null && dim!=null)
+	                        	exists=true;
+	                        
+	                    }
+	                    if(exists==true)
+	                    {
+	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                    	String datatype=NEW_TAXONOMY_CLASS.substring(0, NEW_TAXONOMY_CLASS.length()-1)+"/Data/";
+	                        OntClass c31 = Taxonomy_Export.createClass(datatype+"DataArgument");
+	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+	                        
+	                        OntClass c331 = Taxonomy_Export.createClass(datatype+"TextFile");
+	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+	                        
+	                        
+	                      //HAS ARGUMENT ID EXPORTED
+	                        OntProperty propSelec31;
+	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+	                        
+	                      //HAS ARGUMENT NAME EXPORTED
+	                        OntProperty propSelec32;
+	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+	                        
+	                      //HAS DIMENSIONALITY EXPORTED
+	                        OntProperty propSelec33;
+	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+	                        
+	                    }
+                    
+                    
+                    }
+   
                 }
-            	
-            	
-            	
-            	
-            	
-            	
-            	
+              //Case2: Checking the components once for same Inputs and Outputs
+                else if(namesOfConcreteCompswithSameNames.size()!=0)
+                {
+                //this means we have found a list of similar abstract components in the Taxonomy Model
+                //now there are 2 points we have to consider here
+               //first we have to check the inputs and outputs of all the similar named abstract components in the Taxonomy Model
+               //if there is one with the same number of inputs and outputs then just break off
+               //if there is no one with the same inputs and outputs then we have to export a new one out
+                
+                System.out.println("NAMES FOR SIMILAR NAMED CONCRETE COMPONENTS");
+                for(String x:namesOfConcreteCompswithSameNames)
+                	System.out.println(x);
+                
+                System.out.println("THE INPUTS AND OUTPUTS IN THE CURRENT CONCRETE COMPONENT ARE:");
+                ///
+                String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(nodenew11.getLocalName()+"Class");
+                rnew2 = null;
+                rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
+               
+                HashSet<String> inputsCurrentConcrComp=new HashSet<>();
+                HashSet<String> outputsCurrentConcrComp=new HashSet<>();
+                boolean compConcrete=false;
+                System.out.println("what we have "+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+                while(rnew2.hasNext())
+                {
+                	QuerySolution qsnew = rnew2.next();
+                	Resource nodenew = qsnew.getResource("?n");
+                    Resource input = qsnew.getResource("?i");
+                    Resource output = qsnew.getResource("?o");
+                    System.out.println("nodenew now case2: "+nodenew.getLocalName());
+                    System.out.println("concrComp now case2: "+concrComponent.getLocalName());
+                    if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
+                    {
+                    	inputsCurrentConcrComp.add(input.getLocalName());
+                    	outputsCurrentConcrComp.add(output.getLocalName());
+                    }
+                }
+                System.out.println("CONCRETE COMPONENT----------");
+                for(String i:inputsCurrentConcrComp)
+                	System.out.println("inputs are: "+i);
+                for(String o:outputsCurrentConcrComp)
+                	System.out.println("outputs are: "+o);
+                System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
+                ///
+                
+                
+                
+                //NOW WE HAVE TO FIND OUT THE NUMBER OF INPUTS AND OUTPUTS IN EACH OF THE SIMILAR NAMED ABSTRACT COMPONENTS
+                int clarifyToExportConcrComp=0;
+                for(String whatwehave:namesOfConcreteCompswithSameNames)
+                {
+                	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinalConcreteScenario(NEW_TAXONOMY_CLASS);
+                    rnew2 = null;
+                    rnew2 = queryLocalTaxonomyModelRepository(inputsandoutputsforsimilarnamedComps);
+                   
+                    HashSet<String> similarAbsInps=new HashSet<>();
+                    HashSet<String> similarAbsOuts=new HashSet<>();
+                    System.out.println("what we have "+concrComponent.getLocalName());
+                    while(rnew2.hasNext())
+                    {
+                    	QuerySolution qsnew = rnew2.next();
+                    	Resource nodenew = qsnew.getResource("?n");
+                    	Resource x = qsnew.getResource("?x");
+                    	Resource y = qsnew.getResource("?y");
+                        Resource input = qsnew.getResource("?i");
+                        Resource output = qsnew.getResource("?o");
+                        
+                        
+//                        System.out.println("Node inside case2:? "+nodenew.getLocalName());
+//                        System.out.println("x inside case2: ? "+x.getLocalName());
+//                        System.out.println("y inside case2: ? "+y.getLocalName());
+                        
+                        if(nodenew.getLocalName().toUpperCase().equals(whatwehave) && !nodenew.getLocalName().toUpperCase().equals(x.getLocalName()) && y.getLocalName().equals("COMPONENT"))
+                        {
+                        	System.out.println("Node inside case2:? "+nodenew.getLocalName());
+                            System.out.println("x inside case2: ? "+x.getLocalName());
+                            System.out.println("y inside case2: ? "+y.getLocalName());
+                            System.out.println("input is :"+input.getLocalName());
+                            System.out.println("output is :"+output.getLocalName());
+                        	similarAbsInps.add(input.getLocalName());
+                        	similarAbsOuts.add(output.getLocalName());
+                        }
+                    }
+                    System.out.println("input size "+similarAbsInps.size());
+                    System.out.println("output size "+similarAbsOuts.size());
+                    
+                    if(similarAbsInps.size()==inputsCurrentConcrComp.size() && similarAbsOuts.size()==outputsCurrentConcrComp.size())
+                    {
+                    	System.out.println("There is a match CONCRETE COMPONENT CASE and BREAKKKKKKKKKKK!!!!!!!!!!!!!!");
+                    	clarifyToExportConcrComp=1;
+                    	break;
+                    }
+                }
+
             }
-            //CASE 2: WHENEVER THE NUMBER OF INPUTS AND OUTPUTS ARE NOT THE SAME FOR BOTH THE COMPONENTS (NORMAL & ABSTRACT)
-            //NOW WE HAVE TO CREATE AND NEW CLASS AND LINK THE C.I.'s
-            else
-            	{
-            		System.out.println("create a new class now");
-            		//START EXPORTING A NEW CLASS AND LINK ITS CI's
-            	}
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            	//ABSTRACT COMPONENT RETRIEVAL
+//            String componentCatalogQueryforInputsandOutputsAbstractComponent = Queries.componentCatalogQueryforInputsandOutputs(AbstractSuperClass.getLocalName());
+//            rnew2 = null;
+//            rnew2 = queryComponentCatalog(componentCatalogQueryforInputsandOutputsAbstractComponent);
+//           
+//            HashSet<String> hsAi=new HashSet<>();
+//            HashSet<String> hsAo=new HashSet<>();
+//            while(rnew2.hasNext())
+//            {
+//            	QuerySolution qsnew = rnew2.next();
+//                Resource nodenew = qsnew.getResource("?n");
+//                Resource i = qsnew.getResource("?i");
+//                Resource o = qsnew.getResource("?o");
+//                
+//                //System.out.println("nodenew "+nodenew.getLocalName()+" abstractclass "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
+//                if(nodenew.getLocalName().equals(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)))
+//                {
+//                	System.out.println("node in abstract part : "+nodenew.getLocalName());
+//                	hsAi.add(i.getLocalName());
+//                	hsAo.add(o.getLocalName());
+//                
+//                }
+//            }
+//            System.out.println("component catalog for that Abstract component only:");
+//            System.out.println("className : "+AbstractSuperClass.getLocalName());
+//            System.out.println("input size: "+hsAi.size());
+//            System.out.println("output size: "+hsAo.size());
+//            
+//            System.out.println("component catalog for that particular component only:");
+//            System.out.println("className : "+className);
+//            System.out.println("input size: "+hsi.size());
+//            System.out.println("output size: "+hso.size());
             
+            
+            
+//            //CASE 1: WHENEVER THE NUMBER OF INPUTS AND OUTPUTS ARE THE SAME FOR BOTH THE COMPONENTS (NORMAL & ABSTRACT)
+//            if(hsAi.size()==hsi.size() && hsAo.size()==hso.size())
+//            {
+//            	System.out.println("They are equal...now just export as a subclass if it does not exist");
+//            	//PART 1: CHECKING CRITERIA
+//            	//querying the Taxonomy Export Model to check whether this component already exists or not and if it 
+//            	//exists if its a subclass of that abstract class only
+//            	//Taxonomy_Export.write(System.out,"RDF/XML");
+//            	
+//            	
+//            	
+//            	String checkifComponentExists = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+//                rnew2 = null;
+//                rnew2 = queryLocalTaxonomyModelRepository(checkifComponentExists);
+//                boolean existsInTaxonomyModel=false;
+//                while(rnew2.hasNext())
+//                {
+//                	QuerySolution qsnew = rnew2.next();
+//                	Resource nodenew = qsnew.getResource("?n");
+//                    Resource x = qsnew.getResource("?x");
+//
+//                    	
+//                    if(nodenew!=null && x!=null)
+//                    {
+//                    	System.out.println("node "+nodenew.getLocalName()+" x "+x.getLocalName());
+//                    	if(nodenew.getLocalName().equals(className.toUpperCase()) && x.getLocalName().equals(AbstractSuperClass.getLocalName().toUpperCase()))
+//                    	{
+//                    		System.out.println("it exists");
+//                    		existsInTaxonomyModel=true;
+//                    		break;
+//                    	}
+//                    }
+//  
+//                }
+//                if(existsInTaxonomyModel==true)
+//                	System.out.println("IT ALREADY EXISTS SO NO NEED TO EVEN DO AN EXPORT");
+//            	
+//            	
+//
+//            	//PART2: EXPORTING CRITERIA
+//                if(existsInTaxonomyModel==false)
+//                {
+//                	System.out.println("you will have to export it now");
+//                	
+//                	
+//                	///*********************************///
+//                	///*********STARTS HERE*********///
+//                	///*****EXTRACTION OF THE INPUTS,OUTPUTS AND OTHER PROPERTIES FOR BOTH THE COMPONENTS*****///
+//                	///*********************************///
+//                	
+//                	
+//                	//extracting the actual inputs,outputs and other factors for the component
+//
+//                	String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(className);
+//                    rnew2 = null;
+//                    rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
+//                   
+//                    HashSet<String> inputsComp=new HashSet<>();
+//                    HashSet<String> outputsComp=new HashSet<>();
+//                    String compLoc="";
+//                    boolean compConcrete=false;
+//                    while(rnew2.hasNext())
+//                    {
+//                    	QuerySolution qsnew = rnew2.next();
+//                    	Resource nodenew = qsnew.getResource("?n");
+//                        Resource input = qsnew.getResource("?i");
+//                        Resource output = qsnew.getResource("?o");
+//                        Literal concr=qsnew.getLiteral("?concr");
+//                        Literal loc=qsnew.getLiteral("?loc");
+//
+//                        if(nodenew.getLocalName().equals(className.substring(0,className.length()-5)))
+//                        {
+//                        	inputsComp.add(input.getLocalName());
+//                        	outputsComp.add(output.getLocalName());
+//                        	if(loc!=null && compLoc.equals(""))
+//                        		compLoc=loc.getString();
+//                        	if(concr!=null)
+//                        	{
+//                        		compConcrete=concr.getBoolean();
+//                        	}
+//                        }
+//                    }
+//                    System.out.println("MAIN COMPONENT----------");
+//                    for(String i:inputsComp)
+//                    	System.out.println("inputs are: "+i);
+//                    for(String o:outputsComp)
+//                    	System.out.println("outputs are: "+o);
+//                    System.out.println("Location is: "+compLoc);
+//                    System.out.println("isConcrete is: "+compConcrete);
+//                    
+//                    
+//                  //extracting the actual inputs,outputs and other factors for the Abstract component
+//                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(AbstractSuperClass.getLocalName());
+//                    rnew2 = null;
+//                    rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
+//                   
+//                    HashSet<String> inputsAbsComp=new HashSet<>();
+//                    HashSet<String> outputsAbsComp=new HashSet<>();
+//                    boolean compConcreteAbs=false;
+//                    while(rnew2.hasNext())
+//                    {
+//                    	QuerySolution qsnew = rnew2.next();
+//                    	Resource nodenew = qsnew.getResource("?n");
+//                        Resource input = qsnew.getResource("?i");
+//                        Resource output = qsnew.getResource("?o");
+//                        Literal concr=qsnew.getLiteral("?concr");
+//                        Literal loc=qsnew.getLiteral("?loc");
+//
+//                        if(nodenew.getLocalName().equals(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)))
+//                        {
+//                        	inputsAbsComp.add(input.getLocalName());
+//                        	outputsAbsComp.add(output.getLocalName());
+//                        	if(concr!=null)
+//                        	{
+//                        		compConcreteAbs=concr.getBoolean();
+//                        	}
+//                        }
+//                    }
+//                    System.out.println("ABSTRACT COMPONENT----------");
+//                    for(String i:inputsAbsComp)
+//                    	System.out.println("inputs are: "+i);
+//                    for(String o:outputsAbsComp)
+//                    	System.out.println("outputs are: "+o);
+//                    System.out.println("isConcrete is: "+compConcreteAbs);
+//                	
+//                	
+//                	
+//                ///*********************************///
+//                ///*********ENDS HERE*********///
+//                ///*****EXTRACTION OF THE INPUTS,OUTPUTS AND OTHER PROPERTIES FOR BOTH THE COMPONENTS*****///
+//                ///*********************************///
+//
+//                	
+//                	
+//                    ///*********************************///
+//                    ///*********STARTS HERE*********///
+//                    ///*****EXPORTING FOR BOTH THE COMPONENTS*****///
+//                    ///*********************************///
+//                    
+//                    
+//                	//EXPORTING THE OWL CLASS PART FOR THE COMPONENT
+//                	//component individual
+//                    
+//                    
+//                    
+//                    
+//                	String nameOfIndividualEnc = encode(className);
+//                    OntClass c = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+//                    c.createIndividual(NEW_TAXONOMY_CLASS+"#"+nameOfIndividualEnc.toUpperCase());
+//
+//                    //EXPORTING THE OWL CLASS PART FOR THE ABSTRACT COMPONENT
+//                    //abstract component individual
+//                    String nameOfIndividualEnc2 = encode(AbstractSuperClass.getLocalName());
+//                    OntClass c2 = Taxonomy_Export.createClass(Constants.PREFIX_OWL+"Class");
+//                    c2.createIndividual(NEW_TAXONOMY_CLASS+"#"+nameOfIndividualEnc2.toUpperCase());
+//                    
+//                    
+//                    //EXPORTING THE SUBCLASS RELATION FOR THE COMPONENT
+//                    //for component (property)
+//                    OntProperty propSelec = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+//                    Resource source = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.toUpperCase()) );
+//                    Individual instance = (Individual) source.as( Individual.class );
+//                    if((AbstractSuperClass.getLocalName().toUpperCase()).contains("http://")){//it is a URI
+//                        instance.addProperty(propSelec,(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase()));            
+//                    }else{//it is a local resource
+//                        instance.addProperty(propSelec, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().toUpperCase())));
+//                    }
+//                    
+//                    
+//                    //EXPORTING THE SUBCLASS RELATION FOR THE ABSTRACT COMPONENT
+//                    //for abstract component(property)
+//                    OntProperty propSelec2 = Taxonomy_Export.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
+//                    Resource source2 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(AbstractSuperClass.getLocalName()) );
+//                    Individual instance2 = (Individual) source2.as( Individual.class );
+//                    if(("Component").contains("http://")){//it is a URI
+//                        instance2.addProperty(propSelec2,Constants.PREFIX_COMPONENT+"Component");            
+//                    }else{//it is a local resource
+//                        instance2.addProperty(propSelec2, Taxonomy_Export.getResource(Constants.PREFIX_COMPONENT+encode("Component")));
+//                    }
+//                    
+//                  ///*********************************///
+//                    ///*********ENDS HERE*********///
+//                    ///*****EXPORTING FOR BOTH THE COMPONENTS*****///
+//                    ///*********************************///
+//                    
+//                    
+//                  ///*********************************///
+//                    ///*********STARTS HERE*********///
+//                    ///*****EXPORTING INPUTS,OUTPUTS AND OTHER CRITERIA FOR BOTH THE COMPONENTS*****///
+//                    ///*********************************///
+//                    
+//                    //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+//                    OntClass c11 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+className.toUpperCase());
+//                    c11.createIndividual(NEW_TAXONOMY_CLASS+className.substring(0,className.length()-5).toUpperCase());
+//                    
+//                    //HAS LOCATION EXPORTED
+//                    OntProperty propSelec11;
+//                    propSelec11 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_LOCATION);
+//                    Resource orig11 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()));
+//                    Taxonomy_Export.add(orig11, propSelec11, compLoc);
+//                    
+//                    //IS CONCRETE EXPORTED
+//                    OntProperty propSelec12;
+//                    propSelec12 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
+//                    Resource orig12 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()));
+//                    Taxonomy_Export.add(orig11, propSelec12,compConcrete+"",XSDDatatype.XSDboolean);
+//                    
+//                    //INPUTS-- EXPORTED
+//                    OntProperty propSelec13 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
+//                    Resource source13 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()) );
+//                    Individual instance13 = (Individual) source13.as( Individual.class );
+//                    for(String in:hsi)
+//                    {
+//                    if((in).contains("http://")){//it is a URI
+//                        instance13.addProperty(propSelec13,NEW_TAXONOMY_CLASS+in);            
+//                    }else{//it is a local resource
+//                        instance13.addProperty(propSelec13, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
+//                    }
+//                    }
+//                    
+//                    //OUTPUTS-- EXPORTED
+//                    OntProperty propSelec14 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
+//                    Resource source14 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(className.substring(0,className.length()-5).toUpperCase()) );
+//                    Individual instance14 = (Individual) source14.as( Individual.class );
+//                    for(String out:hso)
+//                    {
+//                    if((out).contains("http://")){//it is a URI
+//                        instance14.addProperty(propSelec14,NEW_TAXONOMY_CLASS+out);            
+//                    }else{//it is a local resource
+//                        instance14.addProperty(propSelec14, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
+//                    }
+//                    }
+//                    
+//                  ///////*****************************///////
+//                  //NOW EXPORTING FOR THE ABSTRACT COMPONENT/
+//                  ///////*****************************///////
+//                    
+//                  //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+//                    OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().toUpperCase());
+//                    c21.createIndividual(NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase());
+//                    
+//                    
+//                    //IS CONCRETE EXPORTED
+//                    OntProperty propSelec22;
+//                    propSelec22 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_IS_CONCRETE);
+//                    Resource orig22 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()));
+//                    Taxonomy_Export.add(orig22, propSelec22,compConcrete+"",XSDDatatype.XSDboolean);
+//                    
+//                    //INPUTS-- EXPORTED
+//                    OntProperty propSelec23 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_INPUT);
+//                    Resource source23 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()) );
+//                    Individual instance23 = (Individual) source23.as( Individual.class );
+//                    for(String in:hsAi)
+//                    {
+//                    if((in).contains("http://")){//it is a URI
+//                        instance23.addProperty(propSelec23,NEW_TAXONOMY_CLASS+in);            
+//                    }else{//it is a local resource
+//                        instance23.addProperty(propSelec23, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(in)));
+//                    }
+//                    }
+//                    
+//                    //OUTPUTS-- EXPORTED
+//                    OntProperty propSelec24 = Taxonomy_Export.createOntProperty(Constants.COMPONENT_HAS_OUTPUT);
+//                    Resource source24 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()) );
+//                    Individual instance24 = (Individual) source24.as( Individual.class );
+//                    for(String out:hsAo)
+//                    {
+//                    if((out).contains("http://")){//it is a URI
+//                        instance24.addProperty(propSelec24,NEW_TAXONOMY_CLASS+out);            
+//                    }else{//it is a local resource
+//                        instance24.addProperty(propSelec24, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(out)));
+//                    }
+//                    }
+//      
+//                  ///*********************************///
+//                    ///*********ENDS HERE*********///
+//                    ///*****EXPORTING INPUTS,OUTPUTS AND OTHER CRITERIA FOR BOTH THE COMPONENTS*****///
+//                    ///*********************************///
+//                    
+//                    
+//                    
+//                    
+//                    
+//                    
+//                  ///*********************************///
+//                    ///*********STARTS HERE*********///
+//                    ///*****EXTRACTING THE INPUTS & OUTPUT INNER CRITERIA FOR BOTH THE COMPONENTS*****///
+//                  //********AND EXTRACTION******************///
+//                    ///*********************************///
+//                    
+//                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
+//                    System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
+//                    for(String inx:hsi)
+//                    {
+//	                    System.out.println(inx);
+//	                    String componentCatalogQueryforInteriorsofParametersComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+//	                    rnew2 = null;
+//	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersComponents);
+//	                    boolean exists=false;
+//	                    String argIDString="",argNameString="",valString="";
+//	                    int dimInt=0;
+//	                    
+//	                    while(rnew2.hasNext())
+//	                    {
+//	                    	QuerySolution qsnew = rnew2.next();
+//	                        Literal argID=qsnew.getLiteral("?argID");
+//	                        Literal argName=qsnew.getLiteral("?argName");
+//	                        Literal dim=qsnew.getLiteral("?dim");
+//	                        Literal val=qsnew.getLiteral("?val");
+//	                        
+//	                        if(argID!=null)
+//	                        {
+//	                        	System.out.println(argID.getString());
+//	                        	argIDString=argID.getString();
+//	                        }
+//	                        if(argName!=null)
+//	                        {
+//	                        	System.out.println(argName.getString());
+//	                        	argNameString=argName.getString();
+//	                        }
+//	                        if(dim!=null)
+//	                        {
+//	                        	System.out.println(dim.getInt());
+//	                        	dimInt=dim.getInt();
+//	                        }
+//	                        if(val!=null)
+//	                        {
+//	                        	System.out.println(val.getString());
+//	                        	valString=val.getString();
+//	                        }
+//	                        if(argID!=null && argName!=null && dim!=null && val!=null)
+//	                        	exists=true;
+//	                        
+//	                    }
+//	                    if(exists==true)
+//	                    {
+//	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR COMPONENTS ONLY");
+//	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+//	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"ParameterArgument");
+//	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+//	                        
+//	                      //HAS ARGUMENT ID EXPORTED
+//	                        OntProperty propSelec31;
+//	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+//	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+//	                        
+//	                      //HAS ARGUMENT NAME EXPORTED
+//	                        OntProperty propSelec32;
+//	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+//	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+//	                        
+//	                      //HAS DIMENSIONALITY EXPORTED
+//	                        OntProperty propSelec33;
+//	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+//	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+//	                        
+//	                      //HAS VALUE EXPORTED
+//	                        OntProperty propSelec34;
+//	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
+//	                        Resource orig34 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig34, propSelec34, valString);
+//	                    }
+//                    
+//                    
+//                    }
+//                    
+//                    
+//                   //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+//                    System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
+//                    for(String inx:hsi)
+//                    {
+//	                    System.out.println(inx);
+//	                    String componentCatalogQueryforInteriorsofDataComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+//	                    rnew2 = null;
+//	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponents);
+//	                    boolean exists=false;
+//	                    String argIDString="",argNameString="";
+//	                    int dimInt=0;
+//	                    
+//	                    while(rnew2.hasNext())
+//	                    {
+//	                    	QuerySolution qsnew = rnew2.next();
+//	                        Literal argID=qsnew.getLiteral("?argID");
+//	                        Literal argName=qsnew.getLiteral("?argName");
+//	                        Literal dim=qsnew.getLiteral("?dim");
+//	                        
+//	                        if(argID!=null)
+//	                        {
+//	                        	System.out.println(argID.getString());
+//	                        	argIDString=argID.getString();
+//	                        }
+//	                        if(argName!=null)
+//	                        {
+//	                        	System.out.println(argName.getString());
+//	                        	argNameString=argName.getString();
+//	                        }
+//	                        if(dim!=null)
+//	                        {
+//	                        	System.out.println(dim.getInt());
+//	                        	dimInt=dim.getInt();
+//	                        }
+//
+//	                        if(argID!=null && argName!=null && dim!=null)
+//	                        	exists=true;
+//	                        
+//	                    }
+//	                    if(exists==true)
+//	                    {
+//	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR COMPONENT ONLY");
+//	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+//	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+//	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+//	                        
+//	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+//	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+//	                        
+//	                        
+//	                      //HAS ARGUMENT ID EXPORTED
+//	                        OntProperty propSelec31;
+//	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+//	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+//	                        
+//	                      //HAS ARGUMENT NAME EXPORTED
+//	                        OntProperty propSelec32;
+//	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+//	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+//	                        
+//	                      //HAS DIMENSIONALITY EXPORTED
+//	                        OntProperty propSelec33;
+//	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+//	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+//	                        
+//	                    }
+//                    
+//                    
+//                    }
+//                    
+//                  //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+//                    System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
+//                    for(String outx:hso)
+//                    {
+//	                    System.out.println(outx);
+//	                    String componentCatalogQueryforInteriorsofDataComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+//	                    rnew2 = null;
+//	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponentsOutput);
+//	                    
+//	                    boolean exists=false;
+//	                    String argIDString="",argNameString="";
+//	                    int dimInt=0;
+//	                    
+//	                    while(rnew2.hasNext())
+//	                    {
+//	                    	QuerySolution qsnew = rnew2.next();
+//	                        Literal argID=qsnew.getLiteral("?argID");
+//	                        Literal argName=qsnew.getLiteral("?argName");
+//	                        Literal dim=qsnew.getLiteral("?dim");
+//	                        
+//	                        if(argID!=null)
+//	                        {
+//	                        	System.out.println(argID.getString());
+//	                        	argIDString=argID.getString();
+//	                        }
+//	                        if(argName!=null)
+//	                        {
+//	                        	System.out.println(argName.getString());
+//	                        	argNameString=argName.getString();
+//	                        }
+//	                        if(dim!=null)
+//	                        {
+//	                        	System.out.println(dim.getInt());
+//	                        	dimInt=dim.getInt();
+//	                        }
+//
+//	                        if(argID!=null && argName!=null && dim!=null)
+//	                        	exists=true;
+//	                        
+//	                    }
+//	                    if(exists==true)
+//	                    {
+//	                    	System.out.println("NOW EXPORT THE OUTPUT DATA INTERIORS FOR COMPONENTS ONLY");
+//	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+//	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+//	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+//	                        
+//	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+//	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+//	                        
+//	                        
+//	                      //HAS ARGUMENT ID EXPORTED
+//	                        OntProperty propSelec31;
+//	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+//	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+//	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+//	                        
+//	                      //HAS ARGUMENT NAME EXPORTED
+//	                        OntProperty propSelec32;
+//	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+//	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+//	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+//	                        
+//	                      //HAS DIMENSIONALITY EXPORTED
+//	                        OntProperty propSelec33;
+//	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+//	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+//	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+//	                        
+//	                    }
+//                    
+//                    
+//                    }
+// 
+//                    
+//                  //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
+//                    System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
+//                    for(String inx:hsAi)
+//                    {
+//	                    System.out.println(inx);
+//	                    String componentCatalogQueryforInteriorsofParametersAbstractComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+//	                    rnew2 = null;
+//	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersAbstractComponents);
+//	                    
+//	                    boolean exists=false;
+//	                    String argIDString="",argNameString="",valString="";
+//	                    int dimInt=0;
+//	                    
+//	                    while(rnew2.hasNext())
+//	                    {
+//	                    	QuerySolution qsnew = rnew2.next();
+//	                        Literal argID=qsnew.getLiteral("?argID");
+//	                        Literal argName=qsnew.getLiteral("?argName");
+//	                        Literal dim=qsnew.getLiteral("?dim");
+//	                        Literal val=qsnew.getLiteral("?val");
+//	                        
+//	                        if(argID!=null)
+//	                        {
+//	                        	System.out.println(argID.getString());
+//	                        	argIDString=argID.getString();
+//	                        }
+//	                        if(argName!=null)
+//	                        {
+//	                        	System.out.println(argName.getString());
+//	                        	argNameString=argName.getString();
+//	                        }
+//	                        if(dim!=null)
+//	                        {
+//	                        	System.out.println(dim.getInt());
+//	                        	dimInt=dim.getInt();
+//	                        }
+//	                        if(val!=null)
+//	                        {
+//	                        	System.out.println(val.getString());
+//	                        	valString=val.getString();
+//	                        }
+//	                        if(argID!=null && argName!=null && dim!=null && val!=null)
+//	                        	exists=true;
+//	                        
+//	                    }
+//	                    if(exists==true)
+//	                    {
+//	                    	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+//	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+//	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"ParameterArgument");
+//	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+//	                        
+//	                      //HAS ARGUMENT ID EXPORTED
+//	                        OntProperty propSelec31;
+//	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+//	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+//	                        
+//	                      //HAS ARGUMENT NAME EXPORTED
+//	                        OntProperty propSelec32;
+//	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+//	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+//	                        
+//	                      //HAS DIMENSIONALITY EXPORTED
+//	                        OntProperty propSelec33;
+//	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+//	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+//	                        
+//	                      //HAS VALUE EXPORTED
+//	                        OntProperty propSelec34;
+//	                        propSelec34 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_VALUE);
+//	                        Resource orig34 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig34, propSelec34, valString);
+//	                    }
+//                    
+//                    
+//                    }
+//                    
+//                  //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
+//                    System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
+//                    for(String inx:hsAi)
+//                    {
+//	                    System.out.println(inx);
+//	                    String componentCatalogQueryforInteriorsofDataAbstractComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+//	                    rnew2 = null;
+//	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataAbstractComponents);
+//	                    
+//	                    boolean exists=false;
+//	                    String argIDString="",argNameString="";
+//	                    int dimInt=0;
+//	                    
+//	                    while(rnew2.hasNext())
+//	                    {
+//	                    	QuerySolution qsnew = rnew2.next();
+//	                        Literal argID=qsnew.getLiteral("?argID");
+//	                        Literal argName=qsnew.getLiteral("?argName");
+//	                        Literal dim=qsnew.getLiteral("?dim");
+//	                        
+//	                        if(argID!=null)
+//	                        {
+//	                        	System.out.println(argID.getString());
+//	                        	argIDString=argID.getString();
+//	                        }
+//	                        if(argName!=null)
+//	                        {
+//	                        	System.out.println(argName.getString());
+//	                        	argNameString=argName.getString();
+//	                        }
+//	                        if(dim!=null)
+//	                        {
+//	                        	System.out.println(dim.getInt());
+//	                        	dimInt=dim.getInt();
+//	                        }
+//
+//	                        if(argID!=null && argName!=null && dim!=null)
+//	                        	exists=true;
+//	                        
+//	                    }
+//	                    if(exists==true)
+//	                    {
+//	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+//	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+//	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+//	                        c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+//	                        
+//	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+//	                        c331.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
+//	                        
+//	                        
+//	                      //HAS ARGUMENT ID EXPORTED
+//	                        OntProperty propSelec31;
+//	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+//	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+//	                        
+//	                      //HAS ARGUMENT NAME EXPORTED
+//	                        OntProperty propSelec32;
+//	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+//	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+//	                        
+//	                      //HAS DIMENSIONALITY EXPORTED
+//	                        OntProperty propSelec33;
+//	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+//	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(inx));
+//	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+//	                        
+//	                    }
+//                    
+//                    
+//                    }
+//                    
+//                  //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
+//                    System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
+//                    for(String outx:hsAo)
+//                    {
+//	                    System.out.println(outx);
+//	                    String componentCatalogQueryforInteriorsofDataAbstractComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+//	                    rnew2 = null;
+//	                    rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataAbstractComponentsOutput);
+//	                    
+//	                    boolean exists=false;
+//	                    String argIDString="",argNameString="";
+//	                    int dimInt=0;
+//	                    
+//	                    while(rnew2.hasNext())
+//	                    {
+//	                    	QuerySolution qsnew = rnew2.next();
+//	                        Literal argID=qsnew.getLiteral("?argID");
+//	                        Literal argName=qsnew.getLiteral("?argName");
+//	                        Literal dim=qsnew.getLiteral("?dim");
+//	                        
+//	                        if(argID!=null)
+//	                        {
+//	                        	System.out.println(argID.getString());
+//	                        	argIDString=argID.getString();
+//	                        }
+//	                        if(argName!=null)
+//	                        {
+//	                        	System.out.println(argName.getString());
+//	                        	argNameString=argName.getString();
+//	                        }
+//	                        if(dim!=null)
+//	                        {
+//	                        	System.out.println(dim.getInt());
+//	                        	dimInt=dim.getInt();
+//	                        }
+//
+//	                        if(argID!=null && argName!=null && dim!=null)
+//	                        	exists=true;
+//	                        
+//	                    }
+//	                    if(exists==true)
+//	                    {
+//	                    	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+//	                    	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+//	                        OntClass c31 = Taxonomy_Export.createClass(Constants.PREFIX_COMPONENT+"DataArgument");
+//	                        c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+//	                        
+//	                        OntClass c331 = Taxonomy_Export.createClass(Constants.PREFIX_J1_ONTO+"TextFile");
+//	                        c331.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
+//	                        
+//	                        
+//	                      //HAS ARGUMENT ID EXPORTED
+//	                        OntProperty propSelec31;
+//	                        propSelec31 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_ID);
+//	                        Resource orig31 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+//	                        Taxonomy_Export.add(orig31, propSelec31, argIDString);
+//	                        
+//	                      //HAS ARGUMENT NAME EXPORTED
+//	                        OntProperty propSelec32;
+//	                        propSelec32 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_ARGUMENT_NAME);
+//	                        Resource orig32 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+//	                        Taxonomy_Export.add(orig32, propSelec32, argNameString);
+//	                        
+//	                      //HAS DIMENSIONALITY EXPORTED
+//	                        OntProperty propSelec33;
+//	                        propSelec33 = Taxonomy_Export.createDatatypeProperty(Constants.COMPONENT_HAS_DIMENSIONALITY);
+//	                        Resource orig33 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(outx));
+//	                        Taxonomy_Export.add(orig33, propSelec33, dimInt+"",XSDDatatype.XSDint);
+//	                        
+//	                    }
+//                    
+//                    
+//                    }
+//                    
+//
+//    
+//                  ///*********************************///
+//                    ///*********ENDS HERE*********///
+//                    ///*****EXTRACTING THE INPUTS & OUTPUT INNER CRITERIA FOR BOTH THE COMPONENTS FOR EXPORTING LATER*****///
+//                    //********AND EXTRACTION******************///
+//                    ///*********************************///
+//                    
+//                    
+//                }
+//            	
+//            	
+//            	
+//            	
+//            	
+//            	
+//            	
+//            }
+//            //CASE 2: WHENEVER THE NUMBER OF INPUTS AND OUTPUTS ARE NOT THE SAME FOR BOTH THE COMPONENTS (NORMAL & ABSTRACT)
+//            //NOW WE HAVE TO CREATE AND NEW CLASS AND LINK THE C.I.'s
+//            else
+//            	{
+//            		System.out.println("create a new class now");
+//            		//START EXPORTING A NEW CLASS AND LINK ITS CI's
+//            	}
+//            
             }
             
             
@@ -2283,6 +4347,13 @@ public void loadTaxonomyExport(String template, String modeFile){
             
             
         }
+        System.out.println("PRINTING ALL THE COMPONENTS THAT EXIST IN THE INCOMING WORKFLOW TEMPLATE");
+        System.out.println();
+        for(String x:hsforComps)
+        	System.out.println(x);
+        System.out.println();
+        
+        
         //retrieval of the dataVariables
         String queryDataV = Queries.queryDataV2();
         r = queryLocalWINGSTemplateModelRepository(queryDataV);
