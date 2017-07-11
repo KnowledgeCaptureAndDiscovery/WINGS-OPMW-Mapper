@@ -33,6 +33,10 @@ import org.apache.jena.reasoner.rulesys.impl.Generator;
 import org.apache.jena.tdb.store.Hash;
 import org.apache.jena.util.FileManager;
 
+import Validations.Scenario3;
+import Validations.Utils;
+import Validations.Validator;
+
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -42,9 +46,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+
+import javax.xml.bind.DatatypeConverter;
 
 
 class Gen
@@ -334,6 +341,8 @@ public void loadTaxonomyExport(String template, String modeFile){
         String queryNameWfTemplate = Queries.queryNameWfTemplate();
         //String templateName = null, templateName_ = null;
         String templateName_ = null;
+        String newTemplateName=null;
+        String newTemplateName_=null;
         //System.out.println(queryNameWfTemplate);
         ResultSet r = queryLocalWINGSTemplateModelRepository(queryNameWfTemplate);
         if(r.hasNext()){//there should be just one local name per template
@@ -347,35 +356,42 @@ public void loadTaxonomyExport(String template, String modeFile){
                     return "";
                 }
             }
+            newTemplateName=ObtainAbstractTemplateName(templateName);
+            newTemplateName_=newTemplateName+"_";
+            
             templateName_=templateName+"_";
             //add the template as a provenance graph
-            this.addIndividual(OPMWModel,templateName, Constants.OPMW_WORKFLOW_TEMPLATE, templateName);
+            this.addIndividual(OPMWModel,newTemplateName, Constants.OPMW_WORKFLOW_TEMPLATE, newTemplateName);
             
             OntClass cParam = OPMWModel.createClass(Constants.P_PLAN_PLAN);
-            cParam.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(templateName));
+            cParam.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(newTemplateName));
             
             if(v!=null){
-                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,""+ v.getInt(),
+                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,""+ v.getInt(),
                         Constants.OPMW_DATA_PROP_VERSION_NUMBER, XSDDatatype.XSDint);
             }
             //add the uri of the original log file (native system template)
-            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName, 
+            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName, 
                     res.getURI(),Constants.OPMW_DATA_PROP_HAS_NATIVE_SYSTEM_TEMPLATE, XSDDatatype.XSDanyURI);
             
             //Prov-o interoperability : workflow template           
             OntClass plan = OPMWModel.createClass(Constants.PROV_PLAN);
-            plan.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(templateName));
+            plan.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(newTemplateName));
             
-            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,
+            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
                 res.getURI(),Constants.PROV_HAD_PRIMARY_SOURCE, XSDDatatype.XSDanyURI);
             
            
-        }        
+        } 
+        
+       
+        
         System.out.println("main template part done"); 
         //additional metadata from the template.
         String queryMetadata = Queries.queryMetadata();
         r = null;
         r = queryLocalWINGSTemplateModelRepository(queryMetadata);
+        String timegiven="";
         while(r.hasNext()){
             QuerySolution qs = r.next();
             Literal doc = qs.getLiteral("?doc");
@@ -385,12 +401,12 @@ public void loadTaxonomyExport(String template, String modeFile){
             Resource diagram = qs.getResource("?diagram");
             //ask for diagram here: hasTemplateDiagram xsd:anyURI (png)
             if(doc!=null){
-                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,doc.getString(),
+                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,doc.getString(),
                         Constants.OPMW_DATA_PROP_HAS_DOCUMENTATION);
             }
             if(contrib!=null){
                 this.addIndividual(OPMWModel,contrib.getString(), Constants.OPM_AGENT,"Agent "+contrib.getString());
-                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,Constants.CONCEPT_AGENT+"/"+contrib.getString(),
+                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,Constants.CONCEPT_AGENT+"/"+contrib.getString(),
                         Constants.PROP_HAS_CONTRIBUTOR);
                 
                 //prov-o interoperability
@@ -399,18 +415,52 @@ public void loadTaxonomyExport(String template, String modeFile){
                 d.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+agEncoded);
             }
             if(license!=null){
-                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,license.getString(),
+                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,license.getString(),
                         Constants.DATA_PROP_RIGHTS, XSDDatatype.XSDanyURI);
             }
             if(time!=null){
-                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,time.getString(),
+                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,time.getString(),
                         Constants.DATA_PROP_MODIFIED, XSDDatatype.XSDdateTime);
+                timegiven=time.getString();
             }
             if(diagram!=null){
-                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,diagram.getURI(),
+                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,diagram.getURI(),
                         Constants.OPMW_DATA_PROP_HAS_TEMPLATE_DIAGRAM, XSDDatatype.XSDanyURI);
             }
         }
+        //extra time added (current time as ISSUED PROPERTY IN DUBLIN CORE)
+        Date d=new Date();
+        Calendar c143 = Calendar.getInstance();
+        c143.setTime(d);
+        String xmlDateTime = DatatypeConverter.printDateTime(c143);
+        this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,xmlDateTime,
+                Constants.ISSUED_TIME,XSDDatatype.XSDdateTime);
+        
+        ////******************////
+        //SCENARIO-3 STARTS HERE:
+
+        OntModel sc3 = Utils.loadDirectory("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/VALIDATIONS/SC3");
+        String s = ""; 
+        if(sc3!=null)
+        {
+        s+= Scenario3.validateRepo(sc3,templateName,newTemplateName,xmlDateTime);
+        }
+        
+        System.out.println("What we have to link the current template to: "+s);
+        
+      //EXPORTING THE PROV_WAS_REVISION_OF
+        if(!s.equals("null"))
+        {
+        	System.out.println("s is not null:"+s);
+        this.addProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName, Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+s, Constants.PROV_WAS_REVISION_OF);
+        }
+        
+        
+        
+        
+        
+    ////******************////
+        //SCENARIO-3 ENDS HERE:
         
         // retrieval of the Components (nodes, with their components and if they are concrete or not)
         String queryNodes = Queries.queryNodes();
@@ -2093,11 +2143,11 @@ public void loadTaxonomyExport(String template, String modeFile){
             	this.addDataProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(), isConcrete.getBoolean()+"", Constants.OPMW_DATA_PROP_IS_CONCRETE, XSDDatatype.XSDboolean);
             }
             this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(),
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,                    
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,                    
                         Constants.OPMW_PROP_IS_STEP_OF_TEMPLATE);            
             //p-plan interop
             this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(),
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,                    
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,                    
                         Constants.P_PLAN_PROP_IS_STEP_OF_PLAN);
             
             
@@ -2158,7 +2208,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 System.out.println(variable);
             }
             this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+variable.getLocalName(),
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
                         Constants.OPMW_PROP_IS_VARIABLE_OF_TEMPLATE);
             
             
@@ -2183,7 +2233,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+aux);
             
             this.addProperty(OPMWModel,Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName_+res.getLocalName(),
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,                    
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,                    
                         Constants.OPMW_PROP_IS_PARAMETER_OF_TEMPLATE);
             
             
@@ -2350,7 +2400,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         exportRDFFile(taxonomy_export, Taxonomy_Export);
         
         
-        return Constants.PREFIX_EXPORT_RESOURCE+""+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(templateName);
+        return Constants.PREFIX_EXPORT_RESOURCE+""+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(newTemplateName);
     }
 
 /**
@@ -2407,7 +2457,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         String queryIntermediateTemplates = Queries.queryIntermediateTemplates();
         //the template is only needed to connect the execution account to itself.
         ResultSet r = queryLocalWINGSResultsRepository(queryIntermediateTemplates);
-        String templateName = "", templateURI, expandedTemplateURI,expandedTemplateName="";
+        String templateName = "", templateURI, expandedTemplateURI,expandedTemplateName="",newTemplateName="";
         if(r.hasNext()){
             QuerySolution qs = r.next();
             Resource template = qs.getResource("?template");
@@ -2416,7 +2466,8 @@ public void loadTaxonomyExport(String template, String modeFile){
             String wfInstance = qs.getResource("?wfInstance").getURI();
             expandedTemplateURI = qs.getResource("?expandedTemplate").getURI();
             expandedTemplateName=qs.getResource("?expandedTemplate").getLocalName();
-
+            newTemplateName=ObtainAbstractTemplateName(templateName);
+            
             
             ////NEW ADDITION BY TIRTH**************//
             //loading the expandedTemplate Model here
@@ -2461,7 +2512,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         
         //relation between the account and the template
         this.addProperty(OPMWModel,accname,
-                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,
+                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
                     Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE);
         
         
@@ -2470,7 +2521,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         
         //p-plan interop
         this.addProperty(PROVModel,accname,
-                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,
+                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
                     Constants.PROV_WAS_DERIVED_FROM);
         
         //AT THIS STAGE WE HAVE GOT THE EXPANDED TEMPLATE NAME AND URI AND WE ARE STARTING TO ACQUIRE THE EXPANDED TEMPLATE
@@ -2484,7 +2535,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         //check the condition and only then go for creating the expanded template
         String newExpandedTemplateName="";
         if(ans==true)
-        	newExpandedTemplateName=createExpandedTemplate(accname,expandedTemplateName,expandedTemplateURI,templateName);
+        	newExpandedTemplateName=createExpandedTemplate(accname,expandedTemplateName,expandedTemplateURI,newTemplateName);
         else
         	System.out.println("SINCE ALL THE TEMPLATE PROCESSES ARE CONCRETE, NO EXPANDED TEMPLATE IS CREATED");
               
@@ -2547,7 +2598,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             //engine = qs.getLiteral("?engine").getString();
             System.out.println("Wings results file:"+executionFile+"\n"
                    // + "User: "+user+", \n"
-                    + "Workflow Template: "+templateName+"\n"
+                    + "Workflow Template: "+newTemplateName+"\n"
                     + "status: "+status+"\n"
                     + "startTime: "+startT+"\n"
                     + "endTime: "+endT);
@@ -2597,7 +2648,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     XSDDatatype.XSDanyURI);
         }
         if(tool!=null){
-            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,
+            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
                 tool,Constants.OPMW_DATA_PROP_CREATED_IN_WORKFLOW_SYSTEM,
                     XSDDatatype.XSDanyURI);
             /*************************
@@ -2605,14 +2656,14 @@ public void loadTaxonomyExport(String template, String modeFile){
             *************************/ 
             //the template is a prov:Plan
             OntClass plan = PROVModel.createClass(Constants.PROV_PLAN);
-            plan.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(templateName));
+            plan.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(newTemplateName));
             //createdIn wf system subprop of wasAttributedTo
-            this.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,
+            this.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
                 tool,Constants.PROV_WAS_ATTRIBUTED_TO,
                     XSDDatatype.XSDanyURI);
             //the run wasInfluencedBy the template
             this.addProperty(PROVModel,accname,
-                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName,
+                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
                     Constants.PROV_WAS_INFLUENCED_BY);
         }
        // String newexpandedtemplatename=newExpandedTemplateName.substring(0,newExpandedTemplateName.indexOf('-'));
@@ -2719,7 +2770,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             
             //link node  to the process templates
             this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName+"_"+derivedFrom,
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName+"_"+derivedFrom,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_PROCESS);
            
             
@@ -2737,7 +2788,7 @@ public void loadTaxonomyExport(String template, String modeFile){
            
             //p-plan interop
             this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName+"_"+derivedFrom,
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName+"_"+derivedFrom,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_STEP);
         }
 
@@ -2802,7 +2853,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             if(res!=null){
                 this.addProperty(OPMWModel,
                         Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
-                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName+"_"+derived,
+                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName+"_"+derived,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
                 
                 //NEW ADDITIONS BY TIRTH
@@ -2818,7 +2869,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 
                 this.addProperty(OPMWModel,
                         Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
-                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName+"_"+derived,
+                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName+"_"+derived,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
             }
             this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
@@ -2910,7 +2961,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 //if it doesn't exist we avoid linking to the template.
                 this.addProperty(OPMWModel,
                         Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName+"_"+objName,
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
                 
   
@@ -2929,7 +2980,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 //p-plan interop
                 this.addProperty(OPMWModel,
                         Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName+"_"+objName,
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
             }else
             //metadata
@@ -3756,6 +3807,118 @@ public void loadTaxonomyExport(String template, String modeFile){
     g.className=classNamegiven;
     return g;
     
+    }
+    
+  //THE FUNCTION FOR OBTAINING THE ABSTRACT TEMPLATE NAME
+    public String ObtainAbstractTemplateName(String TemplateName)
+    {
+
+          ArrayList<String> arrFinalAbstractTemplateNameRelations=new ArrayList<>();
+          String queryNodes=Queries.queryNodes();
+          ResultSet r = null;
+          r = queryLocalWINGSTemplateModelRepository(queryNodes);
+          //COMPONENT PARTS
+          while(r.hasNext()){
+              QuerySolution qs = r.next();
+              Resource res = qs.getResource("?n");
+              Resource comp = qs.getResource("?c");
+              Resource typeComp = qs.getResource("?typeComp");
+              if(res!=null && comp!=null)
+              {
+            	  arrFinalAbstractTemplateNameRelations.add(res.getLocalName()+" has Comp "+comp.getLocalName());
+              }
+              
+          }
+          
+          //DATA PARTS
+          String queryDataV = Queries.queryDataV2();
+          r = queryLocalWINGSTemplateModelRepository(queryDataV);
+          while(r.hasNext()){
+              QuerySolution qs = r.next();
+              Resource variable = qs.getResource("?d");
+              Resource type = qs.getResource("?t");
+              Literal dim = qs.getLiteral("?hasDim"); 
+              if(variable!=null && type!=null)
+              {
+            	  arrFinalAbstractTemplateNameRelations.add("Variable "+ variable.getLocalName()+" has type "+type.getLocalName());
+              }
+              
+          }
+          
+          //PARAMETER PARTS
+          String queryParameterV = Queries.querySelectParameter();
+          r = null;
+          r = queryLocalWINGSTemplateModelRepository(queryParameterV);
+          while(r.hasNext()){
+              QuerySolution qs = r.next();
+              Resource res = qs.getResource("?p");
+              arrFinalAbstractTemplateNameRelations.add("Parameter is "+res.getLocalName());  
+          }
+          
+          
+          
+          
+          //INPUT LINKS
+          String queryInputLinks = Queries.queryInputLinks();
+          r = null;
+          r = queryLocalWINGSTemplateModelRepository(queryInputLinks);
+          while(r.hasNext()){
+              QuerySolution qs = r.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?dest");
+              arrFinalAbstractTemplateNameRelations.add("InputLink "+resVar.getLocalName()+" Node is "+resNode.getLocalName()); 
+          }
+          
+          //INPUT-P LINKS
+          String queryInputLinksP = Queries.queryInputLinksP();
+          r = null;
+          r = queryLocalWINGSTemplateModelRepository(queryInputLinksP);
+          while(r.hasNext()){
+              QuerySolution qs = r.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?dest");
+              arrFinalAbstractTemplateNameRelations.add("Input-plink "+resVar.getLocalName()+" Node is "+resNode.getLocalName());   
+          }
+          
+          //OUTPUT LINKS
+          String queryOutputLinks = Queries.queryOutputLinks();
+          r = null;
+          r = queryLocalWINGSTemplateModelRepository(queryOutputLinks);
+          while(r.hasNext()){
+              QuerySolution qs = r.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?orig");
+              arrFinalAbstractTemplateNameRelations.add("Outputlink "+resVar.getLocalName()+" Node is "+resNode.getLocalName());
+          }
+          //INOUT LINKS
+          String queryInOutLinks = Queries.queryInOutLinks();
+          r = null;
+          r = queryLocalWINGSTemplateModelRepository(queryInOutLinks);
+          while(r.hasNext()){
+              QuerySolution qs = r.next();
+              Resource resVar = qs.getResource("?var");
+              Resource resNode = qs.getResource("?orig");
+              Resource resNodeD = qs.getResource("?dest");
+              arrFinalAbstractTemplateNameRelations.add("Variable "+resVar.getLocalName()+" has origin Node "+resNode.getLocalName()+" has Destination Node "+resNodeD.getLocalName());
+          }
+
+     	  String newAbstractTemplateName="";
+     	  Collections.sort(arrFinalAbstractTemplateNameRelations);
+          for(String x:arrFinalAbstractTemplateNameRelations)
+          {
+        	  newAbstractTemplateName+=x+"\n";
+          }
+
+
+     	  	int indexer=TemplateName.indexOf('-');
+     	  	try{
+     	  		newAbstractTemplateName=TemplateName+"_"+MD5(newAbstractTemplateName);
+     	  	}catch(Exception e)
+     	  	{}
+            System.out.println("final abstracttemplatename is "+newAbstractTemplateName);
+
+            return newAbstractTemplateName;
+
     }
     
     

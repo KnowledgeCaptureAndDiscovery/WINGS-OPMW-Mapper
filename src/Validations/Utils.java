@@ -10,6 +10,7 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.ModelFactory;
 
 public class Utils {
@@ -114,6 +115,36 @@ public class Utils {
         arr.add(hs2.size());
         arr.add(hs3.size());
         return arr;
+    }
+    public static HashSet<String> queryresult112(String query, OntModel m, String varToQuery){
+        ResultSet r =  Utils.queryLocalRepository(query, m);
+        String result = "";
+        HashSet<String> hs1=new HashSet<>();
+        while (r.hasNext()){
+            QuerySolution qs = r.nextSolution();
+            String var1=qs.getResource("?"+varToQuery).getLocalName();
+            System.out.println("var 1 "+var1);
+            hs1.add(var1);
+        }
+        
+        return hs1;
+    }
+    
+    public static Literal queryresult113(String query, OntModel m, String varToQuery){
+        ResultSet r =  Utils.queryLocalRepository(query, m);
+        Literal time=null;
+        System.out.println("query113");
+        if (r.hasNext()){
+            QuerySolution qs = r.nextSolution();
+            Literal timer=qs.getLiteral("?"+varToQuery);
+            if(timer!=null)
+            {
+            System.out.println("var 1 "+timer.getString());
+            time=timer;
+            }
+        }
+        
+        return time;
     }
     
             

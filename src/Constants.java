@@ -24,7 +24,7 @@ public class Constants {
     public static final String PREFIX_COMPONENT_CATALOG = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/components/library.owl#";
     public static final String PREFIX_J1_ONTO = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#";
     
-    
+    public static final String ISSUED_TIME="http://purl.org/dc/terms/issued";
 
     /*****
     COMPONENT CLASS AND ITS RELATIONS

@@ -353,6 +353,18 @@ public class Queries {
             + "?acc <http://www.opmw.org/ontology/correspondsToTemplate> ?et."
             + "}";
     
+    public static final String DO_WE_HAVE_ANY_SIMILAR_NAMED_TEMPLATES="SELECT distinct ?t WHERE{"
+    		+ "?t a <http://www.opmw.org/ontology/WorkflowTemplate>."
+            + "}";
+    public static final String TIME_CHECK(String template)
+    {
+    	String query="SELECT distinct ?time WHERE{"
+    			+ "<http://www.opmw.org/export/resource/WorkflowTemplate/"+template+"> <http://purl.org/dc/terms/issued> ?time."
+                + "}";
+    	return query;
+    }
+    		
+    
     
     
     //other queries and tests

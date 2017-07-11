@@ -569,6 +569,10 @@ public class Queries {
                 + "?run <http://www.opmw.org/ontology/hasOriginalLogFile> \""+runURL+"\"^^xsd:anyURI}";
         return queryRun;
     }
+    
+
+
+    
 
     
 
