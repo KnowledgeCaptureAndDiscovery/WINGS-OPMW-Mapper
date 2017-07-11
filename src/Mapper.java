@@ -414,10 +414,10 @@ public void loadTaxonomyExport(String template, String modeFile){
                 OntClass d = OPMWModel.createClass(Constants.PROV_AGENT);
                 d.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+agEncoded);
             }
-            if(license!=null){
-                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,license.getString(),
-                        Constants.DATA_PROP_RIGHTS, XSDDatatype.XSDanyURI);
-            }
+//            if(license!=null){
+//                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,license.getString(),
+//                        Constants.DATA_PROP_RIGHTS, XSDDatatype.XSDanyURI);
+//            }
             if(time!=null){
                 this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,time.getString(),
                         Constants.DATA_PROP_MODIFIED, XSDDatatype.XSDdateTime);
@@ -428,6 +428,11 @@ public void loadTaxonomyExport(String template, String modeFile){
                         Constants.OPMW_DATA_PROP_HAS_TEMPLATE_DIAGRAM, XSDDatatype.XSDanyURI);
             }
         }
+        //LICENSE EXPORT FOR ABSTRACT TEMPLATE
+        this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,"http://creativecommons.org/licenses/by-sa/3.0/",
+              Constants.LICENSE, XSDDatatype.XSDanyURI);
+        
+        
         //extra time added (current time as ISSUED PROPERTY IN DUBLIN CORE)
         Date d=new Date();
         Calendar c143 = Calendar.getInstance();
@@ -2644,7 +2649,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     XSDDatatype.XSDdateTime);
         if(license!=null){
             this.addDataProperty(OPMWModel,accname,
-                license,Constants.DATA_PROP_RIGHTS,
+                license,Constants.LICENSE,
                     XSDDatatype.XSDanyURI);
         }
         if(tool!=null){
@@ -4119,6 +4124,10 @@ public void loadTaxonomyExport(String template, String modeFile){
         
             }
         }
+        //LICENSE EXPORT FOR EXPANDED TEMPLATE
+        this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXPANDED_TEMPLATE+"/"+newExpandedTemplateName,"http://creativecommons.org/licenses/by-sa/3.0/",
+              Constants.LICENSE, XSDDatatype.XSDanyURI);
+        
         System.out.println("METADATA ENDS");
         System.out.println("--------------------------");
         System.out.println("--------------------------");
