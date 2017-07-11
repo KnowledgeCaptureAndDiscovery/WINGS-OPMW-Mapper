@@ -1,0 +1,244 @@
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://w3id.org/wings/TestingDomain/Data/TextFile>
+        a       owl:Class .
+
+<http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_CLASSV1>
+        a           owl:Class ;
+        rdfs:label  "ConcrCheckerAbs" .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS_CLASSV1>
+        a           owl:Class ;
+        rdfs:label  "countingWords" .
+
+<http://w3id.org/wings/TestingDomain#TextFile>
+        a       owl:Class .
+
+<http://w3id.org/wings/TestingDomain#CONCRCHECKERABSCLASS_V2>
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#COMPONENT> .
+
+<http://w3id.org/wings/TestingDomain#CONVERTTOTEXT_INPUTFORMATTEDFILE>
+        a       <http://w3id.org/wings/TestingDomain/Data/TextFile> , <http://w3id.org/wings/TestingDomain/Data/DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "InputFormattedFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-i1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://w3id.org/wings/TestingDomain#ParameterArgument>
+        a       owl:Class .
+
+<http://www.w3.org/ns/prov#wasRevisionOf>
+        a       rdf:Property .
+
+owl:Class  a    owl:Class .
+
+<http://w3id.org/wings/TestingDomain#COUNTWORDS_V1>
+        a                <http://w3id.org/wings/TestingDomain#COUNTWORDS_CLASSV1> , owl:Class ;
+        rdfs:label       "countWords" ;
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#COMPONENT> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_INPUTTEXTFILE> , <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_WORDINPUT> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_OUTPUTTEXTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                false .
+
+<http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+        a       owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS_OUTPUTTEXTFILE>
+        a       <http://w3id.org/wings/TestingDomain/Data/TextFile> , <http://w3id.org/wings/TestingDomain/Data/DataArgument> , <http://w3id.org/wings/TestingDomain#TextFile> , <http://w3id.org/wings/TestingDomain#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "OutputTextFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-o1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS_WORDINPUT>
+        a       <http://w3id.org/wings/TestingDomain#ParameterArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "WordInput" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-p1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasValue>
+                "great" .
+
+<http://w3id.org/wings/TestingDomain#BUBBLESORT_INPUT-PARA>
+        a       <http://w3id.org/wings/TestingDomain#ParameterArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "input-para" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-p1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasValue>
+                "" .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasValue>
+        a       owl:DatatypeProperty .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasInput>
+        a       rdf:Property .
+
+<http://w3id.org/wings/TestingDomain#BUBBLESORT_CLASSV2>
+        a           owl:Class ;
+        rdfs:label  "BUBBLESORT" .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS_INPUTTEXTFILE>
+        a       <http://w3id.org/wings/TestingDomain/Data/TextFile> , <http://w3id.org/wings/TestingDomain/Data/DataArgument> , <http://w3id.org/wings/TestingDomain#TextFile> , <http://w3id.org/wings/TestingDomain#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "InputTextFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-i1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+rdfs:label  a   owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain/Data/DataArgument>
+        a       owl:Class .
+
+<http://w3id.org/wings/TestingDomain#CONVERTTOTEXT_CLASSV1>
+        a           owl:Class ;
+        rdfs:label  "ConvertToText" .
+
+<http://w3id.org/wings/TestingDomain#BUBBLESORT_CLASSV1>
+        a           owl:Class ;
+        rdfs:label  "BUBBLESORT" .
+
+<http://w3id.org/wings/TestingDomain#BUBBLESORT_V2>
+        a                <http://w3id.org/wings/TestingDomain#BUBBLESORT_CLASSV2> , owl:Class ;
+        rdfs:label       "BUBBLESORT" ;
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_V2> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#BUBBLESORT_INPUTFILE> , <http://w3id.org/wings/TestingDomain#BUBBLESORT_INPUT-PARA> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasLocation>
+                "/opt/wings/storage/default/users/tirth/TestingDomain/code/library/BUBBLESORT" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#BUBBLESORT_OUTPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                true .
+
+<http://w3id.org/wings/TestingDomain#DataArgument>
+        a       owl:Class .
+
+rdfs:subClassOf  a  rdf:Property .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+        a       owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain#COUNTINGWORDS_V1>
+        a                <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_CLASSV1> , owl:Class ;
+        rdfs:label       "countingWords" ;
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#COUNTWORDS> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_INPUTTEXTFILE> , <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_WORDINPUT> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasLocation>
+                "/opt/wings/storage/default/users/tirth/TestingDomain/code/library/countingWords" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#COUNTINGWORDS_OUTPUTTEXTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                true .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+        a       rdf:Property .
+
+<http://w3id.org/wings/TestingDomain#COUNTWORDS_CLASSV1>
+        a           owl:Class ;
+        rdfs:label  "countWords" .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+        a       owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain#BUBBLESORT_V1>
+        a                owl:Class , <http://w3id.org/wings/TestingDomain#BUBBLESORT_CLASSV1> ;
+        rdfs:label       "BUBBLESORT" ;
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_V1> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#BUBBLESORT_INPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasLocation>
+                "/opt/wings/storage/default/users/tirth/TestingDomain/code/library/BUBBLESORT" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#BUBBLESORT_OUTPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                true .
+
+<http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_V2>
+        a                <http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_CLASSV2> ;
+        rdfs:label       "ConcrCheckerAbs" ;
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#COMPONENT> ;
+        <http://www.w3.org/ns/prov#wasRevisionOf>
+                <http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_V1> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#BUBBLESORT_INPUTFILE> , <http://w3id.org/wings/TestingDomain#BUBBLESORT_INPUT-PARA> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#BUBBLESORT_OUTPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                false .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+        a       owl:DatatypeProperty .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasLocation>
+        a       owl:DatatypeProperty .
+
+<http://w3id.org/wings/TestingDomain#BUBBLESORT_OUTPUTFILE>
+        a       <http://w3id.org/wings/TestingDomain#DataArgument> , <http://w3id.org/wings/TestingDomain#TextFile> , <http://w3id.org/wings/TestingDomain/Data/DataArgument> , <http://w3id.org/wings/TestingDomain/Data/TextFile> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "OutputFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-o1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_CLASSV2>
+        a           owl:Class ;
+        rdfs:label  "ConcrCheckerAbs" .
+
+<http://w3id.org/wings/TestingDomain#CONVERTTOTEXT_V1>
+        a                <http://w3id.org/wings/TestingDomain#CONVERTTOTEXT_CLASSV1> , owl:Class ;
+        rdfs:label       "ConvertToText" ;
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#COMPONENT> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#CONVERTTOTEXT_INPUTFORMATTEDFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#CONVERTTOTEXT_OUTPUTTEXTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                false .
+
+<http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_V1>
+        a                owl:Class , <http://w3id.org/wings/TestingDomain#CONCRCHECKERABS_CLASSV1> ;
+        rdfs:label       "ConcrCheckerAbs" ;
+        rdfs:subClassOf  <http://w3id.org/wings/TestingDomain#COMPONENT> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <http://w3id.org/wings/TestingDomain#BUBBLESORT_INPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <http://w3id.org/wings/TestingDomain#BUBBLESORT_OUTPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                false .
+
+<http://w3id.org/wings/TestingDomain#BUBBLESORT_INPUTFILE>
+        a       <http://w3id.org/wings/TestingDomain#DataArgument> , <http://w3id.org/wings/TestingDomain#TextFile> , <http://w3id.org/wings/TestingDomain/Data/DataArgument> , <http://w3id.org/wings/TestingDomain/Data/TextFile> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "InputFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-i1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://w3id.org/wings/TestingDomain#CONVERTTOTEXT_OUTPUTTEXTFILE>
+        a       <http://w3id.org/wings/TestingDomain/Data/TextFile> , <http://w3id.org/wings/TestingDomain/Data/DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "OutputTextFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-o1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
