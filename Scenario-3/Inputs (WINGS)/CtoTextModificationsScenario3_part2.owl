@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.wings-workflows.org/ontology/workflow.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:j.1="http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/workflows/CtoTextModificationsScenario3.owl">
+      <owl:Ontology rdf:about="">
+            <owl:imports rdf:resource="http://www.wings-workflows.org/ontology/workflow.owl"/>
+      </owl:Ontology>
+      <j.0:WorkflowTemplate rdf:ID="CtoTextModificationsScenario3">
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="InputFormattedFile_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:DataVariable rdf:ID="InputFormattedFile">
+                                    <rdf:type rdf:resource="../data/ontology.owl#FormattedFile"/>
+                                    <rdfs:comment rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#string"
+                                    >center:x=147,y=25.1953125</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >ConvertToText_node_InputFormattedFile</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="InputParameter_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="InputParameter">
+                                    <rdfs:comment rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#string"
+                                    >center:x=354.5876159667969,y=33.93666076660156</rdfs:comment>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >concr3_node_InputParameter</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="ConvertToText_node_OutputTextFile_output">
+                        <j.0:hasOriginNode>
+                              <j.0:Node rdf:ID="ConvertToText_node">
+                                    <rdfs:comment rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#string"
+                                    >center:x=148,y=85</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="ConvertToText_node_comp">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#ConvertToText"/>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="ConvertToText_node_crule">
+                                                <j.0:createSetsOn rdf:resource="#ConvertToText_node_comp"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="ConvertToText_node_InputFormattedFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="ConvertToText_node_InputFormattedFile_role">
+                                                            <j.0:hasRoleID
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#string"
+                                                            >InputFormattedFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="ConvertToText_node_OutputTextFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="ConvertToText_node_OutputTextFile_role">
+                                                            <j.0:hasRoleID
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#string"
+                                                            >OutputTextFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="ConvertToText_node_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-5cd3d0ba-1e36-4406-a5e7-c1fb1068c007">
+                                                            <j.0:hasExpressionArgument rdf:resource="#ConvertToText_node_InputFormattedFile"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasOriginNode>
+                        <j.0:hasOriginPort rdf:resource="#ConvertToText_node_OutputTextFile"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="OutputTextFile">
+                                    <rdf:type rdf:resource="../data/ontology.owl#TextFile"/>
+                                    <rdfs:comment rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#string"
+                                    >center:x=147.00140380859375,y=150.80593872070312</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="ConvertToText_node_InputFormattedFile_input">
+                        <j.0:hasDestinationNode rdf:resource="#ConvertToText_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#ConvertToText_node_InputFormattedFile"/>
+                        <j.0:hasVariable rdf:resource="#InputFormattedFile"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="concr3_node_InputParameter_input">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="concr3_node">
+                                    <rdfs:comment rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#string"
+                                    >center:x=315.1998291015625,y=74.2538070678711</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="concr3_node_comp">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#concr3"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="concr3_node_crule">
+                                                <j.0:createSetsOn rdf:resource="#concr3_node_comp"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="concr3_node_InputParameter">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="concr3_node_InputParameter_role">
+                                                            <j.0:hasRoleID
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#string"
+                                                            >InputParameter</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="concr3_node_InputFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="concr3_node_InputFile_role">
+                                                            <j.0:hasRoleID
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#string"
+                                                            >InputFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="concr3_node_OutputFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="concr3_node_OutputFile_role">
+                                                            <j.0:hasRoleID
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#string"
+                                                            >OutputFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="concr3_node_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-bf199a9d-8e13-4a87-ba16-71c5213bd81d">
+                                                            <j.0:hasExpressionArgument rdf:resource="#concr3_node_InputParameter"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#concr3_node_InputFile"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#concr3_node_InputParameter"/>
+                        <j.0:hasVariable rdf:resource="#InputParameter"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="ConvertToText_node_OutputTextFile_to_concr3_node_InputFile">
+                        <j.0:hasDestinationNode rdf:resource="#concr3_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#concr3_node_InputFile"/>
+                        <j.0:hasOriginNode rdf:resource="#ConvertToText_node"/>
+                        <j.0:hasOriginPort rdf:resource="#ConvertToText_node_OutputTextFile"/>
+                        <j.0:hasVariable rdf:resource="#OutputTextFile"/>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="concr3_node_OutputFile_output">
+                        <j.0:hasOriginNode rdf:resource="#concr3_node"/>
+                        <j.0:hasOriginPort rdf:resource="#concr3_node_OutputFile"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="OutputFile">
+                                    <rdf:type rdf:resource="../data/ontology.owl#TextFile"/>
+                                    <rdfs:comment rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#string"
+                                    >center:x=311.4037170410156,y=143.5086898803711</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasMetadata>
+                  <j.0:Metadata rdf:ID="CtoTextModificationsScenario3_meta">
+                        <j.0:hasContributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >tirth</j.0:hasContributor>
+                        <j.0:lastUpdateTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-07-11T07:00:00Z</j.0:lastUpdateTime>
+                  </j.0:Metadata>
+            </j.0:hasMetadata>
+            <j.0:hasNode rdf:resource="#ConvertToText_node"/>
+            <j.0:hasNode rdf:resource="#concr3_node"/>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="OutputTextFile_orole">
+                        <j.0:mapsToVariable rdf:resource="#OutputTextFile"/>
+                        <j.0:hasRoleID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >OutputTextFile</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="OutputFile_orole">
+                        <j.0:mapsToVariable rdf:resource="#OutputFile"/>
+                        <j.0:hasRoleID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >OutputFile</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasVersion rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+            >3</j.0:hasVersion>
+      </j.0:WorkflowTemplate>
+</rdf:RDF>
+
