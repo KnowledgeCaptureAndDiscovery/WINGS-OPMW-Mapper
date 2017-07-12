@@ -459,7 +459,8 @@ public void loadTaxonomyExport(String template, String modeFile){
         	System.out.println("s is not null:"+s);
         this.addProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName, Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+s, Constants.PROV_WAS_REVISION_OF);
         }
-        
+        if(!s.equals("null"))
+        {
         
         
         
@@ -645,10 +646,10 @@ public void loadTaxonomyExport(String template, String modeFile){
             NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
             
             //add each of the nodes as a UniqueTemplateProcess
-            this.addIndividual(OPMWModel,templateName_+res.getLocalName(),Constants.OPMW_WORKFLOW_TEMPLATE_PROCESS, "Workflow template process "+res.getLocalName());
+            this.addIndividual(OPMWModel,newTemplateName_+res.getLocalName(),Constants.OPMW_WORKFLOW_TEMPLATE_PROCESS, "Workflow template process "+res.getLocalName());
             //p-plan interop
             OntClass cStep = OPMWModel.createClass(Constants.P_PLAN_STEP);
-            cStep.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+encode(templateName_+res.getLocalName()));
+            cStep.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+encode(newTemplateName_+res.getLocalName()));
             
             
             //Have to start querying the component catalog for checking the number of inputs and outputs:
@@ -2127,7 +2128,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             	System.out.println("GOING FOR PRINTING THE COMPONENT HERE "+NEW_TAXONOMY_CLASS_2);
             	System.out.println("type is "+typeComp.getURI());
             	String newchangeforthetype=typeComp.getURI().substring(typeComp.getURI().lastIndexOf("/"),typeComp.getURI().length());
-            	String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName());
+            	String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName());
             	OntClass cAux = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype);//repeated tuples will not be duplicated
             	cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);     	
             }
@@ -2136,22 +2137,22 @@ public void loadTaxonomyExport(String template, String modeFile){
             }
             if(rule!=null){
                 //rules are strings
-                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(),
+                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName(),
                     rule.getString(),                    
                         Constants.WINGS_PROP_HAS_RULE);
                 
-                this.addDataProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(),rule.getString(), Constants.OPMW_COMPONENT_HAS_RULES);
+                this.addDataProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName(),rule.getString(), Constants.OPMW_COMPONENT_HAS_RULES);
             }
             if(isConcrete!=null)
             {
             	System.out.println("is component: "+comp.getLocalName()+" concrete: "+isConcrete.getBoolean());
-            	this.addDataProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(), isConcrete.getBoolean()+"", Constants.OPMW_DATA_PROP_IS_CONCRETE, XSDDatatype.XSDboolean);
+            	this.addDataProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName(), isConcrete.getBoolean()+"", Constants.OPMW_DATA_PROP_IS_CONCRETE, XSDDatatype.XSDboolean);
             }
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName(),
                     Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,                    
                         Constants.OPMW_PROP_IS_STEP_OF_TEMPLATE);            
             //p-plan interop
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+res.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName(),
                     Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,                    
                         Constants.P_PLAN_PROP_IS_STEP_OF_PLAN);
             
@@ -2174,25 +2175,25 @@ public void loadTaxonomyExport(String template, String modeFile){
             Resource variable = qs.getResource("?d");
             Resource type = qs.getResource("?t");
             Literal dim = qs.getLiteral("?hasDim");            
-            this.addIndividual(OPMWModel,templateName_+variable.getLocalName(), Constants.OPMW_DATA_VARIABLE, "Data variable "+variable.getLocalName());
+            this.addIndividual(OPMWModel,newTemplateName_+variable.getLocalName(), Constants.OPMW_DATA_VARIABLE, "Data variable "+variable.getLocalName());
             //p-plan interop
             OntClass cVar = OPMWModel.createClass(Constants.P_PLAN_Variable);
-            cVar.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_DATA_VARIABLE+"/"+encode(templateName_+variable.getLocalName()));
+            cVar.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_DATA_VARIABLE+"/"+encode(newTemplateName_+variable.getLocalName()));
            
             //we add the individual as a workflowTemplateArtifact as well            
-            String aux = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+variable.getLocalName());
+            String aux = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+variable.getLocalName());
             OntClass cAux = OPMWModel.createClass(Constants.OPMW_WORKFLOW_TEMPLATE_ARTIFACT);//repeated tuples will not be duplicated
             cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+aux);
                    
             if(dim!=null){//sometimes is null, but it shouldn't
-                this.addDataProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+variable.getLocalName(),
+                this.addDataProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+variable.getLocalName(),
                         ""+dim.getInt(), Constants.OPMW_DATA_PROP_HAS_DIMENSIONALITY, XSDDatatype.XSDint);
                 //System.out.println(res+" has dim: "+dim.getInt());
                 if(dim.getInt()>0)
                 	isCollection=true;
                 else
                 	isCollection=false;
-                this.addDataProperty(OPMWModel, Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+variable.getLocalName(), ""+isCollection, Constants.OPMW_DATA_PROP_IS_COLLECTION, XSDDatatype.XSDboolean);
+                this.addDataProperty(OPMWModel, Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+variable.getLocalName(), ""+isCollection, Constants.OPMW_DATA_PROP_IS_COLLECTION, XSDDatatype.XSDboolean);
             }
             //types of data variables
             if(type!=null){
@@ -2202,7 +2203,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println(variable+" of type "+ type);
 
                 	String newchangeforthetype=type.getURI().substring(type.getURI().lastIndexOf("/"),type.getURI().length());
-                	String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+variable.getLocalName());
+                	String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+variable.getLocalName());
                 	OntClass c = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Data"+newchangeforthetype);//repeated tuples will not be duplicated
                 	c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);    
    
@@ -2212,7 +2213,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             }else{
                 System.out.println(variable);
             }
-            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+variable.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+variable.getLocalName(),
                     Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
                         Constants.OPMW_PROP_IS_VARIABLE_OF_TEMPLATE);
             
@@ -2227,17 +2228,17 @@ public void loadTaxonomyExport(String template, String modeFile){
             Resource res = qs.getResource("?p");
 //            Literal parValue = qs.getLiteral("?parValue");
             System.out.println(res);
-            this.addIndividual(OPMWModel,templateName_+res.getLocalName(), Constants.OPMW_PARAMETER_VARIABLE, "Parameter variable "+res.getLocalName());
+            this.addIndividual(OPMWModel,newTemplateName_+res.getLocalName(), Constants.OPMW_PARAMETER_VARIABLE, "Parameter variable "+res.getLocalName());
             //p-plan interop
             OntClass cVar = OPMWModel.createClass(Constants.P_PLAN_Variable);
-            cVar.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_PARAMETER_VARIABLE+"/"+encode(templateName_+res.getLocalName()));
+            cVar.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_PARAMETER_VARIABLE+"/"+encode(newTemplateName_+res.getLocalName()));
            
             //add the parameter value as an artifact too
-            String aux = encode(Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName_+res.getLocalName());
+            String aux = encode(Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName_+res.getLocalName());
             OntClass cAux = OPMWModel.createClass(Constants.OPMW_WORKFLOW_TEMPLATE_ARTIFACT);//repeated tuples will not be duplicated
             cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+aux);
             
-            this.addProperty(OPMWModel,Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName_+res.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName_+res.getLocalName(),
                     Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,                    
                         Constants.OPMW_PROP_IS_PARAMETER_OF_TEMPLATE);
             
@@ -2253,21 +2254,21 @@ public void loadTaxonomyExport(String template, String modeFile){
             Resource resVar = qs.getResource("?var");
             Resource resNode = qs.getResource("?dest");
             String role = qs.getLiteral("?role").getString();            
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.OPMW_PROP_USES);
             //p-plan interop
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.P_PLAN_PROP_HAS_INPUT);
-            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
                             Constants.P_PLAN_PROP_IS_INTPUT_VAR_OF);
             if(role!=null){
                 System.out.println("Node "+resNode.getLocalName() +" Uses "+ resVar.getLocalName()+ " Role: "+role);
                 //add the roles as subproperty of used. This triple should be on the ontology.
-                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.PREFIX_EXTENSION+"usesAs_"+role);
                 //link the property as a subproperty of Used
                 this.createSubProperty(OPMWModel,Constants.OPMW_PROP_USES, Constants.PREFIX_EXTENSION+"usesAs_"+role);
@@ -2284,21 +2285,21 @@ public void loadTaxonomyExport(String template, String modeFile){
             Resource resVar = qs.getResource("?var");
             Resource resNode = qs.getResource("?dest");
             String role = qs.getLiteral("?role").getString(); 
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
-                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
+                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.OPMW_PROP_USES);
             //p-plan interop
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
-                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
+                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.P_PLAN_PROP_HAS_INPUT);
-            this.addProperty(OPMWModel,Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
                             Constants.P_PLAN_PROP_IS_INTPUT_VAR_OF);
             if(role!=null){
                 System.out.println("Node "+resNode.getLocalName() +" Uses "+ resVar.getLocalName()+ " Role: "+role);
                 //add the roles as subproperty of used. This triple should be on the ontology.
-                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
-                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
+                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.PREFIX_EXTENSION+"usesAs_"+role);
                 //link the property as a subproperty of Used
                 this.createSubProperty(OPMWModel,Constants.OPMW_PROP_USES, Constants.PREFIX_EXTENSION+"usesAs_"+role);
@@ -2317,21 +2318,21 @@ public void loadTaxonomyExport(String template, String modeFile){
             Resource resVar = qs.getResource("?var");
             Resource resNode = qs.getResource("?orig");
             String role = qs.getLiteral("?role").getString();             
-            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
                         Constants.OPMW_PROP_IGB);
             //p-plan interop
-            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
                             Constants.P_PLAN_PROP_IS_OUTPUT_VAR_OF);
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.P_PLAN_PROP_HAS_OUTPUT);            
             if(role!=null){
                 System.out.println("Artifact "+ resVar.getLocalName()+" Is generated by node "+resNode.getLocalName()+" Role "+role);
                 //add the roles as subproperty of used. This triple should be on the ontology.
-                this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
+                this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
                             Constants.PREFIX_EXTENSION+"isGeneratedByAs_"+role);
                 //link the property as a subproperty of WGB
                 this.createSubProperty(OPMWModel,Constants.OPMW_PROP_IGB, Constants.PREFIX_EXTENSION+"isGeneratedByAs_"+role);
@@ -2356,28 +2357,28 @@ public void loadTaxonomyExport(String template, String modeFile){
                         +" with role "+ roleDest);
             }
             //they are all data variables
-            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
                         Constants.OPMW_PROP_IGB);
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNodeD.getLocalName(),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNodeD.getLocalName(),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.OPMW_PROP_USES);
             //p-plan interop
-            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
                             Constants.P_PLAN_PROP_IS_OUTPUT_VAR_OF);
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.P_PLAN_PROP_HAS_OUTPUT);
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNodeD.getLocalName(),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNodeD.getLocalName(),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.P_PLAN_PROP_HAS_INPUT);
-            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNodeD.getLocalName(),
+            this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                        Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNodeD.getLocalName(),
                             Constants.P_PLAN_PROP_IS_INTPUT_VAR_OF);            
             if(roleOrig!=null){                
-                this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNode.getLocalName(),
+                this.addProperty(OPMWModel,Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNode.getLocalName(),
                             Constants.PREFIX_EXTENSION+"isGeneratedByAs_"+roleOrig);
                 //link the property as a subproperty of WGB
                 this.createSubProperty(OPMWModel,Constants.OPMW_PROP_IGB, Constants.PREFIX_EXTENSION+"isGeneratedByAs_"+roleOrig);
@@ -2386,8 +2387,8 @@ public void loadTaxonomyExport(String template, String modeFile){
             }
             if(roleDest!=null){
                 //System.out.println("created role "+ Constants.PREFIX_ONTOLOGY_PROFILE+"used_"+roleDest.getLocalName());
-                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+templateName_+resNodeD.getLocalName(),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+templateName_+resVar.getLocalName(),
+                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+resNodeD.getLocalName(),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+resVar.getLocalName(),
                             Constants.PREFIX_EXTENSION+"usesAs_"+roleDest);
                 //link the property as a subproperty of Used
                 this.createSubProperty(OPMWModel,Constants.OPMW_PROP_USES, Constants.PREFIX_EXTENSION+"usesAs_"+roleDest);
@@ -2403,6 +2404,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         
         //exporting the taxonomy 
         exportRDFFile(taxonomy_export, Taxonomy_Export);
+    }
         
         
         return Constants.PREFIX_EXPORT_RESOURCE+""+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+encode(newTemplateName);
