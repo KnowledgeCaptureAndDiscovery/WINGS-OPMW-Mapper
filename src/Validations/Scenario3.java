@@ -15,6 +15,7 @@ public class Scenario3 {
 	public static String validateRepo(OntModel m,String templateName,String newTemplateName,String timegiven)
 	{
 		newTemplateName=newTemplateName.toUpperCase();
+		templateName=templateName.toUpperCase();
 		 String result = "##########REPORT##########\n";    
 		 StringBuilder ans=new StringBuilder("");
 		    int n=0;
@@ -34,13 +35,18 @@ public class Scenario3 {
 		      boolean secondpart=true;
 		      for(String x:hs1names)
 		      {
+		    	  System.out.println("x "+x);
+		    	  System.out.println("given template "+newTemplateName);
 		    	  if(x.equals(newTemplateName))
 		    		  secondpart=false;
 		      }
+		      
 		      if(secondpart==true)
 		      {
 		      for(String x:hs1names){
-
+		    	  System.out.println("template name "+templateName);
+		    	 System.out.println("xsubstring "+x.substring(0, x.lastIndexOf("_")));
+		    		
 		    	  if(!x.equals(newTemplateName) && templateName.equals(x.substring(0, x.lastIndexOf("_"))))
 		    	  {
 		    		  System.out.println("given newTemplate "+newTemplateName+" current x is: "+x);

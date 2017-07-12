@@ -444,7 +444,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         ////******************////
         //SCENARIO-3 STARTS HERE:
 
-        OntModel sc3 = Utils.loadDirectory("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/VALIDATIONS/SC3");
+        OntModel sc3 = Utils.loadDirectory("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/Scenario-3/Repository");
         String s = ""; 
         if(sc3!=null)
         {
@@ -2471,7 +2471,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             String wfInstance = qs.getResource("?wfInstance").getURI();
             expandedTemplateURI = qs.getResource("?expandedTemplate").getURI();
             expandedTemplateName=qs.getResource("?expandedTemplate").getLocalName();
-            newTemplateName=ObtainAbstractTemplateName(templateName);
+            newTemplateName=ObtainExpandedTemplateName(templateName);
             
             
             ////NEW ADDITION BY TIRTH**************//
@@ -2761,6 +2761,24 @@ public void loadTaxonomyExport(String template, String modeFile){
             OPMWModel.getResource(procURI).
                     addProperty(OPMWModel.createOntProperty(Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT), 
                             blankNode);
+          //add the code binding as an executable component 
+            //NORMAL WAY NOW:
+            
+//            this.createSubProperty(OPMWModel, Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT, Constants.OPMW_DATA_PROP_HAS_LOCATION);
+//            this.createSubProperty(OPMWModel, Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT, Constants.RDFS_LABEL);
+//            this.addDataProperty(OPMWModel, 
+//            		Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT, 
+//            		sCode, 
+//                    Constants.OPMW_DATA_PROP_HAS_LOCATION);
+//            this.addDataProperty(OPMWModel, 
+//            		Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT, 
+//            		"Executable Component associated to "+stepName, 
+//            		Constants.RDFS_LABEL);
+            
+
+            
+            
+            	
             /*************************
             * PROV-O INTEROPERABILITY (commented because it makes it more difficult to understand. It is done through the hasExecutableComponent relationship
             *************************/ 
