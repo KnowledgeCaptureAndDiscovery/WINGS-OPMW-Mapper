@@ -33,6 +33,9 @@ public class Scenario3 {
 		      for(String x:hs1names)
 		    	  System.out.println(x);
 		      boolean secondpart=true;
+		      if(hs1names.size()==0)
+		    	  return "repository does not have a match";
+		      
 		      for(String x:hs1names)
 		      {
 		    	  System.out.println("x "+x);
@@ -87,11 +90,13 @@ public class Scenario3 {
 
 		      }
 		      }
+
 		      if(latesttobelinked!=null && templateTobeLinked!=null)
 		      {
 		    	  System.out.println("We are returning the ans "+ansfinal);
 		    	  ansfinal=templateTobeLinked;
 		      }
+		      
 		      
 		      result+="\n\n";   
 		    

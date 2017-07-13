@@ -454,13 +454,13 @@ public void loadTaxonomyExport(String template, String modeFile){
         System.out.println("What we have to link the current template to: "+s);
         
       //EXPORTING THE PROV_WAS_REVISION_OF
-        if(!s.equals("null"))
+        if(!s.equals("null") && s.equals("repository does not have a match"))
         {
         	System.out.println("s is not null:"+s);
+        if(!s.equals("repository does not have a match"))
+        {
         this.addProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName, Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+s, Constants.PROV_WAS_REVISION_OF);
         }
-        if(!s.equals("null"))
-        {
         
         
         
@@ -474,6 +474,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         r = queryLocalWINGSTemplateModelRepository(queryNodes);
         HashSet<String> hs1Concr=new HashSet<>();
         HashSet<String> hs2Abs=new HashSet<>();
+        String finalDomainName="";
         
         //CREATING 2 HASHSETS FOR MAINTAINING THE CORRECT ORDER IN WHICH THE COMPONENTS ENTER IN THE CASES OF ABSTRACT COMPS AND CONCRETE COMPS
         while(r.hasNext()){
@@ -640,6 +641,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             String subDomain=typeComp.toString().substring(0,indexOf2);
             domainName=subDomain.substring(subDomain.lastIndexOf('/')+1,subDomain.length()); 
             System.out.println("domain name  is: "+domainName);
+            finalDomainName=domainName;
 
           //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
             NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
@@ -1263,7 +1265,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                       
                     //subclass relation
-                    this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", Abs.getLocalName()+"_V1");
+                    this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", Abs.getLocalName());
                       
                       
                     //extracting the actual inputs,outputs and other factors for the component
@@ -1915,7 +1917,7 @@ public void loadTaxonomyExport(String template, String modeFile){
 
                 	
                 	//abstract component individual
-                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName()+finalversionforNewAbstractComponent);
+                  	this.addIndividualAbstract2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
                     
                     //subclass relation for abstract component
@@ -2052,6 +2054,8 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+                    System.out.println("classisaclass "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
+                    System.out.println("secondpara "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
                     this.classIsaClass(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
           
@@ -2403,6 +2407,8 @@ public void loadTaxonomyExport(String template, String modeFile){
         
         
         //exporting the taxonomy 
+        String filetoexport=finalDomainName+"_TaxonomyHierarchyModel.owl";
+        System.out.println("exporting new THM to:"+taxonomy_export+filetoexport );
         exportRDFFile(taxonomy_export, Taxonomy_Export);
     }
         
@@ -4148,7 +4154,8 @@ public void loadTaxonomyExport(String template, String modeFile){
         r1=null;
         //ExpandedTemplateModel.write(System.out,"RDF/XML");
         r1 = queryLocalWINGSResultsRepository(queryNodesforExpandedTemplate);
-       
+        //MAINTAINING A COMPLETE AND FINAL DOMAIN NAME TO BE UTILIZED WHEN ITS GOING TO BE EXPORTED WITH THE TAXONOMY MODEL
+        String finalDomainName="";
         while(r1.hasNext()){
             QuerySolution qs = r1.next();
             Resource res = qs.getResource("?n");
@@ -4174,6 +4181,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             String subDomain=typeComp.toString().substring(0,indexOf2);
             domainName=subDomain.substring(subDomain.lastIndexOf('/')+1,subDomain.length()); 
             System.out.println("domain name  is: "+domainName);
+            finalDomainName=domainName;
 
           //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
             NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";

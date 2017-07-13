@@ -14,17 +14,17 @@ public static void main(String[] args) {
    //String template="/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/abstractTest1/abstractTest1.owl";
    //String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/mapreduce.owl";
    //String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/EXAMPLE-2_INPUT_FOR_MAPPER_SCENARIO-1/HashingConceptScenario1.owl";
-   String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/CtoTextModificationsScenario3.owl";
+   String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/P2.owl";
     String mode = "RDF/XML";
     String mode2="Turtle";
   String outFileOPMW = "testResultOPMW";
   String outFilePROV = "testResultPROV";
   String outFile = "testTemplateabstractTest1";
-  String taxonomy_export="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl";
+  String taxonomy_export="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/TestingDomain_TaxonomyHierarchyModel.owl";
  // /Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl
     
-  //String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile, null,taxonomy_export,mode2);
-   String ans=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null);
+  String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile, null,taxonomy_export,mode2);
+   //String ans=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null);
     System.out.println("--------------------------");
     System.out.println("location is :"+ans);
  
