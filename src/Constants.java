@@ -127,6 +127,7 @@ public class Constants {
     public static final String OPMW_PROP_IS_VARIABLE_OF_TEMPLATE = PREFIX_OPMW+"isVariableOfTemplate";
     public static final String OPMW_PROP_IS_PARAMETER_OF_TEMPLATE = PREFIX_OPMW+"isParameterOfTemplate";
     public static final String OPMW_PROP_EXECUTED_IN_WORKFLOW_SYSTEM = PREFIX_OPMW+"executedInWorkflowSystem";
+    public static final String OPMW_PROP_EXECUTABLE_COMPONENT = PREFIX_OPMW+"ExecutableComponent";
     
     
     

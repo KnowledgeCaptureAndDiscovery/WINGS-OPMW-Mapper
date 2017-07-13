@@ -2753,8 +2753,9 @@ public void loadTaxonomyExport(String template, String modeFile){
                     sStatus, 
                     Constants.OPMW_DATA_PROP_HAS_STATUS);
             
-            //add the code binding as an executable component            
-            Resource blankNode = OPMWModel.createResource();
+            //add the code binding as an executable component  
+            
+            Resource blankNode = OPMWModel.createResource(Constants.OPMW_PROP_EXECUTABLE_COMPONENT+"/"+stepName+date);
             blankNode.addProperty(OPMWModel.createOntProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION),
                     sCode).
                     addProperty(OPMWModel.createOntProperty(Constants.RDFS_LABEL), 
@@ -2763,19 +2764,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             OPMWModel.getResource(procURI).
                     addProperty(OPMWModel.createOntProperty(Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT), 
                             blankNode);
-          //add the code binding as an executable component 
-            //NORMAL WAY NOW:
-            
-//            this.createSubProperty(OPMWModel, Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT, Constants.OPMW_DATA_PROP_HAS_LOCATION);
-//            this.createSubProperty(OPMWModel, Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT, Constants.RDFS_LABEL);
-//            this.addDataProperty(OPMWModel, 
-//            		Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT, 
-//            		sCode, 
-//                    Constants.OPMW_DATA_PROP_HAS_LOCATION);
-//            this.addDataProperty(OPMWModel, 
-//            		Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT, 
-//            		"Executable Component associated to "+stepName, 
-//            		Constants.RDFS_LABEL);
+
             
 
             
