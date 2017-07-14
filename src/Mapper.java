@@ -325,7 +325,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         }
         
         
-        
+        String userName="";
         OPMWModel = ModelFactory.createOntologyModel(); //inicialization of the model        
         try{
             //load the template file to WINGSModel (already loads the taxonomy as well
@@ -448,7 +448,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         String s = ""; 
         if(sc3!=null)
         {
-        s+= Scenario3.validateRepo(sc3,templateName,newTemplateName,xmlDateTime);
+        	s+= Scenario3.validateRepo(sc3,templateName,newTemplateName,xmlDateTime);
         }
         
         System.out.println("What we have to link the current template to: "+s);
@@ -475,6 +475,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         HashSet<String> hs1Concr=new HashSet<>();
         HashSet<String> hs2Abs=new HashSet<>();
         String finalDomainName="";
+        
         
         //CREATING 2 HASHSETS FOR MAINTAINING THE CORRECT ORDER IN WHICH THE COMPONENTS ENTER IN THE CASES OF ABSTRACT COMPS AND CONCRETE COMPS
         while(r.hasNext()){
@@ -603,7 +604,7 @@ public void loadTaxonomyExport(String template, String modeFile){
        //component catalog and make changes to them
        HashSet<String> hsforComps=new HashSet<>();
 
-
+       
         while(r.hasNext()){
             QuerySolution qs = r.next();
             Resource res = qs.getResource("?n");
@@ -637,11 +638,18 @@ public void loadTaxonomyExport(String template, String modeFile){
             String domainName="";
             int indexOf2=typeComp.toString().indexOf("/components");
             System.out.println("domain name finding");
+            
+            String temp222=typeComp.toString().substring(0,indexOf2);
+            String temp333=temp222.substring(0,temp222.lastIndexOf("/"));
+            String temp444=temp333.substring(temp333.lastIndexOf("/")+1,temp333.length());
+            System.out.println("user name "+temp444);
+            
             System.out.println(typeComp.toString().substring(0,indexOf2));
             String subDomain=typeComp.toString().substring(0,indexOf2);
             domainName=subDomain.substring(subDomain.lastIndexOf('/')+1,subDomain.length()); 
             System.out.println("domain name  is: "+domainName);
             finalDomainName=domainName;
+            userName=temp444;
 
           //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
             NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
@@ -833,6 +841,11 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("isConcrete is: "+compConcreteAbs);
                     System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
+                    
+                    //EXPORTING THE USER WHO CREATED THE COMPONENT
+                    this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,nodenew11.getLocalName().toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
+
+                    
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME              
                     this.classIsaClass(nodenew11.getLocalName().toUpperCase()+"_CLASSV1",nodenew11.getLocalName().toUpperCase()+"_V1");
@@ -1048,6 +1061,9 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("isConcrete is: "+compConcreteAbs11);
                     System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
+                    
+                    //EXPORTING THE USER WHO CREATED THE COMPONENT
+                    this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent,userName,XSDDatatype.XSDstring);
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent);
@@ -1307,6 +1323,8 @@ public void loadTaxonomyExport(String template, String modeFile){
                       System.out.println("Location is: "+compLoc);
                       System.out.println("isConcrete is: "+compConcrete);
                       
+                      //EXPORTING THE USER WHO CREATED THE COMPONENT
+                      this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
                       
 
                     //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
@@ -1459,7 +1477,8 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
                     
-                    
+                    //EXPORTING THE USER WHO CREATED THE COMPONENT
+                    this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,userName,XSDDatatype.XSDstring);
 
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
@@ -1525,6 +1544,9 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("isConcrete is: "+compConcreteAbs);
                     System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
+                    
+                    //EXPORTING THE USER WHO CREATED THE COMPONENT
+                    this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,userName,XSDDatatype.XSDstring);
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
@@ -1617,6 +1639,29 @@ public void loadTaxonomyExport(String template, String modeFile){
                     //export of ABSTRACT component ends
                     
                     
+                    //for the component blankNode extraction for dependencies:
+                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    rnew2 = null;
+                    rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
+                    while(rnew2.hasNext())
+                    {
+                    	QuerySolution qsnew = rnew2.next();
+                    	Resource nodenew = qsnew.getResource("?n");
+                    	Resource res11 = qsnew.getResource("?res");
+                    	Literal needs=qs.getLiteral("?needs64bit");
+                    	Literal mem=qs.getLiteral("?mem");
+                    	Literal st=qs.getLiteral("?st");
+                    	
+                    	
+                    	
+                    	System.out.println("res is "+res11);
+                    	System.out.println("needs64bit "+needs);
+                    		System.out.println("mem "+mem);
+                    		System.out.println("st "+st);
+                    		
+                    	
+                    }
+                    
                     
                   //extracting the actual inputs,outputs and other factors for the component
                     
@@ -1628,6 +1673,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     HashSet<String> outputsComp=new HashSet<>();
                     String compLoc="";
                     boolean compConcrete=false;
+                    String doc11="";
                     while(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
@@ -1636,7 +1682,9 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	Resource output = qsnew.getResource("?o");
                     	Literal concr=qsnew.getLiteral("?concr");
                     	Literal loc=qsnew.getLiteral("?loc");
-
+                    	Literal doc=qsnew.getLiteral("?doc");
+                    	
+                    	
                     	if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
                     	{
                     		inputsComp.add(input.getLocalName());
@@ -1646,6 +1694,10 @@ public void loadTaxonomyExport(String template, String modeFile){
                     		if(concr!=null)
                     		{
                     			compConcrete=concr.getBoolean();
+                    		}
+                    		if(doc!=null)
+                    		{
+                    			doc11=doc.getString();
                     		}
                     	}
                     }
@@ -1657,10 +1709,14 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
                     
-                    
+                    //EXPORTING THE USER WHO CREATED THE COMPONENT
+                    this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
 
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
+                    
+                    //EXPORTING THE DOCUMENTATION
+                    this.DataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",doc11,XSDDatatype.XSDstring);
 
            
                     //IS CONCRETE EXPORTED
@@ -1696,6 +1752,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     HashSet<String> outputsAbsComp=new HashSet<>();
                     boolean compConcreteAbs=false;
                     System.out.println("what we have "+AbstractSuperClass.getLocalName());
+                    String docAbs="";
                     while(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
@@ -1704,6 +1761,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                         Resource output = qsnew.getResource("?o");
                         Literal concr=qsnew.getLiteral("?concr");
                         Literal loc=qsnew.getLiteral("?loc");
+                        Literal doc=qsnew.getLiteral("?doc");
                         System.out.println("nodenew inside now: "+nodenew.getLocalName());
                         if(nodenew.getLocalName().equals(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)))
                         {
@@ -1712,6 +1770,10 @@ public void loadTaxonomyExport(String template, String modeFile){
                         	if(concr!=null)
                         	{
                         		compConcreteAbs=concr.getBoolean();
+                        	}
+                        	if(doc!=null)
+                        	{
+                        		docAbs=doc.getString();
                         	}
                         }
                     }
@@ -1723,9 +1785,17 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("isConcrete is: "+compConcreteAbs);
                     System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
                     
+                    //EXPORTING THE USER WHO CREATED THE COMPONENT
+                    this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
+                    
+                    
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(AbstractSuperClass.getLocalName().toUpperCase().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1", AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1");
                     
+                    
+                  //DOCUMENTATION EXPORTED
+                    this.DataProps(Constants.COMPONENT_HAS_DOCUMENTATION, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1", docAbs, XSDDatatype.XSDstring);
+
                     
                     //IS CONCRETE EXPORTED
                     this.DataProps(Constants.COMPONENT_IS_CONCRETE, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1", compConcreteAbs+"", XSDDatatype.XSDboolean);
@@ -1910,7 +1980,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                   	
                   //concrete component individual
                   	this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
-
+                  	
                   	
                   //subclass relation
                   	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent);
@@ -1939,6 +2009,16 @@ public void loadTaxonomyExport(String template, String modeFile){
                     }
                     
                     
+                  //EXPORTING THE PROV_WAS_REVISION_OF
+                    OntProperty propSelec256 = Taxonomy_Export.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                    Resource source256 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
+                    Individual instance256 = (Individual) source256.as( Individual.class );
+                    if((concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
+                        instance256.addProperty(propSelec256,NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent);            
+                    }else{//it is a local resource
+                        instance256.addProperty(propSelec256, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
+                    }  
+                    
                     
                     
                     
@@ -1956,7 +2036,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     HashSet<String> outputsComp=new HashSet<>();
                     String compLoc="";
                     boolean compConcrete112=false;
-
+                    String doc11="";
                     while(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
@@ -1965,6 +2045,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	Resource output = qsnew.getResource("?o");
                     	Literal concr=qsnew.getLiteral("?concr");
                     	Literal loc=qsnew.getLiteral("?loc");
+                    	Literal doc=qsnew.getLiteral("?doc");
                     	System.out.println("trying the nodenew comparison here: "+nodenew.getLocalName());
                     	if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
                     	{
@@ -1976,6 +2057,10 @@ public void loadTaxonomyExport(String template, String modeFile){
                     		{
                     			compConcrete112=concr.getBoolean();
                     		}
+                    		if(doc!=null)
+                    		{
+                    			doc11=doc.getString();
+                    		}
                     	}
                     }
                     System.out.println("MAIN COMPONENT----------");
@@ -1986,12 +2071,18 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
                     
+                  //EXPORTING THE USER WHO CREATED THE COMPONENT
+                    this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,userName,XSDDatatype.XSDstring);
+                    
                     
 
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
-  
+                  //DOCUMENTATION EXPORTED
+                    this.DataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, doc11, XSDDatatype.XSDstring);
+
+                    
                     //IS CONCRETE EXPORTED
                     this.DataProps(Constants.COMPONENT_IS_CONCRETE, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compConcrete112+"", XSDDatatype.XSDboolean);
 
@@ -2025,6 +2116,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     HashSet<String> inputsAbsComp=new HashSet<>();
                     HashSet<String> outputsAbsComp=new HashSet<>();
                     boolean compConcreteAbs=false;
+                    String docAbs="";
                     System.out.println("what we have "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
                     while(rnew2.hasNext())
                     {
@@ -2034,6 +2126,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                         Resource output = qsnew.getResource("?o");
                         Literal concr=qsnew.getLiteral("?concr");
                         Literal loc=qsnew.getLiteral("?loc");
+                        Literal doc=qsnew.getLiteral("?doc");
                         System.out.println("nodenew inside now: "+nodenew.getLocalName());
                         if(nodenew.getLocalName().equals(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)))
                         {
@@ -2042,6 +2135,10 @@ public void loadTaxonomyExport(String template, String modeFile){
                         	if(concr!=null)
                         	{
                         		compConcreteAbs=concr.getBoolean();
+                        	}
+                        	if(doc!=null)
+                        	{
+                        		docAbs=doc.getString();
                         	}
                         }
                     }
@@ -2053,11 +2150,20 @@ public void loadTaxonomyExport(String template, String modeFile){
                     System.out.println("isConcrete is: "+compConcreteAbs);
                     System.out.println("EXTRACTED THE INPUTS AND OUTPUTS ABSTRACT COMPONENT BY HERE");
                     
+                    //EXPORTING THE USER WHO CREATED THE COMPONENT
+                    this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,userName,XSDDatatype.XSDstring);
+                   
+                    
+                    
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     System.out.println("classisaclass "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
                     System.out.println("secondpara "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
                     this.classIsaClass(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
+                    
+                  //DOCUMENTATION EXPORTED
+                    this.DataProps(Constants.COMPONENT_HAS_DOCUMENTATION, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, docAbs, XSDDatatype.XSDstring);
+                    
           
                     //IS CONCRETE EXPORTED
                     this.DataProps(Constants.COMPONENT_IS_CONCRETE, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compConcreteAbs+"", XSDDatatype.XSDboolean);
@@ -2400,6 +2506,11 @@ public void loadTaxonomyExport(String template, String modeFile){
                 propUsed.addLabel("Property that indicates that a resource has been used as a "+roleDest, "EN");
             }
         }
+        //EXPORTING THE USER WHO CREATED THE TEMPLATE:
+        this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,userName,
+                Constants.PROV_WAS_ATTRIBUTED_TO);
+        
+        
         /******************
          * FILE EXPORT. 
          ******************/        
@@ -2685,8 +2796,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         /********************* NODE LINKING**********************/
         /********************************************************/
         //query for detecting steps, their inputs and their outputs
-        ArrayList<String> arrForExpandedTemplate1=new ArrayList<>();
-        ArrayList<String> arrForExpandedTemplate2=new ArrayList<>();
+
         String queryStepsAndIO = Queries.queryStepsAndMetadata();
         r = queryLocalWINGSResultsRepository(queryStepsAndIO);
         String stepName, sStartT = null, sEndT = null, sStatus, sCode, derivedFrom = null;        
