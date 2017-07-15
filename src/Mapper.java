@@ -1283,10 +1283,69 @@ public void loadTaxonomyExport(String template, String modeFile){
                     //subclass relation
                     this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", Abs.getLocalName());
                       
-                      
+                  //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
+                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    rnew2 = null;
+                    rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
+                    Float memval=null;
+                    Float stval=null;
+                    boolean needsval=true;
+                    String minversionval="";
+                    if(rnew2.hasNext())
+                    {
+                    	QuerySolution qsnew = rnew2.next();
+                    	Resource nodenew = qsnew.getResource("?n");
+                    	Resource res11 = qsnew.getResource("?res");
+                    	
+                    	try{
+                    		Resource minversion=qsnew.getResource("?minversion");
+                    		minversionval=minversion.getLocalName();
+                    	Literal needs=qsnew.getLiteral("?needs64bit");
+                    	needsval=needs.getBoolean();
+                    	Literal mem=qsnew.getLiteral("?mem");
+                    	memval=mem.getFloat();
+                    	Literal st=qsnew.getLiteral("?st");
+                    	stval=st.getFloat();
+                    	System.out.println("res is "+res11);
+                    	System.out.println("needs64bit "+needs);
+                    	System.out.println("minversion is "+minversionval);
+                    		System.out.println("mem "+mem);
+                    		System.out.println("st "+st);
+                    	}catch(Exception e){}
+                    		
+                    	
+                    } 
+                    
+                  //EXPORTING THE HARDWARE DEPENDENCY
+                    Resource blankNode112 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    blankNode112.addProperty(Taxonomy_Export.createOntProperty(Constants.NEEDS_64BIT),
+                            needsval+"",XSDDatatype.XSDboolean).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_MEMORYGB), 
+                                    memval+"",XSDDatatype.XSDfloat).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_STORAGEGB), 
+                                    stval+"",XSDDatatype.XSDfloat);
+                    String procURI = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    Taxonomy_Export.getResource(procURI).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_HARDWARE_DEPENDENCY), 
+                                    blankNode112);
+                    this.classIsaClassHardwareParts(Constants.HARDWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+
+                  //EXPORTING THE SOFTWARE DEPENDENCY
+                    Resource blankNode113 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    blankNode113.addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_VERSION),
+                            minversionval+"");
+                    String procURI113 = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    Taxonomy_Export.getResource(procURI113).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_SOFTWARE_DEPENDENCY), 
+                                    blankNode113);
+                    this.classIsaClassHardwareParts(Constants.SOFTWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    
+                    
+                    
+                    
                     //extracting the actual inputs,outputs and other factors for the component
                       
-                      String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                      String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName());
                       rnew2 = null;
                       rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
 
@@ -1294,6 +1353,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                       HashSet<String> outputsComp=new HashSet<>();
                       String compLoc="";
                       boolean compConcrete=false;
+                      String doc11="";
                       while(rnew2.hasNext())
                       {
                       	QuerySolution qsnew = rnew2.next();
@@ -1302,7 +1362,8 @@ public void loadTaxonomyExport(String template, String modeFile){
                       	Resource output = qsnew.getResource("?o");
                       	Literal concr=qsnew.getLiteral("?concr");
                       	Literal loc=qsnew.getLiteral("?loc");
-
+                      	Literal doc=qsnew.getLiteral("?doc");
+                      	
                       	if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
                       	{
                       		inputsComp.add(input.getLocalName());
@@ -1312,6 +1373,10 @@ public void loadTaxonomyExport(String template, String modeFile){
                       		if(concr!=null)
                       		{
                       			compConcrete=concr.getBoolean();
+                      		}
+                      		if(doc!=null)
+                      		{
+                      			doc11=doc.getString();
                       		}
                       	}
                       }
@@ -1330,6 +1395,8 @@ public void loadTaxonomyExport(String template, String modeFile){
                     //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                       this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
 
+                    //DOCUMENTATION EXPORTED
+                      this.DataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", doc11+"", XSDDatatype.XSDstring);
                       
                       
                       //IS CONCRETE EXPORTED
@@ -1434,6 +1501,63 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                     
                     //export of ABSTRACT component ends
+                    
+                  //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
+                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    rnew2 = null;
+                    rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
+                    Float memval=null;
+                    Float stval=null;
+                    boolean needsval=true;
+                    String minversionval="";
+                    if(rnew2.hasNext())
+                    {
+                    	QuerySolution qsnew = rnew2.next();
+                    	Resource nodenew = qsnew.getResource("?n");
+                    	Resource res11 = qsnew.getResource("?res");
+                    	
+                    	try{
+                    		Resource minversion=qsnew.getResource("?minversion");
+                    		minversionval=minversion.getLocalName();
+                    	Literal needs=qsnew.getLiteral("?needs64bit");
+                    	needsval=needs.getBoolean();
+                    	Literal mem=qsnew.getLiteral("?mem");
+                    	memval=mem.getFloat();
+                    	Literal st=qsnew.getLiteral("?st");
+                    	stval=st.getFloat();
+                    	System.out.println("res is "+res11);
+                    	System.out.println("needs64bit "+needs);
+                    	System.out.println("minversion is "+minversionval);
+                    		System.out.println("mem "+mem);
+                    		System.out.println("st "+st);
+                    	}catch(Exception e){}
+                    		
+                    	
+                    } 
+                    
+                  //EXPORTING THE HARDWARE DEPENDENCY
+                    Resource blankNode112 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    blankNode112.addProperty(Taxonomy_Export.createOntProperty(Constants.NEEDS_64BIT),
+                            needsval+"",XSDDatatype.XSDboolean).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_MEMORYGB), 
+                                    memval+"",XSDDatatype.XSDfloat).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_STORAGEGB), 
+                                    stval+"",XSDDatatype.XSDfloat);
+                    String procURI = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    Taxonomy_Export.getResource(procURI).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_HARDWARE_DEPENDENCY), 
+                                    blankNode112);
+                    this.classIsaClassHardwareParts(Constants.HARDWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+
+                  //EXPORTING THE SOFTWARE DEPENDENCY
+                    Resource blankNode113 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    blankNode113.addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_VERSION),
+                            minversionval+"");
+                    String procURI113 = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    Taxonomy_Export.getResource(procURI113).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_SOFTWARE_DEPENDENCY), 
+                                    blankNode113);
+                    this.classIsaClassHardwareParts(Constants.SOFTWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
                     
                     
                     
@@ -1639,28 +1763,42 @@ public void loadTaxonomyExport(String template, String modeFile){
                     //export of ABSTRACT component ends
                     
                     
-                    //for the component blankNode extraction for dependencies:
+                  //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
                     String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
-                    while(rnew2.hasNext())
+                    Float memval=null;
+                    Float stval=null;
+                    boolean needsval=true;
+                    String minversionval="";
+                    if(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
                     	Resource nodenew = qsnew.getResource("?n");
                     	Resource res11 = qsnew.getResource("?res");
-                    	Literal needs=qs.getLiteral("?needs64bit");
-                    	Literal mem=qs.getLiteral("?mem");
-                    	Literal st=qs.getLiteral("?st");
                     	
-                    	
-                    	
+                    	try{
+                    		Resource minversion=qsnew.getResource("?minversion");
+                    		minversionval=minversion.getLocalName();
+                    	Literal needs=qsnew.getLiteral("?needs64bit");
+                    	needsval=needs.getBoolean();
+                    	Literal mem=qsnew.getLiteral("?mem");
+                    	memval=mem.getFloat();
+                    	Literal st=qsnew.getLiteral("?st");
+                    	stval=st.getFloat();
                     	System.out.println("res is "+res11);
                     	System.out.println("needs64bit "+needs);
+                    	System.out.println("minversion is "+minversionval);
                     		System.out.println("mem "+mem);
                     		System.out.println("st "+st);
+                    	}catch(Exception e){}
                     		
                     	
-                    }
+                    } 
+                    
+                    
+                    
+                    
                     
                     
                   //extracting the actual inputs,outputs and other factors for the component
@@ -1741,6 +1879,34 @@ public void loadTaxonomyExport(String template, String modeFile){
                   //HAS LOCATION EXPORTED
                     this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", compLoc+"", XSDDatatype.XSDstring);
 
+                    //EXPORTING THE HARDWARE DEPENDENCY
+                    Resource blankNode112 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    blankNode112.addProperty(Taxonomy_Export.createOntProperty(Constants.NEEDS_64BIT),
+                            needsval+"",XSDDatatype.XSDboolean).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_MEMORYGB), 
+                                    memval+"",XSDDatatype.XSDfloat).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_STORAGEGB), 
+                                    stval+"",XSDDatatype.XSDfloat);
+                    String procURI = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
+                    Taxonomy_Export.getResource(procURI).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_HARDWARE_DEPENDENCY), 
+                                    blankNode112);
+                    this.classIsaClassHardwareParts(Constants.HARDWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
+
+                  //EXPORTING THE SOFTWARE DEPENDENCY
+                    Resource blankNode113 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    blankNode113.addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_VERSION),
+                            minversionval+"");
+                    String procURI113 = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    Taxonomy_Export.getResource(procURI113).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_SOFTWARE_DEPENDENCY), 
+                                    blankNode113);
+                    this.classIsaClassHardwareParts(Constants.SOFTWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                    
+                    
+                    
+                    
+                    
    
                   //extracting the actual inputs,outputs and other factors for the Abstract component
                     System.out.println("EXTRACTION BEGINS "+AbstractSuperClass.getLocalName());
@@ -2023,6 +2189,65 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                     
                     //export of ABSTRACT component ends
+                    
+                    
+                  //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
+                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    rnew2 = null;
+                    rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
+                    Float memval=null;
+                    Float stval=null;
+                    boolean needsval=true;
+                    String minversionval="";
+                    if(rnew2.hasNext())
+                    {
+                    	QuerySolution qsnew = rnew2.next();
+                    	Resource nodenew = qsnew.getResource("?n");
+                    	Resource res11 = qsnew.getResource("?res");
+                    	
+                    	try{
+                    		Resource minversion=qsnew.getResource("?minversion");
+                    		minversionval=minversion.getLocalName();
+                    	Literal needs=qsnew.getLiteral("?needs64bit");
+                    	needsval=needs.getBoolean();
+                    	Literal mem=qsnew.getLiteral("?mem");
+                    	memval=mem.getFloat();
+                    	Literal st=qsnew.getLiteral("?st");
+                    	stval=st.getFloat();
+                    	System.out.println("res is "+res11);
+                    	System.out.println("needs64bit "+needs);
+                    	System.out.println("minversion is "+minversionval);
+                    		System.out.println("mem "+mem);
+                    		System.out.println("st "+st);
+                    	}catch(Exception e){}
+                    		
+                    	
+                    } 
+                    
+                  //EXPORTING THE HARDWARE DEPENDENCY
+                    Resource blankNode112 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    blankNode112.addProperty(Taxonomy_Export.createOntProperty(Constants.NEEDS_64BIT),
+                            needsval+"",XSDDatatype.XSDboolean).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_MEMORYGB), 
+                                    memval+"",XSDDatatype.XSDfloat).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_STORAGEGB), 
+                                    stval+"",XSDDatatype.XSDfloat);
+                    String procURI = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    Taxonomy_Export.getResource(procURI).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_HARDWARE_DEPENDENCY), 
+                                    blankNode112);
+                    this.classIsaClassHardwareParts(Constants.HARDWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+
+                  //EXPORTING THE SOFTWARE DEPENDENCY
+                    Resource blankNode113 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    blankNode113.addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_VERSION),
+                            minversionval+"");
+                    String procURI113 = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    Taxonomy_Export.getResource(procURI113).
+                            addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_SOFTWARE_DEPENDENCY), 
+                                    blankNode113);
+                    this.classIsaClassHardwareParts(Constants.SOFTWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+                    
                     
                     
                     
@@ -3259,6 +3484,11 @@ public void loadTaxonomyExport(String template, String modeFile){
         {
         	 OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+classpart);
              c21.createIndividual(NEW_TAXONOMY_CLASS+indvpart);
+        }
+        private void classIsaClassHardwareParts(String classpart,String indvpart)
+        {
+        	 OntClass c21 = Taxonomy_Export.createClass(classpart);
+             c21.createIndividual(indvpart);
         }
         
 

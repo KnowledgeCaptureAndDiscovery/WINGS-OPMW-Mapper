@@ -94,6 +94,20 @@ public class Queries {
     	return query;
     }
     
+//  //query for determining the number of inputs and outputs in the component catalog based class
+//    public static String componentCatalogQueryforInputsandOutputs11(String className)
+//    {
+//    	String query="SELECT ?n ?i ?o ?loc ?concr ?doc WHERE{"
+//    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+//    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+//    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
+//    			+"?n <"+Constants.PREFIX_COMPONENT+"hasLocation> ?loc."
+//    			+"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr."
+////    			+"?n <"+Constants.PREFIX_COMPONENT+"hasDocumentation> ?doc."
+//    			+"}";
+//    	return query;
+//    }
+    
   //query for determining the number of inputs and outputs in the TAXONOMY HIERARCHY MODEL based class
     public static String componentTaxonomyHierarchyModelforInputsandOutputs(String tax,String className)
     {
@@ -171,11 +185,11 @@ public class Queries {
     	System.out.println("className inside the query received "+className);
     	String query="SELECT ?n ?i ?o ?loc ?concr ?doc WHERE{"
     			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasLocation> ?loc."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasDocumentation> ?doc."
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o.}"
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i.}"
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasLocation> ?loc.}"
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr.}"
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasDocumentation> ?doc.}"
     			+"}";
     	return query;
     }
@@ -183,14 +197,16 @@ public class Queries {
     public static String componentCatalogQuerydependencies(String className)
     {
     	System.out.println("className inside the query received "+className);
-    	String query="SELECT ?n ?res ?needs64bit ?mem ?st WHERE{"
+    	String query="SELECT ?n ?res ?res2 ?needs64bit ?mem ?st ?minversion WHERE{"
     			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
     			+"?n <http://www.wings-workflows.org/ontology/resource.owl#hasHardwareDependency> ?res."
-    			
+    			+"OPTIONAL{?n <http://www.wings-workflows.org/ontology/resource.owl#hasSoftwareDependency> ?res2.}"
+    			+"OPTIONAL{?res2 a <http://www.wings-workflows.org/ontology/resource.owl#SoftwareDependency>.}"
+    			+"OPTIONAL{?res2 <http://www.wings-workflows.org/ontology/resource.owl#requiresMinimumVersion> ?minversion.}"
     			+"?res a <http://www.wings-workflows.org/ontology/resource.owl#HardwareDependency>."
-    			+"?res <http://www.wings-workflows.org/ontology/resource.owl#needs64bit> ?needs64bit;"
-    			+"<http://www.wings-workflows.org/ontology/resource.owl#requiresMemoryGB> ?mem;"
-    			+"<http://www.wings-workflows.org/ontology/resource.owl#requiresStorageGB> ?st."
+    			+"?res <http://www.wings-workflows.org/ontology/resource.owl#needs64bit> ?needs64bit."
+    			+"?res <http://www.wings-workflows.org/ontology/resource.owl#requiresMemoryGB> ?mem."
+    			+"?res <http://www.wings-workflows.org/ontology/resource.owl#requiresStorageGB> ?st."
     			+"}";
     	return query;
     }
@@ -202,10 +218,10 @@ public class Queries {
     	System.out.println("className inside the query received "+className);
     	String query="SELECT ?n ?i ?o ?concr ?doc WHERE{"
     			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasDocumentation> ?doc."
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o.}"
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i.}"
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr.}"
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasDocumentation> ?doc.}"
     			+"}";
     	return query;
     }

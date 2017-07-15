@@ -23,7 +23,9 @@ public class Constants {
     public static final String PREFIX_RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     public static final String PREFIX_COMPONENT_CATALOG = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/components/library.owl#";
     public static final String PREFIX_J1_ONTO = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#";
-    
+    public static final String PREFIX_RESOURCE = "http://www.wings-workflows.org/ontology/resource.owl#";
+    public static final String PREFIX_WICUS = "http://purl.org/net/wicus#";
+    //TIME AND LICENSE ADDITIONS
     public static final String ISSUED_TIME="http://purl.org/dc/terms/issued";
     public static final String LICENSE= "http://purl.org/dc/terms/license";
 
@@ -39,8 +41,21 @@ public class Constants {
     public static final String COMPONENT_HAS_DIMENSIONALITY=PREFIX_COMPONENT+"hasDimensionality";
     public static final String COMPONENT_HAS_VALUE=PREFIX_COMPONENT+"hasValue";
     public static final String COMPONENT_HAS_DOCUMENTATION = PREFIX_COMPONENT+"hasDocumentation"; 
-
     
+    
+    //H/W AND S/W DEPENDENCIES
+    public static final String REQUIRES_STORAGEGB = "http://purl.org/net/wicus-hwspecs#Storage";
+    public static final String NEEDS_64BIT = "http://purl.org/net/wicus-hwspecs#HardwareSpec";
+    public static final String REQUIRES_MEMORYGB = "http://purl.org/net/wicus-hwspecs#Memory";
+    public static final String HARDWARE_DEPENDENCY = "http://purl.org/net/wicus-hwspecs#HardwareComponent";
+    public static final String HAS_HARDWARE_DEPENDENCY = "http://purl.org/net/wicus-reqs#HardwareRequirements";
+    public static final String HAS_SOFTWARE_DEPENDENCY = "http://purl.org/net/wicus-reqs#SoftwareRequirements";
+    public static final String REQUIRES_VERSION ="http://purl.org/net/wicus-stack#requiresVersion";
+    public static final String SOFTWARE_DEPENDENCY = "http://purl.org/net/wicus-stack#SoftwareComponent";
+    
+    
+
+
     
     
     
