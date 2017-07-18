@@ -108,16 +108,7 @@ public class Queries {
 //    	return query;
 //    }
     
-  //query for determining the number of inputs and outputs in the TAXONOMY HIERARCHY MODEL based class
-    public static String componentTaxonomyHierarchyModelforInputsandOutputs(String tax,String className)
-    {
-    	String query="SELECT ?n ?i ?o WHERE{"
-    			+"?n a <"+tax+className+">."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
-    			+"}";
-    	return query;
-    }
+
     
     
     
@@ -138,47 +129,27 @@ public class Queries {
     
     public static String TaxonomyExportQueryforSubclassCheckfinal(String tax)
     {
-    	String query="SELECT ?n ?x ?i ?o WHERE{"
-    			+"?n a <"+Constants.PREFIX_OWL+"Class>."
-    			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
-    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
-    			+"}";
-    	return query;
-    }
-    
-    
-//query for determining if the class is a subclass of a superclass in the component catalog    
-    
-    public static String TaxonomyExportQueryforSubclassCheckfinalConcreteScenario(String tax)
-    {
-    	String query="SELECT ?n ?x ?y ?i ?o WHERE{"
-    			+"?n a <"+Constants.PREFIX_OWL+"Class>."
-    			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
+    	String query="SELECT ?n ?x ?i ?o ?y ?md5 WHERE{"
+    			+"?n a ?x."
     			+"?x <"+Constants.PREFIX_RDFS+"subClassOf> ?y."
-    			+"?x <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
-    			+"?x <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
-    			+"}";
-    	return query;
-    }
-    
-    
-    
-//query for determining if the class is a subclass of a superclass in the component catalog    
-    
-    public static String TaxonomyExportQueryforSubclassCheckfinal22(String tax,String whatwehave)
-    {
-    	String query="SELECT ?n ?x ?i ?o WHERE{"
-    			+"?n a <"+Constants.PREFIX_OWL+"Class>."
-    			+"?n a <"+tax+whatwehave+">."
-    			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
+    			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasMD5Code> ?md5.}"
     			+"}";
     	return query;
     }
     
+    //a complete change from the previous version
+    public static String TaxonomyExportQueryforSubclassCheckfinalAgain(String tax)
+    {
+    	String query="SELECT ?n ?x ?y WHERE{"
+    			+"?n a ?x."
+    			+"?x <"+Constants.PREFIX_RDFS+"subClassOf> ?y."
+    			+"}";
+    	return query;
+    }
     
+ 
   //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc in the component catalog based class
     public static String componentCatalogQueryforActualInputsandOutputsforComponent(String className)
     {
@@ -203,10 +174,10 @@ public class Queries {
     			+"OPTIONAL{?n <http://www.wings-workflows.org/ontology/resource.owl#hasSoftwareDependency> ?res2.}"
     			+"OPTIONAL{?res2 a <http://www.wings-workflows.org/ontology/resource.owl#SoftwareDependency>.}"
     			+"OPTIONAL{?res2 <http://www.wings-workflows.org/ontology/resource.owl#requiresMinimumVersion> ?minversion.}"
-    			+"?res a <http://www.wings-workflows.org/ontology/resource.owl#HardwareDependency>."
-    			+"?res <http://www.wings-workflows.org/ontology/resource.owl#needs64bit> ?needs64bit."
-    			+"?res <http://www.wings-workflows.org/ontology/resource.owl#requiresMemoryGB> ?mem."
-    			+"?res <http://www.wings-workflows.org/ontology/resource.owl#requiresStorageGB> ?st."
+    			+"OPTIONAL{?res a <http://www.wings-workflows.org/ontology/resource.owl#HardwareDependency>.}"
+    			+"OPTIONAL{?res <http://www.wings-workflows.org/ontology/resource.owl#needs64bit> ?needs64bit.}"
+    			+"OPTIONAL{?res <http://www.wings-workflows.org/ontology/resource.owl#requiresMemoryGB> ?mem.}"
+    			+"OPTIONAL{?res <http://www.wings-workflows.org/ontology/resource.owl#requiresStorageGB> ?st.}"
     			+"}";
     	return query;
     }

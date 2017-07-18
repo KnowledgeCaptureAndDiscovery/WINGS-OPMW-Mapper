@@ -9,6 +9,7 @@
 
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -49,7 +50,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -92,6 +96,33 @@ public class Mapper {
    		}
    		return sb.toString();
    		
+   	}
+    
+    //a function for calculating the MD5 VERSION of the code of a component
+    public static String MD5ComponentCode(String component) throws Exception
+   	{
+    	ZipFile zipFile = new ZipFile(component+".zip");
+		ArrayList<String> arr=new ArrayList<>();
+
+	    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+	    StringBuilder sb=new StringBuilder("");
+	    while(entries.hasMoreElements()){
+	        ZipEntry entry = entries.nextElement();
+	        InputStream stream = zipFile.getInputStream(entry);
+	        BufferedReader br = new BufferedReader (new InputStreamReader(stream));
+	        String temp;
+	        while((temp=br.readLine())!=null)
+	        {
+	        	if(!temp.equals(""))
+	        		arr.add(temp+"\n");
+	        }
+	    }
+	    Collections.sort(arr);
+	    for(String x:arr)
+	    {
+	    	sb.append(x);
+	    }
+	    return(MD5(sb.toString()));
    	}
 
     /**
@@ -761,10 +792,11 @@ public void loadTaxonomyExport(String template, String modeFile){
                 	QuerySolution qsnew = r2new.next();
                     Resource nodenew = qsnew.getResource("?n");
                     Resource x = qsnew.getResource("?x");
+                    Resource y = qsnew.getResource("?y");
                     System.out.println("What is nodenew? "+nodenew.getLocalName());
                     System.out.println("What is x? "+x.getLocalName());
                     
-                    if(x.getLocalName().equals("COMPONENT"))
+                    if(y.getLocalName().equals("COMPONENT"))
                     {
                     	System.out.println("UR CHECKING FOR NAMES HERE");
                     	System.out.println(nodenew.getLocalName());
@@ -793,10 +825,10 @@ public void loadTaxonomyExport(String template, String modeFile){
                 	System.out.println("ULTIMATE POINT ::::CHECK::::"+nodenew11.getLocalName());
                 	
                 	//abstract component individual
-                	this.addIndividualAbstract2(nodenew11.getLocalName()+"_V1");
+//                	this.addIndividualAbstract2(nodenew11.getLocalName()+"_V1");
                     
                     //subclass relation
-                	this.addIndividualAbstractSubclass2(nodenew11.getLocalName().toUpperCase()+"_V1");
+                	this.addIndividualConcreteSubclass2(nodenew11.getLocalName().toUpperCase()+"_CLASSV1","COMPONENT");
 
                     
                     System.out.println("EXPORTED THE BASIC ABSTRACT COMPONENT BY HERE");
@@ -947,6 +979,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	QuerySolution qsnew = rnew2.next();
                     	Resource nodenew = qsnew.getResource("?n");
                     	Resource x = qsnew.getResource("?x");
+                    	Resource y = qsnew.getResource("?y");
                         Resource input = qsnew.getResource("?i");
                         Resource output = qsnew.getResource("?o");
                         
@@ -954,7 +987,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                         System.out.println("Node inside case2: ?"+nodenew.getLocalName());
                         System.out.println("x inside case2: ?"+x.getLocalName());
                         
-                        if(nodenew.getLocalName().equals(whatwehave) && x.getLocalName().equals("COMPONENT"))
+                        if(nodenew.getLocalName().equals(whatwehave) && y.getLocalName().equals("COMPONENT"))
                         {
                         	similarAbsInps.add(input.getLocalName());
                         	similarAbsOuts.add(output.getLocalName());
@@ -1000,12 +1033,12 @@ public void loadTaxonomyExport(String template, String modeFile){
 
                 	//this means that the same Abstract Component is not present. So now we will export a fresh one.
                 	
-                	//abstract component individual
-                	this.addIndividualAbstract2(nodenew11.getLocalName()+finalversionforNewAbstractComponent);
+//                	//abstract component individual
+//                	this.addIndividualAbstract2(nodenew11.getLocalName()+finalversionforNewAbstractComponent);
                     
 
                     //subclass relation
-                	this.addIndividualAbstractSubclass2(nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent);
+                	this.addIndividualConcreteSubclass2(nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
 
                     
                     //EXPORTING THE PROV_WAS_REVISION_OF
@@ -1132,7 +1165,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             	
             	
             	System.out.println("NOW UR INSIDE CONCRETE COMPONENT CASE");
-            	String taxonomyModelforConcreteComponent = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+            	String taxonomyModelforConcreteComponent = Queries.TaxonomyExportQueryforSubclassCheckfinalAgain(NEW_TAXONOMY_CLASS);
                 ResultSet r2new = null;
                 r2new = queryLocalTaxonomyModelRepository(taxonomyModelforConcreteComponent);
                
@@ -1140,24 +1173,21 @@ public void loadTaxonomyExport(String template, String modeFile){
               
                 while(r2new.hasNext())
                 {
-                	System.out.println("Are you even inside this?");
                 	QuerySolution qsnew = r2new.next();
                     Resource nodenew = qsnew.getResource("?n");
                     Resource x = qsnew.getResource("?x");
-                    System.out.println("What is nodenew? "+nodenew.getLocalName());
-                    System.out.println("What is x? "+x.getLocalName());
+                    Resource y = qsnew.getResource("?y");
                     
-                    if(!x.getLocalName().equals("COMPONENT"))
+                    if(!y.getLocalName().equals("COMPONENT"))
                     {
-                    	System.out.println("UR CHECKING FOR NAMES HERE");
-                    	System.out.println(nodenew.getLocalName());
                     	if(nodenew.getLocalName().toLowerCase().contains(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toLowerCase()))
                     	{
                     		//this means the name exists
                     		//next step is to check the inputs and outputs based on that className
                     		//saving all such cases in a HashSet
-                    		if(!namesOfConcreteCompswithSameNames.contains(nodenew.getLocalName()))
+                    		if(!namesOfConcreteCompswithSameNames.contains(nodenew.getLocalName()) && !nodenew.getLocalName().contains("CLASS"))
                     		{
+                    			System.out.println("nodenew "+nodenew.getLocalName()+" x "+x.getLocalName()+" y "+y.getLocalName());
                     			namesOfConcreteCompswithSameNames.add(nodenew.getLocalName());
                     		}
                     		
@@ -1166,7 +1196,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                 }
                 
-                System.out.println("THIS WILL IDENTIFY THE CONTENTS OF THE HASHSET");
+                System.out.println("THIS WILL IDENTIFY THE CONTENTS OF THE CONCRETE HASHSET");
                 System.out.println();
                 for(String x:namesOfConcreteCompswithSameNames)
                 	System.out.println(x);
@@ -1180,7 +1210,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 System.out.println("FIND THE NAMES OF SIMILAR ABSTRACT COMPONENTS IN THE TAXONOMY HIERARCHY MODEL");
                 
                 System.out.println("NOW UR INSIDE CONCRETE COMPONENT CASE");
-            	String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+            	String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQueryforSubclassCheckfinalAgain(NEW_TAXONOMY_CLASS);
                 r2new = null;
                 r2new = queryLocalTaxonomyModelRepository(taxonomyModelforAbstractComponent);
                
@@ -1188,17 +1218,13 @@ public void loadTaxonomyExport(String template, String modeFile){
               
                 while(r2new.hasNext())
                 {
-                	System.out.println("Are you even inside this?");
                 	QuerySolution qsnew = r2new.next();
-                    Resource nodenew = qsnew.getResource("?n");
+                	Resource nodenew = qsnew.getResource("?n");
                     Resource x = qsnew.getResource("?x");
-                    System.out.println("What is nodenew? "+nodenew.getLocalName());
-                    System.out.println("What is x? "+x.getLocalName());
+                    Resource y = qsnew.getResource("?y");
                     
-                    if(x.getLocalName().equals("COMPONENT"))
+                    if(y.getLocalName().equals("COMPONENT"))
                     {
-                    	System.out.println("UR CHECKING FOR NAMES HERE");
-                    	System.out.println(nodenew.getLocalName());
                     	if(nodenew.getLocalName().toLowerCase().contains(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toLowerCase()))
                     	{
                     		//this means the name exists
@@ -1214,7 +1240,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     
                 }
                 
-                System.out.println("THIS WILL IDENTIFY THE CONTENTS OF THE HASHSET");
+                System.out.println("THIS WILL IDENTIFY THE CONTENTS OF THE ABSTRACT HASHSET");
                 System.out.println();
                 for(String x:namesOfAbsCompswithSameNames)
                 	System.out.println(x);
@@ -1246,11 +1272,12 @@ public void loadTaxonomyExport(String template, String modeFile){
                         	QuerySolution qsnew = rnew2.next();
                         	Resource nodenew = qsnew.getResource("?n");
                         	Resource x = qsnew.getResource("?x");
+                        	Resource y = qsnew.getResource("?y");
                             Resource input = qsnew.getResource("?i");
                             Resource output = qsnew.getResource("?o");
 
                             
-                            if(nodenew.getLocalName().toUpperCase().equals(whatwehave)  && x.getLocalName().equals("COMPONENT"))
+                            if(nodenew.getLocalName().toUpperCase().equals(whatwehave)  && y.getLocalName().equals("COMPONENT"))
                             {
                             	System.out.println("Node inside case2:? "+nodenew.getLocalName());
                                 System.out.println("x inside case2: ? "+x.getLocalName());
@@ -1276,13 +1303,16 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	//this means we export it as a subclass
                     	System.out.println("ABS IS: "+Abs.getLocalName());
                     	
-                    //concrete component individual
-                    this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
-                    
-                      
-                    //subclass relation
-                    this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", Abs.getLocalName());
-                      
+//                    //concrete component individual
+//                    this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+//                    
+//                      
+//                    //subclass relation
+//                    this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", Abs.getLocalName());
+//                      
+                   this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1",Abs.getLocalName().substring(0,Abs.getLocalName().lastIndexOf("_"))+"_CLASS"+Abs.getLocalName().substring(Abs.getLocalName().lastIndexOf("_")+1,Abs.getLocalName().length()));
+                    	
+                    	
                   //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
                     String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
@@ -1388,6 +1418,11 @@ public void loadTaxonomyExport(String template, String modeFile){
                       System.out.println("Location is: "+compLoc);
                       System.out.println("isConcrete is: "+compConcrete);
                       
+                      //EXPORTING THE MD5 FOR THE COMPONENT CODE
+                      try{
+                      this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                      }catch(Exception e){System.out.println("ERROR");}
+                      
                       //EXPORTING THE USER WHO CREATED THE COMPONENT
                       this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
                       
@@ -1466,21 +1501,23 @@ public void loadTaxonomyExport(String template, String modeFile){
                   	System.out.println("THE MOST LATEST VERSION IS : "+finalversionforNewAbstractComponent);
                   	//ABOVE TASK DONE BY HERE
                   	
-                  //concrete component individual
-                  	this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+//                  //concrete component individual
+//                  	this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+//
+//                  	
+//                  //subclass relation
+//                  	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent);
 
-                  	
-                  //subclass relation
-                  	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent);
-
+                  	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()));
                 	
-                	//abstract component individual
-                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName()+finalversionforNewAbstractComponent);
+//                	//abstract component individual
+//                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName()+finalversionforNewAbstractComponent);
 
                     
-                    //subclass relation for abstract component
-                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
+//                    //subclass relation for abstract component
+//                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
+                  	this.addIndividualConcreteSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
                     
@@ -1600,6 +1637,11 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
+                    
+                  //EXPORTING THE MD5 FOR THE COMPONENT CODE
+                    try{
+                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                    }catch(Exception e){System.out.println("ERROR");}
                     
                     //EXPORTING THE USER WHO CREATED THE COMPONENT
                     this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,userName,XSDDatatype.XSDstring);
@@ -1744,20 +1786,23 @@ public void loadTaxonomyExport(String template, String modeFile){
                 	//EXPORTING IT NOW:
                 	System.out.println("ULTIMATE POINT ::::CHECK::::"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
                 	
-                	//concrete component individual
-                	this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
-                  
-                  //subclass relation
-                    this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1" , AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1");
+//                	//concrete component individual
+//                	this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+//                  
+//                  //subclass relation
+//                    this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1" , AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1");
 
+                	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1");
                 	
-                	//abstract component individual
-                    this.addIndividualAbstract2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1");
+//                	//abstract component individual
+//                    this.addIndividualAbstract2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1");
 
                     
-                    //subclass relation for abstract component
-                    this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1");
+//                    //subclass relation for abstract component
+//                    this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1");
 
+                    this.addIndividualConcreteSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1","COMPONENT");
+                	
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
                     //export of ABSTRACT component ends
@@ -1846,6 +1891,12 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
+                    
+                    //EXPORTING THE MD5 FOR THE COMPONENT CODE
+                    try{
+                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                    }catch(Exception e){System.out.println("ERROR");}
+                    
                     
                     //EXPORTING THE USER WHO CREATED THE COMPONENT
                     this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
@@ -2077,13 +2128,14 @@ public void loadTaxonomyExport(String template, String modeFile){
                 int clarifyToExportConcrComp=0;
                 for(String whatwehave:namesOfConcreteCompswithSameNames)
                 {
-                	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinalConcreteScenario(NEW_TAXONOMY_CLASS);
+                	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
                     rnew2 = null;
                     rnew2 = queryLocalTaxonomyModelRepository(inputsandoutputsforsimilarnamedComps);
                    
                     HashSet<String> similarAbsInps=new HashSet<>();
                     HashSet<String> similarAbsOuts=new HashSet<>();
                     System.out.println("what we have "+concrComponent.getLocalName());
+                    String one=null,two=null;
                     while(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
@@ -2092,7 +2144,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	Resource y = qsnew.getResource("?y");
                         Resource input = qsnew.getResource("?i");
                         Resource output = qsnew.getResource("?o");
-
+                        Literal codeMD5=qsnew.getLiteral("?md5");
                         
                         if(nodenew.getLocalName().toUpperCase().equals(whatwehave) && !nodenew.getLocalName().toUpperCase().equals(x.getLocalName()) && y.getLocalName().equals("COMPONENT"))
                         {
@@ -2103,16 +2155,27 @@ public void loadTaxonomyExport(String template, String modeFile){
                             System.out.println("output is :"+output.getLocalName());
                         	similarAbsInps.add(input.getLocalName());
                         	similarAbsOuts.add(output.getLocalName());
+                        	if(codeMD5!=null)
+                        		two=codeMD5.getString();
                         }
                     }
                     System.out.println("input size "+similarAbsInps.size());
                     System.out.println("output size "+similarAbsOuts.size());
                     
+                    //added factor: check the code too
+                    
+                    try{
+                        one=MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase());
+                        }catch(Exception e){System.out.println("ERROR first");}
+                      
+                   
                     if(similarAbsInps.size()==inputsCurrentConcrComp.size() && similarAbsOuts.size()==outputsCurrentConcrComp.size())
                     {
-                    	
+                    	if(one!=null && two!=null && one.equals(two))
+                    	{
                     	clarifyToExportConcrComp=1;
                     	break;
+                    	}
                     }
                 }
                 if(clarifyToExportConcrComp==1)
@@ -2144,21 +2207,22 @@ public void loadTaxonomyExport(String template, String modeFile){
                   	System.out.println("THE MOST LATEST VERSION IS : "+finalversionforNewAbstractComponent);
                   	//ABOVE TASK DONE BY HERE
                   	
-                  //concrete component individual
-                  	this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
-                  	
-                  	
-                  //subclass relation
-                  	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+//                  //concrete component individual
+//                  	this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent);
+//                  	
+//                  	
+//                  //subclass relation
+//                  	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent);
 
+                  	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()));
                 	
                 	//abstract component individual
-                  	this.addIndividualAbstract2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
                     
-                    //subclass relation for abstract component
-                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
+//                    //subclass relation for abstract component
+//                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
+                  	this.addIndividualConcreteSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
                     
@@ -2295,6 +2359,12 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
+                    
+                    //EXPORTING THE MD5 FOR THE COMPONENT CODE
+                    try{
+                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                    }catch(Exception e){System.out.println("ERROR");}
+                    
                     
                   //EXPORTING THE USER WHO CREATED THE COMPONENT
                     this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,userName,XSDDatatype.XSDstring);

@@ -41,6 +41,7 @@ public class Constants {
     public static final String COMPONENT_HAS_DIMENSIONALITY=PREFIX_COMPONENT+"hasDimensionality";
     public static final String COMPONENT_HAS_VALUE=PREFIX_COMPONENT+"hasValue";
     public static final String COMPONENT_HAS_DOCUMENTATION = PREFIX_COMPONENT+"hasDocumentation"; 
+    public static final String COMPONENT_HAS_MD5_CODE = PREFIX_COMPONENT+"hasMD5Code";
     
     
     //H/W AND S/W DEPENDENCIES
