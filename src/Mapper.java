@@ -2125,7 +2125,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                 
                 
                 //NOW WE HAVE TO FIND OUT THE NUMBER OF INPUTS AND OUTPUTS IN EACH OF THE SIMILAR NAMED ABSTRACT COMPONENTS
-                int clarifyToExportConcrComp=0;
+                int clarifyToExportConcrComp=0,codeisdifferentbutinputsandoutputsaresame=0;
                 for(String whatwehave:namesOfConcreteCompswithSameNames)
                 {
                 	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
@@ -2176,15 +2176,228 @@ public void loadTaxonomyExport(String template, String modeFile){
                     	clarifyToExportConcrComp=1;
                     	break;
                     	}
+                    	else
+                    		codeisdifferentbutinputsandoutputsaresame=1;
+                    	//the else here means that the inputs and outputs are the same but the code is different
+                    	//so we will export only subclass
                     }
                 }
                 if(clarifyToExportConcrComp==1)
                 	System.out.println("There is a match CONCRETE COMPONENT CASE and BREAKKKKKKKKKKK!!!!!!!!!!!!!!");
-                else if(clarifyToExportConcrComp==0)
+                else if(clarifyToExportConcrComp==0 && codeisdifferentbutinputsandoutputsaresame==1)
                 {
+                	System.out.println("we are in the case where the inputs and outputs are the same but the code is different so we export as a subclass with latest version");
+                	String finalversionforNewAbstractComponent="";
+                	String finalversionforLatestAbstractComponent="";
+                  	int max=Integer.MIN_VALUE;
+                  	for(String x:namesOfConcreteCompswithSameNames)
+                  	{
+                  		String temp=x.substring(x.lastIndexOf("_V"),x.length());
+                  		System.out.println("what is temp "+temp);
+                  		int temp2=Integer.parseInt(temp.substring(2,temp.length()));
+                  		if(max<temp2)
+                  		{
+                  			max=temp2;
+                  			
+                  		}
+                  	}
+                  	finalversionforLatestAbstractComponent="_V"+max;
+                  	max++;
+                  	finalversionforNewAbstractComponent="_V"+max;
+                  	System.out.println("THE MOST LATEST VERSION IS : "+finalversionforNewAbstractComponent);
+                	
+                	//concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length())
+                	//this means we export it as a subclass
+                	System.out.println("ABS IS: "+AbstractSuperClass.getLocalName());
+                	
+//                //concrete component individual
+//                this.addIndividualConcrete2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+//                
+//                  
+//                //subclass relation
+//                this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", Abs.getLocalName());
+//                  
+               this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforLatestAbstractComponent.substring(1,finalversionforLatestAbstractComponent.length()));
+                	
+                	
+              //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
+                String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                rnew2 = null;
+                rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
+                Float memval=null;
+                Float stval=null;
+                boolean needsval=true;
+                String minversionval="";
+                if(rnew2.hasNext())
+                {
+                	QuerySolution qsnew = rnew2.next();
+                	Resource nodenew = qsnew.getResource("?n");
+                	Resource res11 = qsnew.getResource("?res");
+                	
+                	try{
+                		Resource minversion=qsnew.getResource("?minversion");
+                		minversionval=minversion.getLocalName();
+                	Literal needs=qsnew.getLiteral("?needs64bit");
+                	needsval=needs.getBoolean();
+                	Literal mem=qsnew.getLiteral("?mem");
+                	memval=mem.getFloat();
+                	Literal st=qsnew.getLiteral("?st");
+                	stval=st.getFloat();
+                	System.out.println("res is "+res11);
+                	System.out.println("needs64bit "+needs);
+                	System.out.println("minversion is "+minversionval);
+                		System.out.println("mem "+mem);
+                		System.out.println("st "+st);
+                	}catch(Exception e){}
+                		
+                	
+                } 
+                
+              //EXPORTING THE HARDWARE DEPENDENCY
+                Resource blankNode112 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                blankNode112.addProperty(Taxonomy_Export.createOntProperty(Constants.NEEDS_64BIT),
+                        needsval+"",XSDDatatype.XSDboolean).
+                        addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_MEMORYGB), 
+                                memval+"",XSDDatatype.XSDfloat).
+                        addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_STORAGEGB), 
+                                stval+"",XSDDatatype.XSDfloat);
+                String procURI = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                Taxonomy_Export.getResource(procURI).
+                        addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_HARDWARE_DEPENDENCY), 
+                                blankNode112);
+                this.classIsaClassHardwareParts(Constants.HARDWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+
+              //EXPORTING THE SOFTWARE DEPENDENCY
+                Resource blankNode113 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                blankNode113.addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_VERSION),
+                        minversionval+"");
+                String procURI113 = NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                Taxonomy_Export.getResource(procURI113).
+                        addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_SOFTWARE_DEPENDENCY), 
+                                blankNode113);
+                this.classIsaClassHardwareParts(Constants.SOFTWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+                
+                
+                
+                
+                //extracting the actual inputs,outputs and other factors for the component
+                  
+                  String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName());
+                  rnew2 = null;
+                  rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
+
+                  HashSet<String> inputsComp=new HashSet<>();
+                  HashSet<String> outputsComp=new HashSet<>();
+                  String compLoc="";
+                  boolean compConcrete123=false;
+                  String doc11="";
+                  while(rnew2.hasNext())
+                  {
+                  	QuerySolution qsnew = rnew2.next();
+                  	Resource nodenew = qsnew.getResource("?n");
+                  	Resource input = qsnew.getResource("?i");
+                  	Resource output = qsnew.getResource("?o");
+                  	Literal concr=qsnew.getLiteral("?concr");
+                  	Literal loc=qsnew.getLiteral("?loc");
+                  	Literal doc=qsnew.getLiteral("?doc");
+                  	
+                  	if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
+                  	{
+                  		inputsComp.add(input.getLocalName());
+                  		outputsComp.add(output.getLocalName());
+                  		if(loc!=null && compLoc.equals(""))
+                  			compLoc=loc.getString();
+                  		if(concr!=null)
+                  		{
+                  			compConcrete123=concr.getBoolean();
+                  		}
+                  		if(doc!=null)
+                  		{
+                  			doc11=doc.getString();
+                  		}
+                  	}
+                  }
+                  System.out.println("MAIN COMPONENT----------");
+                  for(String i:inputsComp)
+                  	System.out.println("inputs are: "+i);
+                  for(String o:outputsComp)
+                  	System.out.println("outputs are: "+o);
+                  System.out.println("Location is: "+compLoc);
+                  System.out.println("isConcrete is: "+compConcrete);
+                  
+                  //EXPORTING THE PROV_WAS_REVISION_OF
+                  OntProperty propSelec256 = Taxonomy_Export.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                  Resource source256 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
+                  Individual instance256 = (Individual) source256.as( Individual.class );
+                  if((concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
+                      instance256.addProperty(propSelec256,NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent);            
+                  }else{//it is a local resource
+                      instance256.addProperty(propSelec256, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
+                  } 
+                  
+                  //EXPORTING THE MD5 FOR THE COMPONENT CODE
+                  try{
+                  this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                  }catch(Exception e){System.out.println("ERROR");}
+                  
+                  //EXPORTING THE USER WHO CREATED THE COMPONENT
+                  this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,userName,XSDDatatype.XSDstring);
+                  
+
+                //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+                  this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
+
+                //DOCUMENTATION EXPORTED
+                  this.DataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, doc11+"", XSDDatatype.XSDstring);
+                  
+                  
+                  //IS CONCRETE EXPORTED
+                  this.DataProps(Constants.COMPONENT_IS_CONCRETE, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compConcrete+"", XSDDatatype.XSDboolean);
+                  
+                  
+                  //RDFS LABEL EXPORTED for canonical instance
+                  this.DataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                 
+                  
+                //RDFS LABEL EXPORTED for class
+                  this.DataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                  
+                  
+                  //INPUTS-- EXPORTED
+                  this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsComp, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
+
+                  
+                  //OUTPUTS-- EXPORTED
+                  this.inputsOutputs(Constants.COMPONENT_HAS_OUTPUT, outputsComp, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
+
+                  
+                //HAS LOCATION EXPORTED
+                  this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compLoc+"",XSDDatatype.XSDstring);
+                  
+                	
+              //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
+                System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
+                this.Step1(hsi);
+                
+                
+                
+               //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
+                this.Step2(hsi);
+                
+                
+              //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
+                System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
+                this.Step3(hso);
+                
+                }
+                else if(clarifyToExportConcrComp==0 && codeisdifferentbutinputsandoutputsaresame==0)
+                {
+                	System.out.println("NOW CHECK IF THE INPUTS AND OUTPUTS WERE THE SAME AND ONLY THE CODE HAD CHANGED...IF YES THEN WE EXPORT ONLY A SUBCLASS FACTOR");
                 	
                 	System.out.println("There is NO MATCH AND HENCE WE HAVE TO CREATE A VERSIONING HERE");
                 	System.out.println("THIS STARTS THE FIRST CASE PART-2");  
+                	
               	  
               	  
                 	String finalversionforNewAbstractComponent="";
