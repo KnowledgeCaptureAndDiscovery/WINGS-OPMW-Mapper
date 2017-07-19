@@ -125,6 +125,7 @@ public class Constants {
     public static final String OPMW_WORKFLOW_TEMPLATE_ARTIFACT = PREFIX_OPMW+CONCEPT_WORKFLOW_TEMPLATE_ARTIFACT;
     public static final String OPMW_WORKFLOW_EXECUTION_ACCOUNT = PREFIX_OPMW+CONCEPT_WORKFLOW_EXECUTION_ACCOUNT;
     public static final String OPMW_WORKFLOW_EXPANDED_TEMPLATE = PREFIX_OPMW + CONCEPT_WORKFLOW_EXPANDED_TEMPLATE;
+    
     //public static final String OPMW_WORKFLOW_EXPANDED_TEMPLATE_PROCESS = PREFIX_OPMW + CONCEPT_WORKFLOW_EXPANDED_TEMPLATE_PROCESS;
     //public static final String OPMW_WORKFLOW_EXPANDED_TEMPLATE_DATA_VARIABLE = PREFIX_OPMW + CONCEPT_WORKFLOW_EXPANDED_TEMPLATE_DATA_VARIABLE;
     //public static final String OPMW_WORKFLOW_EXPANDED_TEMPLATE_PARAMETER_VARIABLE = PREFIX_OPMW + CONCEPT_WORKFLOW_EXPANDED_TEMPLATE_PARAMETER_VARIABLE;
@@ -185,6 +186,10 @@ public class Constants {
     public static final String OPMW_COMPONENT_HAS_RULES = PREFIX_OPMW + "hasRules";
     public static final String OPMW_DATA_PROP_IS_COLLECTION = PREFIX_OPMW + "isCollection";
     public static final String OPMW_DATA_PROP_TYPE_OF_COMPONENT = PREFIX_OPMW + "ComponentType";
+    public static final String OPMW_DATA_HAS_MD5_CODE = PREFIX_OPMW + "hasMD5";
+    public static final String OPMW_DATA_HAS_SIZE = PREFIX_OPMW + "hasSize";
+    public static final String OPMW_DATA_HAS_LANGUAGE = PREFIX_OPMW + "hasLanguage";
+    public static final String OPMW_DATA_HAS_TOPIC = PREFIX_OPMW + "hasTopic";
     
     
     public static final String  OPMW_PROP_IS_DATA_BINDING_OF_EXPANDED_TEMPLATE_DATA_VARIABLE = PREFIX_OPMW + "isDataBindingofExpandedTemplateDataVariable";

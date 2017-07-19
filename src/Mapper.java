@@ -39,6 +39,8 @@ import Validations.Utils;
 import Validations.Validator;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -51,6 +53,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -70,6 +73,7 @@ public class Mapper {
     private OntModel WINGSExecutionResults;
     private OntModel OPMWModel;
     private OntModel PROVModel;
+    private OntModel DataCatalog;
     private String taxonomyURL;
     private OntModel ExpandedTemplateModel;
     private OntModel TemplateModelforCondition;
@@ -173,6 +177,11 @@ public class Mapper {
         return queryLocalRepository(queryIn, Taxonomy_Export);
     }
     
+    //function to query just the DataCatalog model
+    private ResultSet queryLocalDataCatalogRepository(String queryIn) {
+        return queryLocalRepository(queryIn, DataCatalog);
+    }
+    
     
     //function to query just the conditioned template model
     private ResultSet queryConditionTemplateModel(String queryIn) {
@@ -243,7 +252,7 @@ public class Mapper {
     }
     
     
-public void loadedTemplateFileCondition(String template, String modeFile){
+public void loadedTemplateFileCondition(String template, String modeFile) throws Exception{
         
     	InputStream in2 = FileManager.get().open(template.replaceAll("#.*$", ""));
         if (in2 == null){
@@ -264,6 +273,18 @@ public void loadTaxonomyExport(String template, String modeFile){
     
     Taxonomy_Export.read(in2, null, modeFile);
     System.out.println("Taxonomy_Export File Condition"+template+" loaded into the new template model");
+
+}
+
+public void loadDataExport(String template, String modeFile){
+    
+	InputStream in2 = FileManager.get().open(template.replaceAll("#.*$", ""));
+    if (in2 == null){
+        throw new IllegalArgumentException("File: " + template + " not found");
+    }
+    
+    DataCatalog.read(in2, null, modeFile);
+    System.out.println("DataCatalog File "+template+" loaded into the new DataCatalog model");
 
 }
     
@@ -345,8 +366,7 @@ public void loadTaxonomyExport(String template, String modeFile){
         //loading the existing taxonomy file
         
         ////****************IMPORTANT********************////
-        //THE PROBLEM IS THAT IT CAN ONLY TAKE IN A FILE IN 
-        //RDF NOT IN TURTLE, SO JUST SEE TO IT THE INPUT TAXONOMY FILE IS RDF ONLY
+
         try{
             //load the template file to WINGSModel (already loads the taxonomy as well
             this.loadTaxonomyExport(taxonomy_export, mode2);            
@@ -3050,7 +3070,7 @@ public void loadTaxonomyExport(String template, String modeFile){
  */
     //public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, String outFilenameOPMW, String outFilenamePROV){
     public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, 
-        String outFilenameOPMW, String outFilenamePROV, String suffix){
+        String outFilenameOPMW, String outFilenamePROV, String suffix,String data_catalog){
     		
     	//NEW ADDITION BY TIRTH**************//
     	//creating a new expandedTemplateModel that has the expanded Template File only
@@ -3064,6 +3084,10 @@ public void loadTaxonomyExport(String template, String modeFile){
     	 if(TemplateModelforCondition!=null){
     		 TemplateModelforCondition.removeAll();//where we Expanded Template
          }
+    	 
+    	 
+    	 
+    	 
     	 TemplateModelforCondition = ModelFactory.createOntologyModel();
     	 
     	
@@ -3080,7 +3104,21 @@ public void loadTaxonomyExport(String template, String modeFile){
         if(PROVModel!=null){
             PROVModel.removeAll();
         }
+        if(DataCatalog!=null){
+        	DataCatalog.removeAll();
+        }
         PROVModel=ModelFactory.createOntologyModel();
+        DataCatalog=ModelFactory.createOntologyModel();
+        
+        DataCatalog=ModelFactory.createOntologyModel();
+//        try{
+//            //load the template file to WINGSModel (already loads the taxonomy as well
+//            this.loadDataExport(data_catalog, modeFile);            
+//        }catch(Exception e){
+//            System.err.println("Error "+e.getMessage());
+//            return "";
+//        }
+        
         //load the execution library file
         this.loadResultFileToLocalRepository(libraryFile, modeFile);
         //load the execution file
@@ -3107,7 +3145,9 @@ public void loadTaxonomyExport(String template, String modeFile){
             
         ////NEW ADDITION BY TIRTH**************//
             //loading the Template Condition Model here
+            try{
             this.loadedTemplateFileCondition(templateURI, modeFile);
+            }catch(Exception e){}
             System.out.println("---------------------");
             System.out.println("PRINTING THE TEMPLATE FILE");
             //TemplateModelforCondition.write(System.out,"RDF/XML");
@@ -3439,7 +3479,134 @@ public void loadTaxonomyExport(String template, String modeFile){
             step = qs.getResource("?step").getLocalName();
             input = qs.getResource("?input").getLocalName();
             inputBinding = qs.getLiteral("?iBinding").getString();
-            System.out.println("Step: "+step+" used input "+input+" with data binding: "+inputBinding);            
+            System.out.println("Step: "+step+" used input "+input+" with data binding: "+inputBinding); 
+            
+            //need to open the file here:
+            System.out.println("hashing the input file here ");
+            File f=new File("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+inputBinding.substring(inputBinding.lastIndexOf("/")+1,inputBinding.length()));
+            ArrayList<String> arr=new ArrayList<>();
+            StringBuilder sb=new StringBuilder();
+            String currentMD5=null;
+            try{
+	        	InputStream is = new FileInputStream(f);
+	        	BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+	        	
+	        	String line = buf.readLine();
+	        	while(line != null){ 
+	        		if(!line.equals(""))
+		        		arr.add(line+"\n");
+	        		line = buf.readLine();
+	        		}
+	        	for(String x:arr)
+	        		sb.append(x);
+	        	System.out.println("file is "+sb.toString());
+            System.out.println("hashed file version is "+MD5(sb.toString()));
+            currentMD5=MD5(sb.toString());
+            }catch(Exception e){}
+            
+            HashMap<String,String> hsprops=new HashMap<>();
+            
+            String getVarMetadata = Queries.queryDataVariablesMetadata();
+            r=null;
+            r = queryLocalWINGSResultsRepository(getVarMetadata);
+            String var, prop, obj, objName = null;
+            while(r.hasNext()){
+                qs = r.next();
+                var = qs.getResource("?variable").getLocalName();
+                prop = qs.getResource("?prop").getURI();
+                try{
+                    //types
+                    Resource rObj = qs.getResource("?obj");
+                    obj = rObj.getURI();
+                    objName = rObj.getLocalName();
+                }catch(Exception e){
+                    //basic metadata
+                    obj = qs.getLiteral("?obj").getString();
+                }
+//                System.out.println("Var "+var+" <"+prop+ "> "+ obj);
+
+                //redundancy: add it as a opm:Artifact as well
+ 
+                //link to template
+                if(prop.contains("derivedFrom")){
+                    //this relationship ensures that we are doing the linking correctly.
+                    //if it doesn't exist we avoid linking to the template.
+
+                }else
+                //metadata
+                if(prop.contains("rdf-schema#type")||prop.contains("http://www.w3.org/2000/01/rdf-schema#comment")||prop.contains("rdf-syntax-ns#type")){
+                    //the objects are resources in this case
+                    //String auxP = encode(Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date);
+
+                }
+                
+                else if(prop.contains("hasDataBinding")||prop.contains("isVariableOfPlan")){
+                    //do nothing! we have already dealt with data binding before
+                    //regarding the p-plan, i don't add it to avoid confusion
+                }
+              
+                else{
+                    //custom wings property: preserve it.
+                    System.out.println("Topic is here");
+                    hsprops.put(prop.substring(prop.lastIndexOf("/")+1,prop.length()),obj);
+                }
+                
+            }
+
+            
+            
+            //now query the data catalog model to check if this hashed version exists
+            //if it doesnt export ...
+            //if it does check the metadata is the same or not
+            String dataCatalogQuery = Queries.dataCatalogQuery();
+            r=null;
+            r = queryLocalDataCatalogRepository(dataCatalogQuery);
+            String MD5query=null;
+            String versionNumber=null;
+            String sizequery=null,topicquery=null,languagequery=null;
+            while(r.hasNext()){
+                QuerySolution qsnew = r.next();
+                Resource res = qsnew.getResource("?n");
+                Literal md5=qsnew.getLiteral("?md5");
+                Literal topic=qsnew.getLiteral("?topic");
+                Literal size=qsnew.getLiteral("?size");
+                Literal language=qsnew.getLiteral("?lang");
+                if(md5!=null && md5.getString().equals(currentMD5))
+                {
+                	versionNumber=res.getLocalName();
+                	break;
+                }
+                if(topic!=null)
+                	topicquery=topic.getString();
+                if(size!=null)
+                	sizequery=size.getString();
+                if(language!=null)
+                	languagequery=language.getString();
+                
+            }
+            if(versionNumber!=null)
+            	System.out.println("we found a match "+versionNumber);
+            else
+            {
+            	System.out.println("no match and create a new version v1");
+            	OntProperty propSelec22;
+                propSelec22 = DataCatalog.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#hasMD5");
+                Resource orig22 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding.substring(inputBinding.lastIndexOf("/")+1,inputBinding.length())+"_"+currentMD5+"_V1"));
+                DataCatalog.add(orig22, propSelec22,currentMD5);	
+                //RDFS LABEL EXPORTED for canonical instance
+                //this.DataProps(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);
+                for(String x:hsprops.keySet())
+                {
+                OntProperty propSelec23;
+                propSelec23 = DataCatalog.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
+                Resource orig23 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding.substring(inputBinding.lastIndexOf("/")+1,inputBinding.length())+"_"+currentMD5+"_V1"));
+                DataCatalog.add(orig23, propSelec23,hsprops.get(x));
+                }
+   
+            }
+            
+            
+            
             //no need to add the variable individual now because the types are going to be added later
             this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+step+date,
                     Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
@@ -3447,6 +3614,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
                     inputBinding,
                         Constants.OPMW_DATA_PROP_HAS_LOCATION, XSDDatatype.XSDanyURI);
+            System.out.println("inputbinding "+ inputBinding);
             /*************************
             * PROV-O INTEROPERABILITY
             *************************/ 
@@ -3476,6 +3644,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             System.out.println("step "+step +"used param: "+paramName+" with value: "+paramvalue);
             this.addIndividual(OPMWModel, paramName+date,
                     Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT, "Parameter with value: "+paramvalue);
+            System.out.println("HERE IT IS ADDDED "+paramName+date);
             String auxParam = encode(Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date);
             OntClass cParam = OPMWModel.createClass(Constants.OPM_ARTIFACT);
             cParam.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+auxParam);
@@ -3528,6 +3697,7 @@ public void loadTaxonomyExport(String template, String modeFile){
                     Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date, 
                     Constants.PROV_USED);            
         }
+        
         
 
         
@@ -3586,6 +3756,7 @@ public void loadTaxonomyExport(String template, String modeFile){
             this.addIndividual(OPMWModel, var+date,
                     Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT, 
                     "Workflow execution artifact: "+var+date);
+            System.out.println("HERE IT IS ADDED "+var+date+"again here");
             //redundancy: add it as a opm:Artifact as well
             String auxP = encode(Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date);
             OntClass cP = OPMWModel.createClass(Constants.OPM_ARTIFACT);
@@ -3659,6 +3830,8 @@ public void loadTaxonomyExport(String template, String modeFile){
          ***********************************************************************************/        
         exportRDFFile(outFilenameOPMW, OPMWModel);
         exportRDFFile(outFilenamePROV, PROVModel);
+        //exporting the new DATA CATALOG ALSO NOW
+        exportRDFFile(data_catalog, DataCatalog);
         return (Constants.PREFIX_EXPORT_RESOURCE+accname);
     }
     

@@ -165,6 +165,19 @@ public class Queries {
     	return query;
     }
     
+  //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc in the component catalog based class
+    public static String dataCatalogQuery()
+    {
+    	String query="SELECT ?n ?md5 ?lang ?size ?topic WHERE{"
+    			+"?n a <http://www.opmw.org/export/resource/WorkflowExecutionArtifact>."
+    			+"?n <http://www.opmw.org/ontology/hasMD5> ?md5."	
+    			+"OPTIONAL{?n <http://www.opmw.org/ontology/hasLanguage> ?lang.}"
+    			+"OPTIONAL{?n <http://www.opmw.org/ontology/hasTopic> ?topic.}"
+    			+"OPTIONAL{?n <http://www.opmw.org/ontology/hasSize> ?size.}"
+    			+"}";
+    	return query;
+    }
+    
     public static String componentCatalogQuerydependencies(String className)
     {
     	System.out.println("className inside the query received "+className);
