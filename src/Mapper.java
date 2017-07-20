@@ -285,6 +285,7 @@ public void loadDataExport(String template, String modeFile){
     
     DataCatalog.read(in2, null, modeFile);
     System.out.println("DataCatalog File "+template+" loaded into the new DataCatalog model");
+    DataCatalog.write(System.out,"TURTLE");
 
 }
     
@@ -3070,7 +3071,7 @@ public void loadDataExport(String template, String modeFile){
  */
     //public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, String outFilenameOPMW, String outFilenamePROV){
     public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, 
-        String outFilenameOPMW, String outFilenamePROV, String suffix,String data_catalog){
+        String outFilenameOPMW, String outFilenamePROV, String suffix,String data_catalog,String datamode){
     		
     	//NEW ADDITION BY TIRTH**************//
     	//creating a new expandedTemplateModel that has the expanded Template File only
@@ -3111,13 +3112,13 @@ public void loadDataExport(String template, String modeFile){
         DataCatalog=ModelFactory.createOntologyModel();
         
         DataCatalog=ModelFactory.createOntologyModel();
-//        try{
-//            //load the template file to WINGSModel (already loads the taxonomy as well
-//            this.loadDataExport(data_catalog, modeFile);            
-//        }catch(Exception e){
-//            System.err.println("Error "+e.getMessage());
-//            return "";
-//        }
+        try{
+            //load the template file to WINGSModel (already loads the taxonomy as well
+            this.loadDataExport(data_catalog, datamode);            
+        }catch(Exception e){
+            System.err.println("Error "+e.getMessage());
+            return "";
+        }
         
         //load the execution library file
         this.loadResultFileToLocalRepository(libraryFile, modeFile);
@@ -3469,21 +3470,28 @@ public void loadDataExport(String template, String modeFile){
                     Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName+"_"+derivedFrom,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_STEP);
         }
-
-        //annotation of inputs
-        String getInputs = Queries.queryStepInputs();
-        r = queryLocalWINGSResultsRepository(getInputs);
-        String step, input, inputBinding;
+        
+        
+        
+        //DATA VERSIONING CAPTURE
+      //annotation of inputs
+        //creating a hashmap to store the input vs the new name for it to make it replaceable everywhere
+        boolean same=false;
+        HashMap<String,String> hmapforInputstoVersions=new HashMap<>();
+        
+        String getInputs112 = Queries.queryStepInputs();
+        r=null;
+        r = queryLocalWINGSResultsRepository(getInputs112);
+        String step2, input2, inputBinding2;
         while(r.hasNext()){
             QuerySolution qs = r.next();
-            step = qs.getResource("?step").getLocalName();
-            input = qs.getResource("?input").getLocalName();
-            inputBinding = qs.getLiteral("?iBinding").getString();
-            System.out.println("Step: "+step+" used input "+input+" with data binding: "+inputBinding); 
-            
-            //need to open the file here:
+            step2 = qs.getResource("?step").getLocalName();
+            input2 = qs.getResource("?input").getLocalName();
+            inputBinding2 = qs.getLiteral("?iBinding").getString();
+            System.out.println("Step: "+step2+" used input "+input2+" with data binding: "+inputBinding2);
+          //need to open the file here:
             System.out.println("hashing the input file here ");
-            File f=new File("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+inputBinding.substring(inputBinding.lastIndexOf("/")+1,inputBinding.length()));
+            File f=new File("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()));
             ArrayList<String> arr=new ArrayList<>();
             StringBuilder sb=new StringBuilder();
             String currentMD5=null;
@@ -3505,6 +3513,7 @@ public void loadDataExport(String template, String modeFile){
             }catch(Exception e){}
             
             HashMap<String,String> hsprops=new HashMap<>();
+            HashSet<String> propertiesfromExecutionFile=new HashSet<>();
             
             String getVarMetadata = Queries.queryDataVariablesMetadata();
             r=null;
@@ -3548,70 +3557,270 @@ public void loadDataExport(String template, String modeFile){
                 else{
                     //custom wings property: preserve it.
                     System.out.println("Topic is here");
-                    hsprops.put(prop.substring(prop.lastIndexOf("/")+1,prop.length()),obj);
+                    String temp=prop.substring(prop.lastIndexOf("/")+1,prop.length());
+                    hsprops.put(temp.substring(temp.lastIndexOf("#")+1,temp.length()),obj);
+                    propertiesfromExecutionFile.add(prop.substring(prop.lastIndexOf("/")+1,prop.length()));
                 }
                 
             }
-
+            System.out.println("PRINTING THE HASHMAP GIVEN");
+            hsprops.put("hasMD5",currentMD5);
+            for(String x:hsprops.keySet())
+            	System.out.println(x+ " "+hsprops.get(x));
             
-            
+        
+ 
             //now query the data catalog model to check if this hashed version exists
             //if it doesnt export ...
             //if it does check the metadata is the same or not
             String dataCatalogQuery = Queries.dataCatalogQuery();
-            r=null;
-            r = queryLocalDataCatalogRepository(dataCatalogQuery);
-            String MD5query=null;
+            ResultSet rnew123=null;
+            rnew123 = queryLocalDataCatalogRepository(dataCatalogQuery);
+            //HashSet for the properties being queried in the DataCatalogModel
+            HashMap<String,String> hspropsquery=new HashMap<>();
+            
+            HashSet<String> similarNamesofInputFiles=new HashSet<>();
+            
             String versionNumber=null;
-            String sizequery=null,topicquery=null,languagequery=null;
-            while(r.hasNext()){
-                QuerySolution qsnew = r.next();
+            System.out.println("printing the query part");
+            HashMap<String,ArrayList<String>> hmapnewone=new HashMap<>();
+            while(rnew123.hasNext()){
+                QuerySolution qsnew = rnew123.next();
                 Resource res = qsnew.getResource("?n");
-                Literal md5=qsnew.getLiteral("?md5");
-                Literal topic=qsnew.getLiteral("?topic");
-                Literal size=qsnew.getLiteral("?size");
-                Literal language=qsnew.getLiteral("?lang");
-                if(md5!=null && md5.getString().equals(currentMD5))
-                {
-                	versionNumber=res.getLocalName();
-                	break;
+                System.out.println("n "+res.getLocalName());
+                hmapforInputstoVersions.put(input2, res.getLocalName());
+                if(res.getLocalName().substring(0,res.getLocalName().indexOf("_")).equals(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()))
+                	similarNamesofInputFiles.add(res.getLocalName());
+                Resource prop112 = qsnew.getResource("?prop");
+                try{
+                Literal obj112=qsnew.getLiteral("?obj");
+                if(prop112!=null && obj112!=null){
+                	System.out.println("prop112 "+prop112.getLocalName()+" obj112 "+obj112.getString());
+                	if(!prop112.getLocalName().equals("type") && !prop112.getLocalName().equals("wasRevisionOf"))
+                	{
+                		if(hmapnewone.containsKey(res.getLocalName()))
+                		{
+                			ArrayList<String> temp=hmapnewone.get(res.getLocalName());
+                			temp.add(obj112.getString());
+                			hmapnewone.put(res.getLocalName(), temp);
+                		}
+                		else
+                		{
+                			ArrayList<String> temp=new ArrayList<>();
+                			temp.add(obj112.getString());
+                			hmapnewone.put(res.getLocalName(), temp);
+                		}
+                	}
                 }
-                if(topic!=null)
-                	topicquery=topic.getString();
-                if(size!=null)
-                	sizequery=size.getString();
-                if(language!=null)
-                	languagequery=language.getString();
-                
+                }catch(Exception e){
+                	Resource obj112=qsnew.getResource("?obj");
+                	if(prop112!=null && obj112!=null){
+                    	System.out.println("prop112 "+prop112.getLocalName()+" obj112 "+obj112.getLocalName());
+                    	if(!prop112.getLocalName().equals("type") && !prop112.getLocalName().equals("wasRevisionOf"))
+                    	{
+                    		if(hmapnewone.containsKey(res.getLocalName()))
+                    		{
+                    			ArrayList<String> temp=hmapnewone.get(res.getLocalName());
+                    			temp.add(obj112.getLocalName());
+                    			hmapnewone.put(res.getLocalName(), temp);
+                    		}
+                    		else
+                    		{
+                    			ArrayList<String> temp=new ArrayList<>();
+                    			temp.add(obj112.getLocalName());
+                    			hmapnewone.put(res.getLocalName(), temp);
+                    		}
+                    	}
+                	}
+                }
+
+   
             }
-            if(versionNumber!=null)
-            	System.out.println("we found a match "+versionNumber);
-            else
-            {
+            System.out.println("PRINTING THE HASHMAP QUERY");
+            for(String x:hmapnewone.keySet())
+            	System.out.println(x+ " "+hmapnewone.get(x));
+            
+            System.out.println("PRINTING THE HASHSET SIMILAR NAMES");
+            for(String x:similarNamesofInputFiles)
+            	System.out.println(x);
+            
+//           hsprops.put("hello",5+"");
+            
+            
+           if(similarNamesofInputFiles.size()==0)
+           {
+            	hmapforInputstoVersions.put(input2, inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+"_V1");
+            	
             	System.out.println("no match and create a new version v1");
+            	
+            	String nameOfIndividualEnc = encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+"_V1");
+                OntClass c = DataCatalog.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT);
+                c.createIndividual(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+nameOfIndividualEnc.toUpperCase());
+            	
+            	
+            	
             	OntProperty propSelec22;
                 propSelec22 = DataCatalog.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#hasMD5");
-                Resource orig22 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding.substring(inputBinding.lastIndexOf("/")+1,inputBinding.length())+"_"+currentMD5+"_V1"));
+                Resource orig22 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+"_V1"));
                 DataCatalog.add(orig22, propSelec22,currentMD5);	
                 //RDFS LABEL EXPORTED for canonical instance
                 //this.DataProps(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);
                 for(String x:hsprops.keySet())
                 {
                 OntProperty propSelec23;
+                System.out.println("x "+x);
                 propSelec23 = DataCatalog.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
-                Resource orig23 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding.substring(inputBinding.lastIndexOf("/")+1,inputBinding.length())+"_"+currentMD5+"_V1"));
+                Resource orig23 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+"_V1"));
                 DataCatalog.add(orig23, propSelec23,hsprops.get(x));
+                
+                
+                OntProperty propSelec2233;
+                propSelec2233 = DataCatalog.createDatatypeProperty(Constants.RDFS_LABEL);
+                Resource orig2233 = DataCatalog.getResource(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
+                DataCatalog.add(orig2233, propSelec2233,hsprops.get(x));
                 }
    
             }
-            
-            
-            
+           else if(similarNamesofInputFiles.size()!=0)
+           {
+        	   System.out.println("similar names size!=0");
+        	   //now check if all the properties match
+        	   //if they match no export
+        	   //COMPARE hsprops & hspropsquery
+
+        	   ArrayList<String> givenhspropsarr=new ArrayList<>();
+        	   for(String x:hsprops.keySet())
+        		   givenhspropsarr.add(hsprops.get(x));
+        	   Collections.sort(givenhspropsarr);
+        	   
+        	   for(String x:hmapnewone.keySet())
+        	   {
+        		   ArrayList<String> currenttemparr=new ArrayList<>();
+        		   currenttemparr=hmapnewone.get(x);
+        		   Collections.sort(currenttemparr);
+        		   //comment this asap
+//        		   currenttemparr.add("hello");
+        		   if(currenttemparr.size()==givenhspropsarr.size() && currenttemparr.equals(givenhspropsarr))
+        			   same=true;
+
+	           	   if(same==true){
+	           		   System.out.println("they are the same no export");
+	           		   break;
+	           	   			}
+        	   }
+        	   
+           	   if(same==false)
+           	   {
+           		   System.out.println("no matches so versioning export");
+           		   //the props are different somewhere so we find the latest version and link it to it
+           		   String finalversionforNewAbstractComponent="";
+                  	String finalversionforLatestAbstractComponent="";
+                    	int max=Integer.MIN_VALUE;
+                    	for(String x:similarNamesofInputFiles)
+                    	{
+                    		String temp=x.substring(x.lastIndexOf("_V"),x.length());
+                    		System.out.println("what is temp "+temp);
+                    		int temp2=Integer.parseInt(temp.substring(2,temp.length()));
+                    		if(max<temp2)
+                    		{
+                    			max=temp2;
+                    			
+                    		}
+                    	}
+                    	finalversionforLatestAbstractComponent="_V"+max;
+                    	max++;
+                    	finalversionforNewAbstractComponent="_V"+max;
+                    	
+                    	System.out.println("finalversionforLatestAbstractComponent "+finalversionforLatestAbstractComponent);
+                    	System.out.println("finalversionforNewAbstractComponent "+finalversionforNewAbstractComponent);
+                    	
+                    	
+                    	hmapforInputstoVersions.put(input2, inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+finalversionforNewAbstractComponent);
+                   	
+                   	System.out.println("create a new version "+finalversionforNewAbstractComponent);
+                   	
+                   	
+                   	
+                   	
+                   	
+                   	String nameOfIndividualEnc = encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+finalversionforNewAbstractComponent);
+                       OntClass c = DataCatalog.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT);
+                       c.createIndividual(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+nameOfIndividualEnc.toUpperCase());
+                   	
+                   	
+                   	
+   	
+                       //RDFS LABEL EXPORTED for canonical instance
+                       //this.DataProps(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);
+                       for(String x:hsprops.keySet())
+                       {
+	                       OntProperty propSelec23;
+	                       System.out.println("x "+x);
+	                       propSelec23 = DataCatalog.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
+	                       Resource orig23 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforNewAbstractComponent));
+	                       DataCatalog.add(orig23, propSelec23,hsprops.get(x));
+	                       
+	                       OntProperty propSelec2233;
+	                       propSelec2233 = DataCatalog.createDatatypeProperty(Constants.RDFS_LABEL);
+	                       Resource orig2233 = DataCatalog.getResource(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
+	                       DataCatalog.add(orig2233, propSelec2233,hsprops.get(x));
+                       }
+                       
+                     //EXPORTING THE PROV_WAS_REVISION_OF
+                       OntProperty propSelec255 = DataCatalog.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                       Resource source255 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforNewAbstractComponent));
+                       Individual instance255 = (Individual) source255.as( Individual.class );
+                       if((inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
+                           instance255.addProperty(propSelec255,Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent);            
+                       }else{//it is a local resource
+                           instance255.addProperty(propSelec255, DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent)));
+                       }
+                    	
+                    	
+           		   
+           	   }
+           	   if(same==true)
+           	   {
+           		   break;
+           	   }
+        	   
+        	   
+        	   
+
+        	    
+        	   
+        	   
+           }
+
+        }
+        System.out.println("PRINTING THE HASHMAP");
+        for(String x:hmapforInputstoVersions.keySet())
+        {
+        	System.out.println(x+" "+hmapforInputstoVersions.get(x));
+        }
+        
+
+        
+        
+        
+        
+
+        //annotation of inputs
+        String getInputs = Queries.queryStepInputs();
+        r = queryLocalWINGSResultsRepository(getInputs);
+        String step, input, inputBinding;
+        while(r.hasNext()){
+            QuerySolution qs = r.next();
+            step = qs.getResource("?step").getLocalName();
+            input = qs.getResource("?input").getLocalName();
+            inputBinding = qs.getLiteral("?iBinding").getString();
+            System.out.println("Step: "+step+" used input "+input+" with data binding: "+inputBinding); 
+
             //no need to add the variable individual now because the types are going to be added later
             this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+step+date,
-                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
+                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
                         Constants.OPM_PROP_USED);
-            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
+            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
                     inputBinding,
                         Constants.OPMW_DATA_PROP_HAS_LOCATION, XSDDatatype.XSDanyURI);
             System.out.println("inputbinding "+ inputBinding);
@@ -3619,10 +3828,13 @@ public void loadDataExport(String template, String modeFile){
             * PROV-O INTEROPERABILITY
             *************************/ 
             this.addProperty(PROVModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+step+date,
-                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
+                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
                         Constants.PROV_USED);
-            //hasLocation subrpop of atLocation
-            this.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
+
+            
+            
+          //hasLocation subrpop of atLocation
+            this.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
                     inputBinding,
                         Constants.PROV_AT_LOCATION, XSDDatatype.XSDanyURI);
             
@@ -3732,10 +3944,10 @@ public void loadDataExport(String template, String modeFile){
                     outputBinding,
                         Constants.PROV_AT_LOCATION, XSDDatatype.XSDanyURI);
         }
+        
+        
         //annotation of variable metadata
 
-        
-        
         String getVarMetadata = Queries.queryDataVariablesMetadata();
         r = queryLocalWINGSResultsRepository(getVarMetadata);
         String var, prop, obj, objName = null;
@@ -3753,25 +3965,58 @@ public void loadDataExport(String template, String modeFile){
                 obj = qs.getLiteral("?obj").getString();
             }
 //            System.out.println("Var "+var+" <"+prop+ "> "+ obj);
-            this.addIndividual(OPMWModel, var+date,
+            if(hmapforInputstoVersions.containsKey(var))
+            {
+            this.addIndividual(OPMWModel, hmapforInputstoVersions.get(var),
                     Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT, 
                     "Workflow execution artifact: "+var+date);
+            }
+            else
+            {
+            	this.addIndividual(OPMWModel, var+date,
+                        Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT, 
+                        "Workflow execution artifact: "+var+date);
+            }
             System.out.println("HERE IT IS ADDED "+var+date+"again here");
             //redundancy: add it as a opm:Artifact as well
-            String auxP = encode(Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date);
-            OntClass cP = OPMWModel.createClass(Constants.OPM_ARTIFACT);
+            String auxP=null;
+            OntClass cP=null;
+            if(hmapforInputstoVersions.containsKey(var))
+            {
+            auxP = encode(Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var));
+            cP = OPMWModel.createClass(Constants.OPM_ARTIFACT);
             cP.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+auxP);
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
                 accname,
                     Constants.OPM_PROP_ACCOUNT);
+            }
+            else
+            {
+            	auxP = encode(Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date);
+                cP = OPMWModel.createClass(Constants.OPM_ARTIFACT);
+                cP.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+auxP);
+                this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+                    accname,
+                        Constants.OPM_PROP_ACCOUNT);
+            }
             //link to template
             if(prop.contains("derivedFrom")){
                 //this relationship ensures that we are doing the linking correctly.
                 //if it doesn't exist we avoid linking to the template.
-                this.addProperty(OPMWModel,
-                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+            	 if(hmapforInputstoVersions.containsKey(var))
+                 {
+            		 this.addProperty(OPMWModel,
+                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
                         Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+                 }
+            	 else
+            	 {
+            		 this.addProperty(OPMWModel,
+                             Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+                             Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
+                             Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT); 
+            	 }
                 
   
                 
@@ -3779,41 +4024,91 @@ public void loadDataExport(String template, String modeFile){
               //NEW ADDITIONS BY TIRTH
                 if(ans==true)
                 {
+                	 if(hmapforInputstoVersions.containsKey(var))
+                     {
                 this.addProperty(OPMWModel,
-                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
                         Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+var,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+                     }
+                	 else
+                	 {
+                		 this.addProperty(OPMWModel,
+                                 Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+                                 Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+var,
+                                 Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+                	 }
                 }
           
                 
                 //p-plan interop
+                if(hmapforInputstoVersions.containsKey(var))
+                {
                 this.addProperty(OPMWModel,
-                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
                         Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
+                }
+                else
+                {
+                	this.addProperty(OPMWModel,
+                            Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+                            Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
+                            Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
+                }
             }else
             //metadata
             if(prop.contains("http://www.w3.org/2000/01/rdf-schema#type")){
                 //the objects are resources in this case
                 //String auxP = encode(Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date);
-                cP = OPMWModel.createClass(obj);
-                cP.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+auxP);
+//                cP = OPMWModel.createClass(obj);
+//                cP.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+auxP);
             }
-            else if(prop.contains("hasSize")){
-                this.addDataProperty(OPMWModel,
-                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
-                    obj,
-                    Constants.OPMW_DATA_PROP_HAS_SIZE);
-            }else if(prop.contains("hasDataBinding")||prop.contains("isVariableOfPlan")){
+//            else if(prop.contains("hasSize")){
+//            	if(hmapforInputstoVersions.containsKey(var))
+//                {
+//                this.addDataProperty(OPMWModel,
+//                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
+//                    obj,
+//                    Constants.TAXONOMY_CLASS+"DataCatalog#");
+//                }
+//            	else
+//            	{
+//            		this.addDataProperty(OPMWModel,
+//                            Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+//                            obj,
+//                            Constants.OPMW_DATA_PROP_HAS_SIZE);
+//            	}
+//            }
+            else if(prop.contains("hasDataBinding")||prop.contains("isVariableOfPlan") || prop.contains("rdf-syntax-ns#type")
+            		|| prop.contains("rdf-schema#comment")){
                 //do nothing! we have already dealt with data binding before
                 //regarding the p-plan, i don't add it to avoid confusion
-            }else{
-                //custom wings property: preserve it.
-                this.addDataProperty(OPMWModel,
-                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
-                    obj,
-                    prop);
             }
+            
+            else{
+                //custom wings property: preserve it.
+            	if(hmapforInputstoVersions.containsKey(var))
+                {
+            		if(prop.contains("http://ontosoft.isi.edu:8080"))
+            			prop=prop.substring(prop.lastIndexOf("#")+1,prop.length());
+
+                OntProperty propSelec23;
+                
+                propSelec23 = OPMWModel.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#"+prop);
+                Resource orig23 = OPMWModel.getResource("http://www.opmw.org/export/resource/WorkflowExecutionArtifact/"+encode(hmapforInputstoVersions.get(var)));
+                OPMWModel.add(orig23, propSelec23,obj);
+                }
+            	else
+            	{
+            		this.addDataProperty(OPMWModel,
+                            Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+                            obj,
+                            prop);
+
+            	}
+            }
+            
             
             /*************************
             * PROV-O INTEROPERABILITY
@@ -3822,6 +4117,8 @@ public void loadDataExport(String template, String modeFile){
             cP = PROVModel.createClass(Constants.PROV_ENTITY);
             cP.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+auxP);
         }
+      
+        
         
 
         

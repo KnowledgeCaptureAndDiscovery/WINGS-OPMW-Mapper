@@ -109,7 +109,7 @@ public class Constants {
     /*****
     Taxonomy classes
     *****/
-    public static final String TAXONOMY_CLASS = "http://w3id.org/wings/";
+    public static final String TAXONOMY_CLASS = "https://w3id.org/wings/";
     
     
     
