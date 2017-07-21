@@ -105,8 +105,9 @@ public class Mapper {
     //a function for calculating the MD5 VERSION of the code of a component
     public static String MD5ComponentCode(String component) throws Exception
    	{
-    	ZipFile zipFile = new ZipFile(component+".zip");
+    	ZipFile zipFile = new ZipFile(component);
 		ArrayList<String> arr=new ArrayList<>();
+
 
 	    Enumeration<? extends ZipEntry> entries = zipFile.entries();
 	    StringBuilder sb=new StringBuilder("");
@@ -1438,10 +1439,11 @@ public void loadDataExport(String template, String modeFile){
                       	System.out.println("outputs are: "+o);
                       System.out.println("Location is: "+compLoc);
                       System.out.println("isConcrete is: "+compConcrete);
+                      String compLoc2="/Users/Tirthmehta/Desktop/TestingDomain2/Component/";
                       
                       //EXPORTING THE MD5 FOR THE COMPONENT CODE
                       try{
-                      this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                      this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",MD5ComponentCode(compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length())+".zip"),XSDDatatype.XSDstring);
                       }catch(Exception e){System.out.println("ERROR");}
                       
                       //EXPORTING THE USER WHO CREATED THE COMPONENT
@@ -1658,10 +1660,11 @@ public void loadDataExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
+                    String compLoc2="/Users/Tirthmehta/Desktop/TestingDomain2/Component/";
                     
                   //EXPORTING THE MD5 FOR THE COMPONENT CODE
                     try{
-                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode(compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
                     }catch(Exception e){System.out.println("ERROR");}
                     
                     //EXPORTING THE USER WHO CREATED THE COMPONENT
@@ -1912,10 +1915,11 @@ public void loadDataExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
+                    String compLoc2="/Users/Tirthmehta/Desktop/TestingDomain2/Component/";
                     
                     //EXPORTING THE MD5 FOR THE COMPONENT CODE
                     try{
-                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",MD5ComponentCode(compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
                     }catch(Exception e){System.out.println("ERROR");}
                     
                     
@@ -2113,13 +2117,14 @@ public void loadDataExport(String template, String modeFile){
                 
                 System.out.println("THE INPUTS AND OUTPUTS IN THE CURRENT CONCRETE COMPONENT ARE:");
                 ///
-                String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(nodenew11.getLocalName()+"Class");
+                String componentCatalogQueryforActualInputsandOutputsforConcreteComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(nodenew11.getLocalName()+"Class");
                 rnew2 = null;
-                rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
+                rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforConcreteComponent);
                
                 HashSet<String> inputsCurrentConcrComp=new HashSet<>();
                 HashSet<String> outputsCurrentConcrComp=new HashSet<>();
                 boolean compConcrete=false;
+                String compLoc=null;
                 System.out.println("what we have "+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
                 while(rnew2.hasNext())
                 {
@@ -2127,6 +2132,7 @@ public void loadDataExport(String template, String modeFile){
                 	Resource nodenew = qsnew.getResource("?n");
                     Resource input = qsnew.getResource("?i");
                     Resource output = qsnew.getResource("?o");
+                    Literal loc=qsnew.getLiteral("?loc");
                     System.out.println("nodenew now case2: "+nodenew.getLocalName());
                     System.out.println("concrComp now case2: "+concrComponent.getLocalName());
                     if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
@@ -2134,6 +2140,8 @@ public void loadDataExport(String template, String modeFile){
                     	inputsCurrentConcrComp.add(input.getLocalName());
                     	outputsCurrentConcrComp.add(output.getLocalName());
                     }
+                    if(loc!=null)
+                    	compLoc=loc.getString();
                 }
                 System.out.println("CONCRETE COMPONENT----------");
                 for(String i:inputsCurrentConcrComp)
@@ -2182,11 +2190,11 @@ public void loadDataExport(String template, String modeFile){
                     }
                     System.out.println("input size "+similarAbsInps.size());
                     System.out.println("output size "+similarAbsOuts.size());
-                    
+                    String compLoc2="/Users/Tirthmehta/Desktop/TestingDomain2/Component/";
                     //added factor: check the code too
                     
                     try{
-                        one=MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase());
+                        one=MD5ComponentCode(compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip");
                         }catch(Exception e){System.out.println("ERROR first");}
                       
                    
@@ -2309,7 +2317,7 @@ public void loadDataExport(String template, String modeFile){
 
                   HashSet<String> inputsComp=new HashSet<>();
                   HashSet<String> outputsComp=new HashSet<>();
-                  String compLoc="";
+                  compLoc="";
                   boolean compConcrete123=false;
                   String doc11="";
                   while(rnew2.hasNext())
@@ -2355,10 +2363,10 @@ public void loadDataExport(String template, String modeFile){
                   }else{//it is a local resource
                       instance256.addProperty(propSelec256, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
                   } 
-                  
+                  String compLoc2="/Users/Tirthmehta/Desktop/TestingDomain2/Component/";
                   //EXPORTING THE MD5 FOR THE COMPONENT CODE
                   try{
-                  this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                  this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode(compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
                   }catch(Exception e){System.out.println("ERROR");}
                   
                   //EXPORTING THE USER WHO CREATED THE COMPONENT
@@ -2557,7 +2565,7 @@ public void loadDataExport(String template, String modeFile){
 
                     HashSet<String> inputsComp=new HashSet<>();
                     HashSet<String> outputsComp=new HashSet<>();
-                    String compLoc="";
+                    compLoc="";
                     boolean compConcrete112=false;
                     String doc11="";
                     while(rnew2.hasNext())
@@ -2593,10 +2601,11 @@ public void loadDataExport(String template, String modeFile){
                     	System.out.println("outputs are: "+o);
                     System.out.println("Location is: "+compLoc);
                     System.out.println("isConcrete is: "+compConcrete);
+                    String compLoc2="/Users/Tirthmehta/Desktop/TestingDomain2/Component/";
                     
                     //EXPORTING THE MD5 FOR THE COMPONENT CODE
                     try{
-                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()),XSDDatatype.XSDstring);
+                    this.DataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,MD5ComponentCode(compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
                     }catch(Exception e){System.out.println("ERROR");}
                     
                     
@@ -2767,8 +2776,9 @@ public void loadDataExport(String template, String modeFile){
             	System.out.println("GOING FOR PRINTING THE COMPONENT HERE "+NEW_TAXONOMY_CLASS_2);
             	System.out.println("type is "+typeComp.getURI());
             	String newchangeforthetype=typeComp.getURI().substring(typeComp.getURI().lastIndexOf("/"),typeComp.getURI().length());
+            	String newchangeforthetype2=newchangeforthetype.substring(newchangeforthetype.lastIndexOf("#"),newchangeforthetype.length());
             	String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName());
-            	OntClass cAux = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype);//repeated tuples will not be duplicated
+            	OntClass cAux = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype2);//repeated tuples will not be duplicated
             	cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);     	
             }
             else{
@@ -2842,8 +2852,9 @@ public void loadDataExport(String template, String modeFile){
                     System.out.println(variable+" of type "+ type);
 
                 	String newchangeforthetype=type.getURI().substring(type.getURI().lastIndexOf("/"),type.getURI().length());
+                	String newchangeforthetype2=newchangeforthetype.substring(newchangeforthetype.lastIndexOf("#"),newchangeforthetype.length());
                 	String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName_+variable.getLocalName());
-                	OntClass c = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Data"+newchangeforthetype);//repeated tuples will not be duplicated
+                	OntClass c = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Data"+newchangeforthetype2);//repeated tuples will not be duplicated
                 	c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);    
    
                 }else{
@@ -3471,6 +3482,21 @@ public void loadDataExport(String template, String modeFile){
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_STEP);
         }
         
+//        String tp = Queries.queryStepInputs();
+//        r=null;
+//        r = queryLocalWINGSResultsRepository(tp);
+//        while(r.hasNext()){
+//        	System.out.println("we entered data versioning");
+//            QuerySolution qs = r.next();
+//            String step2 = qs.getResource("?step").getLocalName();
+//            String input2 = qs.getResource("?input").getLocalName();
+//            String inputBinding2 = qs.getLiteral("?iBinding").getString();
+//            System.out.println("Step: "+step2+" used input "+input2+" with data binding: "+inputBinding2);
+//        }
+//        System.out.println();
+        
+        
+        
         
         
         //DATA VERSIONING CAPTURE
@@ -3484,14 +3510,21 @@ public void loadDataExport(String template, String modeFile){
         r = queryLocalWINGSResultsRepository(getInputs112);
         String step2, input2, inputBinding2;
         while(r.hasNext()){
+        	System.out.println("we entered data versioning");
             QuerySolution qs = r.next();
             step2 = qs.getResource("?step").getLocalName();
             input2 = qs.getResource("?input").getLocalName();
             inputBinding2 = qs.getLiteral("?iBinding").getString();
             System.out.println("Step: "+step2+" used input "+input2+" with data binding: "+inputBinding2);
           //need to open the file here:
+            
+            
+            
+            
+            
             System.out.println("hashing the input file here ");
-            File f=new File("/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()));
+            File f=new File("/Users/Tirthmehta/Desktop/TestingDomain2/Data/"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()));
+            System.out.println("opening file /Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/COMPONENT_ZIPFILES/"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()));
             ArrayList<String> arr=new ArrayList<>();
             StringBuilder sb=new StringBuilder();
             String currentMD5=null;
@@ -3516,21 +3549,21 @@ public void loadDataExport(String template, String modeFile){
             HashSet<String> propertiesfromExecutionFile=new HashSet<>();
             
             String getVarMetadata = Queries.queryDataVariablesMetadata();
-            r=null;
-            r = queryLocalWINGSResultsRepository(getVarMetadata);
+            ResultSet r222=null;
+            r222 = queryLocalWINGSResultsRepository(getVarMetadata);
             String var, prop, obj, objName = null;
-            while(r.hasNext()){
-                qs = r.next();
-                var = qs.getResource("?variable").getLocalName();
-                prop = qs.getResource("?prop").getURI();
+            while(r222.hasNext()){
+                QuerySolution qs222 = r222.next();
+                var = qs222.getResource("?variable").getLocalName();
+                prop = qs222.getResource("?prop").getURI();
                 try{
                     //types
-                    Resource rObj = qs.getResource("?obj");
+                    Resource rObj = qs222.getResource("?obj");
                     obj = rObj.getURI();
                     objName = rObj.getLocalName();
                 }catch(Exception e){
                     //basic metadata
-                    obj = qs.getLiteral("?obj").getString();
+                    obj = qs222.getLiteral("?obj").getString();
                 }
 //                System.out.println("Var "+var+" <"+prop+ "> "+ obj);
 
@@ -3654,14 +3687,14 @@ public void loadDataExport(String template, String modeFile){
             	System.out.println("no match and create a new version v1");
             	
             	String nameOfIndividualEnc = encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+"_V1");
-                OntClass c = DataCatalog.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT);
-                c.createIndividual(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+nameOfIndividualEnc.toUpperCase());
+                OntClass c = DataCatalog.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT);
+                c.createIndividual(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+nameOfIndividualEnc.toUpperCase());
             	
             	
             	
             	OntProperty propSelec22;
                 propSelec22 = DataCatalog.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#hasMD5");
-                Resource orig22 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+"_V1"));
+                Resource orig22 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+"_V1"));
                 DataCatalog.add(orig22, propSelec22,currentMD5);	
                 //RDFS LABEL EXPORTED for canonical instance
                 //this.DataProps(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);
@@ -3670,14 +3703,14 @@ public void loadDataExport(String template, String modeFile){
                 OntProperty propSelec23;
                 System.out.println("x "+x);
                 propSelec23 = DataCatalog.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
-                Resource orig23 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+"_V1"));
+                Resource orig23 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+"_V1"));
                 DataCatalog.add(orig23, propSelec23,hsprops.get(x));
                 
                 
                 OntProperty propSelec2233;
                 propSelec2233 = DataCatalog.createDatatypeProperty(Constants.RDFS_LABEL);
                 Resource orig2233 = DataCatalog.getResource(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
-                DataCatalog.add(orig2233, propSelec2233,hsprops.get(x));
+                DataCatalog.add(orig2233, propSelec2233,x);
                 }
    
             }
@@ -3744,8 +3777,8 @@ public void loadDataExport(String template, String modeFile){
                    	
                    	
                    	String nameOfIndividualEnc = encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+finalversionforNewAbstractComponent);
-                       OntClass c = DataCatalog.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT);
-                       c.createIndividual(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+nameOfIndividualEnc.toUpperCase());
+                       OntClass c = DataCatalog.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT);
+                       c.createIndividual(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+nameOfIndividualEnc.toUpperCase());
                    	
                    	
                    	
@@ -3757,23 +3790,23 @@ public void loadDataExport(String template, String modeFile){
 	                       OntProperty propSelec23;
 	                       System.out.println("x "+x);
 	                       propSelec23 = DataCatalog.createDatatypeProperty(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
-	                       Resource orig23 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforNewAbstractComponent));
+	                       Resource orig23 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforNewAbstractComponent));
 	                       DataCatalog.add(orig23, propSelec23,hsprops.get(x));
 	                       
 	                       OntProperty propSelec2233;
 	                       propSelec2233 = DataCatalog.createDatatypeProperty(Constants.RDFS_LABEL);
 	                       Resource orig2233 = DataCatalog.getResource(Constants.TAXONOMY_CLASS+"DataCatalog#"+x);
-	                       DataCatalog.add(orig2233, propSelec2233,hsprops.get(x));
+	                       DataCatalog.add(orig2233, propSelec2233,x);
                        }
                        
                      //EXPORTING THE PROV_WAS_REVISION_OF
                        OntProperty propSelec255 = DataCatalog.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                       Resource source255 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforNewAbstractComponent));
+                       Resource source255 = DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforNewAbstractComponent));
                        Individual instance255 = (Individual) source255.as( Individual.class );
                        if((inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
-                           instance255.addProperty(propSelec255,Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent);            
+                           instance255.addProperty(propSelec255,Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent);            
                        }else{//it is a local resource
-                           instance255.addProperty(propSelec255, DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent)));
+                           instance255.addProperty(propSelec255, DataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent)));
                        }
                     	
                     	
@@ -5188,7 +5221,7 @@ public void loadDataExport(String template, String modeFile){
             Literal v = qs.getLiteral("?ver");
             
             //add the expanded template as a provenance graph
-            this.addIndividual(OPMWModel,newExpandedTemplateName, Constants.OPMW_WORKFLOW_EXPANDED_TEMPLATE, newExpandedTemplateName);
+            this.addIndividual(OPMWModel,newExpandedTemplateName, Constants.OPMW_WORKFLOW_EXPANDED_TEMPLATE, "Workflow Expanded Template: "+newExpandedTemplateName);
               
             
             
@@ -5306,8 +5339,9 @@ public void loadDataExport(String template, String modeFile){
 //                cAux1.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
 
             	String newchangeforthetype=typeComp.getURI().substring(typeComp.getURI().lastIndexOf("/"),typeComp.getURI().length());
+            	String newchangeforthetype2=newchangeforthetype.substring(newchangeforthetype.lastIndexOf("#"),newchangeforthetype.length());
             	String tempURI = encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+"Expanded_"+newExpandedTemplateName+"_"+res.getLocalName());
-            	OntClass cAux1 = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype);//repeated tuples will not be duplicated
+            	OntClass cAux1 = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype2);//repeated tuples will not be duplicated
             	cAux1.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
                 
             }else{
@@ -5390,10 +5424,10 @@ public void loadDataExport(String template, String modeFile){
 //                    c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);
                     
                     
-                    String newchangeforthetype=type.getURI().substring(type.getURI().lastIndexOf("/"),type.getURI().length());
-                    String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+variable.getLocalName());
-                    OntClass c = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Data"+newchangeforthetype);
-                	c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);
+//                    String newchangeforthetype=type.getURI().substring(type.getURI().lastIndexOf("/"),type.getURI().length());
+//                    String nameEncoded = encode(Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+variable.getLocalName());
+//                    OntClass c = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Data"+newchangeforthetype);
+//                	c.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+nameEncoded);
                 }else{
                     System.out.println("ANON RESOURCE "+type.getURI()+" ignored");
                 }
