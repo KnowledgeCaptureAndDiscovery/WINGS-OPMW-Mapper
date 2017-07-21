@@ -1,0 +1,180 @@
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+        a       owl:DatatypeProperty .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+        a       owl:DatatypeProperty .
+
+<http://www.wings-workflows.org/ontology/resource.owl#HardwareRequirements_THIRD_V1>
+        a       <http://purl.org/net/wicus-hwspecs#HardwareComponent> .
+
+<https://w3id.org/wings/TestingDomain#THIRD_INPUTFILE>
+        a       <https://w3id.org/wings/TestingDomain/Data/TextFile> , <https://w3id.org/wings/TestingDomain/Data/DataArgument> , <https://w3id.org/wings/TestingDomain#TextFile> , <https://w3id.org/wings/TestingDomain#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "InputFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-i1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<https://w3id.org/wings/TestingDomain#TextFile>
+        a       owl:Class .
+
+<http://purl.org/net/wicus-hwspecs#HardwareSpec>
+        a       rdf:Property .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+        a       owl:DatatypeProperty .
+
+<https://w3id.org/wings/TestingDomain#ParameterArgument>
+        a       owl:Class .
+
+<http://purl.org/net/wicus-hwspecs#Storage>
+        a       rdf:Property .
+
+<https://w3id.org/wings/TestingDomain#TRIALCONCR_V1>
+        a           <https://w3id.org/wings/TestingDomain#TRIALCONCR_CLASSV1> ;
+        rdfs:label  "TRIALCONCR" ;
+        <http://www.w3.org/ns/prov#wasAttributedTo>
+                "tirth" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDocumentation>
+                "" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <https://w3id.org/wings/TestingDomain#THIRD_INPUTFILE> , <https://w3id.org/wings/TestingDomain#THIRD_INPUTWORD> , <https://w3id.org/wings/TestingDomain#THIRD_SECONDINPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <https://w3id.org/wings/TestingDomain#THIRD_OUTPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                false .
+
+<http://purl.org/net/wicus-stack#requiresVersion>
+        a       rdf:Property .
+
+<https://w3id.org/wings/TestingDomain#THIRD_INPUTWORD>
+        a       <https://w3id.org/wings/TestingDomain#ParameterArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "InputWord" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-p1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasValue>
+                "" .
+
+rdfs:label  a   owl:DatatypeProperty .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+        a       owl:DatatypeProperty .
+
+<https://w3id.org/wings/TestingDomain#THIRD_SECONDINPUTFILE>
+        a       <https://w3id.org/wings/TestingDomain/Data/TextFile> , <https://w3id.org/wings/TestingDomain/Data/DataArgument> , <https://w3id.org/wings/TestingDomain#TextFile> , <https://w3id.org/wings/TestingDomain#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "SecondInputFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-i2" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://www.w3.org/ns/prov#wasAttributedTo>
+        a       owl:DatatypeProperty .
+
+<https://w3id.org/wings/TestingDomain#TRIALCONCR_CLASSV1>
+        a                owl:Class ;
+        rdfs:label       "TRIALCONCR" ;
+        rdfs:subClassOf  <https://w3id.org/wings/TestingDomain#COMPONENT> .
+
+<http://purl.org/net/wicus-stack#SoftwareComponent>
+        a       owl:Class .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+        a       rdf:Property .
+
+<http://www.wings-workflows.org/ontology/resource.owl#HardwareRequirements_third_V1>
+        <http://purl.org/net/wicus-hwspecs#HardwareSpec>
+                false ;
+        <http://purl.org/net/wicus-hwspecs#Memory>
+                "0.0"^^xsd:float ;
+        <http://purl.org/net/wicus-hwspecs#Storage>
+                "0.0"^^xsd:float .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasValue>
+        a       owl:DatatypeProperty .
+
+<https://w3id.org/wings/TestingDomain#THIRD_CLASSV1>
+        a                owl:Class ;
+        rdfs:label       "third" ;
+        rdfs:subClassOf  <https://w3id.org/wings/TestingDomain#TRIALCONCR_CLASSV1> .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasInput>
+        a       rdf:Property .
+
+<http://www.wings-workflows.org/ontology/resource.owl#SoftwareRequirements_third_V1>
+        a       <http://purl.org/net/wicus-stack#SoftwareComponent> ;
+        <http://purl.org/net/wicus-stack#requiresVersion>
+                "Python_a2.5" .
+
+<http://purl.org/net/wicus-hwspecs#HardwareComponent>
+        a       owl:Class .
+
+<https://w3id.org/wings/TestingDomain/Data/TextFile>
+        a       owl:Class .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasMD5Code>
+        a       owl:DatatypeProperty .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasLocation>
+        a       owl:DatatypeProperty .
+
+<http://purl.org/net/wicus-reqs#HardwareRequirements>
+        a       rdf:Property .
+
+<https://w3id.org/wings/TestingDomain#DataArgument>
+        a       owl:Class .
+
+rdfs:subClassOf  a  rdf:Property .
+
+<https://w3id.org/wings/TestingDomain#THIRD_OUTPUTFILE>
+        a       <https://w3id.org/wings/TestingDomain/Data/TextFile> , <https://w3id.org/wings/TestingDomain/Data/DataArgument> , <https://w3id.org/wings/TestingDomain#TextFile> , <https://w3id.org/wings/TestingDomain#DataArgument> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentID>
+                "OutputFile" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasArgumentName>
+                "-o1" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDimensionality>
+                "0"^^xsd:int .
+
+<http://purl.org/net/wicus-hwspecs#Memory>
+        a       rdf:Property .
+
+<http://purl.org/net/wicus-reqs#SoftwareRequirements>
+        a       rdf:Property .
+
+<https://w3id.org/wings/TestingDomain/Data/DataArgument>
+        a       owl:Class .
+
+<http://www.wings-workflows.org/ontology/component.owl#hasDocumentation>
+        a       owl:DatatypeProperty .
+
+<https://w3id.org/wings/TestingDomain#THIRD_V1>
+        a           <https://w3id.org/wings/TestingDomain#THIRD_CLASSV1> ;
+        rdfs:label  "third" ;
+        <http://purl.org/net/wicus-reqs#HardwareRequirements>
+                <http://www.wings-workflows.org/ontology/resource.owl#HardwareRequirements_third_V1> ;
+        <http://purl.org/net/wicus-reqs#SoftwareRequirements>
+                <http://www.wings-workflows.org/ontology/resource.owl#SoftwareRequirements_third_V1> ;
+        <http://www.w3.org/ns/prov#wasAttributedTo>
+                "tirth" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasDocumentation>
+                "" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasInput>
+                <https://w3id.org/wings/TestingDomain#THIRD_INPUTFILE> , <https://w3id.org/wings/TestingDomain#THIRD_SECONDINPUTFILE> , <https://w3id.org/wings/TestingDomain#THIRD_INPUTWORD> ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasLocation>
+                "/Users/Tirthmehta/Desktop/TestingDomain2/Component/third" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasMD5Code>
+                "3283beb1a27250887a3e93a242178fe0" ;
+        <http://www.wings-workflows.org/ontology/component.owl#hasOutput>
+                <https://w3id.org/wings/TestingDomain#THIRD_OUTPUTFILE> ;
+        <http://www.wings-workflows.org/ontology/component.owl#isConcrete>
+                true .
