@@ -1478,7 +1478,7 @@ public void loadDataExport(String template, String modeFile){
 
                       
                     //HAS LOCATION EXPORTED
-                      this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", compLoc+"",XSDDatatype.XSDstring);
+                      this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()),XSDDatatype.XSDstring);
                       
                     	
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
@@ -1695,7 +1695,7 @@ public void loadDataExport(String template, String modeFile){
 
                     
                   //HAS LOCATION EXPORTED
-                    this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compLoc+"", XSDDatatype.XSDstring);
+                    this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()), XSDDatatype.XSDstring);
  
 
                   //extracting the actual inputs,outputs and other factors for the Abstract component
@@ -1953,7 +1953,7 @@ public void loadDataExport(String template, String modeFile){
 
                     
                   //HAS LOCATION EXPORTED
-                    this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", compLoc+"", XSDDatatype.XSDstring);
+                    this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()), XSDDatatype.XSDstring);
 
                     //EXPORTING THE HARDWARE DEPENDENCY
                     Resource blankNode112 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
@@ -2401,7 +2401,7 @@ public void loadDataExport(String template, String modeFile){
 
                   
                 //HAS LOCATION EXPORTED
-                  this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compLoc+"",XSDDatatype.XSDstring);
+                  this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()),XSDDatatype.XSDstring);
                   
                 	
               //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
@@ -2642,7 +2642,7 @@ public void loadDataExport(String template, String modeFile){
 
                     
                   //HAS LOCATION EXPORTED
-                    this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compLoc+"", XSDDatatype.XSDstring);
+                    this.DataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compLoc2+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()), XSDDatatype.XSDstring);
  
 
                   //extracting the actual inputs,outputs and other factors for the Abstract component
