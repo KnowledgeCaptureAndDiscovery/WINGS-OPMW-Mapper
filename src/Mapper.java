@@ -3511,6 +3511,11 @@ public void loadDataExport(String template, String modeFile){
             ArrayList<String> arr=new ArrayList<>();
             StringBuilder sb=new StringBuilder();
             String currentMD5=null;
+            //IF THE FILE Does not exist, it might be an intermediate file, of whose versioning we do not take care of
+            if(!f.exists()){
+            	System.out.println("FILE DOES NOT EXIST!!!");
+            	continue;
+            }
             try{
 	        	InputStream is = new FileInputStream(f);
 	        	BufferedReader buf = new BufferedReader(new InputStreamReader(is));
@@ -3592,12 +3597,10 @@ public void loadDataExport(String template, String modeFile){
             String dataCatalogQuery = Queries.dataCatalogQuery();
             ResultSet rnew123=null;
             rnew123 = queryLocalDataCatalogRepository(dataCatalogQuery);
-            //HashSet for the properties being queried in the DataCatalogModel
-            HashMap<String,String> hspropsquery=new HashMap<>();
             
             HashSet<String> similarNamesofInputFiles=new HashSet<>();
             
-            String versionNumber=null;
+
             System.out.println("printing the query part");
             HashMap<String,ArrayList<String>> hmapnewone=new HashMap<>();
             while(rnew123.hasNext()){
@@ -3721,9 +3724,12 @@ public void loadDataExport(String template, String modeFile){
 
 	           	   if(same==true){
 	           		   System.out.println("they are the same no export");
+	        		   hmapforInputstoVersions.put(input2,x);
+
 	           		   break;
 	           	   			}
         	   }
+
         	   
            	   if(same==false)
            	   {
@@ -3795,10 +3801,10 @@ public void loadDataExport(String template, String modeFile){
                     	
            		   
            	   }
-           	   if(same==true)
-           	   {
-           		   break;
-           	   }
+//           	   if(same==true)
+//           	   {
+//           		   break;
+//           	   }
         	   
         	   
         	   
@@ -3809,7 +3815,7 @@ public void loadDataExport(String template, String modeFile){
            }
 
         }
-        System.out.println("PRINTING THE HASHMAP");
+        System.out.println("PRINTING THE HASHMAP INPUT VERSIONS");
         for(String x:hmapforInputstoVersions.keySet())
         {
         	System.out.println(x+" "+hmapforInputstoVersions.get(x));

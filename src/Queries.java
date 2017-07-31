@@ -169,7 +169,7 @@ public class Queries {
     public static String dataCatalogQuery()
     {
     	String query="SELECT ?n ?prop ?obj WHERE{"
-    			+"?n a <http://www.opmw.org/ontology/WorkflowExecutionArtifact>."
+    			+"?n a <http://www.opmw.org/export/resource/WorkflowExecutionArtifact>."
     			+"OPTIONAL{?n ?prop ?obj.}"		
     			+"}";
     	return query;
