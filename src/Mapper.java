@@ -2,7 +2,7 @@
  * 
  * Author:Tirth Rajen Mehta
  * Current Progress: Expanded Template Exported
- * Scenario 1 & 2 completed
+ * Scenario 1 & 2 & 3 completed along with Data Versioning
  * 
  */
 
@@ -27,27 +27,17 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.reasoner.rulesys.impl.Generator;
-import org.apache.jena.tdb.store.Hash;
 import org.apache.jena.util.FileManager;
 
 import Validations.Scenario3;
 import Validations.Utils;
-import Validations.Validator;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -145,14 +135,7 @@ public class Mapper {
         return rs;
     }
     
-    /**
-     * Query the local OPMW repository
-     * @param queryIn input query
-     * @return 
-     */
-    private ResultSet queryLocalOPMRepository(String queryIn) {
-        return queryLocalRepository(queryIn, OPMWModel);
-    }
+
     /**
      * Query the local Wings repository
      * @param queryIn input query
