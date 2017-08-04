@@ -3597,7 +3597,7 @@ public void loadDataExport(String template, String modeFile){
             
             HashMap<String,String> hsprops=new HashMap<>();
             HashSet<String> propertiesfromExecutionFile=new HashSet<>();
-            
+
             String getVarMetadata = Queries.queryDataVariablesMetadata();
             ResultSet r222=null;
             r222 = queryLocalWINGSResultsRepository(getVarMetadata);
@@ -3605,6 +3605,7 @@ public void loadDataExport(String template, String modeFile){
             while(r222.hasNext()){
                 QuerySolution qs222 = r222.next();
                 var = qs222.getResource("?variable").getLocalName();
+//                System.out.println("variable "+var);
                 prop = qs222.getResource("?prop").getURI();
                 try{
                     //types
@@ -3640,9 +3641,12 @@ public void loadDataExport(String template, String modeFile){
                 else{
                     //custom wings property: preserve it.
                     System.out.println("Topic is here");
-                    String temp=prop.substring(prop.lastIndexOf("/")+1,prop.length());
-                    hsprops.put(temp.substring(temp.lastIndexOf("#")+1,temp.length()),obj);
-                    propertiesfromExecutionFile.add(prop.substring(prop.lastIndexOf("/")+1,prop.length()));
+                    if(var.equals(input2))
+                    {
+	                    String temp=prop.substring(prop.lastIndexOf("/")+1,prop.length());
+	                    hsprops.put(temp.substring(temp.lastIndexOf("#")+1,temp.length()),obj);
+	                    propertiesfromExecutionFile.add(prop.substring(prop.lastIndexOf("/")+1,prop.length()));
+                    }
                 }
                 
             }
@@ -3668,10 +3672,13 @@ public void loadDataExport(String template, String modeFile){
             while(rnew123.hasNext()){
                 QuerySolution qsnew = rnew123.next();
                 Resource res = qsnew.getResource("?n");
-                System.out.println("n "+res.getLocalName());
-                hmapforInputstoVersions.put(input2, res.getLocalName());
-                if(res.getLocalName().substring(0,res.getLocalName().indexOf("_")).equals(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()))
+//                System.out.println("n "+res.getLocalName());
+//                hmapforInputstoVersions.put(input2, res.getLocalName());
+                
+                if(res.getLocalName().substring(0,res.getLocalName().lastIndexOf("_")).equals(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5.toUpperCase()))
+                {
                 	similarNamesofInputFiles.add(res.getLocalName());
+                }
                 Resource prop112 = qsnew.getResource("?prop");
                 try{
                 Literal obj112=qsnew.getLiteral("?obj");
@@ -3681,9 +3688,11 @@ public void loadDataExport(String template, String modeFile){
                 	{
                 		if(hmapnewone.containsKey(res.getLocalName()))
                 		{
-                			ArrayList<String> temp=hmapnewone.get(res.getLocalName());
-                			temp.add(obj112.getString());
-                			hmapnewone.put(res.getLocalName(), temp);
+                			ArrayList<String> newtemp=new ArrayList<>();
+                			newtemp=hmapnewone.get(res.getLocalName());
+                			newtemp.add(obj112.getString());
+                			hmapnewone.remove(res.getLocalName());
+                			hmapnewone.put(res.getLocalName(), newtemp);
                 		}
                 		else
                 		{
@@ -3725,11 +3734,11 @@ public void loadDataExport(String template, String modeFile){
             for(String x:similarNamesofInputFiles)
             	System.out.println(x);
             
-//           hsprops.put("hello",5+"");
             
             
            if(similarNamesofInputFiles.size()==0)
            {
+        	   
             	hmapforInputstoVersions.put(input2, inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+"_V1");
             	
             	System.out.println("no match and create a new version v1");
@@ -3774,7 +3783,7 @@ public void loadDataExport(String template, String modeFile){
         		   givenhspropsarr.add(hsprops.get(x));
         	   Collections.sort(givenhspropsarr);
         	   
-        	   for(String x:hmapnewone.keySet())
+        	   for(String x:similarNamesofInputFiles)
         	   {
         		   ArrayList<String> currenttemparr=new ArrayList<>();
         		   currenttemparr=hmapnewone.get(x);
@@ -3786,6 +3795,10 @@ public void loadDataExport(String template, String modeFile){
 
 	           	   if(same==true){
 	           		   System.out.println("they are the same no export");
+	           		   System.out.println();
+	           		   System.out.println("PUT PUT PUT PUT PUT PUT PUT PUT PUT PUT ");
+	           		   System.out.println(input2+"    "+x);
+	           		   System.out.println();
 	        		   hmapforInputstoVersions.put(input2,x);
 
 	           		   break;
@@ -3901,26 +3914,62 @@ public void loadDataExport(String template, String modeFile){
             System.out.println("Step: "+step+" used input "+input+" with data binding: "+inputBinding); 
 
             //no need to add the variable individual now because the types are going to be added later
-            this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+step+date,
-                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
-                        Constants.OPM_PROP_USED);
-            this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
+            if(hmapforInputstoVersions.containsKey(input))
+            {
+            	this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+step+date,
+                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
+                            Constants.OPM_PROP_USED);
+            }
+            else
+            {
+            	this.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+step+date,
+                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
+                            Constants.OPM_PROP_USED);
+            }
+            if(hmapforInputstoVersions.containsKey(input))
+            {
+            	this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
                     inputBinding,
                         Constants.OPMW_DATA_PROP_HAS_LOCATION, XSDDatatype.XSDanyURI);
+            }
+            else
+            {
+            	this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
+                        inputBinding,
+                            Constants.OPMW_DATA_PROP_HAS_LOCATION, XSDDatatype.XSDanyURI);
+            }
             System.out.println("inputbinding "+ inputBinding);
             /*************************
             * PROV-O INTEROPERABILITY
             *************************/ 
+            if(hmapforInputstoVersions.containsKey(input))
+            {
             this.addProperty(PROVModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+step+date,
                     Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
                         Constants.PROV_USED);
+            }
+            else
+            {
+            	this.addProperty(PROVModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+step+date,
+                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
+                            Constants.PROV_USED);
+            }
 
             
             
           //hasLocation subrpop of atLocation
-            this.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
+            if(hmapforInputstoVersions.containsKey(input))
+            {
+            	this.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(input),
                     inputBinding,
                         Constants.PROV_AT_LOCATION, XSDDatatype.XSDanyURI);
+            }
+            else
+            {
+            	this.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+input+date,
+                        inputBinding,
+                            Constants.PROV_AT_LOCATION, XSDDatatype.XSDanyURI);	
+            }
             
         }
         
