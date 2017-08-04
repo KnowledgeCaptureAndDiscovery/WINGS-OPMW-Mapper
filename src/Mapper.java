@@ -71,6 +71,7 @@ public class Mapper {
     private OntModel Taxonomy_Export;
     public static String NEW_TAXONOMY_CLASS="";
     public static String NEW_TAXONOMY_CLASS_2="";
+    public static String PREFIX_COMP_CATALOG="";
     public Mapper(){
 
     }
@@ -269,7 +270,7 @@ public void loadDataExport(String template, String modeFile){
     
     DataCatalog.read(in2, null, modeFile);
     System.out.println("DataCatalog File "+template+" loaded into the new DataCatalog model");
-    DataCatalog.write(System.out,"TURTLE");
+//    DataCatalog.write(System.out,"TURTLE");
 
 }
     
@@ -512,6 +513,8 @@ public void loadDataExport(String template, String modeFile){
         HashSet<String> hs2Abs=new HashSet<>();
         String finalDomainName="";
         
+        HashSet<String> specialCaseforFolders=new HashSet<String>();
+        
         
         //CREATING 2 HASHSETS FOR MAINTAINING THE CORRECT ORDER IN WHICH THE COMPONENTS ENTER IN THE CASES OF ABSTRACT COMPS AND CONCRETE COMPS
         while(r.hasNext()){
@@ -526,6 +529,7 @@ public void loadDataExport(String template, String modeFile){
             int indexOf=typeComp.toString().indexOf('#');
             className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
             System.out.println("type class is: "+className);
+
             
             
             String componentCatalogQueryforSubclassCheck = Queries.componentCatalogQueryforSubclassCheckfinal(className);
@@ -535,20 +539,30 @@ public void loadDataExport(String template, String modeFile){
             System.out.println("Finallllll");
             Resource AbstractSuperClass=null;
             Resource concrComponent=null;
+            String concreteness=null;
             while(rnew1.hasNext())
             {
             	
             	QuerySolution qsnew = rnew1.next();
                 Resource nodenew = qsnew.getResource("?n");
                 Resource x = qsnew.getResource("?x");
+                Resource y = qsnew.getResource("?y");
+                Literal concr=qsnew.getLiteral("?concr");
+                
+                if(y!=null && !nodenew.getLocalName().contains(y.getLocalName()))
+                {
+                	continue;
+                }
+                
                 if(x!=null)
                 {
 
-                	if(nodenew.getLocalName().equals(className))
+                	if(nodenew.getLocalName().equals(className) && concr!=null)
                 	{
                 			AbstractSuperClass=x;
                 			concrComponent=nodenew;
-                			System.out.println("x is "+x.getLocalName());
+                			concreteness=concr.getString();
+                			System.out.println("y is "+y.getLocalName()+" n is "+nodenew.getLocalName()+" x is "+x.getLocalName()+" concreteness is "+concr);
                 			deciderpoint=1;
                 			break;         		
                 	}
@@ -558,9 +572,19 @@ public void loadDataExport(String template, String modeFile){
                 	System.out.println("x is null");
                 
             }
-            if(AbstractSuperClass.getLocalName().equals("Component"))
+
+            if(concreteness!=null && concreteness.equals("false"))
+            {
+            	if(!AbstractSuperClass.getLocalName().equals("Component"))
+            		specialCaseforFolders.add(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
             	hs2Abs.add(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
+            }
         }
+        
+        System.out.println("ABS FIRST TIME CHECK");
+        for(String x:hs2Abs)
+        	System.out.println(x);
+        
         r = null;
         r = queryLocalWINGSTemplateModelRepository(queryNodes);
         //CREATING 2 HASHSETS FOR MAINTAINING THE CORRECT ORDER IN WHICH THE COMPONENTS ENTER IN THE CASES OF ABSTRACT COMPS AND CONCRETE COMPS
@@ -585,19 +609,23 @@ public void loadDataExport(String template, String modeFile){
             int deciderpoint=0;
             Resource AbstractSuperClass=null;
             Resource concrComponent=null;
+            String concreteness=null;
             while(rnew1.hasNext())
             {
             	
             	QuerySolution qsnew = rnew1.next();
                 Resource nodenew = qsnew.getResource("?n");
                 Resource x = qsnew.getResource("?x");
+                Literal concr=qsnew.getLiteral("?concr");
+                
                 if(x!=null)
                 {
 
-                	if(nodenew.getLocalName().equals(className))
+                	if(nodenew.getLocalName().equals(className) && concr!=null)
                 	{
                 			AbstractSuperClass=x;
                 			concrComponent=nodenew;
+                			concreteness=concr.getString();
                 			System.out.println("x is "+x.getLocalName());
                 			deciderpoint=1;
                 			break;         		
@@ -608,11 +636,15 @@ public void loadDataExport(String template, String modeFile){
                 	System.out.println("x is null");
                 
             }
-            if(!AbstractSuperClass.getLocalName().equals("Component"))
+
+            if(concreteness!=null && concreteness.equals("true"))
             {
             	hs1Concr.add(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
             	hs2Abs.remove(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
             }
+            
+            
+
         }
         
         
@@ -654,6 +686,13 @@ public void loadDataExport(String template, String modeFile){
             
             System.out.println("Node work starts here");
             System.out.println(res+" Node has component "+comp+" of type: "+ typeComp);//+ " which is concrete: "+isConcrete.getBoolean()
+            if(res!=null)
+            {	
+            	System.out.println("HERE " +res);
+            	String tempp=res.toString().substring(0,res.toString().lastIndexOf("/"));
+            	tempp=tempp.substring(0,tempp.lastIndexOf("/"));
+            	PREFIX_COMP_CATALOG=tempp+"/components/library.owl#";
+            }
             System.out.println("Node has inport "+inport.getLocalName());
             System.out.println("Node has outport "+outport.getLocalName());
             //------------ADDITION BY TIRTH-----------------
@@ -663,6 +702,14 @@ public void loadDataExport(String template, String modeFile){
             className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
             System.out.println("type class is: "+className);
             
+
+            	if(!hs1Concr.contains(className.substring(0,className.length()-5)) && !hs2Abs.contains(className.substring(0,className.length()-5)) && !hs1Concr.contains(className) && !hs2Abs.contains(className))
+                {
+                	System.out.println("THIS IS ONLY HAPPENING TO: "+className);
+                	continue;
+                }
+
+            	
             
             
             
@@ -744,7 +791,8 @@ public void loadDataExport(String template, String modeFile){
             	
             System.out.println("THIS MEANS THE BASIC CONDITIONS ARE MET THAT THE COMPONENT-CATALOG HAS EXPORTED THE COMPONENT---------");         	
             //QUERY-1 FOR THE RETRIEVAL OF INPUTS AND OUTPUTS OF THE PARTICULAR COMPONENT
-            String componentCatalogQueryforInputsandOutputsComponent = Queries.componentCatalogQueryforInputsandOutputs(className);
+            System.out.println("PREFIX_COMP_CATALOG "+PREFIX_COMP_CATALOG);
+            String componentCatalogQueryforInputsandOutputsComponent = Queries.componentCatalogQueryforInputsandOutputs(PREFIX_COMP_CATALOG,className);
             ResultSet rnew2 = null;
             rnew2 = queryComponentCatalog(componentCatalogQueryforInputsandOutputsComponent);
            
@@ -757,7 +805,7 @@ public void loadDataExport(String template, String modeFile){
                 Resource nodenew12 = qsnew.getResource("?n");
                 Resource i = qsnew.getResource("?i");
                 Resource o = qsnew.getResource("?o");
-                
+                System.out.println("nodenew12 "+nodenew12.getLocalName());
                 if(nodenew12.getLocalName().equals(className.substring(0,className.length()-5)))
                 {
                 	nodenew11=nodenew12;
@@ -779,8 +827,14 @@ public void loadDataExport(String template, String modeFile){
              */
            
             
-            if(AbstractSuperClass.getLocalName().equals("Component"))
+            if(hs2Abs.contains(className) || hs2Abs.contains(className.substring(0,className.length()-5)))
             {
+            	boolean specialFolder=false;
+            	if(specialCaseforFolders.contains(className) || specialCaseforFolders.contains(className.substring(0,className.length()-5)))
+            	{
+            		System.out.println("SPECIAL FOLDER IS CASE IS TRUE");
+            		specialFolder=true;
+            	}
             	System.out.println("ABSTRACT PART HEREEE: "+nodenew11.getLocalName());
             	if(hs2Abs.contains(nodenew11.getLocalName()))
             	{
@@ -844,7 +898,7 @@ public void loadDataExport(String template, String modeFile){
                     
                   //extracting the actual inputs,outputs and other factors for the Abstract component
                     System.out.println("EXTRACTION BEGINS "+nodenew11.getLocalName());
-                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(nodenew11.getLocalName()+"Class");
+                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(PREFIX_COMP_CATALOG,nodenew11.getLocalName()+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
                    
@@ -881,7 +935,7 @@ public void loadDataExport(String template, String modeFile){
                     
                     //EXPORTING THE USER WHO CREATED THE COMPONENT
                     this.DataProps(Constants.PROV_WAS_ATTRIBUTED_TO,nodenew11.getLocalName().toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
-
+                    
                     
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME              
@@ -904,6 +958,10 @@ public void loadDataExport(String template, String modeFile){
                     //OUTPUTS-- EXPORTED
                     this.inputsOutputs(Constants.COMPONENT_HAS_OUTPUT,outputsAbsComp,nodenew11.getLocalName().toUpperCase()+"_V1");
 
+                    if(specialFolder==true)
+                    {
+                        this.DataProps(Constants.COMPONENT_HAS_SUPERCLASS_FOLDER,nodenew11.getLocalName().toUpperCase()+"_V1",AbstractSuperClass.getLocalName(),XSDDatatype.XSDstring);
+                    }
                     
                     //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
@@ -936,7 +994,7 @@ public void loadDataExport(String template, String modeFile){
                 
                 System.out.println("THE INPUTS AND OUTPUTS IN THE CURRENT ABSTRACT COMPONENT ARE:");
                 ///
-                String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(nodenew11.getLocalName()+"Class");
+                String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(PREFIX_COMP_CATALOG,nodenew11.getLocalName()+"Class");
                 rnew2 = null;
                 rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
                
@@ -1065,7 +1123,7 @@ public void loadDataExport(String template, String modeFile){
                     
                   //extracting the actual inputs,outputs and other factors for the Abstract component
                     System.out.println("EXTRACTION BEGINS "+nodenew11.getLocalName());
-                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent11 = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(nodenew11.getLocalName()+"Class");
+                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent11 = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(PREFIX_COMP_CATALOG,nodenew11.getLocalName()+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent11);
                    
@@ -1123,7 +1181,11 @@ public void loadDataExport(String template, String modeFile){
                     
                     //OUTPUTS-- EXPORTED
                     this.inputsOutputs(Constants.COMPONENT_HAS_OUTPUT, outputsAbsComp, nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent);
-
+                    
+                    if(specialFolder==true)
+                    {
+                        this.DataProps(Constants.COMPONENT_HAS_SUPERCLASS_FOLDER, nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName(), XSDDatatype.XSDstring);
+                    }
            	
                   //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
@@ -1162,7 +1224,7 @@ public void loadDataExport(String template, String modeFile){
             								/////////********STARTS***********////////////
             /////**************THIS IS THE ENTIRE PART WHERE WE THE INCOMING COMPONENT IS A CONCRETE COMPONENT**********////
 
-            else if(!AbstractSuperClass.getLocalName().equals("Component"))
+            else if(hs1Concr.contains(className) || hs1Concr.contains(className.substring(0,className.length()-5)))
             {
             	
             	
@@ -1319,7 +1381,7 @@ public void loadDataExport(String template, String modeFile){
                     	
                     	
                   //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
-                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
                     Float memval=null;
@@ -1380,7 +1442,7 @@ public void loadDataExport(String template, String modeFile){
                     
                     //extracting the actual inputs,outputs and other factors for the component
                       
-                      String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName());
+                      String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(PREFIX_COMP_CATALOG,concrComponent.getLocalName());
                       rnew2 = null;
                       rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
 
@@ -1546,7 +1608,7 @@ public void loadDataExport(String template, String modeFile){
                     //export of ABSTRACT component ends
                     
                   //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
-                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
                     Float memval=null;
@@ -1606,7 +1668,7 @@ public void loadDataExport(String template, String modeFile){
                     
                   //extracting the actual inputs,outputs and other factors for the component
                     
-                    String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
 
@@ -1683,7 +1745,7 @@ public void loadDataExport(String template, String modeFile){
 
                   //extracting the actual inputs,outputs and other factors for the Abstract component
                     System.out.println("EXTRACTION BEGINS "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
-                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"Class");
+                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(PREFIX_COMP_CATALOG,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
                    
@@ -1816,7 +1878,7 @@ public void loadDataExport(String template, String modeFile){
                     
                     
                   //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
-                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
                     Float memval=null;
@@ -1855,7 +1917,7 @@ public void loadDataExport(String template, String modeFile){
                     
                   //extracting the actual inputs,outputs and other factors for the component
                     
-                    String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
 
@@ -1969,7 +2031,7 @@ public void loadDataExport(String template, String modeFile){
    
                   //extracting the actual inputs,outputs and other factors for the Abstract component
                     System.out.println("EXTRACTION BEGINS "+AbstractSuperClass.getLocalName());
-                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(AbstractSuperClass.getLocalName());
+                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(PREFIX_COMP_CATALOG,AbstractSuperClass.getLocalName());
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent);
                    
@@ -2100,7 +2162,7 @@ public void loadDataExport(String template, String modeFile){
                 
                 System.out.println("THE INPUTS AND OUTPUTS IN THE CURRENT CONCRETE COMPONENT ARE:");
                 ///
-                String componentCatalogQueryforActualInputsandOutputsforConcreteComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(nodenew11.getLocalName()+"Class");
+                String componentCatalogQueryforActualInputsandOutputsforConcreteComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(PREFIX_COMP_CATALOG,nodenew11.getLocalName()+"Class");
                 rnew2 = null;
                 rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforConcreteComponent);
                
@@ -2233,7 +2295,7 @@ public void loadDataExport(String template, String modeFile){
                 	
                 	
               //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
-                String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                 rnew2 = null;
                 rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
                 Float memval=null;
@@ -2294,7 +2356,7 @@ public void loadDataExport(String template, String modeFile){
                 
                 //extracting the actual inputs,outputs and other factors for the component
                   
-                  String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName());
+                  String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(PREFIX_COMP_CATALOG,concrComponent.getLocalName());
                   rnew2 = null;
                   rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
 
@@ -2481,7 +2543,7 @@ public void loadDataExport(String template, String modeFile){
                     
                     
                   //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
-                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    String componentCatalogQuerydependencies = Queries.componentCatalogQuerydependencies(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQuerydependencies);
                     Float memval=null;
@@ -2542,7 +2604,7 @@ public void loadDataExport(String template, String modeFile){
                     
                   //extracting the actual inputs,outputs and other factors for the component
                     
-                    String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
+                    String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
 
@@ -2630,7 +2692,7 @@ public void loadDataExport(String template, String modeFile){
 
                   //extracting the actual inputs,outputs and other factors for the Abstract component
                     System.out.println("EXTRACTION BEGINS "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
-                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent112 = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"Class");
+                    String componentCatalogQueryforActualInputsandOutputsforAbstractComponent112 = Queries.componentCatalogQueryforActualInputsandOutputsforAbstractComponent(PREFIX_COMP_CATALOG,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"Class");
                     rnew2 = null;
                     rnew2 = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforAbstractComponent112);
                    
@@ -3528,7 +3590,7 @@ public void loadDataExport(String template, String modeFile){
 	        		}
 	        	for(String x:arr)
 	        		sb.append(x);
-	        	System.out.println("file is "+sb.toString());
+//	        	System.out.println("file is "+sb.toString());
             System.out.println("hashed file version is "+MD5(sb.toString()));
             currentMD5=MD5(sb.toString());
             }catch(Exception e){}
@@ -4288,7 +4350,7 @@ public void loadDataExport(String template, String modeFile){
         for(String inx:a)
         {
               System.out.println(inx);
-              String componentCatalogQueryforInteriorsofParametersComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+              String componentCatalogQueryforInteriorsofParametersComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(PREFIX_COMP_CATALOG,inx);
               ResultSet rnew2 = null;
               rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersComponents);
               boolean exists=false;
@@ -4371,7 +4433,7 @@ public void loadDataExport(String template, String modeFile){
         for(String inx:a)
         {
               System.out.println(inx);
-              String componentCatalogQueryforInteriorsofDataComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+              String componentCatalogQueryforInteriorsofDataComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(PREFIX_COMP_CATALOG,inx);
               ResultSet rnew2 = null;
               rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponents);
               boolean exists=false;
@@ -4447,7 +4509,7 @@ public void loadDataExport(String template, String modeFile){
         for(String outx:a)
         {
               System.out.println(outx);
-              String componentCatalogQueryforInteriorsofDataComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+              String componentCatalogQueryforInteriorsofDataComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(PREFIX_COMP_CATALOG,outx);
               ResultSet rnew2 = null;
               rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataComponentsOutput);
               
@@ -4523,7 +4585,7 @@ public void loadDataExport(String template, String modeFile){
         	for(String inx:a)
             {
                 System.out.println(inx);
-                String componentCatalogQueryforInteriorsofParametersAbstractComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(inx);
+                String componentCatalogQueryforInteriorsofParametersAbstractComponents = Queries.componentCatalogQueryforInteriorsofParametersComponents(PREFIX_COMP_CATALOG,inx);
                 ResultSet rnew2 = null;
                 rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofParametersAbstractComponents);
                 
@@ -4603,7 +4665,7 @@ public void loadDataExport(String template, String modeFile){
         for(String inx:a)
         {
             System.out.println(inx);
-            String componentCatalogQueryforInteriorsofDataAbstractComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(inx);
+            String componentCatalogQueryforInteriorsofDataAbstractComponents = Queries.componentCatalogQueryforInteriorsofDataComponents(PREFIX_COMP_CATALOG,inx);
             ResultSet rnew2 = null;
             rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataAbstractComponents);
             
@@ -4679,7 +4741,7 @@ public void loadDataExport(String template, String modeFile){
         	for(String outx:a)
             {
                 System.out.println(outx);
-                String componentCatalogQueryforInteriorsofDataAbstractComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(outx);
+                String componentCatalogQueryforInteriorsofDataAbstractComponentsOutput = Queries.componentCatalogQueryforInteriorsofDataComponents(PREFIX_COMP_CATALOG,outx);
                 ResultSet rnew2 = null;
                 rnew2 = queryComponentCatalog(componentCatalogQueryforInteriorsofDataAbstractComponentsOutput);
                 

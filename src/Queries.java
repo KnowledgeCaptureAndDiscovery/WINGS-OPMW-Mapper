@@ -84,10 +84,10 @@ public class Queries {
     
     
     //query for determining the number of inputs and outputs in the component catalog based class
-    public static String componentCatalogQueryforInputsandOutputs(String className)
+    public static String componentCatalogQueryforInputsandOutputs(String prefix,String className)
     {
     	String query="SELECT ?n ?i ?o WHERE{"
-    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n a <"+prefix+className+">."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
     			+"}";
@@ -98,7 +98,7 @@ public class Queries {
 //    public static String componentCatalogQueryforInputsandOutputs11(String className)
 //    {
 //    	String query="SELECT ?n ?i ?o ?loc ?concr ?doc WHERE{"
-//    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+//    			+"?n a <"+prefix+className+">."
 //    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
 //    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
 //    			+"?n <"+Constants.PREFIX_COMPONENT+"hasLocation> ?loc."
@@ -117,9 +117,21 @@ public class Queries {
   
     public static String componentCatalogQueryforSubclassCheckfinal(String className)
     {
-    	String query="SELECT ?n ?x WHERE{"
+    	String query="SELECT ?n ?x ?y ?concr WHERE{"
     			+"?n a <"+Constants.PREFIX_OWL+"Class>."
     			+"?n <"+Constants.PREFIX_RDFS+"subClassOf> ?x."
+    			+"OPTIONAL{?y  a  ?n.}"
+    			+"OPTIONAL{?y <http://www.wings-workflows.org/ontology/component.owl#isConcrete> ?concr.}"
+    			+"}";
+    	return query;
+    }
+    
+    //folder handling
+    public static String componentCatalogQueryforSubclassCheckfinalinside(String className)
+    {
+    	String query="SELECT ?n ?x ?concr WHERE{"
+    			+"?n a ?x."
+    			+"OPTIONAL{?n <http://www.wings-workflows.org/ontology/component.owl#isConcrete> ?concr.}"
     			+"}";
     	return query;
     }
@@ -151,11 +163,11 @@ public class Queries {
     
  
   //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc in the component catalog based class
-    public static String componentCatalogQueryforActualInputsandOutputsforComponent(String className)
+    public static String componentCatalogQueryforActualInputsandOutputsforComponent(String prefix,String className)
     {
     	System.out.println("className inside the query received "+className);
     	String query="SELECT ?n ?i ?o ?loc ?concr ?doc WHERE{"
-    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n a <"+prefix+className+">."
     			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o.}"
     			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i.}"
     			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasLocation> ?loc.}"
@@ -175,11 +187,11 @@ public class Queries {
     	return query;
     }
     
-    public static String componentCatalogQuerydependencies(String className)
+    public static String componentCatalogQuerydependencies(String prefix,String className)
     {
     	System.out.println("className inside the query received "+className);
     	String query="SELECT ?n ?res ?res2 ?needs64bit ?mem ?st ?minversion WHERE{"
-    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n a <"+prefix+className+">."
     			+"?n <http://www.wings-workflows.org/ontology/resource.owl#hasHardwareDependency> ?res."
     			+"OPTIONAL{?n <http://www.wings-workflows.org/ontology/resource.owl#hasSoftwareDependency> ?res2.}"
     			+"OPTIONAL{?res2 a <http://www.wings-workflows.org/ontology/resource.owl#SoftwareDependency>.}"
@@ -194,11 +206,11 @@ public class Queries {
     
     
     //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc FOR ABSTRACT COMPONENTS ONLY!!!! in the component catalog based class
-    public static String componentCatalogQueryforActualInputsandOutputsforAbstractComponent(String className)
+    public static String componentCatalogQueryforActualInputsandOutputsforAbstractComponent(String prefix,String className)
     {
     	System.out.println("className inside the query received "+className);
     	String query="SELECT ?n ?i ?o ?concr ?doc WHERE{"
-    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n a <"+prefix+className+">."
     			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o.}"
     			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i.}"
     			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr.}"
@@ -210,11 +222,11 @@ public class Queries {
     
     
   //query for determining the inputs and outputs for the Abstract Component
-    public static String queryTaxonomyModelforAbstractCompsInputOutput(String tax,String className)
+    public static String queryTaxonomyModelforAbstractCompsInputOutput(String prefix,String tax,String className)
     {
     	System.out.println("className inside the query received "+className);
     	String query="SELECT ?n ?i ?o ?concr WHERE{"
-    			+"?n a <"+Constants.PREFIX_COMPONENT_CATALOG+className+">."
+    			+"?n a <"+prefix+className+">."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
     			+"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?concr."
@@ -227,27 +239,27 @@ public class Queries {
     
     
   //query for determining interiors of the INPUT PARAMETERS FOR COMPONENTS ONLY!!!! in the component catalog based class
-    public static String componentCatalogQueryforInteriorsofParametersComponents(String input)
+    public static String componentCatalogQueryforInteriorsofParametersComponents(String prefix,String input)
     {
     	String query="SELECT ?i ?argID ?argName ?dim ?val WHERE{"
     			
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> a <"+Constants.PREFIX_COMPONENT+"ParameterArgument>."
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentID> ?argID."
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentName> ?argName."
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasDimensionality> ?dim."
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasValue> ?val."
+    			+"<"+prefix+input+"> a <"+Constants.PREFIX_COMPONENT+"ParameterArgument>."
+    			+"<"+prefix+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentID> ?argID."
+    			+"<"+prefix+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentName> ?argName."
+    			+"<"+prefix+input+"> <"+Constants.PREFIX_COMPONENT+"hasDimensionality> ?dim."
+    			+"<"+prefix+input+"> <"+Constants.PREFIX_COMPONENT+"hasValue> ?val."
     			+"}";
     	return query;
     }
     
   //query for determining interiors of the INPUT DATA FOR COMPONENTS ONLY!!!! in the component catalog based class
-    public static String componentCatalogQueryforInteriorsofDataComponents(String input)
+    public static String componentCatalogQueryforInteriorsofDataComponents(String prefix,String input)
     {
     	String query="SELECT ?i ?argID ?argName ?dim WHERE{"		
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> a <"+Constants.PREFIX_COMPONENT+"DataArgument>."
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentID> ?argID."
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentName> ?argName."
-    			+"<"+Constants.PREFIX_COMPONENT_CATALOG+input+"> <"+Constants.PREFIX_COMPONENT+"hasDimensionality> ?dim."
+    			+"<"+prefix+input+"> a <"+Constants.PREFIX_COMPONENT+"DataArgument>."
+    			+"<"+prefix+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentID> ?argID."
+    			+"<"+prefix+input+"> <"+Constants.PREFIX_COMPONENT+"hasArgumentName> ?argName."
+    			+"<"+prefix+input+"> <"+Constants.PREFIX_COMPONENT+"hasDimensionality> ?dim."
     			+"}";
     	return query;
     }

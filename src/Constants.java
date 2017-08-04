@@ -21,8 +21,6 @@ public class Constants {
     public static final String PREFIX_COMPONENT="http://www.wings-workflows.org/ontology/component.owl#";
     public static final String PREFIX_OWL="http://www.w3.org/2002/07/owl#";
     public static final String PREFIX_RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-    public static final String PREFIX_COMPONENT_CATALOG = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/components/library.owl#";
-    public static final String PREFIX_J1_ONTO = "http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/data/ontology.owl#";
     public static final String PREFIX_RESOURCE = "http://www.wings-workflows.org/ontology/resource.owl#";
     public static final String PREFIX_WICUS = "http://purl.org/net/wicus#";
     //TIME AND LICENSE ADDITIONS
@@ -32,6 +30,7 @@ public class Constants {
     /*****
     COMPONENT CLASS AND ITS RELATIONS
     *****/
+    public static final String COMPONENT_HAS_SUPERCLASS_FOLDER=PREFIX_COMPONENT+"hasFolder";
     public static final String COMPONENT_HAS_INPUT=PREFIX_COMPONENT+"hasInput";
     public static final String COMPONENT_HAS_OUTPUT=PREFIX_COMPONENT+"hasOutput";
     public static final String COMPONENT_HAS_LOCATION=PREFIX_COMPONENT+"hasLocation";
