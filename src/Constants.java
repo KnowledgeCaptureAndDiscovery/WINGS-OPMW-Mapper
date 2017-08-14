@@ -30,7 +30,7 @@ public class Constants {
     /*****
     COMPONENT CLASS AND ITS RELATIONS
     *****/
-    public static final String COMPONENT_HAS_SUPERCLASS_FOLDER=PREFIX_COMPONENT+"hasFolder";
+    public static final String COMPONENT_HAS_SUPERCLASS_FOLDER=PREFIX_COMPONENT+"hasFolder|SuperComponent";
     public static final String COMPONENT_HAS_INPUT=PREFIX_COMPONENT+"hasInput";
     public static final String COMPONENT_HAS_OUTPUT=PREFIX_COMPONENT+"hasOutput";
     public static final String COMPONENT_HAS_LOCATION=PREFIX_COMPONENT+"hasLocation";

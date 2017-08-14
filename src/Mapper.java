@@ -636,8 +636,10 @@ public void loadDataExport(String template, String modeFile){
                 	System.out.println("x is null");
                 
             }
+            
 
-            if(concreteness!=null && concreteness.equals("true"))
+
+            if(concreteness!=null && concreteness.equals("true") && !AbstractSuperClass.getLocalName().equals("Component"))
             {
             	hs1Concr.add(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
             	hs2Abs.remove(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5));
@@ -799,6 +801,8 @@ public void loadDataExport(String template, String modeFile){
             HashSet<String> hsi=new HashSet<>();
             HashSet<String> hso=new HashSet<>();
             Resource nodenew11=null;
+            if(rnew2==null)
+            	System.out.println("rnew2 is null here only");
             while(rnew2.hasNext())
             {
             	QuerySolution qsnew = rnew2.next();
@@ -827,7 +831,7 @@ public void loadDataExport(String template, String modeFile){
              */
            
             
-            if(hs2Abs.contains(className) || hs2Abs.contains(className.substring(0,className.length()-5)))
+            if(hs2Abs.contains(className) || hs2Abs.contains(className.substring(0,className.length()-5)) && nodenew11!=null)
             {
             	boolean specialFolder=false;
             	if(specialCaseforFolders.contains(className) || specialCaseforFolders.contains(className.substring(0,className.length()-5)))
@@ -836,8 +840,7 @@ public void loadDataExport(String template, String modeFile){
             		specialFolder=true;
             	}
             	System.out.println("ABSTRACT PART HEREEE: "+nodenew11.getLocalName());
-            	if(hs2Abs.contains(nodenew11.getLocalName()))
-            	{
+
             	System.out.println("NOW UR INSIDE ABSTRACT COMPONENT CASE");
             	String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
                 ResultSet r2new = null;
@@ -1205,7 +1208,7 @@ public void loadDataExport(String template, String modeFile){
                 }
              }   
                 
-           }
+
          }
             
 
@@ -3592,7 +3595,14 @@ public void loadDataExport(String template, String modeFile){
 	        		sb.append(x);
 //	        	System.out.println("file is "+sb.toString());
             System.out.println("hashed file version is "+MD5(sb.toString()));
+            try{
             currentMD5=MD5(sb.toString());
+            }
+            catch(Exception e)
+            {
+            	System.out.println("Hashing is not possible for file size and hence we will not version it");
+            	continue;
+            }
             }catch(Exception e){}
             
             HashMap<String,String> hsprops=new HashMap<>();
