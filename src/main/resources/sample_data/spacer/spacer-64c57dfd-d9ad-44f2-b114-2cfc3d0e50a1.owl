@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.wings-workflows.org/ontology/execution.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/executions/spacer-64c57dfd-d9ad-44f2-b114-2cfc3d0e50a1.owl">
+      <j.0:Execution rdf:ID="spacer-64c57dfd-d9ad-44f2-b114-2cfc3d0e50a1">
+            <j.0:hasPlan rdf:resource="spacer-3414a24c-2c50-47bb-8064-e508ff82d488.owl#spacer-3414a24c-2c50-47bb-8064-e508ff82d488"/>
+            <j.0:hasStep>
+                  <j.0:ExecutionStep rdf:about="spacer-835c1d70-fa39-4f0c-ad51-b28b622ce8fc.owl#spacerNode">
+                        <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-06-02T23:48:48.289Z</j.0:hasStartTime>
+                        <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-06-02T23:48:48.292Z</j.0:hasEndTime>
+                        <j.0:hasExecutionStatus rdf:datatype=
+                        "http://www.w3.org/2001/XMLSchema#string"
+                        >SUCCESS</j.0:hasExecutionStatus>
+                        <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >/opt/wings/storage/default/users/tirth/TestingDomain/code/library/spacer/run -i1 /opt/wings/storage/default/users/tirth/TestingDomain/data/USconstitution.txt -o1 /opt/wings/storage/default/users/tirth/TestingDomain/data/OutputFile1-8584v90xnj66ttr61ee9m4mhk
+Outputs already exist. Not running job
+</j.0:hasLog>     </j.0:ExecutionStep>
+            </j.0:hasStep>
+            <j.0:hasTemplate rdf:resource="../workflows/spacer.owl#spacer"/>
+            <j.0:hasExpandedTemplate rdf:resource="spacer-835c1d70-fa39-4f0c-ad51-b28b622ce8fc.owl#spacer-835c1d70-fa39-4f0c-ad51-b28b622ce8fc"/>
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-06-02T23:48:48.282Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-06-02T23:48:48.3Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+            <j.0:hasSeededTemplate rdf:resource="../workflows/spacer-49ca394b-991e-49f5-b898-f5cf447df246.owl#spacer-49ca394b-991e-49f5-b898-f5cf447df246"/>
+      </j.0:Execution>
+</rdf:RDF>
+
