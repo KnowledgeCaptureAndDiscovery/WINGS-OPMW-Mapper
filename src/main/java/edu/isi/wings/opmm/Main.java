@@ -6,30 +6,30 @@ public class Main {
 public static void main(String[] args) {
     Mapper instance = new Mapper();
    
-  String lib = "src\\main\\resources\\sample_data\\new\\simple_abstract\\library.owl";
+  String lib = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"library.owl";
   //String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/spacer/spacer-ex.owl";
   //String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/parasimple/cpexe.owl";
   //String execution = "/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/ab2ex.owl";
   //String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/abex3.owl";
-  String execution ="src\\main\\resources\\sample_data\\new\\simple_abstract\\execution.owl";
+  String execution ="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"execution.owl";
   
    //String template="/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/parasimple/CaesarCypherParallelSimple.owl";
    //String template="/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/abstractTest1/abstractTest1.owl";
    //String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/mapreduce.owl";
    //String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/EXAMPLE-2_INPUT_FOR_MAPPER_SCENARIO-1/HashingConceptScenario1.owl";
-   String template="src\\main\\resources\\sample_data\\new\\simple_abstract\\template.owl";
+   String template="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"template.owl";
     String mode = "RDF/XML";
     String mode2="Turtle";
   String outFileOPMW = "testResultOPMW";
   String outFilePROV = "testResultPROV";
   String outFile = "testTemplateabstractTest1";
-  String data_catalog="TestingDomain1\\Data\\TestingDomain_DataCatalog.owl";
-  String taxonomy_export="TestingDomain1\\Component\\TestingDomain_TaxonomyHierarchyModel.owl";
-  String componentDirectory = "src\\main\\resources\\sample_data\\new\\simple_abstract\\components\\";
-  String dataDirectory = "src\\main\\resources\\sample_data\\new\\simple_abstract\\data\\";
+  String data_catalog="TestingDomain1"+File.separator+"Data"+File.separator+"TestingDomain_DataCatalog.owl";
+  String taxonomy_export="TestingDomain1"+File.separator+"Component"+File.separator+"TestingDomain_TaxonomyHierarchyModel.owl";
+  String componentDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"components"+File.separator+"";
+  String dataDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"data"+File.separator+"";
  // /Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl
     
-//  String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile,taxonomy_export,mode2, componentDirectory,"TestingDomain");
+  String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile,taxonomy_export,mode2, componentDirectory,"TestingDomain");
   String ans2=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null,data_catalog,mode2,dataDirectory, "TestingDomain");
     System.out.println("--------------------------");
 //    System.out.println("location is :"+ans);
@@ -55,13 +55,13 @@ public static void main(String[] args) {
 //        String outFileOPMW = "testResult";
 //        String outFilePROV = "testResult2"; 
 //        System.out.println("Transforming an execution of a template with collections...");
-//        String lib="src\\main\\resources\\sample_data\\new\\abs_words\\Library.owl";
-//        String execution="src\\main\\resources\\sample_data\\new\\abs_words\\Execution.owl";
-//        String data_catalog="TestingDomain1\\Data\\TestingDomain_DataCatalog.owl";
-//        String data_URI="src\\main\\resources\\sample_data\\new\\abs_words\\data\\";
-//        String template = "src\\main\\resources\\sample_data\\new\\abs_words\\Template.owl";
+//        String lib="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"abs_words"+File.separator+"Library.owl";
+//        String execution="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"abs_words"+File.separator+"Execution.owl";
+//        String data_catalog="TestingDomain1"+File.separator+"Data"+File.separator+"TestingDomain_DataCatalog.owl";
+//        String data_URI="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"abs_words"+File.separator+"data"+File.separator+"";
+//        String template = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"abs_words"+File.separator+"Template.owl";
 //        String outFile = "testTemplateabstractTest1";
-//        String taxonomy_export="TestingDomain1\\Component\\TestingDomain_TaxonomyHierarchyModel.owl";
+//        String taxonomy_export="TestingDomain1"+File.separator+"Component"+File.separator+"TestingDomain_TaxonomyHierarchyModel.owl";
 //        System.out.println(instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV,null, data_catalog, "TURTLE",data_URI,"CompareFiles"));
 //        String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile,taxonomy_export,"TURTLE", taxonomy_export,"TestingDomain");
 //        //delete output files

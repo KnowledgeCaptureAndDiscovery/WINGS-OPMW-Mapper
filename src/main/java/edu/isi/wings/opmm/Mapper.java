@@ -53,7 +53,7 @@ public class Mapper {
     private OntModel expandedTemplateModel;
     private OntModel templateModel;
     private OntModel ComponentCatalog;
-    private OntModel Taxonomy_Export;
+    private OntModel taxonomyExport;
     public static String NEW_TAXONOMY_CLASS="";
     public static String NEW_TAXONOMY_CLASS_2="";
     public static String PREFIX_COMP_CATALOG="";
@@ -84,7 +84,7 @@ public class Mapper {
     
     //function to query just the taxonomy model
     private ResultSet queryLocalTaxonomyModelRepository(String queryIn) {
-        return ModelUtils.queryLocalRepository(queryIn, Taxonomy_Export);
+        return ModelUtils.queryLocalRepository(queryIn, taxonomyExport);
     }
     
     //function to query just the DataCatalog model
@@ -146,7 +146,11 @@ public class Mapper {
         
     }
     
-    
+    /**
+ * This method should be replaced with one that reads a file into a model
+ * @param template
+ * @param modeFile 
+ */
     public void loadExpandedTemplateFileToLocalRepository(String template, String modeFile){
         
     	InputStream in2 = FileManager.get().open(template.replaceAll("#.*$", ""));
@@ -160,7 +164,12 @@ public class Mapper {
 
     }
     
-    
+
+/**
+ * This method should be replaced with one that reads a file into a model
+ * @param template
+ * @param modeFile 
+ */    
 public void loadedTemplateFileCondition(String template, String modeFile) throws Exception{
         
     	InputStream in2 = FileManager.get().open(template.replaceAll("#.*$", ""));
@@ -172,6 +181,11 @@ public void loadedTemplateFileCondition(String template, String modeFile) throws
         System.out.println("Template File Condition"+template+" loaded into the new template model");
 }
 
+/**
+ * This method should be replaced with one that reads a file into a model
+ * @param template
+ * @param modeFile 
+ */
 public void loadTaxonomyExport(String template, String modeFile){
     
 	InputStream in2 = FileManager.get().open(template.replaceAll("#.*$", ""));
@@ -179,12 +193,17 @@ public void loadTaxonomyExport(String template, String modeFile){
         throw new IllegalArgumentException("File: " + template + " not found");
     }
     
-    Taxonomy_Export.read(in2, null, modeFile);
+    taxonomyExport.read(in2, null, modeFile);
     System.out.println("Taxonomy_Export File Condition"+template+" loaded into the new template model");
 
 }
 
-public void loadDataExport(String template, String modeFile){
+/**
+ * This method should be replaced with one that reads a file into a model
+ * @param template
+ * @param modeFile 
+ */
+public void loadDataCatalog(String template, String modeFile){
     
 	InputStream in2 = FileManager.get().open(template.replaceAll("#.*$", ""));
     if (in2 == null){
@@ -249,10 +268,11 @@ public void loadDataExport(String template, String modeFile){
     public String transformWINGSElaboratedTemplateToOPMW(String wingsInputTemplatePath,String inputMode, String rdfOutputFile, String componentCatalogPath,String exportMode, String componentDirectory, String domainName){
         NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
         NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
-    	ComponentCatalog = initializeModel(ComponentCatalog);
+    	//model initialization
+        ComponentCatalog = initializeModel(ComponentCatalog);
         WINGSModelTemplate = initializeModel(WINGSModelTemplate);
         OPMWModel = initializeModel(OPMWModel);
-        Taxonomy_Export = initializeModel(Taxonomy_Export);
+        taxonomyExport = initializeModel(taxonomyExport);
         try{
             //load the template file to WINGSModel (already loads the taxonomy as well
             this.loadTaxonomyExport(componentCatalogPath, exportMode);            
@@ -736,7 +756,7 @@ public void loadDataExport(String template, String modeFile){
 //                	this.addIndividualAbstract2(nodenew11.getLocalName()+"_V1");
                     
                     //subclass relation
-                	ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export,nodenew11.getLocalName().toUpperCase()+"_CLASSV1","COMPONENT");
+                	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,nodenew11.getLocalName().toUpperCase()+"_CLASSV1","COMPONENT");
 
                     
                     System.out.println("EXPORTED THE BASIC ABSTRACT COMPONENT BY HERE");
@@ -814,17 +834,17 @@ public void loadDataExport(String template, String modeFile){
                     
                     //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                    ComponentVersion.Step4(inputsAbsComp, ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step4(inputsAbsComp, ComponentCatalog, taxonomyExport);
 
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    ComponentVersion.Step5(inputsAbsComp,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step5(inputsAbsComp,ComponentCatalog, taxonomyExport);
                     
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step6(outputsAbsComp,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step6(outputsAbsComp,ComponentCatalog, taxonomyExport);
                     
                     
                 }
@@ -950,17 +970,17 @@ public void loadDataExport(String template, String modeFile){
                     
 
                     //subclass relation
-                	ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export,nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
+                	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
 
                     
                     //EXPORTING THE PROV_WAS_REVISION_OF
-                    OntProperty propSelec255 = Taxonomy_Export.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                    Resource source255 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent) );
+                    OntProperty propSelec255 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent) );
                     Individual instance255 = (Individual) source255.as( Individual.class );
                     if((nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
                         instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS+nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent);            
                     }else{//it is a local resource
-                        instance255.addProperty(propSelec255, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent)));
+                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent)));
                     }
                     
                     
@@ -1038,17 +1058,17 @@ public void loadDataExport(String template, String modeFile){
            	
                   //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step4(inputsAbsComp,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step4(inputsAbsComp,ComponentCatalog, taxonomyExport);
                    
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS  
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    ComponentVersion.Step5(inputsAbsComp,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step5(inputsAbsComp,ComponentCatalog, taxonomyExport);
 
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step6(outputsAbsComp,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step6(outputsAbsComp,ComponentCatalog, taxonomyExport);
                     
 
                 }
@@ -1215,7 +1235,7 @@ public void loadDataExport(String template, String modeFile){
 //                    //subclass relation
 //                    this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", Abs.getLocalName());
 //                      
-                   ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1",Abs.getLocalName().substring(0,Abs.getLocalName().lastIndexOf("_"))+"_CLASS"+Abs.getLocalName().substring(Abs.getLocalName().lastIndexOf("_")+1,Abs.getLocalName().length()));
+                   ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1",Abs.getLocalName().substring(0,Abs.getLocalName().lastIndexOf("_"))+"_CLASS"+Abs.getLocalName().substring(Abs.getLocalName().lastIndexOf("_")+1,Abs.getLocalName().length()));
                     	
                     	
                   //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
@@ -1344,18 +1364,18 @@ public void loadDataExport(String template, String modeFile){
                     	
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                    ComponentVersion.Step1(hsi,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step1(hsi,ComponentCatalog, taxonomyExport);
                     
                     
                     
                    //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                    ComponentVersion.Step2(hsi,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step2(hsi,ComponentCatalog, taxonomyExport);
                     
                     
                   //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                    ComponentVersion.Step3(hso,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step3(hso,ComponentCatalog, taxonomyExport);
                     
  	
                   }
@@ -1392,7 +1412,7 @@ public void loadDataExport(String template, String modeFile){
 //                  //subclass relation
 //                  	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent);
 
-                  	ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()));
+                  	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent,AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()));
                 	
 //                	//abstract component individual
 //                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName()+finalversionforNewAbstractComponent);
@@ -1401,20 +1421,20 @@ public void loadDataExport(String template, String modeFile){
 //                    //subclass relation for abstract component
 //                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
-                  	ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
+                  	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
                     
                     
                     
                   //EXPORTING THE PROV_WAS_REVISION_OF
-                    OntProperty propSelec255 = Taxonomy_Export.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                    Resource source255 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                    OntProperty propSelec255 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
                     Individual instance255 = (Individual) source255.as( Individual.class );
                     if((AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
                         instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent);            
                     }else{//it is a local resource
-                        instance255.addProperty(propSelec255, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
+                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
                     }
                     
                     
@@ -1606,31 +1626,31 @@ public void loadDataExport(String template, String modeFile){
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                     
                   System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step1(hsi,ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step1(hsi,ComponentCatalog, taxonomyExport);
                   
                   
                   
                  //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step2(hsi,ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step2(hsi,ComponentCatalog, taxonomyExport);
                   
                 //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step3(hso,ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step3(hso,ComponentCatalog, taxonomyExport);
 
                   
                     //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                    ComponentVersion.Step4(inputsComp,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step4(inputsComp,ComponentCatalog, taxonomyExport);
                     
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    ComponentVersion.Step5(inputsComp,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step5(inputsComp,ComponentCatalog, taxonomyExport);
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step6(outputsComp,ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step6(outputsComp,ComponentCatalog, taxonomyExport);
 
                 	System.out.println("THIS ENDS THE FIRST CASE PART-2");  
                 	  
@@ -1656,7 +1676,7 @@ public void loadDataExport(String template, String modeFile){
 //                  //subclass relation
 //                    this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1" , AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1");
 
-                	ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1");
+                	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1");
                 	
 //                	//abstract component individual
 //                    this.addIndividualAbstract2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_V1");
@@ -1665,7 +1685,7 @@ public void loadDataExport(String template, String modeFile){
 //                    //subclass relation for abstract component
 //                    this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1");
 
-                    ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1","COMPONENT");
+                    ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1","COMPONENT");
                 	
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
@@ -1883,30 +1903,30 @@ public void loadDataExport(String template, String modeFile){
                     
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                   System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step1(hsi, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step1(hsi, ComponentCatalog, taxonomyExport);
                   
                   
                  //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step2(hsi, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step2(hsi, ComponentCatalog, taxonomyExport);
                   
                   
                 //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step3(hso, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step3(hso, ComponentCatalog, taxonomyExport);
                     
 
                 //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                   System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                  ComponentVersion.Step4(inputsComp, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step4(inputsComp, ComponentCatalog, taxonomyExport);
 
               //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                   System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                  ComponentVersion.Step5(inputsComp, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step5(inputsComp, ComponentCatalog, taxonomyExport);
 
               //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                   System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                  ComponentVersion.Step6(outputsComp, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step6(outputsComp, ComponentCatalog, taxonomyExport);
                     
                     
                 }
@@ -2056,7 +2076,7 @@ public void loadDataExport(String template, String modeFile){
 //                //subclass relation
 //                this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", Abs.getLocalName());
 //                  
-               ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforLatestAbstractComponent.substring(1,finalversionforLatestAbstractComponent.length()));
+               ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforLatestAbstractComponent.substring(1,finalversionforLatestAbstractComponent.length()));
                 	
                 	
               //for the component blankNode extraction for HARDWARE and SOFTWARE dependencies:
@@ -2144,13 +2164,13 @@ public void loadDataExport(String template, String modeFile){
                   System.out.println("isConcrete is: "+compConcrete);
                   
                   //EXPORTING THE PROV_WAS_REVISION_OF
-                  OntProperty propSelec256 = Taxonomy_Export.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                  Resource source256 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
+                  OntProperty propSelec256 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                  Resource source256 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
                   Individual instance256 = (Individual) source256.as( Individual.class );
                   if((concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
                       instance256.addProperty(propSelec256,NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent);            
                   }else{//it is a local resource
-                      instance256.addProperty(propSelec256, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
+                      instance256.addProperty(propSelec256, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
                   } 
 //                  String compLoc2="/Users/Tirthmehta/Desktop/TestingDomain2/Component/";
                   //EXPORTING THE MD5 FOR THE COMPONENT CODE
@@ -2195,16 +2215,16 @@ public void loadDataExport(String template, String modeFile){
                 	
                //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                 System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                ComponentVersion.Step1(hsi, ComponentCatalog, Taxonomy_Export); 
+                ComponentVersion.Step1(hsi, ComponentCatalog, taxonomyExport); 
                 
                 //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                 System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                ComponentVersion.Step2(hsi, ComponentCatalog, Taxonomy_Export);
+                ComponentVersion.Step2(hsi, ComponentCatalog, taxonomyExport);
                 
                 
                 //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                 System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                ComponentVersion.Step3(hso, ComponentCatalog, Taxonomy_Export);
+                ComponentVersion.Step3(hso, ComponentCatalog, taxonomyExport);
                 
                 }
                 else if(clarifyToExportConcrComp==0 && codeisdifferentbutinputsandoutputsaresame==0)
@@ -2241,7 +2261,7 @@ public void loadDataExport(String template, String modeFile){
 //                  //subclass relation
 //                  	this.addIndividualConcreteSubclass2(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+finalversionforNewAbstractComponent);
 
-                  	ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()));
+                  	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()));
                 	
                 	//abstract component individual
 
@@ -2249,31 +2269,31 @@ public void loadDataExport(String template, String modeFile){
 //                    //subclass relation for abstract component
 //                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
-                  	ModelUtils.addIndividualConcreteSubclass2(this.Taxonomy_Export, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
+                  	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
                     
                     
                     
                   //EXPORTING THE PROV_WAS_REVISION_OF
-                    OntProperty propSelec255 = Taxonomy_Export.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                    Resource source255 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                    OntProperty propSelec255 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
                     Individual instance255 = (Individual) source255.as( Individual.class );
                     if((AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
                         instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent);            
                     }else{//it is a local resource
-                        instance255.addProperty(propSelec255, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
+                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
                     }
                     
                     
                   //EXPORTING THE PROV_WAS_REVISION_OF
-                    OntProperty propSelec256 = Taxonomy_Export.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                    Resource source256 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
+                    OntProperty propSelec256 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+                    Resource source256 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
                     Individual instance256 = (Individual) source256.as( Individual.class );
                     if((concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
                         instance256.addProperty(propSelec256,NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent);            
                     }else{//it is a local resource
-                        instance256.addProperty(propSelec256, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
+                        instance256.addProperty(propSelec256, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
                     }  
                     
                     
@@ -2491,31 +2511,31 @@ public void loadDataExport(String template, String modeFile){
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                     
                   System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step1(hsi, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step1(hsi, ComponentCatalog, taxonomyExport);
                   
                   
                   
                  //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step2(hsi, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step2(hsi, ComponentCatalog, taxonomyExport);
                   
                 //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step3(hso, ComponentCatalog, Taxonomy_Export);
+                  ComponentVersion.Step3(hso, ComponentCatalog, taxonomyExport);
 
                   
                     //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                    ComponentVersion.Step4(inputsComp, ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step4(inputsComp, ComponentCatalog, taxonomyExport);
                     
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    ComponentVersion.Step5(inputsComp, ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step5(inputsComp, ComponentCatalog, taxonomyExport);
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step6(outputsComp, ComponentCatalog, Taxonomy_Export);
+                    ComponentVersion.Step6(outputsComp, ComponentCatalog, taxonomyExport);
 
                 	System.out.println("THIS ENDS THE FIRST CASE PART-2");  
                 	  
@@ -2822,7 +2842,7 @@ public void loadDataExport(String template, String modeFile){
         //exporting the taxonomy 
         String filetoexport=domainName+"_TaxonomyHierarchyModel.owl";
         System.out.println("exporting new THM to:"+componentCatalogPath+filetoexport );
-        exportRDFFile(componentCatalogPath, Taxonomy_Export, exportMode);
+        exportRDFFile(componentCatalogPath, taxonomyExport, exportMode);
 //    }
         
         
@@ -2843,7 +2863,7 @@ public void loadDataExport(String template, String modeFile){
  * @param exportMode mode in which we want to export the produced files (TURTLE, RDF/XML, etc.)
  * @param dataCatalogDirectory path to the WINGS data directory where all data files are present
  * @param domainName name of the domain of the workflow
- * @return 
+ * @return The URI for the template. An empty string will be returned if an error occurred (see console for details)
  */
     //public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, String outFilenameOPMW, String outFilenamePROV){
     public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, 
@@ -2856,7 +2876,7 @@ public void loadDataExport(String template, String modeFile){
         dataCatalog = initializeModel(dataCatalog);
         
         try{
-            this.loadDataExport(data_catalog, exportMode);
+            this.loadDataCatalog(data_catalog, exportMode);
         }catch(Exception e){
             System.err.println("Error "+e.getMessage());
             return "";
@@ -2871,16 +2891,21 @@ public void loadDataExport(String template, String modeFile){
         String queryIntermediateTemplates = Queries.queryIntermediateTemplates();
         //the template is only needed to connect the execution account to itself.
         ResultSet r = queryLocalWINGSResultsRepository(queryIntermediateTemplates);
-        String templateName = "", templateURI, expandedTemplateURI,expandedTemplateName="",newTemplateName="";
-        boolean generateExpandedTemplate = false;
+        String templateName = "", templateURI, expandedTemplateURI,expandedTemplateName="",hashedTemplateName="", 
+                hashedExpandedTemplateName, wfInstance, templateToLink;
+        
+        String expanded ="";// Auxiliary string so we don't have to continually ask which template we are linking to
+        
+        boolean generateExpandedTemplate;
         if(r.hasNext()){
             QuerySolution qs = r.next();
             Resource template = qs.getResource("?template");
             templateURI = template.getURI();
             templateName = template.getLocalName();
-            String wfInstance = qs.getResource("?wfInstance").getURI();
-            expandedTemplateURI = qs.getResource("?expandedTemplate").getURI();
-            expandedTemplateName=qs.getResource("?expandedTemplate").getLocalName();
+            wfInstance = qs.getResource("?wfInstance").getURI();
+            Resource auxExpandedTemplate = qs.getResource("?expandedTemplate");
+            expandedTemplateURI = auxExpandedTemplate.getURI();
+            expandedTemplateName = auxExpandedTemplate.getLocalName();
             //loading template and taxonomy (extracted from execution file)
             try{
                 this.loadedTemplateFileCondition(templateURI, modeFile);
@@ -2892,31 +2917,6 @@ public void loadDataExport(String template, String modeFile){
             }catch(Exception e){
                 System.out.println("Error while loading the taxonomy: "+e.getMessage());
             }
-            //assessing whether to generate an expanded template (needs the template model to be loaded)
-            generateExpandedTemplate = exportExpandedTemplate();
-            System.out.println("Should Expanded template be generated? "+generateExpandedTemplate);
-            this.loadExpandedTemplateFileToLocalRepository(expandedTemplateURI, modeFile);
-            if(generateExpandedTemplate){
-                newTemplateName=HashCreator.getExpandedTemplateHash(expandedTemplateName, expandedTemplateModel);//this.WINGSExecutionResults);
-            }else{
-                
-                newTemplateName=HashCreator.getAbstractTemplateHash(templateName, this.templateModel);
-            }
-//            if the above is correct, then you link to both the template and the expanded template...
-            
-            ////NEW ADDITION BY TIRTH**************//
-            //loading the expandedTemplate Model here
-            
-            
-            System.out.println("ENDING THE PRINTING OF TEMPLATE FILE");
-            
-            System.out.println("expanded template URI : "+expandedTemplateURI);
-            this.loadFileToLocalRepository(WINGSExecutionResults,expandedTemplateURI, modeFile);
-            
-            System.out.println("Loaded the expanded template successfully ...");
-            this.loadFileToLocalRepository(WINGSExecutionResults,wfInstance, modeFile);
-           // System.out.println(wfInstance);
-            System.out.println("Loaded the workflow instance successfully ...");
         }else{
             System.err.println("The template, expanded template or workflow instance are not available. ");
             return "";
@@ -2925,6 +2925,12 @@ public void loadDataExport(String template, String modeFile){
         if(suffix == null){
           suffix = date;
         }
+        
+        System.out.println("expanded template URI : "+expandedTemplateURI);
+        this.loadFileToLocalRepository(WINGSExecutionResults,expandedTemplateURI, modeFile);
+        System.out.println("Loaded the expanded template successfully ...");
+        this.loadFileToLocalRepository(WINGSExecutionResults,wfInstance, modeFile);
+        System.out.println("Loaded the workflow instance successfully ...");
         //add the account of the current execution
         //this.addIndividual(OPMWModel,"Account"+date, Constants.OPMW_WORKFLOW_EXECUTION_ACCOUNT,"Execution account created on "+date);
         ModelUtils.addIndividual(OPMWModel,"Account-"+suffix, Constants.OPMW_WORKFLOW_EXECUTION_ACCOUNT,"Execution account created on "+date);
@@ -2934,20 +2940,34 @@ public void loadDataExport(String template, String modeFile){
         OntClass cAux = OPMWModel.createClass(Constants.OPM_ACCOUNT);
         cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+accname);
         
-        /*************************
-         * PROV-O INTEROPERABILITY
-         *************************/
-        OntClass d = PROVModel.createClass(Constants.PROV_BUNDLE);
-        d.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+accname);
-        
-        //relation between the account and the template
-        ModelUtils.addProperty(OPMWModel,accname,
-                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
-                    Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE);
-        //p-plan interop
-        ModelUtils.addProperty(PROVModel,accname,
-                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
+        //assessing whether to generate an expanded template (needs the template model to be loaded)
+        generateExpandedTemplate = isExportExpandedTemplate();
+        System.out.println("Should Expanded template be generated? "+generateExpandedTemplate);
+        this.loadExpandedTemplateFileToLocalRepository(expandedTemplateURI, modeFile);
+        hashedTemplateName = HashCreator.getAbstractTemplateHash(templateName, this.templateModel);
+        System.out.println("HASHED TEMPLATE NAME "+hashedTemplateName);
+        if(generateExpandedTemplate){
+            hashedExpandedTemplateName = createExpandedTemplate(accname,expandedTemplateName,expandedTemplateURI,hashedTemplateName,domainName);
+            templateToLink = hashedExpandedTemplateName;
+            expanded = "Expanded_";
+            //all the links have to be done to the expanded template instead of the template
+        }else{
+            templateToLink = hashedTemplateName;
+            //only add the correspondence to template if there is no expanded template
+           //relation between the account and the template
+           ModelUtils.addProperty(OPMWModel,accname,
+                   Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+hashedTemplateName,
+                       Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE);
+           //p-plan interop
+           ModelUtils.addProperty(PROVModel,accname,
+                   Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+hashedTemplateName,
                     Constants.PROV_WAS_DERIVED_FROM);
+           /*************************
+            * PROV-O INTEROPERABILITY
+            *************************/
+           OntClass d = PROVModel.createClass(Constants.PROV_BUNDLE);
+           d.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+accname);
+        }
         
         //AT THIS STAGE WE HAVE GOT THE EXPANDED TEMPLATE NAME AND URI AND WE ARE STARTING TO ACQUIRE THE EXPANDED TEMPLATE
         //AND TRYING TO REPLICATE THE ELABORATE TEMPLATE FROM THE WINGSEXECUTIONRESULTS MODEL THAT HAS LOADED THE EXPANDED
@@ -2959,11 +2979,11 @@ public void loadDataExport(String template, String modeFile){
         /************** EXPANDED TEMPLATE CREATION CODE **************/
         /********************************************************/
         //check the condition and only then go for creating the expanded template
-        String newExpandedTemplateName="";
-        if(generateExpandedTemplate)
-        	newExpandedTemplateName=createExpandedTemplate(accname,expandedTemplateName,expandedTemplateURI,newTemplateName,domainName);
-        else
-        	System.out.println("SINCE ALL THE TEMPLATE PROCESSES ARE CONCRETE, NO EXPANDED TEMPLATE IS CREATED");
+//        String newExpandedTemplateName="";
+//        if(generateExpandedTemplate)
+//        	
+//        else
+//        	System.out.println("SINCE ALL THE TEMPLATE PROCESSES ARE CONCRETE, NO EXPANDED TEMPLATE IS CREATED");
               
         /********************************************************/
         /************** EXPANDED TEMPLATE CREATION CODE ENDS **************/
@@ -3024,7 +3044,7 @@ public void loadDataExport(String template, String modeFile){
             //engine = qs.getLiteral("?engine").getString();
             System.out.println("Wings results file:"+executionFile+"\n"
                    // + "User: "+user+", \n"
-                    + "Workflow Template: "+newTemplateName+"\n"
+                    + "Workflow Template: "+hashedTemplateName+"\n"
                     + "status: "+status+"\n"
                     + "startTime: "+startT+"\n"
                     + "endTime: "+endT);
@@ -3074,7 +3094,7 @@ public void loadDataExport(String template, String modeFile){
                     XSDDatatype.XSDanyURI);
         }
         if(tool!=null){
-            ModelUtils.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
+            ModelUtils.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+hashedTemplateName,
                 tool,Constants.OPMW_DATA_PROP_CREATED_IN_WORKFLOW_SYSTEM,
                     XSDDatatype.XSDanyURI);
             /*************************
@@ -3082,14 +3102,14 @@ public void loadDataExport(String template, String modeFile){
             *************************/ 
             //the template is a prov:Plan
             OntClass plan = PROVModel.createClass(Constants.PROV_PLAN);
-            plan.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+EncodingUtils.encode(newTemplateName));
+            plan.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+hashedTemplateName);
             //createdIn wf system subprop of wasAttributedTo
-            ModelUtils.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
+            ModelUtils.addDataProperty(PROVModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+hashedTemplateName,
                 tool,Constants.PROV_WAS_ATTRIBUTED_TO,
                     XSDDatatype.XSDanyURI);
             //the run wasInfluencedBy the template
             ModelUtils.addProperty(PROVModel,accname,
-                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,
+                Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+hashedTemplateName,
                     Constants.PROV_WAS_INFLUENCED_BY);
         }
        // String newexpandedtemplatename=newExpandedTemplateName.substring(0,newExpandedTemplateName.indexOf('-'));
@@ -3197,25 +3217,25 @@ public void loadDataExport(String template, String modeFile){
             
             //link node  to the process templates
             ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName+"_"+derivedFrom,
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+expanded+templateToLink+"_"+derivedFrom,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_PROCESS);
            
             
             
             
 	        //NEW ADDITIONS BY TIRTH:
-            if(generateExpandedTemplate)
-            {
-	        ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
-	                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+"Expanded_"+newExpandedTemplateName+"_"+stepName,
-	                        Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_PROCESS);
-            }
+//            if(generateExpandedTemplate)
+//            {
+//	        ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
+//	                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+"Expanded_"+templateToLink+"_"+stepName,
+//	                        Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_PROCESS);
+//            }
             
 
            
             //p-plan interop
             ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName+"_"+derivedFrom,
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+expanded+templateToLink+"_"+derivedFrom,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_STEP);
         }
         
@@ -3462,7 +3482,7 @@ public void loadDataExport(String template, String modeFile){
                 }
    
             }
-           else if(similarNamesofInputFiles.size()!=0)
+           else if(!similarNamesofInputFiles.isEmpty())
            {
         	   System.out.println("similar names size!=0");
         	   //now check if all the properties match
@@ -3484,12 +3504,7 @@ public void loadDataExport(String template, String modeFile){
         		   if(currenttemparr.size()==givenhspropsarr.size() && currenttemparr.equals(givenhspropsarr))
         			   same=true;
 
-	           	   if(same==true){
-	           		   System.out.println("they are the same no export");
-	           		   System.out.println();
-	           		   System.out.println("PUT PUT PUT PUT PUT PUT PUT PUT PUT PUT ");
-	           		   System.out.println(input2+"    "+x);
-	           		   System.out.println();
+	           	   if(same){
 	        		   hmapforInputstoVersions.put(input2,x);
 
 	           		   break;
@@ -3497,7 +3512,7 @@ public void loadDataExport(String template, String modeFile){
         	   }
 
         	   
-           	   if(same==false)
+           	   if(!same)
            	   {
            		   System.out.println("no matches so versioning export");
            		   //the props are different somewhere so we find the latest version and link it to it
@@ -3534,9 +3549,7 @@ public void loadDataExport(String template, String modeFile){
                    	String nameOfIndividualEnc = EncodingUtils.encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+finalversionforNewAbstractComponent);
                        OntClass c = dataCatalog.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT);
                        c.createIndividual(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+nameOfIndividualEnc.toUpperCase());
-                   	
-                   	
-                   	
+                   	                   	
    	
                        //RDFS LABEL EXPORTED for canonical instance
                        //this.DataProps(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);
@@ -3678,24 +3691,23 @@ public void loadDataExport(String template, String modeFile){
             //link to template
             if(res!=null){
                 ModelUtils.addProperty(OPMWModel,
-                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
-                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName+"_"+derived,
-                        Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+                    Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
+                    Constants.CONCEPT_PARAMETER_VARIABLE+"/"+expanded+templateToLink+"_"+derived,
+                    Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
                 
-                //NEW ADDITIONS BY TIRTH
-                if(generateExpandedTemplate)
-                {
-                ModelUtils.addProperty(OPMWModel,
-                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
-                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+paramName,
-                        Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
-                }
+//                //NEW ADDITIONS BY TIRTH
+//                if(generateExpandedTemplate){
+//                    ModelUtils.addProperty(OPMWModel,
+//                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
+//                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+"Expanded_"+templateToLink+"_"+paramName,
+//                        Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+//                }
                 
 
                 
                 ModelUtils.addProperty(OPMWModel,
                         Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
-                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+newTemplateName+"_"+derived,
+                        Constants.CONCEPT_PARAMETER_VARIABLE+"/"+expanded+templateToLink+"_"+derived,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
             }
             ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+paramName+date,
@@ -3806,55 +3818,63 @@ public void loadDataExport(String template, String modeFile){
                  {
             		 ModelUtils.addProperty(OPMWModel,
                         Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+expanded+templateToLink+"_"+objName,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+                         //p-plan interop
+                         ModelUtils.addProperty(OPMWModel,
+                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
+                        Constants.CONCEPT_DATA_VARIABLE+"/"+expanded+templateToLink+"_"+objName,
+                        Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
                  }
             	 else
             	 {
             		 ModelUtils.addProperty(OPMWModel,
                              Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
-                             Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
-                             Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT); 
+                             Constants.CONCEPT_DATA_VARIABLE+"/"+expanded+templateToLink+"_"+objName,
+                             Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+                         //p-plan interop
+                         ModelUtils.addProperty(OPMWModel,
+                            Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+                            Constants.CONCEPT_DATA_VARIABLE+"/"+expanded+templateToLink+"_"+objName,
+                            Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
             	 }
                 
   
                 
                 
               //NEW ADDITIONS BY TIRTH
-                if(generateExpandedTemplate)
-                {
-                	 if(hmapforInputstoVersions.containsKey(var))
-                     {
-                    ModelUtils.addProperty(OPMWModel,
-                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+var,
-                        Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
-                     }
-                	 else
-                	 {
-                            ModelUtils.addProperty(OPMWModel,
-                                 Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
-                                 Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+var,
-                                 Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
-                	 }
-                }
+//                if(generateExpandedTemplate){
+//                    if(hmapforInputstoVersions.containsKey(var)){
+//                        ModelUtils.addProperty(OPMWModel,
+//                            Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
+//                            Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+var,
+//                            Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+//                     }
+//                	 else
+//                	 {
+//                            ModelUtils.addProperty(OPMWModel,
+//                                 Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+//                                 Constants.CONCEPT_DATA_VARIABLE+"/"+"Expanded_"+newExpandedTemplateName+"_"+var,
+//                                 Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT);
+//                	 }
+//                }
           
                 
                 //p-plan interop
-                if(hmapforInputstoVersions.containsKey(var))
-                {
-                    ModelUtils.addProperty(OPMWModel,
-                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
-                        Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
-                        Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
-                }
-                else
-                {
-                	ModelUtils.addProperty(OPMWModel,
-                            Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
-                            Constants.CONCEPT_DATA_VARIABLE+"/"+newTemplateName+"_"+objName,
-                            Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
-                }
+//                if(hmapforInputstoVersions.containsKey(var))
+//                {
+//                    ModelUtils.addProperty(OPMWModel,
+//                        Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+hmapforInputstoVersions.get(var),
+//                        Constants.CONCEPT_DATA_VARIABLE+"/"+hashedTemplateName+"_"+objName,
+//                        Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
+//                }
+//                else
+//                {
+//                	ModelUtils.addProperty(OPMWModel,
+//                            Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+var+date,
+//                            Constants.CONCEPT_DATA_VARIABLE+"/"+hashedTemplateName+"_"+objName,
+//                            Constants.P_PLAN_PROP_CORRESPONDS_TO_VAR);
+//                }
             }else
             //metadata
             if(prop.contains("http://www.w3.org/2000/01/rdf-schema#type")){
@@ -3958,19 +3978,19 @@ public void loadDataExport(String template, String modeFile){
         private void dataProps(String dataprop,String resourcepart,String propextracted,XSDDatatype x)
         {
         	OntProperty propSelec22;
-            propSelec22 = Taxonomy_Export.createDatatypeProperty(dataprop);
-            Resource orig22 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(resourcepart));
-            Taxonomy_Export.add(orig22, propSelec22,propextracted,x);
+            propSelec22 = taxonomyExport.createDatatypeProperty(dataprop);
+            Resource orig22 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(resourcepart));
+            taxonomyExport.add(orig22, propSelec22,propextracted,x);
         }
         
         private void classIsaClass(String classpart,String indvpart)
         {
-        	 OntClass c21 = Taxonomy_Export.createClass(NEW_TAXONOMY_CLASS+classpart);
+        	 OntClass c21 = taxonomyExport.createClass(NEW_TAXONOMY_CLASS+classpart);
              c21.createIndividual(NEW_TAXONOMY_CLASS+indvpart);
         }
         private void classIsaClassHardwareParts(String classpart,String indvpart)
         {
-        	 OntClass c21 = Taxonomy_Export.createClass(classpart);
+        	 OntClass c21 = taxonomyExport.createClass(classpart);
              c21.createIndividual(indvpart);
         }
         
@@ -3978,15 +3998,15 @@ public void loadDataExport(String template, String modeFile){
         
         private void inputsOutputs(String prop,HashSet<String> hs,String encodepart)
         {
-        	OntProperty propSelec23 = Taxonomy_Export.createOntProperty(prop);
-            Resource source23 = Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(encodepart) );
+        	OntProperty propSelec23 = taxonomyExport.createOntProperty(prop);
+            Resource source23 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(encodepart) );
             Individual instance23 = (Individual) source23.as( Individual.class );
             for(String in:hs)
             {
             if((in).contains("http://")){//it is a URI
                 instance23.addProperty(propSelec23,NEW_TAXONOMY_CLASS+in);            
             }else{//it is a local resource
-                instance23.addProperty(propSelec23, Taxonomy_Export.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(in)));
+                instance23.addProperty(propSelec23, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(in)));
             }
             }
         }
@@ -4031,7 +4051,7 @@ public void loadDataExport(String template, String modeFile){
     
     
   //function to check to export the expanded template or not. This should be an ASK query 
-    public boolean exportExpandedTemplate()
+    public boolean isExportExpandedTemplate()
     {
         String queryNodes = Queries.queryNodesforTemplateCondition();
         ResultSet r = queryConditionTemplateModel(queryNodes);
@@ -4053,8 +4073,6 @@ public void loadDataExport(String template, String modeFile){
  	   //UTILIZING THE FUNCTION FOR OBTAINING THE EXPANDED TEMPLATE NAME
  	   String newExpandedTemplateName=HashCreator.getExpandedTemplateHash(expandedTemplateName, this.WINGSExecutionResults);
  	   
- 	
-
  	 //capturing the relationship between the execution account and the expanded template
         ModelUtils.addProperty(OPMWModel, accname, Constants.CONCEPT_WORKFLOW_EXPANDED_TEMPLATE+"/"+newExpandedTemplateName, Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE);
         ModelUtils.addProperty(OPMWModel, Constants.CONCEPT_WORKFLOW_EXPANDED_TEMPLATE+"/"+newExpandedTemplateName, Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+templateName, Constants.OPMW_PROP_IS_IMPLEMENTATION_OF_TEMPLATE);
@@ -4076,8 +4094,6 @@ public void loadDataExport(String template, String modeFile){
             
             //add the expanded template as a provenance graph
             ModelUtils.addIndividual(OPMWModel,newExpandedTemplateName, Constants.OPMW_WORKFLOW_EXPANDED_TEMPLATE, "Workflow Expanded Template: "+newExpandedTemplateName);
-              
-            
             
             //P-PLAN FOR EXPANDED TEMPLATE
             OntClass cParam = OPMWModel.createClass(Constants.P_PLAN_PLAN);
@@ -4539,30 +4555,30 @@ public void loadDataExport(String template, String modeFile){
    //*************************//
  
     private void exportHardwareSoftwareDependencies(boolean needsval, Float memval, Float stval, Float minversionval, Resource concrComponent){
-        Resource blankNode112 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
-        blankNode112.addProperty(Taxonomy_Export.createOntProperty(Constants.NEEDS_64BIT),
+        Resource blankNode112 = taxonomyExport.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+        blankNode112.addProperty(taxonomyExport.createOntProperty(Constants.NEEDS_64BIT),
             needsval+"",XSDDatatype.XSDboolean);
         if(memval!=null){
-            blankNode112.addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_MEMORYGB), 
+            blankNode112.addProperty(taxonomyExport.createOntProperty(Constants.REQUIRES_MEMORYGB), 
                 memval+"",XSDDatatype.XSDfloat);
         }
         if(stval!=null){
-            blankNode112.addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_STORAGEGB), 
+            blankNode112.addProperty(taxonomyExport.createOntProperty(Constants.REQUIRES_STORAGEGB), 
                 stval+"",XSDDatatype.XSDfloat);
         }
         String procURI = NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
-        Taxonomy_Export.getResource(procURI).
-                addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_HARDWARE_DEPENDENCY), 
+        taxonomyExport.getResource(procURI).
+                addProperty(taxonomyExport.createOntProperty(Constants.HAS_HARDWARE_DEPENDENCY), 
                         blankNode112);
         this.classIsaClassHardwareParts(Constants.HARDWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
-        Resource blankNode113 = Taxonomy_Export.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+        Resource blankNode113 = taxonomyExport.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
         if(minversionval!=null){
-            blankNode113.addProperty(Taxonomy_Export.createOntProperty(Constants.REQUIRES_VERSION),
+            blankNode113.addProperty(taxonomyExport.createOntProperty(Constants.REQUIRES_VERSION),
                 minversionval+"");
         }
         String procURI113 = NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
-        Taxonomy_Export.getResource(procURI113).
-                addProperty(Taxonomy_Export.createOntProperty(Constants.HAS_SOFTWARE_DEPENDENCY), 
+        taxonomyExport.getResource(procURI113).
+                addProperty(taxonomyExport.createOntProperty(Constants.HAS_SOFTWARE_DEPENDENCY), 
                         blankNode113);
         this.classIsaClassHardwareParts(Constants.SOFTWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
     }
