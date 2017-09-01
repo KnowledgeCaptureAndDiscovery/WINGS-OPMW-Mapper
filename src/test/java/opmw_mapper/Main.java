@@ -1,4 +1,5 @@
-package Validations;
+package opmw_mapper;
+
 import java.util.*;
 
 import org.apache.jena.ontology.OntModel;

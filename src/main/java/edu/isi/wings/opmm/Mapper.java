@@ -2945,7 +2945,6 @@ public void loadDataCatalog(String template, String modeFile){
         System.out.println("Should Expanded template be generated? "+generateExpandedTemplate);
         this.loadExpandedTemplateFileToLocalRepository(expandedTemplateURI, modeFile);
         hashedTemplateName = HashCreator.getAbstractTemplateHash(templateName, this.templateModel);
-        System.out.println("HASHED TEMPLATE NAME "+hashedTemplateName);
         if(generateExpandedTemplate){
             hashedExpandedTemplateName = createExpandedTemplate(accname,expandedTemplateName,expandedTemplateURI,hashedTemplateName,domainName);
             templateToLink = hashedExpandedTemplateName;
@@ -4591,4 +4590,14 @@ public void loadDataCatalog(String template, String modeFile){
          }
         return m;
     }
+
+    /**
+     * Getter of the model for validation purposes
+     * @return 
+     */
+    public OntModel getOPMWModel() {
+        return OPMWModel;
+    }
+    
+    
  }

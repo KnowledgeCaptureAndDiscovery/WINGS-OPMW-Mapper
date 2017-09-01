@@ -1,4 +1,4 @@
-package Validations;
+package opmw_mapper;
 
 import java.util.*;
 import java.io.File;

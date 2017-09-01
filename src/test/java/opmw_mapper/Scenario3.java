@@ -1,5 +1,6 @@
-package Validations;
+package opmw_mapper;
 
+import opmw_mapper.Queries;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;

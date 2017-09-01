@@ -1,5 +1,6 @@
-package Validations;
+package opmw_mapper;
 
+import opmw_mapper.Queries;
 import org.apache.jena.ontology.OntModel;
 
 public class Statistics {

@@ -1,4 +1,4 @@
-package Validations;
+package opmw_mapper;
 
 public class Queries {
 	//commonly used predicates for artifacts and processes. The queries are equivalent, 

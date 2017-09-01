@@ -1,4 +1,4 @@
-package Validations;
+package opmw_mapper;
 
 import java.util.ArrayList;
 
@@ -8,8 +8,8 @@ public static String validateRepo(OntModel m){
     String result = "##########REPORT##########\n";        
     int n=0;
     //execution artifacts
-    //result+="#TEST"+(++n)+": ALL EXECUTION ARTIFACTS SHOULD BELONG TO AN ACCOUNT.\n";
-    //result+="\t"+isTestFailed(Integer.parseInt(Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_ACCOUNT, m, "countArt")))+"\n";
+//    result+="#TEST"+(++n)+": ALL EXECUTION ARTIFACTS SHOULD BELONG TO AN ACCOUNT.\n";
+//    result+="\t"+isTestFailed(Integer.parseInt(Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_ACCOUNT, m, "countArt")))+"\n";
 //    result+="#TEST"+(++n)+": ALL EXECUTION ARTIFACTS SHOULD HAVE A LOCATION (VARIABLES) OR VALUE (PARAMETERS)..\n";
 //    result+="\t"+isTestFailed(Integer.parseInt(Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_LOCATION_OR_VALUE, m, "countArt")))+"\n";
 //    result+="#TEST"+(++n)+": ALL EXECUTION ARTIFACTS SHOULD BELONG TO A TEMPLATE VARIABLE OR PARAMETER THAT BELONGS TO A TEMPLATE.\n";
@@ -57,7 +57,10 @@ public static String validateRepo(OntModel m){
 //    result+="\t"+isTestFailed(Integer.parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_WITHOUT_VERSION_NUMBER, m, "countT")))+"\n";
 //    result+="#TEST"+(++n)+": (OPTIONAL TEST) TEMPLATES SHOULD HAVE A POINTER TO THE NATIVE SYSTEM TEMPLATE.\n";
 //    result+="\t"+isTestFailed(Integer.parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_WITHOUT_NATIVE_SYS_TEMPL, m, "countT")))+"\n";
-    
+//    
+/**
+ * TESTS ON SCENARIOS COMMENTED AT THE MOMENT
+ */
     
     System.out.println("VALIDATION TESTS FOR SCENARIO-1 (NUMBER OF EXECUTIONS, EXPANDED TEMPLATES AND ABSTRACT TEMPLATES)");
     //TEST 1: HOW MANY EXECUTIONS DOES THE TEMPLATE HAVE?
