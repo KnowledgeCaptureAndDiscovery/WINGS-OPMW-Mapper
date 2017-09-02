@@ -384,7 +384,7 @@ public class ComponentVersion {
             {
             	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
             	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-            	String datatype=NEW_TAXONOMY_CLASS.substring(0, NEW_TAXONOMY_CLASS.length()-1)+"/Data/";
+            	String datatype=NEW_TAXONOMY_CLASS.substring(0, NEW_TAXONOMY_CLASS.length()-1)+"/Data#";
                 OntClass c31 = taxonomyExport.createClass(datatype+"DataArgument");
                 c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
                 

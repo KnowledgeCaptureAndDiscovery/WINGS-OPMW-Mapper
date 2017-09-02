@@ -344,20 +344,23 @@ public void loadDataCatalog(String template, String modeFile){
         String queryMetadata = Queries.queryMetadata();
         r = null;
         r = queryLocalWINGSTemplateModelRepository(queryMetadata);
-        String timegiven="";
         while(r.hasNext()){
             QuerySolution qs = r.next();
             Literal doc = qs.getLiteral("?doc");
             Literal contrib = qs.getLiteral("?contrib");
             Literal time = qs.getLiteral("?time");
-            Literal license = qs.getLiteral("?license");
             Resource diagram = qs.getResource("?diagram");
             //ask for diagram here: hasTemplateDiagram xsd:anyURI (png)
+            String documentationContent ="";
             if(doc!=null){
-                ModelUtils.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,doc.getString(),
+                documentationContent = doc.getString();
+                if(documentationContent.equals("")){
+                    ModelUtils.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,documentationContent,
                         Constants.OPMW_DATA_PROP_HAS_DOCUMENTATION);
+                }
             }
             if(contrib!=null){
+                userName = contrib.getString();
                 ModelUtils.addIndividual(OPMWModel,contrib.getString(), Constants.OPM_AGENT,"Agent "+contrib.getString());
                 ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,Constants.CONCEPT_AGENT+"/"+contrib.getString(),
                         Constants.PROP_HAS_CONTRIBUTOR);
@@ -366,6 +369,8 @@ public void loadDataCatalog(String template, String modeFile){
                 String agEncoded = EncodingUtils.encode(Constants.CONCEPT_AGENT+"/"+contrib.getString());
                 OntClass d = OPMWModel.createClass(Constants.PROV_AGENT);
                 d.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+agEncoded);
+                ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,Constants.CONCEPT_AGENT+"/"+contrib.getString(),
+                Constants.PROV_WAS_ATTRIBUTED_TO);
             }
 //            if(license!=null){
 //                this.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,license.getString(),
@@ -374,7 +379,6 @@ public void loadDataCatalog(String template, String modeFile){
             if(time!=null){
                 ModelUtils.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,time.getString(),
                         Constants.DATA_PROP_MODIFIED, XSDDatatype.XSDdateTime);
-                timegiven=time.getString();
             }
             if(diagram!=null){
                 ModelUtils.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,diagram.getURI(),
@@ -745,7 +749,7 @@ public void loadDataCatalog(String template, String modeFile){
                 
                 
                 //Case1: Direct Export
-                if(namesOfAbstractCompswithSameNames.size()==0)
+                if( namesOfAbstractCompswithSameNames.isEmpty())
                 {
                 	//this means that there are no similarities anywhere and we need to export it
                 	System.out.println("NOW UR INSIDE EXPORTING A FRESH ONE");
@@ -1335,8 +1339,9 @@ public void loadDataCatalog(String template, String modeFile){
                       this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
 
                     //DOCUMENTATION EXPORTED
+                    if(!doc11.equals("")){
                       this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", doc11+"", XSDDatatype.XSDstring);
-                      
+                    }
                       
                       //IS CONCRETE EXPORTED
                       this.dataProps(Constants.COMPONENT_IS_CONCRETE, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", compConcrete+"", XSDDatatype.XSDboolean);
@@ -1662,7 +1667,7 @@ public void loadDataCatalog(String template, String modeFile){
                 
   
               //Case2: Direct Export since the size of the found concr comps with similar names is 0
-                if(namesOfConcreteCompswithSameNames.size()==0 && namesOfAbsCompswithSameNames.size()==0)
+                if( namesOfConcreteCompswithSameNames.isEmpty() && namesOfAbsCompswithSameNames.isEmpty())
                 {
 
                 	//this means that there are no similarities anywhere and we need to export it
@@ -1724,12 +1729,6 @@ public void loadDataCatalog(String template, String modeFile){
                     		
                     	
                     } 
-                    
-                    
-                    
-                    
-                    
-                    
                   //extracting the actual inputs,outputs and other factors for the component
                     
                     String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(PREFIX_COMP_CATALOG,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"Class");
@@ -1750,20 +1749,16 @@ public void loadDataCatalog(String template, String modeFile){
                     	Literal concr=qsnew.getLiteral("?concr");
                     	Literal loc=qsnew.getLiteral("?loc");
                     	Literal doc=qsnew.getLiteral("?doc");
-                    	
-                    	
                     	if(nodenew.getLocalName().equals(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)))
                     	{
                     		inputsComp.add(input.getLocalName());
                     		outputsComp.add(output.getLocalName());
                     		if(loc!=null && compLoc.equals(""))
                     			compLoc=loc.getString();
-                    		if(concr!=null)
-                    		{
+                    		if(concr!=null){
                     			compConcrete=concr.getBoolean();
                     		}
-                    		if(doc!=null)
-                    		{
+                    		if(doc!=null){
                     			doc11=doc.getString();
                     		}
                     	}
@@ -1790,8 +1785,9 @@ public void loadDataCatalog(String template, String modeFile){
                     this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
                     
                     //EXPORTING THE DOCUMENTATION
-                    this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",doc11,XSDDatatype.XSDstring);
-
+                    if (!doc11.equals("")){
+                        this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",doc11,XSDDatatype.XSDstring);
+                    }
            
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",compConcrete+"", XSDDatatype.XSDboolean);
@@ -1875,8 +1871,9 @@ public void loadDataCatalog(String template, String modeFile){
                     
                     
                   //DOCUMENTATION EXPORTED
+                  if (!docAbs.equals("")){
                     this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1", docAbs, XSDDatatype.XSDstring);
-
+                  }
                     
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1", compConcreteAbs+"", XSDDatatype.XSDboolean);
@@ -2186,8 +2183,9 @@ public void loadDataCatalog(String template, String modeFile){
                   this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
                 //DOCUMENTATION EXPORTED
+                if (!doc11.equals("")){
                   this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, doc11+"", XSDDatatype.XSDstring);
-                  
+                }
                   
                   //IS CONCRETE EXPORTED
                   this.dataProps(Constants.COMPONENT_IS_CONCRETE, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compConcrete+"", XSDDatatype.XSDboolean);
@@ -2402,8 +2400,9 @@ public void loadDataCatalog(String template, String modeFile){
                     this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
                   //DOCUMENTATION EXPORTED
+                  if (!doc11.equals("")){
                     this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, doc11, XSDDatatype.XSDstring);
-
+                  }
                     
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compConcrete112+"", XSDDatatype.XSDboolean);
@@ -2484,8 +2483,9 @@ public void loadDataCatalog(String template, String modeFile){
 
                     
                   //DOCUMENTATION EXPORTED
+                  if (!docAbs.equals("")){
                     this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, docAbs, XSDDatatype.XSDstring);
-                    
+                  }
           
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compConcreteAbs+"", XSDDatatype.XSDboolean);
@@ -2828,9 +2828,6 @@ public void loadDataCatalog(String template, String modeFile){
                 propUsed.addLabel("Property that indicates that a resource has been used as a "+roleDest, "EN");
             }
         }
-        //EXPORTING THE USER WHO CREATED THE TEMPLATE:
-        ModelUtils.addDataProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,userName,
-                Constants.PROV_WAS_ATTRIBUTED_TO);
         
         
         /******************
@@ -2968,22 +2965,7 @@ public void loadDataCatalog(String template, String modeFile){
            d.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+accname);
         }
         
-        //AT THIS STAGE WE HAVE GOT THE EXPANDED TEMPLATE NAME AND URI AND WE ARE STARTING TO ACQUIRE THE EXPANDED TEMPLATE
-        //AND TRYING TO REPLICATE THE ELABORATE TEMPLATE FROM THE WINGSEXECUTIONRESULTS MODEL THAT HAS LOADED THE EXPANDED
-        //TEMPLATE FILE
-        
-        
-        /********************************************************/
-        /*********************ADDITION BY TIRTH***************/
-        /************** EXPANDED TEMPLATE CREATION CODE **************/
-        /********************************************************/
-        //check the condition and only then go for creating the expanded template
-//        String newExpandedTemplateName="";
-//        if(generateExpandedTemplate)
-//        	
-//        else
-//        	System.out.println("SINCE ALL THE TEMPLATE PROCESSES ARE CONCRETE, NO EXPANDED TEMPLATE IS CREATED");
-              
+ 
         /********************************************************/
         /************** EXPANDED TEMPLATE CREATION CODE ENDS **************/
         /********************************************************/
@@ -3191,68 +3173,33 @@ public void loadDataCatalog(String template, String modeFile){
                     Constants.OPMW_DATA_PROP_HAS_STATUS);
             
             //add the code binding as an executable component  
-            
-            Resource blankNode = OPMWModel.createResource(Constants.OPMW_PROP_EXECUTABLE_COMPONENT+"/"+stepName+date);
+            String executableComponentName = date;
+            try{
+                executableComponentName = EncodingUtils.MD5ComponentCode(sCode);
+            }catch(Exception e){
+                System.out.println("Error while MD5ing the component: "+ stepName);
+            }
+            Resource blankNode = OPMWModel.createResource(Constants.OPMW_PROP_EXECUTABLE_COMPONENT+"/"+stepName+executableComponentName);
             blankNode.addProperty(OPMWModel.createOntProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION),
                     sCode).
                     addProperty(OPMWModel.createOntProperty(Constants.RDFS_LABEL), 
                             "Executable Component associated to "+stepName);
-            String procURI = Constants.PREFIX_EXPORT_RESOURCE+ EncodingUtils.encode(Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date);
+            String procURI = Constants.PREFIX_EXPORT_RESOURCE+ EncodingUtils.encode(Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+executableComponentName);
             OPMWModel.getResource(procURI).
                     addProperty(OPMWModel.createOntProperty(Constants.OPMW_PROP_HAS_EXECUTABLE_COMPONENT), 
                             blankNode);
             	
-            /*************************
-            * PROV-O INTEROPERABILITY (commented because it makes it more difficult to understand. It is done through the hasExecutableComponent relationship
-            *************************/ 
-            /*Resource bnodeProv = PROVModel.createResource();
-            bnodeProv.addProperty(PROVModel.createOntProperty(Constants.PROV_AT_LOCATION),
-                    sCode).
-                    addProperty(PROVModel.createOntProperty(Constants.RDFS_LABEL), 
-                            "Executable Component associated to "+stepName);
-            PROVModel.getResource(procURI).
-                    addProperty(PROVModel.createOntProperty(Constants.PROV_USED), 
-                            bnodeProv);*/
-            
+          
             //link node  to the process templates
             ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
                     Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+expanded+templateToLink+"_"+derivedFrom,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_PROCESS);
-           
-            
-            
-            
-	        //NEW ADDITIONS BY TIRTH:
-//            if(generateExpandedTemplate)
-//            {
-//	        ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
-//	                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+"Expanded_"+templateToLink+"_"+stepName,
-//	                        Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_PROCESS);
-//            }
-            
-
            
             //p-plan interop
             ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
                     Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+expanded+templateToLink+"_"+derivedFrom,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_STEP);
         }
-        
-//        String tp = Queries.queryStepInputs();
-//        r=null;
-//        r = queryLocalWINGSResultsRepository(tp);
-//        while(r.hasNext()){
-//        	System.out.println("we entered data versioning");
-//            QuerySolution qs = r.next();
-//            String step2 = qs.getResource("?step").getLocalName();
-//            String input2 = qs.getResource("?input").getLocalName();
-//            String inputBinding2 = qs.getLiteral("?iBinding").getString();
-//            System.out.println("Step: "+step2+" used input "+input2+" with data binding: "+inputBinding2);
-//        }
-//        System.out.println();
-        
-        
-        
         
         
         //DATA VERSIONING CAPTURE
@@ -3330,8 +3277,6 @@ public void loadDataCatalog(String template, String modeFile){
                     //basic metadata
                     obj = qs222.getLiteral("?obj").getString();
                 }
-//                System.out.println("Var "+var+" <"+prop+ "> "+ obj);
-
                 //redundancy: add it as a opm:Artifact as well
  
                 //link to template
@@ -3362,14 +3307,8 @@ public void loadDataCatalog(String template, String modeFile){
                 }
                 
             }
-//            System.out.println("PRINTING THE HASHMAP GIVEN");
             hsprops.put("hasMD5",currentMD5);
-//            for(String x:hsprops.keySet())
-//            	System.out.println(x+ " "+hsprops.get(x));
-            
-            //now query the data catalog model to check if this hashed version exists
-            //if it doesnt export ...
-            //if it does check the metadata is the same or not
+
             String dataCatalogQuery = Queries.dataCatalogQuery();
             ResultSet rnew123=null;
             rnew123 = queryLocalDataCatalogRepository(dataCatalogQuery);
@@ -3385,7 +3324,7 @@ public void loadDataCatalog(String template, String modeFile){
 //                System.out.println("n "+res.getLocalName());
 //                hmapforInputstoVersions.put(input2, res.getLocalName());
                 
-                if(res.getLocalName().substring(0,res.getLocalName().lastIndexOf("_")).equals(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5.toUpperCase()))
+                if(res.getLocalName().substring(0,res.getLocalName().indexOf("_")).equals(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()))
                 {
                 	similarNamesofInputFiles.add(res.getLocalName());
                 }
@@ -3393,24 +3332,24 @@ public void loadDataCatalog(String template, String modeFile){
                 try{
                 Literal obj112=qsnew.getLiteral("?obj");
                 if(prop112!=null && obj112!=null){
-                	System.out.println("prop112 "+prop112.getLocalName()+" obj112 "+obj112.getString());
-                	if(!prop112.getLocalName().equals("type") && !prop112.getLocalName().equals("wasRevisionOf"))
-                	{
-                		if(hmapnewone.containsKey(res.getLocalName()))
-                		{
-                			ArrayList<String> newtemp=new ArrayList<>();
-                			newtemp=hmapnewone.get(res.getLocalName());
-                			newtemp.add(obj112.getString());
-                			hmapnewone.remove(res.getLocalName());
-                			hmapnewone.put(res.getLocalName(), newtemp);
-                		}
-                		else
-                		{
-                			ArrayList<String> temp=new ArrayList<>();
-                			temp.add(obj112.getString());
-                			hmapnewone.put(res.getLocalName(), temp);
-                		}
-                	}
+                    System.out.println("prop112 "+prop112.getLocalName()+" obj112 "+obj112.getString());
+                    if(!prop112.getLocalName().equals("type") && !prop112.getLocalName().equals("wasRevisionOf"))
+                    {
+                        if(hmapnewone.containsKey(res.getLocalName()))
+                        {
+                            ArrayList<String> newtemp=new ArrayList<>();
+                            newtemp=hmapnewone.get(res.getLocalName());
+                            newtemp.add(obj112.getString());
+                            hmapnewone.remove(res.getLocalName());
+                            hmapnewone.put(res.getLocalName(), newtemp);
+                        }
+                        else
+                        {
+                            ArrayList<String> temp=new ArrayList<>();
+                            temp.add(obj112.getString());
+                            hmapnewone.put(res.getLocalName(), temp);
+                        }
+                    }
                 }
                 }catch(Exception e){
                 	Resource obj112=qsnew.getResource("?obj");
@@ -3446,7 +3385,7 @@ public void loadDataCatalog(String template, String modeFile){
             
             
             
-           if(similarNamesofInputFiles.size()==0)
+           if(similarNamesofInputFiles.isEmpty())
            {
         	   
             	hmapforInputstoVersions.put(input2, inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+"_V1");
@@ -3492,7 +3431,6 @@ public void loadDataCatalog(String template, String modeFile){
         	   for(String x:hsprops.keySet())
         		   givenhspropsarr.add(hsprops.get(x));
         	   Collections.sort(givenhspropsarr);
-        	   
         	   for(String x:similarNamesofInputFiles)
         	   {
         		   ArrayList<String> currenttemparr=new ArrayList<>();
@@ -3504,13 +3442,10 @@ public void loadDataCatalog(String template, String modeFile){
         			   same=true;
 
 	           	   if(same){
-	        		   hmapforInputstoVersions.put(input2,x);
-
-	           		   break;
-	           	   			}
+                                hmapforInputstoVersions.put(input2,x);
+                                break;
+	           	   }
         	   }
-
-        	   
            	   if(!same)
            	   {
            		   System.out.println("no matches so versioning export");
@@ -3518,6 +3453,7 @@ public void loadDataCatalog(String template, String modeFile){
            		   String finalversionforNewAbstractComponent="";
                   	String finalversionforLatestAbstractComponent="";
                     	int max=Integer.MIN_VALUE;
+                        String compareFile = "";
                     	for(String x:similarNamesofInputFiles)
                     	{
                     		String temp=x.substring(x.lastIndexOf("_V"),x.length());
@@ -3526,7 +3462,7 @@ public void loadDataCatalog(String template, String modeFile){
                     		if(max<temp2)
                     		{
                     			max=temp2;
-                    			
+                    			compareFile = x;
                     		}
                     	}
                     	finalversionforLatestAbstractComponent="_V"+max;
@@ -3540,10 +3476,6 @@ public void loadDataCatalog(String template, String modeFile){
                     	hmapforInputstoVersions.put(input2, inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+finalversionforNewAbstractComponent);
                    	
                    	System.out.println("create a new version "+finalversionforNewAbstractComponent);
-                   	
-                   	
-                   	
-                   	
                    	
                    	String nameOfIndividualEnc = EncodingUtils.encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()).toUpperCase()+"_"+currentMD5+finalversionforNewAbstractComponent);
                        OntClass c = dataCatalog.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT);
@@ -3570,23 +3502,18 @@ public void loadDataCatalog(String template, String modeFile){
                        OntProperty propSelec255 = dataCatalog.createOntProperty(Constants.PROV_WAS_REVISION_OF);
                        Resource source255 = dataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+EncodingUtils.encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforNewAbstractComponent));
                        Individual instance255 = (Individual) source255.as( Individual.class );
-                       if((inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
-                           instance255.addProperty(propSelec255,Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent);            
+                       if((compareFile).contains("http://")){//it is a URI
+                           instance255.addProperty(propSelec255,Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+compareFile);            
                        }else{//it is a local resource
-                           instance255.addProperty(propSelec255, dataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+EncodingUtils.encode(inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length())+"_"+currentMD5+finalversionforLatestAbstractComponent)));
-                       }
-                    	
-                    	
-           		   
+                           instance255.addProperty(propSelec255, dataCatalog.getResource(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT_EXPORT_DIRECT+"/"+EncodingUtils.encode(compareFile)));
+                       }   
            	   }
-        	   
            }
 
         }
         System.out.println("PRINTING THE HASHMAP INPUT VERSIONS");
-        for(String x:hmapforInputstoVersions.keySet())
-        {
-        	System.out.println(x+" "+hmapforInputstoVersions.get(x));
+        for(String x:hmapforInputstoVersions.keySet()){
+            System.out.println(x+" "+hmapforInputstoVersions.get(x));
         }
 
         //annotation of inputs
@@ -3984,13 +3911,13 @@ public void loadDataCatalog(String template, String modeFile){
         
         private void classIsaClass(String classpart,String indvpart)
         {
-        	 OntClass c21 = taxonomyExport.createClass(NEW_TAXONOMY_CLASS+classpart);
-             c21.createIndividual(NEW_TAXONOMY_CLASS+indvpart);
+            OntClass c21 = taxonomyExport.createClass(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+classpart);
+            c21.createIndividual(NEW_TAXONOMY_CLASS+indvpart);
         }
         private void classIsaClassHardwareParts(String classpart,String indvpart)
         {
-        	 OntClass c21 = taxonomyExport.createClass(classpart);
-             c21.createIndividual(indvpart);
+            OntClass c21 = taxonomyExport.createClass(classpart);
+            c21.createIndividual(indvpart);
         }
         
 
@@ -4067,7 +3994,7 @@ public void loadDataCatalog(String template, String modeFile){
     public String createExpandedTemplate(String accname,String expandedTemplateName,String expandedTemplateURI,String templateName, String domainName){
         //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
         NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
-        NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
+//        NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
  	   System.out.println("expanded template name: "+expandedTemplateName);
  	   //UTILIZING THE FUNCTION FOR OBTAINING THE EXPANDED TEMPLATE NAME
  	   String newExpandedTemplateName=HashCreator.getExpandedTemplateHash(expandedTemplateName, this.WINGSExecutionResults);

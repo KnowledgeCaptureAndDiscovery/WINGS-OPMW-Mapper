@@ -6,18 +6,18 @@ public class Main {
 public static void main(String[] args) {
     Mapper instance = new Mapper();
    
-  String lib = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"library.owl";
+  String lib = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"variantCalling"+File.separator+"library.owl";
   //String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/spacer/spacer-ex.owl";
   //String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/parasimple/cpexe.owl";
   //String execution = "/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/ab2ex.owl";
   //String execution = "/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/abex3.owl";
-  String execution ="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"execution.owl";
+  String execution ="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"variantCalling"+File.separator+"execution.owl";
   
    //String template="/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/parasimple/CaesarCypherParallelSimple.owl";
    //String template="/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/abstractTest1/abstractTest1.owl";
    //String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/mapreduce.owl";
    //String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/EXAMPLE-2_INPUT_FOR_MAPPER_SCENARIO-1/HashingConceptScenario1.owl";
-   String template="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"template.owl";
+   String template="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"variantCalling"+File.separator+"template.owl";
     String mode = "RDF/XML";
     String mode2="Turtle";
   String outFileOPMW = "testResultOPMW";
@@ -25,12 +25,12 @@ public static void main(String[] args) {
   String outFile = "testTemplateabstractTest1";
   String data_catalog="TestingDomain1"+File.separator+"Data"+File.separator+"TestingDomain_DataCatalog.owl";
   String taxonomy_export="TestingDomain1"+File.separator+"Component"+File.separator+"TestingDomain_TaxonomyHierarchyModel.owl";
-  String componentDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"components"+File.separator+"";
-  String dataDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"simple_abstract"+File.separator+"data"+File.separator+"";
+  String componentDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"variantCalling"+File.separator+"components"+File.separator+"";
+  String dataDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"variantCalling"+File.separator+"data"+File.separator+"";
  // /Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl
     
   String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile,taxonomy_export,mode2, componentDirectory,"TestingDomain");
-  String ans2=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null,data_catalog,mode2,dataDirectory, "TestingDomain");
+//  String ans2=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null,data_catalog,mode2,dataDirectory, "TestingDomain");
     System.out.println("--------------------------");
 //    System.out.println("location is :"+ans);
     

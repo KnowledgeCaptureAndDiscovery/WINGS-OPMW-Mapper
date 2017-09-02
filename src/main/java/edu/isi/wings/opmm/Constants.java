@@ -21,19 +21,19 @@ public class Constants {
     public static final String PREFIX_WEXEC = "http://www.wings-workflows.org/ontology/execution.owl#";
     public static final String PREFIX_WFINVOC = "http://purl.org/net/wf-invocation#";
     public static final String PREFIX_P_PLAN = "http://purl.org/net/p-plan#";
-    public static final String PREFIX_COMPONENT="http://www.wings-workflows.org/ontology/component.owl#";
-    public static final String PREFIX_OWL="http://www.w3.org/2002/07/owl#";
-    public static final String PREFIX_RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    public static final String PREFIX_COMPONENT = "http://www.wings-workflows.org/ontology/component.owl#";
+    public static final String PREFIX_OWL = "http://www.w3.org/2002/07/owl#";
+    public static final String PREFIX_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     public static final String PREFIX_RESOURCE = "http://www.wings-workflows.org/ontology/resource.owl#";
     public static final String PREFIX_WICUS = "http://purl.org/net/wicus#";
     //TIME AND LICENSE ADDITIONS
-    public static final String ISSUED_TIME="http://purl.org/dc/terms/issued";
-    public static final String LICENSE= "http://purl.org/dc/terms/license";
+    public static final String ISSUED_TIME = "http://purl.org/dc/terms/issued";
+    public static final String LICENSE = "http://purl.org/dc/terms/license";
 
     /*****
     COMPONENT CLASS AND ITS RELATIONS
     *****/
-    public static final String COMPONENT_HAS_SUPERCLASS_FOLDER=PREFIX_COMPONENT+"hasFolder|SuperComponent";
+    public static final String COMPONENT_HAS_SUPERCLASS_FOLDER=PREFIX_COMPONENT+"hasFolderORSuperComponent";
     public static final String COMPONENT_HAS_INPUT=PREFIX_COMPONENT+"hasInput";
     public static final String COMPONENT_HAS_OUTPUT=PREFIX_COMPONENT+"hasOutput";
     public static final String COMPONENT_HAS_LOCATION=PREFIX_COMPONENT+"hasLocation";
