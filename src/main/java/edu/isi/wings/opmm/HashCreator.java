@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.isi.wings.opmm;
 
 import java.util.ArrayList;
@@ -16,8 +11,9 @@ import utils.EncodingUtils;
 import utils.ModelUtils;
 
 /**
- *
- * @author dgarijo
+ * Classes for creating hash identifiers for templates. 
+ * This is needed for versioning purposes.
+ * @author Daniel Garijo and Tirth Meta
  */
 public class HashCreator {
     
@@ -129,7 +125,7 @@ public class HashCreator {
 
     }
     
-    
+    /*This function should be merged with the previous one*/
     //THE FUNCTION FOR OBTAINING THE EXPANDED TEMPLATE NAME
     public static String getExpandedTemplateHash(String expandedTemplateName, OntModel wingsResults)
     {

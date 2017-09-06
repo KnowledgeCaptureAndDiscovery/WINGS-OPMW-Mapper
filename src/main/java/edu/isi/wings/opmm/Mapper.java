@@ -29,8 +29,6 @@ import org.apache.jena.util.FileManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -50,9 +48,9 @@ public class Mapper {
     private OntModel PROVModel;
     private OntModel dataCatalog;
     private String taxonomyURL;
-    private OntModel expandedTemplateModel;
+//    private OntModel expandedTemplateModel;
     private OntModel templateModel;
-    private OntModel ComponentCatalog;
+    private OntModel componentCatalog;
     private OntModel taxonomyExport;
     public static String NEW_TAXONOMY_CLASS="";
     public static String NEW_TAXONOMY_CLASS_2="";
@@ -73,13 +71,7 @@ public class Mapper {
     
   //function to query just the component catalog model
     private ResultSet queryComponentCatalog(String queryIn) {
-        return ModelUtils.queryLocalRepository(queryIn, ComponentCatalog);
-    }
-    
-    
-    //function to query just the expanded template model
-    private ResultSet queryLocalExpandedTemplateRepository(String queryIn) {
-        return ModelUtils.queryLocalRepository(queryIn, expandedTemplateModel);
+        return ModelUtils.queryLocalRepository(queryIn, componentCatalog);
     }
     
     //function to query just the taxonomy model
@@ -158,7 +150,7 @@ public class Mapper {
             throw new IllegalArgumentException("File: " + template + " not found");
         }
         
-        expandedTemplateModel.read(in2, null, modeFile);
+//        expandedTemplateModel.read(in2, null, modeFile);
         
         System.out.println("Expanded Template File "+template+" loaded into the execution results");
 
@@ -269,10 +261,13 @@ public void loadDataCatalog(String template, String modeFile){
         NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
         NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
     	//model initialization
-        ComponentCatalog = initializeModel(ComponentCatalog);
+        componentCatalog = initializeModel(componentCatalog);
         WINGSModelTemplate = initializeModel(WINGSModelTemplate);
         OPMWModel = initializeModel(OPMWModel);
         taxonomyExport = initializeModel(taxonomyExport);
+        
+        HashMap<String,String> classNames = new HashMap<>();
+        
         try{
             //load the template file to WINGSModel (already loads the taxonomy as well
             this.loadTaxonomyExport(componentCatalogPath, exportMode);            
@@ -285,7 +280,7 @@ public void loadDataCatalog(String template, String modeFile){
         try{
             this.loadTemplateFileToLocalRepository(wingsInputTemplatePath, inputMode);            
             loadTaxonomy(WINGSModelTemplate);
-            loadTaxonomy(ComponentCatalog);
+            loadTaxonomy(componentCatalog);
         }catch(Exception e){
             System.err.println("Error "+e.getMessage());
             return "";
@@ -813,6 +808,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME              
                     this.classIsaClass(nodenew11.getLocalName().toUpperCase()+"_CLASSV1",nodenew11.getLocalName().toUpperCase()+"_V1");
+                    classNames.put(nodenew11.getLocalName().toUpperCase(), nodenew11.getLocalName().toUpperCase()+"_CLASSV1");
 
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE,nodenew11.getLocalName().toUpperCase()+"_V1",compConcreteAbs+"",XSDDatatype.XSDboolean);
@@ -821,7 +817,7 @@ public void loadDataCatalog(String template, String modeFile){
                     this.dataProps(Constants.RDFS_LABEL,nodenew11.getLocalName().toUpperCase()+"_V1",nodenew11.getLocalName(),XSDDatatype.XSDstring);
                     
                   //RDFS LABEL EXPORTED for class
-                    this.dataProps(Constants.RDFS_LABEL,nodenew11.getLocalName().toUpperCase()+"_CLASSV1",nodenew11.getLocalName(),XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.RDFS_LABEL,nodenew11.getLocalName().toUpperCase()+"_CLASSV1",nodenew11.getLocalName(),XSDDatatype.XSDstring);
 
          
                     //INPUTS-- EXPORTED
@@ -831,29 +827,29 @@ public void loadDataCatalog(String template, String modeFile){
                     //OUTPUTS-- EXPORTED
                     this.inputsOutputs(Constants.COMPONENT_HAS_OUTPUT,outputsAbsComp,nodenew11.getLocalName().toUpperCase()+"_V1");
 
-                    if(specialFolder==true)
-                    {
-                        this.dataProps(Constants.COMPONENT_HAS_SUPERCLASS_FOLDER,nodenew11.getLocalName().toUpperCase()+"_V1",AbstractSuperClass.getLocalName(),XSDDatatype.XSDstring);
+                    if(specialFolder==true){
+                        //this is a bit dirty, should be another constant
+                        this.dataProps("http://www.w3.org/2000/01/rdf-schema#subClassOf",nodenew11.getLocalName().toUpperCase()+"_V1",AbstractSuperClass.getLocalName(),XSDDatatype.XSDstring);
                     }
                     
                     //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                    ComponentVersion.Step4(inputsAbsComp, ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step4(inputsAbsComp, componentCatalog, taxonomyExport);
 
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    ComponentVersion.Step5(inputsAbsComp,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step5(inputsAbsComp,componentCatalog, taxonomyExport);
                     
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step6(outputsAbsComp,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step6(outputsAbsComp,componentCatalog, taxonomyExport);
                     
                     
                 }
               //Case2: Checking the components once for same Inputs and Outputs
-                else if(namesOfAbstractCompswithSameNames.size()!=0)
+                else if(!namesOfAbstractCompswithSameNames.isEmpty())
                 {
                 //this means we have found a list of similar abstract components in the Taxonomy Model
                 //now there are 2 points we have to consider here
@@ -1036,7 +1032,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent);
-                    
+                    classNames.put(nodenew11.getLocalName().toUpperCase(), nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
 
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE, nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent, compConcreteAbs+"", XSDDatatype.XSDboolean);
@@ -1046,7 +1042,7 @@ public void loadDataCatalog(String template, String modeFile){
                     this.dataProps(Constants.RDFS_LABEL, nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent, nodenew11.getLocalName(), XSDDatatype.XSDstring);
                     
                   //RDFS LABEL EXPORTED for class
-                    this.dataProps(Constants.RDFS_LABEL, nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), nodenew11.getLocalName(), XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.RDFS_LABEL, nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), nodenew11.getLocalName(), XSDDatatype.XSDstring);
                     
                     //INPUTS-- EXPORTED
                     this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsAbsComp, nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent);
@@ -1062,17 +1058,17 @@ public void loadDataCatalog(String template, String modeFile){
            	
                   //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step4(inputsAbsComp,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step4(inputsAbsComp,componentCatalog, taxonomyExport);
                    
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS  
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    ComponentVersion.Step5(inputsAbsComp,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step5(inputsAbsComp,componentCatalog, taxonomyExport);
 
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step6(outputsAbsComp,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step6(outputsAbsComp,componentCatalog, taxonomyExport);
                     
 
                 }
@@ -1337,10 +1333,10 @@ public void loadDataCatalog(String template, String modeFile){
 
                     //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                       this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
-
+                      classNames.put(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase(), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1");
                     //DOCUMENTATION EXPORTED
-                    if(!doc11.equals("")){
-                      this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", doc11+"", XSDDatatype.XSDstring);
+                        if(!doc11.equals("")){
+                          this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", doc11+"", XSDDatatype.XSDstring);
                     }
                       
                       //IS CONCRETE EXPORTED
@@ -1348,11 +1344,11 @@ public void loadDataCatalog(String template, String modeFile){
                       
                       
                       //RDFS LABEL EXPORTED for canonical instance
-                      this.dataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                      this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
                      
                       
                     //RDFS LABEL EXPORTED for class
-                      this.dataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                      this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
                       
                       
                       //INPUTS-- EXPORTED
@@ -1369,18 +1365,18 @@ public void loadDataCatalog(String template, String modeFile){
                     	
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                    ComponentVersion.Step1(hsi,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step1(hsi,componentCatalog, taxonomyExport);
                     
                     
                     
                    //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                    ComponentVersion.Step2(hsi,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step2(hsi,componentCatalog, taxonomyExport);
                     
                     
                   //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                    ComponentVersion.Step3(hso,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step3(hso,componentCatalog, taxonomyExport);
                     
  	
                   }
@@ -1459,7 +1455,7 @@ public void loadDataCatalog(String template, String modeFile){
                     if(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
-                    	Resource nodenew = qsnew.getResource("?n");
+//                    	Resource nodenew = qsnew.getResource("?n");
                     	Resource res11 = qsnew.getResource("?res");
                     	
                     	try{
@@ -1537,7 +1533,7 @@ public void loadDataCatalog(String template, String modeFile){
 
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
-
+                    classNames.put(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase(), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
   
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compConcrete+"", XSDDatatype.XSDboolean);
@@ -1548,7 +1544,7 @@ public void loadDataCatalog(String template, String modeFile){
 
                     
                   //RDFS LABEL EXPORTED for class
-                    this.dataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
                     
                     
                     //INPUTS-- EXPORTED
@@ -1605,7 +1601,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
-
+                    classNames.put(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase(), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
           
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, compConcreteAbs+"", XSDDatatype.XSDboolean);
@@ -1616,7 +1612,7 @@ public void loadDataCatalog(String template, String modeFile){
 
                     
                   //RDFS LABEL EXPORTED for class
-                    this.dataProps(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);                 
+                    this.dataProps2(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);                 
                     
                     
                     //INPUTS-- EXPORTED
@@ -1631,31 +1627,31 @@ public void loadDataCatalog(String template, String modeFile){
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                     
                   System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step1(hsi,ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step1(hsi,componentCatalog, taxonomyExport);
                   
                   
                   
                  //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step2(hsi,ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step2(hsi,componentCatalog, taxonomyExport);
                   
                 //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step3(hso,ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step3(hso,componentCatalog, taxonomyExport);
 
                   
                     //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                    ComponentVersion.Step4(inputsComp,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step4(inputsComp,componentCatalog, taxonomyExport);
                     
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    ComponentVersion.Step5(inputsComp,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step5(inputsComp,componentCatalog, taxonomyExport);
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step6(outputsComp,ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step6(outputsComp,componentCatalog, taxonomyExport);
 
                 	System.out.println("THIS ENDS THE FIRST CASE PART-2");  
                 	  
@@ -1670,8 +1666,6 @@ public void loadDataCatalog(String template, String modeFile){
                 if( namesOfConcreteCompswithSameNames.isEmpty() && namesOfAbsCompswithSameNames.isEmpty())
                 {
 
-                	//this means that there are no similarities anywhere and we need to export it
-                	System.out.println("NOW UR INSIDE EXPORTING A FRESH ONE");
                 	//EXPORTING IT NOW:
                 	System.out.println("ULTIMATE POINT ::::CHECK::::"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5));
                 	
@@ -1783,7 +1777,7 @@ public void loadDataCatalog(String template, String modeFile){
 
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
-                    
+                    classNames.put(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase(), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1");
                     //EXPORTING THE DOCUMENTATION
                     if (!doc11.equals("")){
                         this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",doc11,XSDDatatype.XSDstring);
@@ -1797,7 +1791,7 @@ public void loadDataCatalog(String template, String modeFile){
                     this.dataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
                     
                   //RDFS LABEL EXPORTED for class
-                    this.dataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1",concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5) , XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1",concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5) , XSDDatatype.XSDstring);
                     
                     
                     //INPUTS-- EXPORTED
@@ -1868,7 +1862,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(AbstractSuperClass.getLocalName().toUpperCase().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1", AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1");
-                    
+                    classNames.put(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase(),AbstractSuperClass.getLocalName().toUpperCase().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1");
                     
                   //DOCUMENTATION EXPORTED
                   if (!docAbs.equals("")){
@@ -1884,7 +1878,7 @@ public void loadDataCatalog(String template, String modeFile){
 
                     
                   //RDFS LABEL EXPORTED for class
-                    this.dataProps(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASSV1", AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASSV1", AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);
 
                     
                     
@@ -1900,30 +1894,30 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                   System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step1(hsi, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step1(hsi, componentCatalog, taxonomyExport);
                   
                   
                  //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step2(hsi, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step2(hsi, componentCatalog, taxonomyExport);
                   
                   
                 //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step3(hso, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step3(hso, componentCatalog, taxonomyExport);
                     
 
                 //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                   System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                  ComponentVersion.Step4(inputsComp, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step4(inputsComp, componentCatalog, taxonomyExport);
 
               //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                   System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                  ComponentVersion.Step5(inputsComp, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step5(inputsComp, componentCatalog, taxonomyExport);
 
               //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                   System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                  ComponentVersion.Step6(outputsComp, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step6(outputsComp, componentCatalog, taxonomyExport);
                     
                     
                 }
@@ -1980,7 +1974,7 @@ public void loadDataCatalog(String template, String modeFile){
                 
                 
                 
-                //NOW WE HAVE TO FIND OUT THE NUMBER OF INPUTS AND OUTPUTS IN EACH OF THE SIMILAR NAMED ABSTRACT COMPONENTS
+                //NOW WE HAVE TO FIND OUT THE NUMBER OF INPUTS AND OUTPUTS IN EACH OF THE SIMILAR NAMED CONCRETE COMPONENTS
                 int clarifyToExportConcrComp=0,codeisdifferentbutinputsandoutputsaresame=0;
                 for(String whatwehave:namesOfConcreteCompswithSameNames)
                 {
@@ -2002,7 +1996,7 @@ public void loadDataCatalog(String template, String modeFile){
                         Resource output = qsnew.getResource("?o");
                         Literal codeMD5=qsnew.getLiteral("?md5");
                         
-                        if(nodenew.getLocalName().toUpperCase().equals(whatwehave) && !nodenew.getLocalName().toUpperCase().equals(x.getLocalName()) && y.getLocalName().equals("COMPONENT"))
+                        if(nodenew.getLocalName().toUpperCase().equals(whatwehave) && !nodenew.getLocalName().toUpperCase().equals(x.getLocalName()))
                         {
                         	System.out.println("Node inside case2:? "+nodenew.getLocalName());
                             System.out.println("x inside case2: ? "+x.getLocalName());
@@ -2181,6 +2175,7 @@ public void loadDataCatalog(String template, String modeFile){
 
                 //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                   this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
+                  classNames.put(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase(),concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()));
 
                 //DOCUMENTATION EXPORTED
                 if (!doc11.equals("")){
@@ -2196,7 +2191,7 @@ public void loadDataCatalog(String template, String modeFile){
                  
                   
                 //RDFS LABEL EXPORTED for class
-                  this.dataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                  this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
                   
                   
                   //INPUTS-- EXPORTED
@@ -2213,16 +2208,16 @@ public void loadDataCatalog(String template, String modeFile){
                 	
                //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                 System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                ComponentVersion.Step1(hsi, ComponentCatalog, taxonomyExport); 
+                ComponentVersion.Step1(hsi, componentCatalog, taxonomyExport); 
                 
                 //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                 System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                ComponentVersion.Step2(hsi, ComponentCatalog, taxonomyExport);
+                ComponentVersion.Step2(hsi, componentCatalog, taxonomyExport);
                 
                 
                 //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                 System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                ComponentVersion.Step3(hso, ComponentCatalog, taxonomyExport);
+                ComponentVersion.Step3(hso, componentCatalog, taxonomyExport);
                 
                 }
                 else if(clarifyToExportConcrComp==0 && codeisdifferentbutinputsandoutputsaresame==0)
@@ -2398,7 +2393,8 @@ public void loadDataCatalog(String template, String modeFile){
 
                   //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     this.classIsaClass(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
-
+                    classNames.put(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase(),concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
+                    
                   //DOCUMENTATION EXPORTED
                   if (!doc11.equals("")){
                     this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent, doc11, XSDDatatype.XSDstring);
@@ -2413,7 +2409,7 @@ public void loadDataCatalog(String template, String modeFile){
 
                     
                   //RDFS LABEL EXPORTED for class
-                    this.dataProps(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
                     
                     
                     //INPUTS-- EXPORTED
@@ -2480,7 +2476,7 @@ public void loadDataCatalog(String template, String modeFile){
                     System.out.println("classisaclass "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
                     System.out.println("secondpara "+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
                     this.classIsaClass(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
-
+                    classNames.put(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase(),AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()));
                     
                   //DOCUMENTATION EXPORTED
                   if (!docAbs.equals("")){
@@ -2496,7 +2492,7 @@ public void loadDataCatalog(String template, String modeFile){
 
                     
                   //RDFS LABEL EXPORTED for class
-                    this.dataProps(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);                 
+                    this.dataProps2(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);                 
                     
                     
                     //INPUTS-- EXPORTED
@@ -2511,31 +2507,31 @@ public void loadDataCatalog(String template, String modeFile){
                   //STEP1: EXTRACT ONLY THE (INPUTS) PARAMETERS IF THEY EXIST FOR COMPONENTS
                     
                   System.out.println("INPUT PARAMETERS EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step1(hsi, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step1(hsi, componentCatalog, taxonomyExport);
                   
                   
                   
                  //STEP2: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("INPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step2(hsi, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step2(hsi, componentCatalog, taxonomyExport);
                   
                 //STEP3: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR COMPONENTS
                   System.out.println("OUTPUT DATA EXTRACTION PRINTING COMPONENTS");
-                  ComponentVersion.Step3(hso, ComponentCatalog, taxonomyExport);
+                  ComponentVersion.Step3(hso, componentCatalog, taxonomyExport);
 
                   
                     //STEP4: EXTRACT ONLY THE PARAMETERS IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT PARAMETERS EXTRACTION PRINTING FOR ABSTARCT COMPONENTS");
-                    ComponentVersion.Step4(inputsComp, ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step4(inputsComp, componentCatalog, taxonomyExport);
                     
                     
                   //STEP5: EXTRACT ONLY THE (INPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("INPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS ONLY");
-                    ComponentVersion.Step5(inputsComp, ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step5(inputsComp, componentCatalog, taxonomyExport);
                     
                   //STEP6: EXTRACT ONLY THE (OUTPUTS) DATA VARIABLES IF THEY EXIST FOR ABSTRACT COMPONENTS
                     System.out.println("OUTPUT DATA EXTRACTION PRINTING FOR ABSTRACT COMPONENTS");
-                    ComponentVersion.Step6(outputsComp, ComponentCatalog, taxonomyExport);
+                    ComponentVersion.Step6(outputsComp, componentCatalog, taxonomyExport);
 
                 	System.out.println("THIS ENDS THE FIRST CASE PART-2");  
                 	  
@@ -2561,6 +2557,10 @@ public void loadDataCatalog(String template, String modeFile){
             String newchangeforthetype=typeComp.getURI().substring(typeComp.getURI().lastIndexOf("/"),typeComp.getURI().length());
             String newchangeforthetype2=newchangeforthetype.substring(newchangeforthetype.lastIndexOf("#"),newchangeforthetype.length());
             String tempURI = EncodingUtils.encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName());
+            String key = newchangeforthetype2.toUpperCase().replace("#","");
+            if(classNames.containsKey(key)){
+                newchangeforthetype2 = "#"+ classNames.get(key);
+            }
             OntClass cAux = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype2);//repeated tuples will not be duplicated
             cAux.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);     	
         }
@@ -2587,8 +2587,6 @@ public void loadDataCatalog(String template, String modeFile){
         ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName(),
                 Constants.CONCEPT_WORKFLOW_TEMPLATE+"/"+newTemplateName,                    
                     Constants.P_PLAN_PROP_IS_STEP_OF_PLAN);
-            
-            
         }
         System.out.println("PRINTING ALL THE COMPONENTS THAT EXIST IN THE INCOMING WORKFLOW TEMPLATE");
         System.out.println();
@@ -2833,13 +2831,13 @@ public void loadDataCatalog(String template, String modeFile){
         /******************
          * FILE EXPORT. 
          ******************/        
-        exportRDFFile(rdfOutputFile, OPMWModel, exportMode);
+        ModelUtils.exportRDFFile(rdfOutputFile, OPMWModel, exportMode);
         
         
         //exporting the taxonomy 
         String filetoexport=domainName+"_TaxonomyHierarchyModel.owl";
         System.out.println("exporting new THM to:"+componentCatalogPath+filetoexport );
-        exportRDFFile(componentCatalogPath, taxonomyExport, exportMode);
+        ModelUtils.exportRDFFile(componentCatalogPath, taxonomyExport, exportMode);
 //    }
         
         
@@ -2865,7 +2863,7 @@ public void loadDataCatalog(String template, String modeFile){
     //public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, String outFilenameOPMW, String outFilenamePROV){
     public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, 
         String outFilenameOPMW, String outFilenamePROV, String suffix,String data_catalog,String exportMode, String dataCatalogDirectory, String domainName){
-    	expandedTemplateModel = initializeModel(expandedTemplateModel);
+//    	expandedTemplateModel = initializeModel(expandedTemplateModel);
         templateModel = initializeModel(templateModel);
         WINGSExecutionResults = initializeModel(WINGSExecutionResults);
         OPMWModel = initializeModel(OPMWModel);
@@ -2940,7 +2938,7 @@ public void loadDataCatalog(String template, String modeFile){
         //assessing whether to generate an expanded template (needs the template model to be loaded)
         generateExpandedTemplate = isExportExpandedTemplate();
         System.out.println("Should Expanded template be generated? "+generateExpandedTemplate);
-        this.loadExpandedTemplateFileToLocalRepository(expandedTemplateURI, modeFile);
+//        this.loadExpandedTemplateFileToLocalRepository(expandedTemplateURI, modeFile);
         hashedTemplateName = HashCreator.getAbstractTemplateHash(templateName, this.templateModel);
         if(generateExpandedTemplate){
             hashedExpandedTemplateName = createExpandedTemplate(accname,expandedTemplateName,expandedTemplateURI,hashedTemplateName,domainName);
@@ -3125,6 +3123,7 @@ public void loadDataCatalog(String template, String modeFile){
                 //the node name on the template is the same as in the exp template
                 derivedFrom = stepName;
             }
+            derivedFrom = derivedFrom.replace("_", "");
             System.out.println("Derived from = "+derivedFrom);
             System.out.println("after derived from "+stepName +"\n\t "+ sStartT+"\n\t "+sEndT+"\n\t "+sStatus+"\n\t "+sCode);
             //add each step with its metadata to the model Start and end time are reused from prov.
@@ -3192,12 +3191,12 @@ public void loadDataCatalog(String template, String modeFile){
           
             //link node  to the process templates
             ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+expanded+templateToLink+"_"+derivedFrom,
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+expanded+templateToLink+"_"+stepName,
                         Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_PROCESS);
            
             //p-plan interop
             ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+stepName+date,
-                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+expanded+templateToLink+"_"+derivedFrom,
+                    Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+expanded+templateToLink+"_"+stepName,
                         Constants.P_PLAN_PROP_CORRESPONDS_TO_STEP);
         }
         
@@ -3861,10 +3860,10 @@ public void loadDataCatalog(String template, String modeFile){
         /***********************************************************************************
          * FILE EXPORT 
          ***********************************************************************************/        
-        exportRDFFile(outFilenameOPMW, OPMWModel, exportMode);
-        exportRDFFile(outFilenamePROV, PROVModel, exportMode);
+        ModelUtils.exportRDFFile(outFilenameOPMW, OPMWModel, exportMode);
+        ModelUtils.exportRDFFile(outFilenamePROV, PROVModel, exportMode);
         //exporting the new DATA CATALOG ALSO NOW
-        exportRDFFile(data_catalog, dataCatalog, exportMode);
+        ModelUtils.exportRDFFile(data_catalog, dataCatalog, exportMode);
         return (Constants.PREFIX_EXPORT_RESOURCE+accname);
     }
     
@@ -3882,30 +3881,21 @@ public void loadDataCatalog(String template, String modeFile){
       Constants.PREFIX_EXPORT_RESOURCE = prefix;
     }
 
-    /**
-     * Function to export the stored model as an RDF file, using ttl syntax
-     * @param outFile name and path of the outFile must be created.
-     */
-    private void exportRDFFile(String outFile, OntModel model, String mode){
-        OutputStream out;
-        try {
-            out = new FileOutputStream(outFile);
-            model.write(out,mode);
-            //model.write(out,"RDF/XML");
-            out.close();
-        } catch (Exception ex) {
-            System.out.println("Error while writing the model to file "+ex.getMessage() + " oufile "+outFile);
-        }
-    }
     
     
-        
-        
         private void dataProps(String dataprop,String resourcepart,String propextracted,XSDDatatype x)
         {
         	OntProperty propSelec22;
             propSelec22 = taxonomyExport.createDatatypeProperty(dataprop);
             Resource orig22 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(resourcepart));
+            taxonomyExport.add(orig22, propSelec22,propextracted,x);
+        }
+        
+        private void dataProps2(String dataprop,String resourcepart,String propextracted,XSDDatatype x)
+        {
+        	OntProperty propSelec22;
+            propSelec22 = taxonomyExport.createDatatypeProperty(dataprop);
+            Resource orig22 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+EncodingUtils.encode(resourcepart));
             taxonomyExport.add(orig22, propSelec22,propextracted,x);
         }
         
@@ -3994,7 +3984,6 @@ public void loadDataCatalog(String template, String modeFile){
     public String createExpandedTemplate(String accname,String expandedTemplateName,String expandedTemplateURI,String templateName, String domainName){
         //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
         NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
-//        NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
  	   System.out.println("expanded template name: "+expandedTemplateName);
  	   //UTILIZING THE FUNCTION FOR OBTAINING THE EXPANDED TEMPLATE NAME
  	   String newExpandedTemplateName=HashCreator.getExpandedTemplateHash(expandedTemplateName, this.WINGSExecutionResults);

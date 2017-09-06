@@ -20,8 +20,10 @@ import utils.EncodingUtils;
 import utils.ModelUtils;
 
 /**
- *
- * @author dgarijo
+ * Note: this class should join all "step" into one function, or avoid duplicated code.
+ * 
+ * Class for doing component versioning.
+ * @author Tirth Meta and Daniel Garijo
  */
 public class ComponentVersion {
     
@@ -307,7 +309,7 @@ public class ComponentVersion {
                 }
                 if(exists==true)
                 {
-                	System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR ABSTRACT COMPONENTS ONLY");
+                    System.out.println("NOW EXPORT THE PARAMETER INTERIORS FOR ABSTRACT COMPONENTS ONLY");
                 	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
                     OntClass c31 = taxonomyExport.createClass(NEW_TAXONOMY_CLASS+"ParameterArgument");
                     c31.createIndividual(NEW_TAXONOMY_CLASS+inx.toUpperCase());
@@ -460,7 +462,7 @@ public class ComponentVersion {
                 {
                 	System.out.println("NOW EXPORT THE INPUT DATA INTERIORS FOR ABSTRACT COMPONENTS ONLY");
                 	//EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
-                	String datatype=NEW_TAXONOMY_CLASS.substring(0, NEW_TAXONOMY_CLASS.length()-1)+"/Data/";
+                	String datatype=NEW_TAXONOMY_CLASS.substring(0, NEW_TAXONOMY_CLASS.length()-1)+"/Data#";
                     OntClass c31 = taxonomyExport.createClass(datatype+"DataArgument");
                     c31.createIndividual(NEW_TAXONOMY_CLASS+outx.toUpperCase());
                     

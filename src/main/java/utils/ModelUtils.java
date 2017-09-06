@@ -8,6 +8,8 @@ package utils;
 import edu.isi.wings.opmm.Constants;
 import static edu.isi.wings.opmm.Mapper.NEW_TAXONOMY_CLASS;
 import edu.isi.wings.opmm.Queries;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
@@ -53,7 +55,7 @@ public class ModelUtils {
 
     public static void addIndividualAbstractSubclass2(OntModel m, String encodepart){
         OntProperty propSelec2 = m.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
-        Resource source2 = m.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(encodepart) );
+        Resource source2 = m.getResource(NEW_TAXONOMY_CLASS.replace("#","/")+"Component#"+ EncodingUtils.encode(encodepart) );
         Individual instance2 = (Individual) source2.as( Individual.class );
         if(("Component").contains("http://")){//it is a URI
             instance2.addProperty(propSelec2,NEW_TAXONOMY_CLASS+"Component");            
@@ -64,7 +66,7 @@ public class ModelUtils {
 
     public static void addIndividualConcreteSubclass2(OntModel m, String encodepart,String containspart){
         OntProperty propSelec1 = m.createOntProperty(Constants.PREFIX_RDFS+"subClassOf");
-        Resource source1 = m.getResource(NEW_TAXONOMY_CLASS+ encodepart);
+        Resource source1 = m.getResource(NEW_TAXONOMY_CLASS.replace("#","/")+"Component#"+ encodepart);
         Individual instance1 = (Individual) source1.as( Individual.class );
         if((containspart).contains("http://")){//it is a URI
             instance1.addProperty(propSelec1,NEW_TAXONOMY_CLASS+containspart);            
@@ -179,6 +181,22 @@ public class ModelUtils {
         ResultSet rs =  qe.execSelect();
         //qe.close();
         return rs;
+    }
+    
+    /**
+     * Function to export the stored model as an RDF file, using ttl syntax
+     * @param outFile name and path of the outFile must be created.
+     */
+    public static void exportRDFFile(String outFile, OntModel model, String mode){
+        OutputStream out;
+        try {
+            out = new FileOutputStream(outFile);
+            model.write(out,mode);
+            //model.write(out,"RDF/XML");
+            out.close();
+        } catch (Exception ex) {
+            System.out.println("Error while writing the model to file "+ex.getMessage() + " oufile "+outFile);
+        }
     }
 
 }
