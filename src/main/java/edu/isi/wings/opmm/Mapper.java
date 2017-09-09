@@ -331,9 +331,6 @@ public void loadDataCatalog(String template, String modeFile){
             
            
         } 
-        
-       
-        
         System.out.println("main template part done"); 
         //additional metadata from the template.
         String queryMetadata = Queries.queryMetadata();
@@ -707,7 +704,7 @@ public void loadDataCatalog(String template, String modeFile){
             	System.out.println("ABSTRACT PART HEREEE: "+nodenew11.getLocalName());
 
             	System.out.println("NOW UR INSIDE ABSTRACT COMPONENT CASE");
-            	String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+            	String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQueryforSubclassCheckfinal();
                 ResultSet r2new = null;
                 r2new = queryLocalTaxonomyModelRepository(taxonomyModelforAbstractComponent);
                
@@ -715,15 +712,14 @@ public void loadDataCatalog(String template, String modeFile){
               
                 while(r2new.hasNext())
                 {
-                	System.out.println("Are you even inside this?");
                 	QuerySolution qsnew = r2new.next();
                     Resource nodenew = qsnew.getResource("?n");
                     Resource x = qsnew.getResource("?x");
-                    Resource y = qsnew.getResource("?y");
+                    boolean isComponentConcrete = qsnew.getLiteral("?isConcrete").getBoolean();
                     System.out.println("What is nodenew? "+nodenew.getLocalName());
                     System.out.println("What is x? "+x.getLocalName());
                     
-                    if(y.getLocalName().equals("COMPONENT"))
+                    if(!isComponentConcrete)
                     {
                     	System.out.println("UR CHECKING FOR NAMES HERE");
                     	System.out.println(nodenew.getLocalName());
@@ -744,8 +740,7 @@ public void loadDataCatalog(String template, String modeFile){
                 
                 
                 //Case1: Direct Export
-                if( namesOfAbstractCompswithSameNames.isEmpty())
-                {
+                if( namesOfAbstractCompswithSameNames.isEmpty()){
                 	//this means that there are no similarities anywhere and we need to export it
                 	System.out.println("NOW UR INSIDE EXPORTING A FRESH ONE");
                 	//EXPORTING IT NOW:
@@ -849,8 +844,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                 }
               //Case2: Checking the components once for same Inputs and Outputs
-                else if(!namesOfAbstractCompswithSameNames.isEmpty())
-                {
+                else if(!namesOfAbstractCompswithSameNames.isEmpty()){
                 //this means we have found a list of similar abstract components in the Taxonomy Model
                 //now there are 2 points we have to consider here
                //first we have to check the inputs and outputs of all the similar named abstract components in the Taxonomy Model
@@ -899,34 +893,41 @@ public void loadDataCatalog(String template, String modeFile){
                 boolean clarifyToExportAbstractComp=true;
                 for(String whatwehave:namesOfAbstractCompswithSameNames)
                 {
-                	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+                	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal();
                     rnew2 = null;
                     rnew2 = queryLocalTaxonomyModelRepository(inputsandoutputsforsimilarnamedComps);
                    
                     HashSet<String> similarAbsInps=new HashSet<>();
                     HashSet<String> similarAbsOuts=new HashSet<>();
                     System.out.println("what we have "+nodenew11.getLocalName());
+                    String nodeInstance="", nodeClass ="";
                     while(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
                     	Resource nodenew = qsnew.getResource("?n");
-                    	Resource x = qsnew.getResource("?x");
-                    	Resource y = qsnew.getResource("?y");
                         Resource input = qsnew.getResource("?i");
                         Resource output = qsnew.getResource("?o");
-                        
+                        nodeInstance = qsnew.getResource("?n").getLocalName();
+                        nodeClass = qsnew.getResource("?x").getLocalName();
                         
                         System.out.println("Node inside case2: ?"+nodenew.getLocalName());
-                        System.out.println("x inside case2: ?"+x.getLocalName());
+                        //System.out.println("x inside case2: ?"+x.getLocalName());
                         
-                        if(nodenew.getLocalName().equals(whatwehave) && y.getLocalName().equals("COMPONENT"))
+                        if(nodenew.getLocalName().equals(whatwehave))
                         {
-                        	similarAbsInps.add(input.getLocalName());
-                        	similarAbsOuts.add(output.getLocalName());
+                            
+                            similarAbsInps.add(input.getLocalName());
+                            similarAbsOuts.add(output.getLocalName());
+                            taxonomyExport.write(System.out,"TURTLE");
                         }
                     }
                     if(similarAbsInps.size()==inputsAbsComp.size() && similarAbsOuts.size()==outputsAbsComp.size())
                     {
+                        
+                        //add to classNames the appropriate version of the class that we have to point to.
+                        classNames.put(nodeInstance, nodeClass);
+                        
+                        
                     	System.out.println("There is a match and hence we don't have to export anything and BREAK NOW");
                     	clarifyToExportAbstractComp=false;
                     	break;
@@ -1184,7 +1185,7 @@ public void loadDataCatalog(String template, String modeFile){
                 	Resource Abs=null;
                     for(String whatwehave:namesOfAbsCompswithSameNames)
                     {
-                    	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+                    	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal();
                         rnew2 = null;
                         rnew2 = queryLocalTaxonomyModelRepository(inputsandoutputsforsimilarnamedComps);
                        
@@ -1197,12 +1198,12 @@ public void loadDataCatalog(String template, String modeFile){
                         	QuerySolution qsnew = rnew2.next();
                         	Resource nodenew = qsnew.getResource("?n");
                         	Resource x = qsnew.getResource("?x");
-                        	Resource y = qsnew.getResource("?y");
+//                        	Resource y = qsnew.getResource("?y");
                             Resource input = qsnew.getResource("?i");
                             Resource output = qsnew.getResource("?o");
 
                             
-                            if(nodenew.getLocalName().toUpperCase().equals(whatwehave)  && y.getLocalName().equals("COMPONENT"))
+                            if(nodenew.getLocalName().toUpperCase().equals(whatwehave))
                             {
                             	System.out.println("Node inside case2:? "+nodenew.getLocalName());
                                 System.out.println("x inside case2: ? "+x.getLocalName());
@@ -1978,7 +1979,7 @@ public void loadDataCatalog(String template, String modeFile){
                 int clarifyToExportConcrComp=0,codeisdifferentbutinputsandoutputsaresame=0;
                 for(String whatwehave:namesOfConcreteCompswithSameNames)
                 {
-                	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal(NEW_TAXONOMY_CLASS);
+                	String inputsandoutputsforsimilarnamedComps = Queries.TaxonomyExportQueryforSubclassCheckfinal();
                     rnew2 = null;
                     rnew2 = queryLocalTaxonomyModelRepository(inputsandoutputsforsimilarnamedComps);
                    
@@ -1991,7 +1992,7 @@ public void loadDataCatalog(String template, String modeFile){
                     	QuerySolution qsnew = rnew2.next();
                     	Resource nodenew = qsnew.getResource("?n");
                     	Resource x = qsnew.getResource("?x");
-                    	Resource y = qsnew.getResource("?y");
+//                    	Resource y = qsnew.getResource("?y");
                         Resource input = qsnew.getResource("?i");
                         Resource output = qsnew.getResource("?o");
                         Literal codeMD5=qsnew.getLiteral("?md5");
@@ -2000,7 +2001,7 @@ public void loadDataCatalog(String template, String modeFile){
                         {
                         	System.out.println("Node inside case2:? "+nodenew.getLocalName());
                             System.out.println("x inside case2: ? "+x.getLocalName());
-                            System.out.println("y inside case2: ? "+y.getLocalName());
+//                            System.out.println("y inside case2: ? "+y.getLocalName());
                             System.out.println("input is :"+input.getLocalName());
                             System.out.println("output is :"+output.getLocalName());
                         	similarAbsInps.add(input.getLocalName());
@@ -2545,8 +2546,6 @@ public void loadDataCatalog(String template, String modeFile){
 
           }//decider point==1
             
-            
-            
             hsforComps.add(className);
        }//if part for the hash-set not repeating the same names
         if(typeComp.isURIResource()){ //only adds the type if the type is a uRI (not a blank node)
@@ -2558,6 +2557,7 @@ public void loadDataCatalog(String template, String modeFile){
             String newchangeforthetype2=newchangeforthetype.substring(newchangeforthetype.lastIndexOf("#"),newchangeforthetype.length());
             String tempURI = EncodingUtils.encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName());
             String key = newchangeforthetype2.toUpperCase().replace("#","");
+            key = key.substring(0, key.length()-5);
             if(classNames.containsKey(key)){
                 newchangeforthetype2 = "#"+ classNames.get(key);
             }

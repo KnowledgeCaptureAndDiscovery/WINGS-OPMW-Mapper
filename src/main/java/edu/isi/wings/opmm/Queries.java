@@ -141,11 +141,13 @@ public class Queries {
     
     //query for determining if the class is a subclass of a superclass in the component catalog    
     
-    public static String TaxonomyExportQueryforSubclassCheckfinal(String tax)
+    public static String TaxonomyExportQueryforSubclassCheckfinal()
     {
-    	String query="SELECT ?n ?x ?i ?o ?y ?md5 WHERE{"
+    	String query="SELECT ?n ?x ?i ?o ?md5 ?isConcrete WHERE{"
     			+"?n a ?x."
-    			+"?x <"+Constants.PREFIX_RDFS+"subClassOf> ?y."
+                        +"?n <"+Constants.PREFIX_COMPONENT+"isConcrete> ?isConcrete."
+                        +"?x <"+Constants.PREFIX_RDFS+"label> ?l."
+//    			+"?x <"+Constants.PREFIX_RDFS+"subClassOf> ?y."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
     			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i."
     			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasMD5Code> ?md5.}"
