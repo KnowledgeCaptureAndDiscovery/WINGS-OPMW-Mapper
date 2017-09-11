@@ -17,15 +17,15 @@ public static void main(String[] args) {
    //String template="/Users/Tirthmehta/Desktop/WINGS_PROVENANCE_EXPORT_ISI/executions/abstractTest1/abstractTest1.owl";
    //String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/mapreduce.owl";
    //String template="/Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/EXAMPLE-2_INPUT_FOR_MAPPER_SCENARIO-1/HashingConceptScenario1.owl";
-   String template="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"spacer"+File.separator+"template.owl";
+   String template="src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"simple_abstract"+File.separator+"template.owl";
     String mode = "RDF/XML";
     String mode2="Turtle";
 //  String outFileOPMW = "testResultOPMW";
 //  String outFilePROV = "testResultPROV";
-  String outFile = "testTemplateabstractTest1";
+  String outFile = "newtestTemplateabstractTest1";
   //String data_catalog="TestingDomain1"+File.separator+"Data"+File.separator+"TestingDomain_DataCatalog.owl";
   String taxonomy_export="TestingDomain1"+File.separator+"Component"+File.separator+"TestingDomain_TaxonomyHierarchyModel.owl";
-  String componentDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"spacer"+File.separator+"components"+File.separator+"";
+  String componentDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"simple_abstract"+File.separator+"components"+File.separator+"";
   //String dataDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"variantCalling"+File.separator+"data"+File.separator+"";
  // /Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl
     

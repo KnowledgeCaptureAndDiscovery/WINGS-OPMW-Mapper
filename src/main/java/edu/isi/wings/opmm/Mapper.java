@@ -901,6 +901,7 @@ public void loadDataCatalog(String template, String modeFile){
                     HashSet<String> similarAbsOuts=new HashSet<>();
                     System.out.println("what we have "+nodenew11.getLocalName());
                     String nodeInstance="", nodeClass ="";
+                    String nodeinstanceans="",nodeclassans="";
                     while(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
@@ -914,18 +915,21 @@ public void loadDataCatalog(String template, String modeFile){
                         //System.out.println("x inside case2: ?"+x.getLocalName());
                         
                         if(nodenew.getLocalName().equals(whatwehave))
-                        {
-                            
+                        { 
+                        	nodeinstanceans=nodeInstance;
+                        	nodeclassans=nodeClass;
                             similarAbsInps.add(input.getLocalName());
                             similarAbsOuts.add(output.getLocalName());
-                            taxonomyExport.write(System.out,"TURTLE");
                         }
                     }
                     if(similarAbsInps.size()==inputsAbsComp.size() && similarAbsOuts.size()==outputsAbsComp.size())
                     {
                         
                         //add to classNames the appropriate version of the class that we have to point to.
-                        classNames.put(nodeInstance, nodeClass);
+                        classNames.put(nodeinstanceans.substring(0,nodeinstanceans.lastIndexOf("_")), nodeclassans);
+                        for(String x:classNames.keySet())
+                        	System.out.println(x+" "+classNames.get(x));
+                        System.out.println();
                         
                         
                     	System.out.println("There is a match and hence we don't have to export anything and BREAK NOW");
@@ -1769,6 +1773,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                     //EXPORTING THE MD5 FOR THE COMPONENT CODE
                     try{
+                    	System.out.println(componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip");
                     this.dataProps(Constants.COMPONENT_HAS_MD5_CODE,concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1",EncodingUtils.MD5ComponentCode(componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
                     }catch(Exception e){System.out.println("ERROR");}
                     
@@ -1987,18 +1992,23 @@ public void loadDataCatalog(String template, String modeFile){
                     HashSet<String> similarAbsOuts=new HashSet<>();
                     System.out.println("what we have "+concrComponent.getLocalName());
                     String one=null,two=null;
+                    String nodeInstance="",nodeClass="";
+                    String nodeInstanceans="",nodeClassans="";
                     while(rnew2.hasNext())
                     {
                     	QuerySolution qsnew = rnew2.next();
                     	Resource nodenew = qsnew.getResource("?n");
                     	Resource x = qsnew.getResource("?x");
-//                    	Resource y = qsnew.getResource("?y");
                         Resource input = qsnew.getResource("?i");
                         Resource output = qsnew.getResource("?o");
                         Literal codeMD5=qsnew.getLiteral("?md5");
+                        nodeInstance = qsnew.getResource("?n").getLocalName();
+                        nodeClass = qsnew.getResource("?x").getLocalName();
                         
                         if(nodenew.getLocalName().toUpperCase().equals(whatwehave) && !nodenew.getLocalName().toUpperCase().equals(x.getLocalName()))
                         {
+                        	nodeInstanceans=nodeInstance;
+                        	nodeClassans=nodeClass;
                         	System.out.println("Node inside case2:? "+nodenew.getLocalName());
                             System.out.println("x inside case2: ? "+x.getLocalName());
 //                            System.out.println("y inside case2: ? "+y.getLocalName());
@@ -2016,6 +2026,7 @@ public void loadDataCatalog(String template, String modeFile){
                     //added factor: check the code too
                     
                     try{
+                    	System.out.println(componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip");
                         one=EncodingUtils.MD5ComponentCode(componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip");
                         }catch(Exception e){System.out.println("ERROR first");}
                       
@@ -2024,6 +2035,9 @@ public void loadDataCatalog(String template, String modeFile){
                     {
                     	if(one!=null && two!=null && one.equals(two))
                     	{
+                    		classNames.put(nodeInstanceans.substring(0, nodeInstanceans.lastIndexOf("_")), nodeClassans);
+                    		for(String x:classNames.keySet())
+                    			System.out.println(x+" "+classNames.get(x));
                     	clarifyToExportConcrComp=1;
                     	break;
                     	}
@@ -2558,6 +2572,7 @@ public void loadDataCatalog(String template, String modeFile){
             String tempURI = EncodingUtils.encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+newTemplateName_+res.getLocalName());
             String key = newchangeforthetype2.toUpperCase().replace("#","");
             key = key.substring(0, key.length()-5);
+            System.out.println("KEY INCOMING "+key +" "+classNames.get(key));
             if(classNames.containsKey(key)){
                 newchangeforthetype2 = "#"+ classNames.get(key);
             }
@@ -2592,6 +2607,13 @@ public void loadDataCatalog(String template, String modeFile){
         System.out.println();
         for(String x:hsforComps)
         	System.out.println(x);
+        System.out.println();
+        
+        
+        System.out.println("PRINTING ALL THE CONTENTS OF CLASS NAMES");
+        System.out.println();
+        for(String x:classNames.keySet())
+        	System.out.println(x+" "+classNames.get(x));
         System.out.println();
         
         
