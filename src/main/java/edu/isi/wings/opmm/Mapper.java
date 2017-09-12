@@ -750,7 +750,7 @@ public void loadDataCatalog(String template, String modeFile){
 //                	this.addIndividualAbstract2(nodenew11.getLocalName()+"_V1");
                     
                     //subclass relation
-                	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,nodenew11.getLocalName().toUpperCase()+"_CLASSV1","COMPONENT");
+                	//ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,nodenew11.getLocalName().toUpperCase()+"_CLASSV1","COMPONENT");
 
                     
                     System.out.println("EXPORTED THE BASIC ABSTRACT COMPONENT BY HERE");
@@ -808,11 +808,13 @@ public void loadDataCatalog(String template, String modeFile){
                     //IS CONCRETE EXPORTED
                     this.dataProps(Constants.COMPONENT_IS_CONCRETE,nodenew11.getLocalName().toUpperCase()+"_V1",compConcreteAbs+"",XSDDatatype.XSDboolean);
                     
+                    
                     //RDFS LABEL EXPORTED for canonical instance
                     this.dataProps(Constants.RDFS_LABEL,nodenew11.getLocalName().toUpperCase()+"_V1",nodenew11.getLocalName(),XSDDatatype.XSDstring);
                     
                   //RDFS LABEL EXPORTED for class
                     this.dataProps2(Constants.RDFS_LABEL,nodenew11.getLocalName().toUpperCase()+"_CLASSV1",nodenew11.getLocalName(),XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.OWL_VERSION_INFO,nodenew11.getLocalName().toUpperCase()+"_CLASSV1","1",XSDDatatype.XSDstring);
 
          
                     //INPUTS-- EXPORTED
@@ -975,7 +977,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
 
                     //subclass relation
-                	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
+                	//ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
 
                     
                     //EXPORTING THE PROV_WAS_REVISION_OF
@@ -1048,7 +1050,8 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //RDFS LABEL EXPORTED for class
                     this.dataProps2(Constants.RDFS_LABEL, nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), nodenew11.getLocalName(), XSDDatatype.XSDstring);
-                    
+                    this.dataProps2(Constants.RDFS_LABEL, nodenew11.getLocalName().toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()),finalversionforNewAbstractComponent, XSDDatatype.XSDstring);
+
                     //INPUTS-- EXPORTED
                     this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsAbsComp, nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent);
 
@@ -1095,7 +1098,7 @@ public void loadDataCatalog(String template, String modeFile){
             	
             	
             	System.out.println("NOW UR INSIDE CONCRETE COMPONENT CASE");
-            	String taxonomyModelforConcreteComponent = Queries.TaxonomyExportQueryforSubclassCheckfinalAgain(NEW_TAXONOMY_CLASS);
+            	String taxonomyModelforConcreteComponent = Queries.TaxonomyExportQueryforSubclassCheckfinalAgain();
                 ResultSet r2new = null;
                 r2new = queryLocalTaxonomyModelRepository(taxonomyModelforConcreteComponent);
                
@@ -1106,9 +1109,9 @@ public void loadDataCatalog(String template, String modeFile){
                 	QuerySolution qsnew = r2new.next();
                     Resource nodenew = qsnew.getResource("?n");
                     Resource x = qsnew.getResource("?x");
-                    Resource y = qsnew.getResource("?y");
+                    Literal c = qsnew.getLiteral("?c");
                     
-                    if(!y.getLocalName().equals("COMPONENT"))
+                    if(c.getBoolean())
                     {
                     	if(nodenew.getLocalName().toLowerCase().contains(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toLowerCase()))
                     	{
@@ -1117,7 +1120,7 @@ public void loadDataCatalog(String template, String modeFile){
                     		//saving all such cases in a HashSet
                     		if(!namesOfConcreteCompswithSameNames.contains(nodenew.getLocalName()) && !nodenew.getLocalName().contains("CLASS"))
                     		{
-                    			System.out.println("nodenew "+nodenew.getLocalName()+" x "+x.getLocalName()+" y "+y.getLocalName());
+                    			System.out.println("nodenew "+nodenew.getLocalName()+" x "+x.getLocalName()+" c "+c.getBoolean());
                     			namesOfConcreteCompswithSameNames.add(nodenew.getLocalName());
                     		}
                     		
@@ -1140,7 +1143,7 @@ public void loadDataCatalog(String template, String modeFile){
                 System.out.println("FIND THE NAMES OF SIMILAR ABSTRACT COMPONENTS IN THE TAXONOMY HIERARCHY MODEL");
                 
                 System.out.println("NOW UR INSIDE CONCRETE COMPONENT CASE");
-            	String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQueryforSubclassCheckfinalAgain(NEW_TAXONOMY_CLASS);
+            	String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQueryforSubclassCheckfinalAgain();
                 r2new = null;
                 r2new = queryLocalTaxonomyModelRepository(taxonomyModelforAbstractComponent);
                
@@ -1148,22 +1151,22 @@ public void loadDataCatalog(String template, String modeFile){
               
                 while(r2new.hasNext())
                 {
-                	QuerySolution qsnew = r2new.next();
-                	Resource nodenew = qsnew.getResource("?n");
+                    QuerySolution qsnew = r2new.next();
+                    Resource nodenew = qsnew.getResource("?n");
                     Resource x = qsnew.getResource("?x");
-                    Resource y = qsnew.getResource("?y");
+                    Literal concrete = qsnew.getLiteral("?c");
                     
-                    if(y.getLocalName().equals("COMPONENT"))
+                    if(!concrete.getBoolean())
                     {
                     	if(nodenew.getLocalName().toLowerCase().contains(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toLowerCase()))
                     	{
-                    		//this means the name exists
-                    		//next step is to check the inputs and outputs based on that className
-                    		//saving all such cases in a HashSet
-                    		if(!namesOfAbsCompswithSameNames.contains(nodenew.getLocalName()))
-                    		{
-                    			namesOfAbsCompswithSameNames.add(nodenew.getLocalName());
-                    		}
+                            //this means the name exists
+                            //next step is to check the inputs and outputs based on that className
+                            //saving all such cases in a HashSet
+                            if(!namesOfAbsCompswithSameNames.contains(nodenew.getLocalName()))
+                            {
+                                    namesOfAbsCompswithSameNames.add(nodenew.getLocalName());
+                            }
                     		
                     	}
                     }
@@ -1354,7 +1357,8 @@ public void loadDataCatalog(String template, String modeFile){
                       
                     //RDFS LABEL EXPORTED for class
                       this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
-                      
+                      this.dataProps2(Constants.OWL_VERSION_INFO, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1", "1", XSDDatatype.XSDstring);
+
                       
                       //INPUTS-- EXPORTED
                       this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsComp, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
@@ -1427,7 +1431,7 @@ public void loadDataCatalog(String template, String modeFile){
 //                    //subclass relation for abstract component
 //                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
-                  	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
+                  	//ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
                     
@@ -1550,7 +1554,8 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //RDFS LABEL EXPORTED for class
                     this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
-                    
+                    this.dataProps2(Constants.OWL_VERSION_INFO, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),finalversionforNewAbstractComponent , XSDDatatype.XSDstring);
+
                     
                     //INPUTS-- EXPORTED
                     this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsComp, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
@@ -1618,7 +1623,8 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //RDFS LABEL EXPORTED for class
                     this.dataProps2(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);                 
-                    
+                    this.dataProps2(Constants.OWL_VERSION_INFO, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()),finalversionforNewAbstractComponent, XSDDatatype.XSDstring);                 
+
                     
                     //INPUTS-- EXPORTED
                     this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsComp, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
@@ -1689,7 +1695,7 @@ public void loadDataCatalog(String template, String modeFile){
 //                    //subclass relation for abstract component
 //                    this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_V1");
 
-                    ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1","COMPONENT");
+                    //ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASSV1","COMPONENT");
                 	
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
@@ -1798,7 +1804,8 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //RDFS LABEL EXPORTED for class
                     this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1",concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5) , XSDDatatype.XSDstring);
-                    
+                    this.dataProps2(Constants.OWL_VERSION_INFO, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASSV1","1" , XSDDatatype.XSDstring);
+
                     
                     //INPUTS-- EXPORTED
                     this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsComp, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1");
@@ -1885,6 +1892,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //RDFS LABEL EXPORTED for class
                     this.dataProps2(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASSV1", AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.OWL_VERSION_INFO, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASSV1", "1", XSDDatatype.XSDstring);
 
                     
                     
@@ -2207,6 +2215,7 @@ public void loadDataCatalog(String template, String modeFile){
                   
                 //RDFS LABEL EXPORTED for class
                   this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                  this.dataProps2(Constants.OWL_VERSION_INFO, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), finalversionforNewAbstractComponent, XSDDatatype.XSDstring);
                   
                   
                   //INPUTS-- EXPORTED
@@ -2277,7 +2286,7 @@ public void loadDataCatalog(String template, String modeFile){
 //                    //subclass relation for abstract component
 //                  	this.addIndividualAbstractSubclass2(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent);
 
-                  	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
+                  	//ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5)+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),"COMPONENT");
                     
                     System.out.println("EXPORTED THE BASIC CONCRETE COMPONENT BY HERE");
                     
@@ -2425,6 +2434,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //RDFS LABEL EXPORTED for class
                     this.dataProps2(Constants.RDFS_LABEL, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()), concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5), XSDDatatype.XSDstring);
+                    this.dataProps2(Constants.OWL_VERSION_INFO, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1,finalversionforNewAbstractComponent.length()),finalversionforNewAbstractComponent, XSDDatatype.XSDstring);
                     
                     
                     //INPUTS-- EXPORTED
@@ -2508,6 +2518,7 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //RDFS LABEL EXPORTED for class
                     this.dataProps2(Constants.RDFS_LABEL, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5), XSDDatatype.XSDstring);                 
+                    this.dataProps2(Constants.OWL_VERSION_INFO, AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+"_CLASS"+finalversionforNewAbstractComponent.substring(1, finalversionforNewAbstractComponent.length()), finalversionforNewAbstractComponent, XSDDatatype.XSDstring);                 
                     
                     
                     //INPUTS-- EXPORTED
@@ -2880,17 +2891,19 @@ public void loadDataCatalog(String template, String modeFile){
  * @param exportMode mode in which we want to export the produced files (TURTLE, RDF/XML, etc.)
  * @param dataCatalogDirectory path to the WINGS data directory where all data files are present
  * @param domainName name of the domain of the workflow
+ * @param componentCatalogPath component catalog path to export the right expanded templates.
  * @return The URI for the template. An empty string will be returned if an error occurred (see console for details)
  */
     //public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, String outFilenameOPMW, String outFilenamePROV){
     public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, 
-        String outFilenameOPMW, String outFilenamePROV, String suffix,String data_catalog,String exportMode, String dataCatalogDirectory, String domainName){
+        String outFilenameOPMW, String outFilenamePROV, String suffix,String data_catalog,String exportMode, String dataCatalogDirectory, String domainName, String componentCatalogPath){
 //    	expandedTemplateModel = initializeModel(expandedTemplateModel);
         templateModel = initializeModel(templateModel);
         WINGSExecutionResults = initializeModel(WINGSExecutionResults);
         OPMWModel = initializeModel(OPMWModel);
         PROVModel = initializeModel(PROVModel);
         dataCatalog = initializeModel(dataCatalog);
+        taxonomyExport = initializeModel(taxonomyExport);
         
         try{
             this.loadDataCatalog(data_catalog, exportMode);
@@ -2898,7 +2911,7 @@ public void loadDataCatalog(String template, String modeFile){
             System.err.println("Error "+e.getMessage());
             return "";
         }
-        
+        this.loadFileToLocalRepository(taxonomyExport, componentCatalogPath, "TURTLE");
         //load the execution library file
         this.loadFileToLocalRepository(WINGSExecutionResults, libraryFile, modeFile);
         //load the execution file
@@ -4094,23 +4107,22 @@ public void loadDataCatalog(String template, String modeFile){
             Literal rule = qs.getLiteral("?rule");
             Resource res2=qs.getResource("?derivedFrom");
             
+            //we have to 
+            //1.Query the component catalog to find the corresponding component exists or not
+            //2. if it exists conintue
+            //3.else we have to export it with the correct versioning code from the concrete component side
             
-          //------------ADDITION BY TIRTH-----------------
-            //obtaining the className
-            String className="";
-            int indexOf=typeComp.toString().indexOf('#');
-            className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
-            System.out.println("type class is: "+className);
-
-          //------------ADDITION BY TIRTH-----------------
-            //obtaining the className
-//            String domainName="";
-            int indexOf2=typeComp.toString().indexOf("/components");
-            System.out.println("domain name finding");
-            System.out.println(typeComp.toString().substring(0,indexOf2));
-            String subDomain=typeComp.toString().substring(0,indexOf2);
-//            domainName=subDomain.substring(subDomain.lastIndexOf('/')+1,subDomain.length()); 
-            System.out.println("domain name  is: "+domainName);
+             
+//            String componentCatalogQueryforSubclassCheck = Queries.componentCatalogQueryforSubclassCheckfinal(className);
+//            ResultSet rnew1 = null;
+//            rnew1 = queryComponentCatalog(componentCatalogQueryforSubclassCheck);	
+//            int deciderPoint=0;
+//            Resource AbstractSuperClass=null;
+//            Resource concrComponent=null;
+//            while(rnew1.hasNext())
+//            {
+//                
+//            }
 
           
             

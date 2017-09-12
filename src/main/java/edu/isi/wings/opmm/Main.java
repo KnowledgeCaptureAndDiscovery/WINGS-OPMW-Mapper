@@ -29,8 +29,8 @@ public static void main(String[] args) {
   //String dataDirectory = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"sample_data"+File.separator+"new"+File.separator+"variantCalling"+File.separator+"data"+File.separator+"";
  // /Users/Tirthmehta/Documents/workspace/WINGS_PROVENANCE_EXPORT_SCENARIOS/LOCAL_FOLDER_COMPONENT_CATALOGS_OF_DIFFERENT_DOMAINS/Testing.owl
     
-  String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile,taxonomy_export,mode2, componentDirectory,"TestingDomain");
-//  String ans2=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null,data_catalog,mode2,dataDirectory, "TestingDomain");
+  //String ans=instance.transformWINGSElaboratedTemplateToOPMW(template, mode, outFile,taxonomy_export,mode2, componentDirectory,"TestingDomain");
+    //String ans2=instance.transformWINGSResultsToOPMW(execution, lib, mode, outFileOPMW, outFilePROV, null,data_catalog,mode2,dataDirectory, "TestingDomain",taxonomy_export);
     System.out.println("--------------------------");
 //    System.out.println("location is :"+ans);
     

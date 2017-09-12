@@ -156,11 +156,11 @@ public class Queries {
     }
     
     //a complete change from the previous version
-    public static String TaxonomyExportQueryforSubclassCheckfinalAgain(String tax)
+    public static String TaxonomyExportQueryforSubclassCheckfinalAgain()
     {
-    	String query="SELECT ?n ?x ?y WHERE{"
+    	String query="SELECT ?n ?x ?c WHERE{"
     			+"?n a ?x."
-    			+"?x <"+Constants.PREFIX_RDFS+"subClassOf> ?y."
+                        + "?n <"+Constants.COMPONENT_IS_CONCRETE+"> ?c."
     			+"}";
     	return query;
     }

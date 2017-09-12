@@ -324,6 +324,7 @@ public class Constants {
     public static final String RDFS_LABEL = PREFIX_RDFS+"label";
     public static final String PROP_HAS_CONTRIBUTOR = PREFIX_DCTERMS +"contributor";    
     public static final String RDFS_COMMENT = PREFIX_RDFS+"comment";
+    public static final String OWL_VERSION_INFO = "http://www.w3.org/2002/07/owl#versionInfo";
     
     /*****
     P-Plan classes
