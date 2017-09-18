@@ -285,7 +285,7 @@ public void loadDataCatalog(String template, String modeFile){
             System.err.println("Error "+e.getMessage());
             return "";
         }
-    	
+//    	componentCatalog.write(System.out,"TURTLE");
         //retrieval of the name of the workflowTemplate
         String queryNameWfTemplate = Queries.queryNameWfTemplate();
         //String templateName = null, templateName_ = null;
@@ -2896,7 +2896,7 @@ public void loadDataCatalog(String template, String modeFile){
  */
     //public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, String outFilenameOPMW, String outFilenamePROV){
     public String transformWINGSResultsToOPMW(String resultFile, String libraryFile, String modeFile, 
-        String outFilenameOPMW, String outFilenamePROV, String suffix,String data_catalog,String exportMode, String dataCatalogDirectory, String domainName, String componentCatalogPath){
+        String outFilenameOPMW, String outFilenamePROV, String suffix,String data_catalog,String exportMode, String dataCatalogDirectory, String domainName, String componentCatalogPath,String componentDirectory){
 //    	expandedTemplateModel = initializeModel(expandedTemplateModel);
         templateModel = initializeModel(templateModel);
         WINGSExecutionResults = initializeModel(WINGSExecutionResults);
@@ -2976,7 +2976,7 @@ public void loadDataCatalog(String template, String modeFile){
 //        this.loadExpandedTemplateFileToLocalRepository(expandedTemplateURI, modeFile);
         hashedTemplateName = HashCreator.getAbstractTemplateHash(templateName, this.templateModel);
         if(generateExpandedTemplate){
-            hashedExpandedTemplateName = createExpandedTemplate(accname,expandedTemplateName,expandedTemplateURI,hashedTemplateName,domainName);
+            hashedExpandedTemplateName = createExpandedTemplate(accname,expandedTemplateName,expandedTemplateURI,hashedTemplateName,domainName,componentCatalogPath,componentDirectory);
             templateToLink = hashedExpandedTemplateName;
             expanded = "Expanded_";
             //all the links have to be done to the expanded template instead of the template
@@ -4004,6 +4004,7 @@ public void loadDataCatalog(String template, String modeFile){
   //function to check to export the expanded template or not. This should be an ASK query 
     public boolean isExportExpandedTemplate()
     {
+    	componentCatalog=initializeModel(componentCatalog);
         String queryNodes = Queries.queryNodesforTemplateCondition();
         ResultSet r = queryConditionTemplateModel(queryNodes);
         while(r.hasNext()){
@@ -4016,10 +4017,26 @@ public void loadDataCatalog(String template, String modeFile){
     }
     
     
-    public String createExpandedTemplate(String accname,String expandedTemplateName,String expandedTemplateURI,String templateName, String domainName){
+    public String createExpandedTemplate(String accname,String expandedTemplateName,String expandedTemplateURI,String templateName, String domainName,String componentCatalogPath,String componentDirectory){
         //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
         NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
  	   System.out.println("expanded template name: "+expandedTemplateName);
+ 	   
+ 	   
+ 	   try{
+ 	  loadTaxonomy(componentCatalog);
+ 	   }catch(Exception e){}
+ 	   
+ 	  try{
+          //load the template file to WINGSModel (already loads the taxonomy as well
+          this.loadTaxonomyExport(componentCatalogPath, "TURTLE");            
+      }catch(Exception e){
+          System.out.println("Error while loading the taxonomy: "+e.getMessage());
+          return "";
+      }
+ 	   
+ 	   
+ 	   
  	   //UTILIZING THE FUNCTION FOR OBTAINING THE EXPANDED TEMPLATE NAME
  	   String newExpandedTemplateName=HashCreator.getExpandedTemplateHash(expandedTemplateName, this.WINGSExecutionResults);
  	   
@@ -4068,7 +4085,7 @@ public void loadDataCatalog(String template, String modeFile){
         String queryMetadataforExandedTemplate = Queries.queryMetadataforExpandedTemplate();
         r1 = null;
         r1 = queryLocalWINGSResultsRepository(queryMetadataforExandedTemplate);
-        
+        String userName="";
         while(r1.hasNext())
         {
         	System.out.println("inside for the contributor");
@@ -4077,6 +4094,7 @@ public void loadDataCatalog(String template, String modeFile){
             
             if(contrib!=null){
             	System.out.println("contributor is:"+contrib.getString());
+            	userName=contrib.getString();
                 ModelUtils.addIndividual(OPMWModel,contrib.getString(), Constants.OPM_AGENT,"Agent "+contrib.getString());
                 ModelUtils.addProperty(OPMWModel,Constants.CONCEPT_WORKFLOW_EXPANDED_TEMPLATE+"/"+newExpandedTemplateName,Constants.CONCEPT_AGENT+"/"+contrib.getString(),
                         Constants.PROP_HAS_CONTRIBUTOR);
@@ -4107,24 +4125,153 @@ public void loadDataCatalog(String template, String modeFile){
             Literal rule = qs.getLiteral("?rule");
             Resource res2=qs.getResource("?derivedFrom");
             
+            
+            System.out.println(res);
+            PREFIX_COMP_CATALOG=res.toString().substring(0,res.toString().lastIndexOf("/"));
+            PREFIX_COMP_CATALOG=PREFIX_COMP_CATALOG.substring(0,PREFIX_COMP_CATALOG.lastIndexOf("/"));
+            PREFIX_COMP_CATALOG+="/components/library.owl#";
+            
             //we have to 
             //1.Query the component catalog to find the corresponding component exists or not
             //2. if it exists conintue
             //3.else we have to export it with the correct versioning code from the concrete component side
+ 
             
-             
-//            String componentCatalogQueryforSubclassCheck = Queries.componentCatalogQueryforSubclassCheckfinal(className);
-//            ResultSet rnew1 = null;
-//            rnew1 = queryComponentCatalog(componentCatalogQueryforSubclassCheck);	
-//            int deciderPoint=0;
-//            Resource AbstractSuperClass=null;
-//            Resource concrComponent=null;
-//            while(rnew1.hasNext())
-//            {
-//                
-//            }
+            //THIS RECEIVES THE INPUTS OF OUTPUTS OF THE ACTUAL CONCRETE COMPONENT//
+            
+            //STARTS
+            String tobequeriedclass=res.getLocalName().substring(0,res.getLocalName().length()-4);
+            tobequeriedclass+="Class";
+            String componentCatalogQueryforActualInputsandOutputsforComponent = Queries.componentCatalogQueryforActualInputsandOutputsforComponent(PREFIX_COMP_CATALOG,tobequeriedclass);
+            ResultSet ractualzone = null;
+            ractualzone = queryComponentCatalog(componentCatalogQueryforActualInputsandOutputsforComponent);
+
+            HashSet<String> inputsComp=new HashSet<>();
+            HashSet<String> outputsComp=new HashSet<>();
+            String doc11="",compLoc="";
+            while(ractualzone.hasNext())
+            {
+            	QuerySolution qsnew = ractualzone.next();
+            	Resource nodenew = qsnew.getResource("?n");
+            	Resource input = qsnew.getResource("?i");
+            	Resource output = qsnew.getResource("?o");
+            	Literal loc = qsnew.getLiteral("?loc");
+            	Resource c = qsnew.getResource("?c");
+            	Literal doc = qsnew.getLiteral("?doc");
+            	System.out.println("Check it out "+nodenew.getLocalName());
+            	if(nodenew.getLocalName().equals(res.getLocalName().substring(0,res.getLocalName().length()-4)))
+            	{
+            		inputsComp.add(input.getLocalName());
+            		outputsComp.add(output.getLocalName());
+            		doc11=doc.getString();
+            		compLoc=loc.toString();
+            	}
+            }
+            System.out.println("MAIN COMPONENT----------");
+            for(String i:inputsComp)
+            	System.out.println("inputs are: "+i);
+            for(String o:outputsComp)
+            	System.out.println("outputs are: "+o);
+            //ENDS
+            
+            //NOW QUERY MY COMPONENT CATALOG TO CHECK IF THIS COMPONENT WITH SAME INPS AND OUTPS EXISTS
+            //IF IT DOES UR DONE
+            //IF NOT EXPORT A FRESH COPY
+            taxonomyExport.write(System.out,"TURTLE");
+            String taxonomyModelforConcreteComponent = Queries.TaxonomyExportQuerySpecificComponentQueryConcrete();
+            ResultSet rformycomponentcatalog = null;
+            rformycomponentcatalog = queryLocalTaxonomyModelRepository(taxonomyModelforConcreteComponent);
+           
+            HashSet<String> inpsfrommycc=new HashSet<>();
+            HashSet<String> outpsfrommycc=new HashSet<>();
+            while(rformycomponentcatalog.hasNext())
+            {
+            	QuerySolution qsnew = rformycomponentcatalog.next();
+                Resource nodenew = qsnew.getResource("?n");
+                Resource x = qsnew.getResource("?x");
+                Resource input = qsnew.getResource("?i");
+                Resource output = qsnew.getResource("?o");
+                Literal c = qsnew.getLiteral("?c");
+                
+                
+                if(c.getBoolean())
+                {
+                	if(nodenew.getLocalName().toLowerCase().substring(0, nodenew.getLocalName().toLowerCase().lastIndexOf("_")).equals(res.getLocalName()))
+                	{
+                		System.out.println(input.getLocalName()+" "+output.getLocalName());
+                	}
+                }
+                
+            }
+            if(inputsComp.size()==inpsfrommycc.size() && outputsComp.size()==outpsfrommycc.size())
+            	System.out.println("no need to export new stuff");
+            else
+            {
+            	//now you have to export it
+            	
+            	  //EXPORTING THE MD5 FOR THE COMPONENT CODE
+                try{
+                	
+                this.dataProps(Constants.COMPONENT_HAS_MD5_CODE,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",EncodingUtils.MD5ComponentCode(componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
+                }catch(Exception e){System.out.println("ERROR");}
+                
+            	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1",res2.getLocalName().substring(0,res2.getLocalName().length()-5).toUpperCase()+"_CLASSV1");
+
+                //EXPORTING THE USER WHO CREATED THE COMPONENT
+                this.dataProps(Constants.PROV_WAS_ATTRIBUTED_TO,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
+
+              //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+                this.classIsaClass(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1", res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1");
+                //classNames.put(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase(), res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1");
+                //EXPORTING THE DOCUMENTATION
+                if (!doc11.equals("")){
+                    this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",doc11,XSDDatatype.XSDstring);
+                }
+       
+                //IS CONCRETE EXPORTED
+                this.dataProps(Constants.COMPONENT_IS_CONCRETE, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",true+"", XSDDatatype.XSDboolean);
+
+                
+                //RDFS LABEL EXPORTED for canonical instance
+                this.dataProps(Constants.RDFS_LABEL, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1", res.getLocalName().substring(0,res.getLocalName().length()-4), XSDDatatype.XSDstring);
+                
+              //RDFS LABEL EXPORTED for class
+                this.dataProps2(Constants.RDFS_LABEL, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1",res.getLocalName().substring(0,res.getLocalName().length()-4) , XSDDatatype.XSDstring);
+                this.dataProps2(Constants.OWL_VERSION_INFO, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1","1" , XSDDatatype.XSDstring);
+                
+                
+                //INPUTS-- EXPORTED
+                this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsComp, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1");
+
+                
+                //OUTPUTS-- EXPORTED
+                this.inputsOutputs(Constants.COMPONENT_HAS_OUTPUT, outputsComp, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1");
+
+                
+//              HAS LOCATION EXPORTED
+                this.dataProps(Constants.COMPONENT_HAS_LOCATION, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1", componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()), XSDDatatype.XSDstring);
+
+            	
+            	
+            }
+            ////
+            
+            
 
           
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             System.out.println("node is :"+res.getLocalName()+" derived from "+res2.getLocalName() +"the component is :"+comp);
             System.out.println("cb is :"+typeComp);
@@ -4499,6 +4646,7 @@ public void loadDataCatalog(String template, String modeFile){
         
         //THIS ENDS THE EXPANDED TEMPLATE RETRIEVAL CODE
         System.out.println("EXPANDED TEMPLATE CODE ENDS HERE");
+        ModelUtils.exportRDFFile(componentCatalogPath, taxonomyExport, "TURTLE");
         return newExpandedTemplateName;
     }
    //*************************//

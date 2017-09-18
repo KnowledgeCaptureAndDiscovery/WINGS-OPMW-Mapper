@@ -154,6 +154,16 @@ public class Queries {
     			+"}";
     	return query;
     }
+    //specific component query
+    public static String TaxonomyExportQuerySpecificComponentQuery()
+    {
+    	String query="SELECT ?n ?i ?o ?md5 WHERE{"
+    			+"?n a ?x."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasMD5> ?md5."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i.";
+    	return query;
+    }
     
     //a complete change from the previous version
     public static String TaxonomyExportQueryforSubclassCheckfinalAgain()
@@ -165,11 +175,23 @@ public class Queries {
     	return query;
     }
     
+    public static String TaxonomyExportQuerySpecificComponentQueryConcrete()
+    {
+    	String query="SELECT ?n ?i ?x ?o ?md5 ?c WHERE{"
+    			+"?n a ?x."
+    			+"?n <"+Constants.COMPONENT_IS_CONCRETE+"> ?c."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasMD5> ?md5."
+    			+"?n <"+Constants.PREFIX_COMPONENT+"hasInput> ?i.}";
+    	return query;
+    }
+    
  
   //query for determining the number of actual inputs,outputs,isConcrete,hasLocation etc in the component catalog based class
     public static String componentCatalogQueryforActualInputsandOutputsforComponent(String prefix,String className)
     {
     	System.out.println("className inside the query received "+className);
+    	System.out.println("prefix inside the query received "+prefix);
     	String query="SELECT ?n ?i ?o ?loc ?concr ?doc WHERE{"
     			+"?n a <"+prefix+className+">."
     			+"OPTIONAL{?n <"+Constants.PREFIX_COMPONENT+"hasOutput> ?o.}"
