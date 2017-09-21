@@ -982,12 +982,12 @@ public void loadDataCatalog(String template, String modeFile){
                     
                     //EXPORTING THE PROV_WAS_REVISION_OF
                     OntProperty propSelec255 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent) );
+                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+ EncodingUtils.encode(nodenew11.getLocalName().toUpperCase()+finalversionforNewAbstractComponent) );
                     Individual instance255 = (Individual) source255.as( Individual.class );
                     if((nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
-                        instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS+nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent);            
+                        instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS.replace("#", "/Component#")+nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent);            
                     }else{//it is a local resource
-                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent)));
+                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+EncodingUtils.encode(nodenew11.getLocalName().toUpperCase()+finalversionforLatestAbstractComponent)));
                     }
                     
                     
@@ -1280,7 +1280,8 @@ public void loadDataCatalog(String template, String modeFile){
                     } 
                     
                   //EXPORTING THE HARDWARE AND SOFTWARE DEPENDENCY
-                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent);
+                    int versioncontrol=1;
+                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent,versioncontrol);
                     
                     
                     
@@ -1439,12 +1440,12 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //EXPORTING THE PROV_WAS_REVISION_OF
                     OntProperty propSelec255 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+ EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
                     Individual instance255 = (Individual) source255.as( Individual.class );
                     if((AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
-                        instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent);            
+                        instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS.replace("#", "/Component#")+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent);            
                     }else{//it is a local resource
-                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
+                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
                     }
                     
                     
@@ -1487,7 +1488,8 @@ public void loadDataCatalog(String template, String modeFile){
                     } 
                     
                   ///EXPORTING THE HARDWARE AND SOFTWARE DEPENDENCY
-                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent);
+                    int versioncontrol=max;
+                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent,versioncontrol);
                   
                     
                     
@@ -1819,7 +1821,8 @@ public void loadDataCatalog(String template, String modeFile){
                     this.dataProps(Constants.COMPONENT_HAS_LOCATION, concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5).toUpperCase()+"_V1", componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()), XSDDatatype.XSDstring);
 
                     //EXPORTING THE HARDWARE AND SOFTWARE DEPENDENCY
-                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent);
+                    int versioncontrol=1;
+                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent,versioncontrol);
                   
                     
                     
@@ -2127,7 +2130,8 @@ public void loadDataCatalog(String template, String modeFile){
                 } 
                 
               //EXPORTING THE HARDWARE AND SOFTWARE DEPENDENCY
-                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent);
+                int versioncontrol=max;
+                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent,versioncontrol);
                   
                 
                 
@@ -2179,12 +2183,12 @@ public void loadDataCatalog(String template, String modeFile){
                   
                   //EXPORTING THE PROV_WAS_REVISION_OF
                   OntProperty propSelec256 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                  Resource source256 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
+                  Resource source256 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+ EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
                   Individual instance256 = (Individual) source256.as( Individual.class );
                   if((concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
-                      instance256.addProperty(propSelec256,NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent);            
+                      instance256.addProperty(propSelec256,NEW_TAXONOMY_CLASS.replace("#", "/Component#")+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent);            
                   }else{//it is a local resource
-                      instance256.addProperty(propSelec256, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
+                      instance256.addProperty(propSelec256, taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
                   } 
 //                  String compLoc2="/Users/Tirthmehta/Desktop/TestingDomain2/Component/";
                   //EXPORTING THE MD5 FOR THE COMPONENT CODE
@@ -2294,23 +2298,23 @@ public void loadDataCatalog(String template, String modeFile){
                     
                   //EXPORTING THE PROV_WAS_REVISION_OF
                     OntProperty propSelec255 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
+                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+ EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforNewAbstractComponent) );
                     Individual instance255 = (Individual) source255.as( Individual.class );
                     if((AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
-                        instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent);            
+                        instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS.replace("#", "/Component#")+AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent);            
                     }else{//it is a local resource
-                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
+                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+EncodingUtils.encode(AbstractSuperClass.getLocalName().substring(0,AbstractSuperClass.getLocalName().length()-5).toUpperCase()+finalversionforLatestAbstractComponent)));
                     }
                     
                     
                   //EXPORTING THE PROV_WAS_REVISION_OF
                     OntProperty propSelec256 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
-                    Resource source256 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+ EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
+                    Resource source256 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+ EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforNewAbstractComponent) );
                     Individual instance256 = (Individual) source256.as( Individual.class );
                     if((concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent).contains("http://")){//it is a URI
-                        instance256.addProperty(propSelec256,NEW_TAXONOMY_CLASS+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent);            
+                        instance256.addProperty(propSelec256,NEW_TAXONOMY_CLASS.replace("#", "/Component#")+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent);            
                     }else{//it is a local resource
-                        instance256.addProperty(propSelec256, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
+                        instance256.addProperty(propSelec256, taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "/Component#")+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+finalversionforLatestAbstractComponent)));
                     }  
                     
                     
@@ -2353,7 +2357,8 @@ public void loadDataCatalog(String template, String modeFile){
                     } 
                     
                   //EXPORTING THE HARDWARE AND SOFTWARE DEPENDENCY
-                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent);
+                    int versioncontrol=max;
+                   exportHardwareSoftwareDependencies(needsval, memval, stval, memval, concrComponent,versioncontrol);
                   
                     
                     
@@ -3922,7 +3927,7 @@ public void loadDataCatalog(String template, String modeFile){
         {
         	OntProperty propSelec22;
             propSelec22 = taxonomyExport.createDatatypeProperty(dataprop);
-            Resource orig22 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(resourcepart));
+            Resource orig22 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+EncodingUtils.encode(resourcepart));
             taxonomyExport.add(orig22, propSelec22,propextracted,x);
         }
         
@@ -3937,7 +3942,7 @@ public void loadDataCatalog(String template, String modeFile){
         private void classIsaClass(String classpart,String indvpart)
         {
             OntClass c21 = taxonomyExport.createClass(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+classpart);
-            c21.createIndividual(NEW_TAXONOMY_CLASS+indvpart);
+            c21.createIndividual(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+indvpart);
         }
         private void classIsaClassHardwareParts(String classpart,String indvpart)
         {
@@ -3950,14 +3955,14 @@ public void loadDataCatalog(String template, String modeFile){
         private void inputsOutputs(String prop,HashSet<String> hs,String encodepart)
         {
         	OntProperty propSelec23 = taxonomyExport.createOntProperty(prop);
-            Resource source23 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(encodepart) );
+            Resource source23 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+EncodingUtils.encode(encodepart) );
             Individual instance23 = (Individual) source23.as( Individual.class );
             for(String in:hs)
             {
             if((in).contains("http://")){//it is a URI
-                instance23.addProperty(propSelec23,NEW_TAXONOMY_CLASS+in);            
+                instance23.addProperty(propSelec23,NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+in);            
             }else{//it is a local resource
-                instance23.addProperty(propSelec23, taxonomyExport.getResource(NEW_TAXONOMY_CLASS+EncodingUtils.encode(in)));
+                instance23.addProperty(propSelec23, taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+EncodingUtils.encode(in)));
             }
             }
         }
@@ -4148,7 +4153,7 @@ public void loadDataCatalog(String template, String modeFile){
 
             HashSet<String> inputsComp=new HashSet<>();
             HashSet<String> outputsComp=new HashSet<>();
-            String doc11="",compLoc="";
+            String doc11=null,compLoc="";
             while(ractualzone.hasNext())
             {
             	QuerySolution qsnew = ractualzone.next();
@@ -4163,7 +4168,8 @@ public void loadDataCatalog(String template, String modeFile){
             	{
             		inputsComp.add(input.getLocalName());
             		outputsComp.add(output.getLocalName());
-            		doc11=doc.getString();
+            		if(doc!=null)
+            			doc11=doc.getString();
             		compLoc=loc.toString();
             	}
             }
@@ -4174,48 +4180,147 @@ public void loadDataCatalog(String template, String modeFile){
             	System.out.println("outputs are: "+o);
             //ENDS
             
+            
+            
+            //NOW QUERYING MY COMPONENT CATALOG FOR FINDING THE INPUTS AND OUTPUTS OF THE ABSTRACT COMPONENT
+            
+            String taxonomyModelforAbstractComponent = Queries.TaxonomyExportQuerySpecificComponentQueryAbstract();
+            ResultSet rformycomponentcatalogabstract = null;
+            rformycomponentcatalogabstract = queryLocalTaxonomyModelRepository(taxonomyModelforAbstractComponent);
+           
+            
+            String finalabstractcomponenttobelinkedto="";
+            while(rformycomponentcatalogabstract.hasNext())
+            {
+            	QuerySolution qsnew = rformycomponentcatalogabstract.next();
+                Resource nodenew = qsnew.getResource("?n");
+//                System.out.println("n is "+nodenew.getLocalName());
+                String internalforeachcomp = Queries.TaxonomyExportQuerySpecificComponentQueryAbstract();
+                ResultSet internal1 = null;
+                internal1 = queryLocalTaxonomyModelRepository(internalforeachcomp);
+                HashSet<String> inpsfrommyac=new HashSet<>();
+                HashSet<String> outpsfrommyac=new HashSet<>();
+                while(internal1.hasNext())
+                {
+                	QuerySolution qsnew1 = internal1.next();
+                	Resource nodenew1 = qsnew1.getResource("?n");
+                	Resource input = qsnew1.getResource("?i");
+                	Resource output = qsnew1.getResource("?o");
+                	Literal c=qsnew1.getLiteral("?c");
+                	if(!c.getBoolean())
+                    {
+                    	if(nodenew.getLocalName().equals(nodenew1.getLocalName()) && nodenew.getLocalName().toLowerCase().substring(0, nodenew.getLocalName().toLowerCase().lastIndexOf("_")).equals(res2.getLocalName().substring(0,res2.getLocalName().lastIndexOf("_")).toLowerCase()))
+                    	{
+                    		finalabstractcomponenttobelinkedto=nodenew.getLocalName();
+                    		inpsfrommyac.add(input.getLocalName());
+                    		outpsfrommyac.add(output.getLocalName());
+                    		System.out.println(input.getLocalName()+" "+output.getLocalName());
+                    	}
+                    }
+                	
+                }
+                if(inputsComp.size()==inpsfrommyac.size() && outpsfrommyac.size()==outputsComp.size())
+                	break;
+            }
+            System.out.println("The final abstract component to be linked to is:"+finalabstractcomponenttobelinkedto);
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            ////ENDS
+            
             //NOW QUERY MY COMPONENT CATALOG TO CHECK IF THIS COMPONENT WITH SAME INPS AND OUTPS EXISTS
             //IF IT DOES UR DONE
             //IF NOT EXPORT A FRESH COPY
-            taxonomyExport.write(System.out,"TURTLE");
-            String taxonomyModelforConcreteComponent = Queries.TaxonomyExportQuerySpecificComponentQueryConcrete();
+//            taxonomyExport.write(System.out,"TURTLE");
+            String taxonomyModelforConcreteComponent = Queries.TaxonomyExportQuerySpecificComponentQueryAbstract();
             ResultSet rformycomponentcatalog = null;
             rformycomponentcatalog = queryLocalTaxonomyModelRepository(taxonomyModelforConcreteComponent);
-           
-            HashSet<String> inpsfrommycc=new HashSet<>();
-            HashSet<String> outpsfrommycc=new HashSet<>();
+            if(rformycomponentcatalog.hasNext())
+            	System.out.println("it contains something");
+            String namefoundornot=null;
+            int flag=0;
+            
+            HashSet<String> othernamesfoundforversioning=new HashSet<>();
             while(rformycomponentcatalog.hasNext())
             {
             	QuerySolution qsnew = rformycomponentcatalog.next();
                 Resource nodenew = qsnew.getResource("?n");
-                Resource x = qsnew.getResource("?x");
-                Resource input = qsnew.getResource("?i");
-                Resource output = qsnew.getResource("?o");
-                Literal c = qsnew.getLiteral("?c");
+                Literal coutside=qsnew.getLiteral("?c");
+                if(coutside.getBoolean()==false)
+                	continue;
+//                System.out.println(nodenew.getLocalName());
                 
-                
-                if(c.getBoolean())
+                HashSet<String> inpsfrommycc=new HashSet<>();
+                HashSet<String> outpsfrommycc=new HashSet<>();
+                String internal = Queries.TaxonomyExportQuerySpecificComponentQueryAbstract();
+                ResultSet inter = null;
+                inter = queryLocalTaxonomyModelRepository(internal);
+                while(inter.hasNext())
                 {
-                	if(nodenew.getLocalName().toLowerCase().substring(0, nodenew.getLocalName().toLowerCase().lastIndexOf("_")).equals(res.getLocalName()))
-                	{
-                		System.out.println(input.getLocalName()+" "+output.getLocalName());
-                	}
+                	QuerySolution qsnew1 = inter.next();
+                    Resource nodenew1 = qsnew1.getResource("?n");
+                    Resource input = qsnew1.getResource("?i");
+                    Resource output = qsnew1.getResource("?o");
+                    Literal c=qsnew1.getLiteral("?c");
+                	
+                	if(c.getBoolean()==true)
+                    {
+	             		if(nodenew.getLocalName().equals(nodenew1.getLocalName()) && nodenew.getLocalName().toLowerCase().substring(0, nodenew.getLocalName().toLowerCase().lastIndexOf("_")).equals(res.getLocalName().substring(0,res.getLocalName().length()-4).toLowerCase()))                    	{
+	                    		othernamesfoundforversioning.add(nodenew.getLocalName());
+	                    		namefoundornot=nodenew.getLocalName();
+	                    		inpsfrommycc.add(input.getLocalName());
+	                    		outpsfrommycc.add(output.getLocalName());
+	                    		System.out.println(input.getLocalName()+" "+output.getLocalName());
+	                    	}
+	                    }
                 }
-                
+                if(namefoundornot!=null && inputsComp.size()==inpsfrommycc.size() && outputsComp.size()==outpsfrommycc.size())
+                {
+                	//now the name is found and plus the inputs and outputs are also equal and so ur done here
+                	System.out.println("no need to export new stuff");
+                	flag=1;
+                	break;
+                }   
             }
-            if(inputsComp.size()==inpsfrommycc.size() && outputsComp.size()==outpsfrommycc.size())
-            	System.out.println("no need to export new stuff");
-            else
+            System.out.println("OTHER NAMES FOUND FOR CONCRETE COMPONENTS");
+            for(String x:othernamesfoundforversioning)
+            	System.out.println(x);
+            if(flag==1)
             {
-            	//now you have to export it
+            	System.out.println("U have found a match and hence u don't need to export anything from the expanded template zone end");
+            }
+            else if(namefoundornot==null)
+            {
+            	//now you have to export it a fresh new copy irrespective
             	
             	  //EXPORTING THE MD5 FOR THE COMPONENT CODE
+            	System.out.println("namefoundornot==null");
                 try{
                 	
                 this.dataProps(Constants.COMPONENT_HAS_MD5_CODE,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",EncodingUtils.MD5ComponentCode(componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
                 }catch(Exception e){System.out.println("ERROR");}
                 
-            	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1",res2.getLocalName().substring(0,res2.getLocalName().length()-5).toUpperCase()+"_CLASSV1");
+            	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1",finalabstractcomponenttobelinkedto.substring(0,finalabstractcomponenttobelinkedto.lastIndexOf("_")+1)+"CLASS"+finalabstractcomponenttobelinkedto.substring(finalabstractcomponenttobelinkedto.lastIndexOf("_")+1,finalabstractcomponenttobelinkedto.length()));
 
                 //EXPORTING THE USER WHO CREATED THE COMPONENT
                 this.dataProps(Constants.PROV_WAS_ATTRIBUTED_TO,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",userName,XSDDatatype.XSDstring);
@@ -4224,7 +4329,7 @@ public void loadDataCatalog(String template, String modeFile){
                 this.classIsaClass(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1", res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1");
                 //classNames.put(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase(), res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1");
                 //EXPORTING THE DOCUMENTATION
-                if (!doc11.equals("")){
+                if (doc11!=null){
                     this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",doc11,XSDDatatype.XSDstring);
                 }
        
@@ -4250,10 +4355,87 @@ public void loadDataCatalog(String template, String modeFile){
                 
 //              HAS LOCATION EXPORTED
                 this.dataProps(Constants.COMPONENT_HAS_LOCATION, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1", componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()), XSDDatatype.XSDstring);
+                		
+                
+                //now the only thing left to be done at this stage for a fresh new export is to just link it with the appropriate
+                //abstract component which will already be present in my component catalog
+                
+            	
+            	
+            	}
+	            else if(namefoundornot!=null)
+	            {
+	            	//now the thing is that a name has been found but its not having the same number of inputs and outputs
+	            	System.out.println("namefoundornot!=null");
+	            	int max=-1;
+	            	for(String x:othernamesfoundforversioning)
+	            	{
+	            		int temp=Integer.parseInt(x.substring(x.lastIndexOf("_V")+2, x.length()));
+	            		if(temp>max)
+	            			max=temp;
+	            	}
+	            	int versionnumber=max+1;
+	            	System.out.println("new version number is "+versionnumber);
+	            	//now simply export using this version number and link to previous version number
+	            	
+	            	
+	            	
+	            	
+	            	//now exporting it
+	            	try{
+	                	
+	                    this.dataProps(Constants.COMPONENT_HAS_MD5_CODE,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber,EncodingUtils.MD5ComponentCode(componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
+	                    }catch(Exception e){System.out.println("ERROR");}
+	                    
+	                	ModelUtils.addIndividualConcreteSubclass2(this.taxonomyExport,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV"+versionnumber,finalabstractcomponenttobelinkedto.substring(0,finalabstractcomponenttobelinkedto.lastIndexOf("_")+1)+"CLASS"+finalabstractcomponenttobelinkedto.substring(finalabstractcomponenttobelinkedto.lastIndexOf("_")+1,finalabstractcomponenttobelinkedto.length()));
 
-            	
-            	
-            }
+	                    //EXPORTING THE USER WHO CREATED THE COMPONENT
+	                    this.dataProps(Constants.PROV_WAS_ATTRIBUTED_TO,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber,userName,XSDDatatype.XSDstring);
+
+	                  //EXPORTING THE FACT THAT CLASSNAME-CLASS IS A CLASSNAME
+	                    this.classIsaClass(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV"+versionnumber, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber);
+	                    //classNames.put(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase(), res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1");
+	                    //EXPORTING THE DOCUMENTATION
+	                    if (doc11!=null){
+	                        this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber,doc11,XSDDatatype.XSDstring);
+	                    }
+	           
+	                    //IS CONCRETE EXPORTED
+	                    this.dataProps(Constants.COMPONENT_IS_CONCRETE, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber,true+"", XSDDatatype.XSDboolean);
+
+	                    
+	                    //RDFS LABEL EXPORTED for canonical instance
+	                    this.dataProps(Constants.RDFS_LABEL, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber, res.getLocalName().substring(0,res.getLocalName().length()-4), XSDDatatype.XSDstring);
+	                    
+	                  //RDFS LABEL EXPORTED for class
+	                    this.dataProps2(Constants.RDFS_LABEL, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV"+versionnumber,res.getLocalName().substring(0,res.getLocalName().length()-4) , XSDDatatype.XSDstring);
+	                    this.dataProps2(Constants.OWL_VERSION_INFO, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV"+versionnumber,versionnumber+"" , XSDDatatype.XSDstring);
+	                    
+	                    
+	                    //INPUTS-- EXPORTED
+	                    this.inputsOutputs(Constants.COMPONENT_HAS_INPUT, inputsComp, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber);
+
+	                    
+	                    //OUTPUTS-- EXPORTED
+	                    this.inputsOutputs(Constants.COMPONENT_HAS_OUTPUT, outputsComp, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber);
+
+	                    
+//	                  HAS LOCATION EXPORTED
+	                    this.dataProps(Constants.COMPONENT_HAS_LOCATION, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber, componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1, compLoc.length()), XSDDatatype.XSDstring);
+	                   
+	                    //EXPORTING THE PROV_WAS_REVISION_OF
+	                    OntProperty propSelec255 = taxonomyExport.createOntProperty(Constants.PROV_WAS_REVISION_OF);
+	                    Resource source255 = taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+ EncodingUtils.encode(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber) );
+	                    Individual instance255 = (Individual) source255.as( Individual.class );
+	                    if((res.getLocalName().toUpperCase()+"_V"+max).contains("http://")){//it is a URI
+	                        instance255.addProperty(propSelec255,NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+max);            
+	                    }else{//it is a local resource
+	                        instance255.addProperty(propSelec255, taxonomyExport.getResource(NEW_TAXONOMY_CLASS.replace("#", "")+"/Component#"+EncodingUtils.encode(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+max)));
+	                    }
+	                    
+	                   
+	            }
+            
             ////
             
             
@@ -4651,8 +4833,8 @@ public void loadDataCatalog(String template, String modeFile){
     }
    //*************************//
  
-    private void exportHardwareSoftwareDependencies(boolean needsval, Float memval, Float stval, Float minversionval, Resource concrComponent){
-        Resource blankNode112 = taxonomyExport.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+    private void exportHardwareSoftwareDependencies(boolean needsval, Float memval, Float stval, Float minversionval, Resource concrComponent,int version_no){
+        Resource blankNode112 = taxonomyExport.createResource(Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V"+version_no);
         blankNode112.addProperty(taxonomyExport.createOntProperty(Constants.NEEDS_64BIT),
             needsval+"",XSDDatatype.XSDboolean);
         if(memval!=null){
@@ -4663,21 +4845,21 @@ public void loadDataCatalog(String template, String modeFile){
             blankNode112.addProperty(taxonomyExport.createOntProperty(Constants.REQUIRES_STORAGEGB), 
                 stval+"",XSDDatatype.XSDfloat);
         }
-        String procURI = NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+        String procURI = NEW_TAXONOMY_CLASS.replace("#", "/Component#")+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V"+version_no);
         taxonomyExport.getResource(procURI).
                 addProperty(taxonomyExport.createOntProperty(Constants.HAS_HARDWARE_DEPENDENCY), 
                         blankNode112);
-        this.classIsaClassHardwareParts(Constants.HARDWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
-        Resource blankNode113 = taxonomyExport.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+        this.classIsaClassHardwareParts(Constants.HARDWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"HardwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V"+version_no);
+        Resource blankNode113 = taxonomyExport.createResource(Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V"+version_no);
         if(minversionval!=null){
             blankNode113.addProperty(taxonomyExport.createOntProperty(Constants.REQUIRES_VERSION),
                 minversionval+"");
         }
-        String procURI113 = NEW_TAXONOMY_CLASS+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+        String procURI113 = NEW_TAXONOMY_CLASS.replace("#", "/Component#")+EncodingUtils.encode(concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V"+version_no);
         taxonomyExport.getResource(procURI113).
                 addProperty(taxonomyExport.createOntProperty(Constants.HAS_SOFTWARE_DEPENDENCY), 
                         blankNode113);
-        this.classIsaClassHardwareParts(Constants.SOFTWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V1");
+        this.classIsaClassHardwareParts(Constants.SOFTWARE_DEPENDENCY,Constants.PREFIX_RESOURCE+"SoftwareRequirements_"+concrComponent.getLocalName().substring(0,concrComponent.getLocalName().length()-5)+"_V"+version_no);
     }
     
     private OntModel initializeModel (OntModel m){
