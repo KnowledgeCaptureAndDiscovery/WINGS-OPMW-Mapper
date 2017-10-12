@@ -3262,7 +3262,7 @@ public void loadDataCatalog(String template, String modeFile){
             
             System.out.println("hashing the input file here ");
             File f=new File(dataCatalogDirectory+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()));
-            System.out.println("opening file"+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()));
+            System.out.println("opening file"+dataCatalogDirectory+inputBinding2.substring(inputBinding2.lastIndexOf("/")+1,inputBinding2.length()));
             ArrayList<String> arr=new ArrayList<>();
             StringBuilder sb=new StringBuilder();
             String currentMD5=null;
@@ -4314,7 +4314,7 @@ public void loadDataCatalog(String template, String modeFile){
             	//now you have to export it a fresh new copy irrespective
             	
             	  //EXPORTING THE MD5 FOR THE COMPONENT CODE
-            	System.out.println("namefoundornot==null");
+            	System.out.println("");
                 try{
                 	
                 this.dataProps(Constants.COMPONENT_HAS_MD5_CODE,res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",EncodingUtils.MD5ComponentCode(componentDirectory+compLoc.substring(compLoc.lastIndexOf("/")+1,compLoc.length())+".zip"),XSDDatatype.XSDstring);
