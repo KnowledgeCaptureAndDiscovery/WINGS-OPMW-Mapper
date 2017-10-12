@@ -2910,6 +2910,8 @@ public void loadDataCatalog(String template, String modeFile){
         dataCatalog = initializeModel(dataCatalog);
         taxonomyExport = initializeModel(taxonomyExport);
         
+        HashMap<String,String> classNames=new HashMap<>();
+        
         try{
             this.loadDataCatalog(data_catalog, exportMode);
         }catch(Exception e){
@@ -3132,6 +3134,17 @@ public void loadDataCatalog(String template, String modeFile){
                     Constants.PROV_WAS_INFLUENCED_BY);
         }
        // String newexpandedtemplatename=newExpandedTemplateName.substring(0,newExpandedTemplateName.indexOf('-'));
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         /********************************************************/
         /********************* NODE LINKING**********************/
@@ -3966,44 +3979,6 @@ public void loadDataCatalog(String template, String modeFile){
             }
             }
         }
-
-    
-//    public Gen InputOutputGenerator(ResultSet replica,String classNamegiven)
-//    {
-//    	HashSet<String> input=new HashSet<>();
-//    	HashSet<String> output=new HashSet<>();
-//    while(replica.hasNext()){
-//        QuerySolution qs = replica.next();
-//        Resource res = qs.getResource("?n");
-//        Resource comp = qs.getResource("?c");
-//        Resource typeComp = qs.getResource("?typeComp");
-//        Literal rule = qs.getLiteral("?rule");
-//        Literal isConcrete = qs.getLiteral("?isConcrete");
-//        
-//        Resource inport = qs.getResource("?inport");
-//        Resource outport = qs.getResource("?outport");
-//        //------------ADDITION BY TIRTH-----------------
-//        //obtaining the className
-//        String className="";
-//        int indexOf=typeComp.toString().indexOf('#');
-//        className=typeComp.toString().substring(indexOf+1,typeComp.toString().length());
-//        
-//        
-//        if(className.equals(classNamegiven))
-//        {
-//        	
-//        	  input.add(inport.getLocalName());
-//              output.add(outport.getLocalName());
-//        }
-//      
-////    }
-//    Gen g=new Gen();
-//    g.input=input.size();
-//    g.output=output.size();
-//    g.className=classNamegiven;
-//    return g;
-//    
-//    }
     
     
   //function to check to export the expanded template or not. This should be an ASK query 
@@ -4023,7 +3998,9 @@ public void loadDataCatalog(String template, String modeFile){
     
     
     public String createExpandedTemplate(String accname,String expandedTemplateName,String expandedTemplateURI,String templateName, String domainName,String componentCatalogPath,String componentDirectory){
-        //creating a new EXPORT NAME FOR THE TAXONOMY CLASS
+        HashMap<String,String> classNames=new HashMap<>();
+        NEW_TAXONOMY_CLASS_2=Constants.TAXONOMY_CLASS+domainName+"/";
+    	//creating a new EXPORT NAME FOR THE TAXONOMY CLASS
         NEW_TAXONOMY_CLASS=Constants.TAXONOMY_CLASS+domainName+"#";
  	   System.out.println("expanded template name: "+expandedTemplateName);
  	   
@@ -4224,28 +4201,7 @@ public void loadDataCatalog(String template, String modeFile){
             }
             System.out.println("The final abstract component to be linked to is:"+finalabstractcomponenttobelinkedto);
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
             ////ENDS
             
             //NOW QUERY MY COMPONENT CATALOG TO CHECK IF THIS COMPONENT WITH SAME INPS AND OUTPS EXISTS
@@ -4297,6 +4253,8 @@ public void loadDataCatalog(String template, String modeFile){
                 if(namefoundornot!=null && inputsComp.size()==inpsfrommycc.size() && outputsComp.size()==outpsfrommycc.size())
                 {
                 	//now the name is found and plus the inputs and outputs are also equal and so ur done here
+                	
+                	classNames.put(nodenew.getLocalName().substring(0,nodenew.getLocalName().lastIndexOf("_")), nodenew.getLocalName().substring(0,nodenew.getLocalName().lastIndexOf("_")+1)+"CLASS"+nodenew.getLocalName().substring(nodenew.getLocalName().lastIndexOf("_")+1));
                 	System.out.println("no need to export new stuff");
                 	flag=1;
                 	break;
@@ -4332,6 +4290,7 @@ public void loadDataCatalog(String template, String modeFile){
                 if (doc11!=null){
                     this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",doc11,XSDDatatype.XSDstring);
                 }
+                classNames.put(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase(), res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV1");
        
                 //IS CONCRETE EXPORTED
                 this.dataProps(Constants.COMPONENT_IS_CONCRETE, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V1",true+"", XSDDatatype.XSDboolean);
@@ -4399,6 +4358,8 @@ public void loadDataCatalog(String template, String modeFile){
 	                    if (doc11!=null){
 	                        this.dataProps(Constants.COMPONENT_HAS_DOCUMENTATION, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber,doc11,XSDDatatype.XSDstring);
 	                    }
+	                    classNames.put(res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase(), res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_CLASSV"+versionnumber);
+
 	           
 	                    //IS CONCRETE EXPORTED
 	                    this.dataProps(Constants.COMPONENT_IS_CONCRETE, res.getLocalName().substring(0,res.getLocalName().length()-4).toUpperCase()+"_V"+versionnumber,true+"", XSDDatatype.XSDboolean);
@@ -4477,8 +4438,23 @@ public void loadDataCatalog(String template, String modeFile){
             	String newchangeforthetype=typeComp.getURI().substring(typeComp.getURI().lastIndexOf("/"),typeComp.getURI().length());
             	String newchangeforthetype2=newchangeforthetype.substring(newchangeforthetype.lastIndexOf("#"),newchangeforthetype.length());
             	String tempURI = EncodingUtils.encode(Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS+"/"+"Expanded_"+newExpandedTemplateName+"_"+res.getLocalName());
-            	OntClass cAux1 = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype2);//repeated tuples will not be duplicated
-            	cAux1.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
+//            	OntClass cAux1 = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype2);//repeated tuples will not be duplicated
+            	System.out.println("CHECK HERE FOR SOME PRINTING");
+            	System.out.println(newchangeforthetype2);
+//            	cAux1.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);
+            	
+            	
+            	String key = newchangeforthetype2.toUpperCase().replace("#","");
+            	System.out.println(key);
+	            System.out.println("KEY INCOMING "+key +" "+classNames.get(key));
+	            if(classNames.containsKey(key)){
+	                newchangeforthetype2 = "#"+ classNames.get(key);
+	            }
+	            
+	            OntClass cAux1 = OPMWModel.createClass(NEW_TAXONOMY_CLASS_2+"Component"+newchangeforthetype2);//repeated tuples will not be duplicated
+	            System.out.println("CH "+NEW_TAXONOMY_CLASS_2);
+	            cAux1.createIndividual(Constants.PREFIX_EXPORT_RESOURCE+tempURI);    
+            	 
                 
             }else{
                 System.out.println("ANON RESOURCE "+typeComp.getURI()+" ignored");
@@ -4504,6 +4480,9 @@ public void loadDataCatalog(String template, String modeFile){
            
            
         }
+        System.out.println("PRINTING THE LINKING HASHMAP");
+        for(String x:classNames.keySet())
+        	System.out.println(x+" "+classNames.get(x));
       
         System.out.println("NODE LINKING ENDS");
         
