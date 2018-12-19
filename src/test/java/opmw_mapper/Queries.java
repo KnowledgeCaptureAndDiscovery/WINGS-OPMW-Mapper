@@ -134,13 +134,16 @@ public class Queries {
     
         
     /**** EXECUTION RULES ****/
-    //REQ1: ALL EXECUTIONS MUST BELONG TO A TEMPLATE
+    //REQ1: ALL EXECUTIONS MUST BELONG TO A TEMPLATE (OR EXPANDED TEMPLATE)
     private static final String EXECUTIONS_WITHOUT_TEMPLATE =""
             + "?acc a <http://www.opmw.org/ontology/WorkflowExecutionAccount>."
             + "FILTER NOT EXISTS{"
             + "?acc <http://www.opmw.org/ontology/correspondsToTemplate> ?templ."
+            + "{"
             + "?templ a <http://www.opmw.org/ontology/WorkflowTemplate>"
-            + "}"
+            + "}UNION{"
+            + "?templ a <http://www.opmw.org/ontology/WorkflowExpandedTemplate>"
+            + "}}"
             + "}";
     public static final String SELECT_EXECUTIONS_WITHOUT_TEMPLATE =ACCOUNT_SELECTION+EXECUTIONS_WITHOUT_TEMPLATE;
     public static final String COUNT_EXECUTIONS_WITHOUT_TEMPLATE =ACCOUNT_COUNT+EXECUTIONS_WITHOUT_TEMPLATE;

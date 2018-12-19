@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.wings-workflows.org/ontology/execution.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="http://www.wings-workflows.org/wings-omics-portal/export/users/alyssa/DataAbstractions/executions/library.owl">
+      <owl:ObjectProperty rdf:about="/ontology/execution.owl#hasSeededTemplate"/>
+      <owl:DatatypeProperty rdf:about="/ontology/execution.owl#hasLog"/>
+      <j.0:Execution rdf:about="genomics_analysi-d681acb5-49e2-428d-a2ed-42738c63833c.owl#genomics_analysi-d681acb5-49e2-428d-a2ed-42738c63833c">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T21:29:53.714Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T21:29:53.853Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="PreparationStep--3bb69953-eb65-4da7-8735-54c875813bd1.owl#PreparationStep--3bb69953-eb65-4da7-8735-54c875813bd1">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-07-27T16:29:00.99Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-07-27T16:29:00.997Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCalling-2-3531776f-4507-45d7-a1c1-48ce52500b66.owl#VariantCalling-2-3531776f-4507-45d7-a1c1-48ce52500b66">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T20:38:44.463Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T20:38:44.559Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-6f2236d2-80d7-4561-bb75-0ffc9ec5d9b6.owl#VariantCallingRe-6f2236d2-80d7-4561-bb75-0ffc9ec5d9b6">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T22:32:09.688Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T22:32:09.703Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-53ab71da-235d-47ba-83ac-9e34cdb35737.owl#VariantCallingRe-53ab71da-235d-47ba-83ac-9e34cdb35737">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T22:33:26.397Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T22:33:26.41Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-998907ae-580d-42ca-99b3-220780c6ce82.owl#VariantCallingRe-998907ae-580d-42ca-99b3-220780c6ce82">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-07-31T23:08:25.647Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-07-31T23:08:25.739Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-7dafe0fd-fb83-49b1-9af7-af47ef190b83.owl#VariantCallingRe-7dafe0fd-fb83-49b1-9af7-af47ef190b83">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T17:46:28.692Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T17:46:28.708Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="genomics_analysi-373c2c9a-3cb8-48b4-96f4-43efbb14b6af.owl#genomics_analysi-373c2c9a-3cb8-48b4-96f4-43efbb14b6af">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T21:23:06.376Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T21:23:06.511Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-2bdbc485-d4f3-40dd-9fc3-fb6f0a0f9b33.owl#VariantCallingRe-2bdbc485-d4f3-40dd-9fc3-fb6f0a0f9b33">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-03T18:17:45.418Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-03T18:17:45.573Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="genomics_analysi-5975a8a3-b944-48ae-a5c3-48c561656334.owl#genomics_analysi-5975a8a3-b944-48ae-a5c3-48c561656334">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T21:14:26.223Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T21:14:26.344Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-84562b34-0fdf-414c-a40b-dcd9fee16dfb.owl#VariantCallingRe-84562b34-0fdf-414c-a40b-dcd9fee16dfb">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T17:53:23.043Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T17:53:23.056Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-0128a555-4e0f-4d16-b164-f7822ab88cc6.owl#VariantCallingRe-0128a555-4e0f-4d16-b164-f7822ab88cc6">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-07-31T23:23:02.07Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-07-31T23:23:02.101Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-fd6acf93-c1ae-42fd-a894-41d4fe94cca3.owl#VariantCallingRe-fd6acf93-c1ae-42fd-a894-41d4fe94cca3">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T17:47:53.051Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T17:47:53.065Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="genomics_analysi-62006568-52a6-4240-8b25-d8537e4ee3f8.owl#genomics_analysi-62006568-52a6-4240-8b25-d8537e4ee3f8">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T20:48:34.019Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-14T20:48:34.146Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-b2bb9a26-81c8-43fb-b65b-0897e48bd1b0.owl#VariantCallingRe-b2bb9a26-81c8-43fb-b65b-0897e48bd1b0">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T17:45:05.798Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T17:45:05.848Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="PreparationStep--797653f5-d470-4a89-a367-75a1b25067ad.owl#PreparationStep--797653f5-d470-4a89-a367-75a1b25067ad">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-07-27T16:31:40.902Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-07-27T16:31:40.926Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-c915a4e1-d280-4b96-9c3f-cf1a931229a9.owl#VariantCallingRe-c915a4e1-d280-4b96-9c3f-cf1a931229a9">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T18:09:59.831Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T18:09:59.844Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-d8ac7312-9e13-4b3e-802c-7982ce05b977.owl#VariantCallingRe-d8ac7312-9e13-4b3e-802c-7982ce05b977">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T22:35:07.509Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-02T22:35:07.522Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+      </j.0:Execution>
+      <j.0:Execution rdf:about="VariantCallingRe-7fe45b06-f278-4394-9588-2da6fad4785e.owl#VariantCallingRe-7fe45b06-f278-4394-9588-2da6fad4785e">
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-03T17:59:55.229Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-08-03T17:59:55.239Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >FAILURE</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+Finished
+</j.0:hasLog>
+      </j.0:Execution>
+</rdf:RDF>
+

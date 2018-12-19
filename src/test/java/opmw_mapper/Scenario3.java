@@ -11,6 +11,10 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Literal;
 
+/**
+ * This class may be deleted
+ 
+ */
 public class Scenario3 {
 
 	public static String validateRepo(OntModel m,String templateName,String newTemplateName,String timegiven)

@@ -13,6 +13,10 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.ModelFactory;
 
+/**
+ * Should assess if this class overlaps with the current utils class.
+ * @author dgarijo
+ */
 public class Utils {
 	//given a directory, loads all the files in a local model.
     public static OntModel loadDirectory(String dirPath){

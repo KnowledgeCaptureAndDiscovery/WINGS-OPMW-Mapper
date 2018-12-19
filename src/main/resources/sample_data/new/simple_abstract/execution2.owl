@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.wings-workflows.org/ontology/execution.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="http://ontosoft.isi.edu:8080/wings-portal/export/users/tirth/TestingDomain/executions/j1-fd745d2b-f01f-4650-80e1-29a016698b87.owl">
+      <j.0:Execution rdf:ID="j1-fd745d2b-f01f-4650-80e1-29a016698b87">
+            <j.0:hasPlan rdf:resource="j1-fa77803c-3215-4ade-beeb-9ef3356c9ae0.owl#j1-fa77803c-3215-4ade-beeb-9ef3356c9ae0"/>
+            <j.0:hasStep>
+                  <j.0:ExecutionStep rdf:about="j1-faa7c57a-0120-47d2-abbf-e7329e999a8e.owl#htmltotextNode">
+                        <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-09-01T23:44:31.709Z</j.0:hasStartTime>
+                        <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-09-01T23:44:31.714Z</j.0:hasEndTime>
+                        <j.0:hasExecutionStatus rdf:datatype=
+                        "http://www.w3.org/2001/XMLSchema#string"
+                        >SUCCESS</j.0:hasExecutionStatus>
+                        <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >/opt/wings/storage/default/users/tirth/TestingDomain/code/library/htmltotext/run -i1 /opt/wings/storage/default/users/tirth/TestingDomain/data/test1.html -o1 /opt/wings/storage/default/users/tirth/TestingDomain/data/OutputTextFile-dgkic20dcccli7po0vetzivc
+Outputs already exist. Not running job
+</j.0:hasLog>     </j.0:ExecutionStep>
+            </j.0:hasStep>
+            <j.0:hasStep>
+                  <j.0:ExecutionStep rdf:about="j1-faa7c57a-0120-47d2-abbf-e7329e999a8e.owl#thirdNode">
+                        <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-09-01T23:44:31.749Z</j.0:hasStartTime>
+                        <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2017-09-01T23:44:32.041Z</j.0:hasEndTime>
+                        <j.0:hasExecutionStatus rdf:datatype=
+                        "http://www.w3.org/2001/XMLSchema#string"
+                        >SUCCESS</j.0:hasExecutionStatus>
+                        <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >/opt/wings/storage/default/users/tirth/TestingDomain/code/library/third/run -i1 /opt/wings/storage/default/users/tirth/TestingDomain/data/OutputTextFile-dgkic20dcccli7po0vetzivc -i2 /opt/wings/storage/default/users/tirth/TestingDomain/data/USconstitution.txt -p1 hi -o1 /opt/wings/storage/default/users/tirth/TestingDomain/data/OutputFile-1pqjw5fmduhkcn9sf3e018520
+Test1
+
+First
+Heading
+
+Hi
+this
+is
+a
+basic
+paragraph
+
+
+</j.0:hasLog>     </j.0:ExecutionStep>
+            </j.0:hasStep>
+            <j.0:hasTemplate rdf:resource="../workflows/j1.owl#j1"/>
+            <j.0:hasExpandedTemplate rdf:resource="j1-faa7c57a-0120-47d2-abbf-e7329e999a8e.owl#j1-faa7c57a-0120-47d2-abbf-e7329e999a8e"/>
+            <j.0:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-09-01T23:44:31.693Z</j.0:hasStartTime>
+            <j.0:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >2017-09-01T23:44:32.045Z</j.0:hasEndTime>
+            <j.0:hasExecutionStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >SUCCESS</j.0:hasExecutionStatus>
+            <j.0:hasLog rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Finished
+</j.0:hasLog>
+            <j.0:hasSeededTemplate rdf:resource="../workflows/j1-049d5ff2-b5c9-4631-8296-452a51035d7d.owl#j1-049d5ff2-b5c9-4631-8296-452a51035d7d"/>
+      </j.0:Execution>
+</rdf:RDF>
+
