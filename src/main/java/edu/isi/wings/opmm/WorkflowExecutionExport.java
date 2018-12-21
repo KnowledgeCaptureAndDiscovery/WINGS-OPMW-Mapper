@@ -315,8 +315,8 @@ public class WorkflowExecutionExport {
         
         //TO DO: Export to the right path on the right method.
         //w.opmwModel.write(System.out, "TTL");
-        w.exportAsOPMW("", "TTL");
-        w.concreteTemplateExport.exportAsOPMW("", "TTL");
+        w.exportAsOPMW(".", "TTL");
+        w.concreteTemplateExport.exportAsOPMW(".", "TTL");
         c.exportCatalog(null);
         
         //second test: ODS execution
