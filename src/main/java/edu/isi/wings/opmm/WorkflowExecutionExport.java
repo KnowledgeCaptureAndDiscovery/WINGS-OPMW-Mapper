@@ -1,6 +1,7 @@
 package edu.isi.wings.opmm;
 
 import java.io.File;
+
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.QuerySolution;
@@ -27,7 +28,9 @@ public class WorkflowExecutionExport {
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
     private boolean isExecPublished;
-    
+    private String uploadURL;
+    private String uploadUsername;
+    private String uploadPassword;
     //private OntModel provModel;//TO IMPLEMENT AT THE END. Can it be done with constructs?
 
     /**
@@ -35,15 +38,23 @@ public class WorkflowExecutionExport {
      * @param executionFile
      * @param catalog
      * @param exportName
-     * @param endpointURI 
+     * @param endpointURI
+     * @param uploadURL
+     * @param uploadUsername
+     * @param uploadPassword
      */
-    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportName, String endpointURI) {
+    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportName, String endpointURI,
+                                   String uploadURL, String uploadUsername, String uploadPassword) {
         this.wingsExecutionModel = ModelUtils.loadModel(executionFile);
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
+
         PREFIX_EXPORT_RESOURCE = Constants.PREFIX_EXPORT_GENERIC+exportName+"/"+"resource/";
         this.endpointURI = endpointURI;
         this.exportName = exportName;
+        this.uploadURL = uploadURL;
+        this.uploadUsername = uploadUsername;
+        this.uploadPassword = uploadPassword;
         isExecPublished = false;
     }
 
@@ -73,20 +84,21 @@ public class WorkflowExecutionExport {
             wingsExecutionModel.add(ModelUtils.loadModel(plan));
             //ask if an execution with same run id exists. If so, return URI. The local name of the execution is its run id.
             String queryExec = QueriesWorkflowExecutionExport.getOPMWExecutionsWithRunID(wingsExecution.getLocalName());
-            ResultSet rs = ModelUtils.queryOnlineRepository(queryExec, endpointURI);
-            if(rs.hasNext()){
+            QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec, endpointURI);
+            if(solution != null){
                 System.out.println("Execution exists!");
-                this.transformedExecutionURI = (rs.next().getResource("?exec").getURI()); 
+                this.transformedExecutionURI = (solution.getResource("?exec").getURI());
                 isExecPublished = true;
             }else{
                 System.out.println("Execution does not exist! Publishing new execution");
                 this.transformedExecutionURI =  convertExecutionToOPMW(wingsExecution);
             }
         }catch(Exception e){
-            System.err.println("Error: "+e.getMessage()+"\n The execution was not exported");
+          e.printStackTrace();
+          System.err.println("Error: "+e.getMessage()+"\n The execution was not exported");
         }
     }
-    
+
     /**
      * General method to convert a WINGS execution to OPMW
      * @param wingsExecution instance pointer to the execution
@@ -114,25 +126,25 @@ public class WorkflowExecutionExport {
             Literal status = qs.getLiteral("?status");
             weInstance.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_OVERALL_START_TIME),start);
             weInstance.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_OVERALL_END_TIME),end);
-            weInstance.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_STATUS),status);            
+            weInstance.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_STATUS),status);
         }
         //link user. Info not available so it is extracted from URL.
-        //TO DO: Ask Varun if user can be accessed without deriving it from path
+        //TODO: Ask Varun if user can be accessed without deriving it from path
         String user = wingsExecution.getURI().split("/users/")[1];
         user = user.substring(0, user.indexOf("/"));
         String userURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_AGENT+"/"+user;
         Individual userInstance = opmwModel.createClass(Constants.OPM_AGENT).createIndividual(userURI);
         userInstance.addLabel(user, null);
         weInstance.addProperty(opmwModel.createProperty(Constants.PROP_HAS_CONTRIBUTOR), userInstance);
-        
+
         //metadata of the execution system (WINGS)
-        //TO DO: Ask Varun to include extra metadata on whether the exec was on Pegasus/OODT, etc.
+        //TODO: Ask Varun to include extra metadata on whether the exec was on Pegasus/OODT, etc.
         String wfSystemURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_AGENT+"/"+"WINGS";
         Individual wingsInstance = opmwModel.createClass(Constants.OPM_AGENT).createIndividual(wfSystemURI);
         weInstance.addProperty(opmwModel.createProperty(Constants.PROP_HAS_CREATOR), wingsInstance);
         wingsInstance.addProperty(opmwModel.createProperty(Constants.PROV_ACTED_ON_BEHALF_OF), userInstance);
         wingsInstance.addLabel("WINGS", null);
-        
+
         //get expanded template loaded in local model (for parameter linking)
         String queryExpandedTemplate = QueriesWorkflowExecutionExport.getWINGSExpandedTemplate();
         rs = ModelUtils.queryLocalRepository(queryExpandedTemplate , wingsExecutionModel);
@@ -162,7 +174,7 @@ public class WorkflowExecutionExport {
             String executionStepURI = PREFIX_EXPORT_RESOURCE+ Constants.CONCEPT_WORKFLOW_EXECUTION_PROCESS+"/"+runID+"_"+wingsStep.getLocalName();
             Individual executionStep = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_PROCESS).createIndividual(executionStepURI);
             executionStep.addLabel(wingsStep.getLocalName(), null);
-            executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAD_INVOCATION_COMMAND),invLine);            
+            executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAD_INVOCATION_COMMAND),invLine);
             executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAD_START_TIME),start);
             executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_STATUS),status);
             if(end!=null){
@@ -173,29 +185,51 @@ public class WorkflowExecutionExport {
             String configLocation = null;//this is where the ZIP file with the contents will be stored
             //Creation of the software config. This may be moved to another class for simplicity and because it
             //can be used in the catalog too.
-            //TO DO: bundle (zip) of the files in the configuration. Save them to folder along with Zip.
-            //TO DO: get MD5 for the zip
-            //if there are errors, then create a config URI based on the node and URI (i.e., unique)
+            //TODO: if there are errors, then create a config URI based on the node and URI (i.e., unique)
             //config URI will be: https://exportResource/SoftwareConfiguration/MD5_Config
+
+            /* Export the component code */
             if(configURI == null){
-                //if the config URI could not be created with MD5, then we give it a unique id (runID+steplocalName)
+                  //if the config URI could not be created with MD5, then we give it a unique id (runID+steplocalName)
                 configURI = PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_SOFTWARE_CONFIGURATION+"/"+runID+"_"+wingsStep.getLocalName()+"_config";
                 configLocation = executionScript.getString().replace("/run", "");
             }
+            File directory = new File(configLocation);
+            String configLocationRemote = configLocation;
+            //TODO: zip and upload
+            try {
+                configLocationRemote = StorageHandler.zipStreamUpload(directory,
+                        this.uploadURL, this.uploadUsername, this.uploadPassword);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            /*Export the mainscript and upload */
             Individual stepConfig = opmwModel.createClass(Constants.OPMW_SOFTWARE_CONFIGURATION).createIndividual(configURI);
             stepConfig.addLabel(stepConfig.getLocalName(), null);
             if(configURIMD5 != null){
                 stepConfig.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_MD5), configURIMD5);
-                //TO DO
-                //add all the scripts inside as scripts with location, MD5 and label (create URI for them)
-                //add the good path for the main script with location, MD5 and label (create URI)
             }else{
+                if (configLocationRemote != null ){
+                    configLocation = configLocationRemote;
+                }
                 stepConfig.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION), configLocation);
                 //since we don't have MD5, use blank node.
-                Resource mainScript = ModelUtils.getIndividualFromFile(executionScript.getString(), opmwModel, 
+                String mainScriptLocationLocal = executionScript.getString();
+                String mainScriptLocation = mainScriptLocationLocal;
+                File mainScriptFile = new File(mainScriptLocationLocal);
+                try {
+                    mainScriptLocation = StorageHandler.uploadFile(mainScriptFile, uploadURL, uploadUsername, uploadPassword);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Resource mainScript = ModelUtils.getIndividualFromFile(mainScriptLocation, opmwModel,
                         Constants.OPMW_SOFTWARE_SCRIPT, null);
                 stepConfig.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_HAS_MAIN_SCRIPT),mainScript);
             }
+
             executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_HAD_SOFTWARE_CONFIGURATION), stepConfig);
             executionStep.addProperty(opmwModel.createProperty(Constants.OPM_PROP_WCB), wingsInstance);
             //for each step get its i/o (plan)
@@ -208,9 +242,23 @@ public class WorkflowExecutionExport {
                 Literal binding = qsVar.getLiteral("?binding");
                 String executionArtifactURI = PREFIX_EXPORT_RESOURCE+Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT+"/"+runID+"_"+variable.getLocalName();
                 Individual executionArtifact = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT).createIndividual(executionArtifactURI);
-                //TO DO: MD5 of the file, construct alternateof if others share MD5.
                 executionArtifact.addLabel(variable.getLocalName(),null);
-                executionArtifact.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION), binding);
+
+                //upload data input or output
+                String dataLocation = null;
+                try {
+                    File dataFile = new File(binding.toString());
+                    dataLocation = StorageHandler.uploadFile(dataFile, uploadURL, uploadUsername, uploadPassword);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if ( dataLocation != null ) {
+                    executionArtifact.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION), dataLocation);
+                } else {
+                    executionArtifact.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION), binding);
+                }
+
                 //add as part of the account
                 executionArtifact.addProperty(opmwModel.createProperty(Constants.OPM_PROP_ACCOUNT), weInstance);
                 if(varType.equals(Constants.P_PLAN_PROP_HAS_INPUT)){
@@ -301,25 +349,15 @@ public class WorkflowExecutionExport {
         //this.export_as_OPMW(outFilePath, serialization);
         //this.export_as_PPlan(outFilePath, serialization);
     }
-    
+
     //TO DO: When exporting, do the execution inputs and output collection as I discussed with Milan.?
-    
-    public static void main(String[] args){
-        //String taxonomyURL = "http://www.wings-workflows.org/wings-omics-portal/export/users/ravali/genomics/components/library.owl";
-        String taxonomyURL = "C:\\Users\\dgarijo\\Dropbox (OEG-UPM)\\NetBeansProjects\\WingsToOPMWMapper\\NEW_TEST\\templates\\concreteWorkflow\\library-gen.owl";
-        String executionPath = "C:\\Users\\dgarijo\\Dropbox (OEG-UPM)\\NetBeansProjects\\WingsToOPMWMapper\\NEW_TEST\\executions\\genomics_analysi-exec.owl";
-        //should get taxonomy URL from template. For the tests we will try local components.
-        Catalog c = new Catalog("genomics", "testExport", "domains", taxonomyURL);
-        WorkflowExecutionExport w = new WorkflowExecutionExport(executionPath, c, "exportTest", "http://localhost:3030/test/query");
-        System.out.println("Exec URI: "+w.getTransformedExecutionURI());
-        
-        //TO DO: Export to the right path on the right method.
-        //w.opmwModel.write(System.out, "TTL");
-        w.exportAsOPMW(".", "TTL");
-        w.concreteTemplateExport.exportAsOPMW(".", "TTL");
-        c.exportCatalog(null);
-        
-        //second test: ODS execution
-        //TO DO
+
+    public WorkflowTemplateExport getConcreteTemplateExport() {
+      return concreteTemplateExport;
     }
+
+    public void setConcreteTemplateExport(WorkflowTemplateExport concreteTemplateExport) {
+      this.concreteTemplateExport = concreteTemplateExport;
+    }
+
 }
