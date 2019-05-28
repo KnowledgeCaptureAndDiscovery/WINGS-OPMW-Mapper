@@ -208,8 +208,9 @@ public class WorkflowExecutionExport {
 
             /*Export the mainscript and upload */
             String mainScriptLocation = uploadFile(executionScript.getString());
+            String mainScriptURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_SOFTWARE_CONFIGURATION + "/" + runID + "_" + wingsStep.getLocalName() + "_mainscript";
             Resource mainScript = ModelUtils.getIndividualFromFile(mainScriptLocation, opmwModel,
-                    Constants.OPMW_SOFTWARE_SCRIPT, null);
+                    Constants.OPMW_SOFTWARE_SCRIPT, mainScriptURI);
             stepConfig.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_HAS_MAIN_SCRIPT), mainScript);
             executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_HAD_SOFTWARE_CONFIGURATION), stepConfig);
             executionStep.addProperty(opmwModel.createProperty(Constants.OPM_PROP_WCB), wingsInstance);
@@ -221,7 +222,9 @@ public class WorkflowExecutionExport {
                 String varType = qsVar.getResource("?varType").getURI();
                 Resource variable = qsVar.getResource("?variable");
                 Literal binding = qsVar.getLiteral("?binding");
-                Individual executionArtifact = getIndividual(runID, variable);
+                String executionArtifactURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT + "/" + runID + "_" + variable.getLocalName();
+                Individual executionArtifact = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT).createIndividual(executionArtifactURI);
+                executionArtifact.addLabel(variable.getLocalName(), null);
                 String pathFile = binding.toString();
                 String dataLocation = uploadFile(pathFile);
                 executionArtifact.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION), dataLocation);
@@ -250,7 +253,7 @@ public class WorkflowExecutionExport {
                 QuerySolution nextP = params.next();
                 Resource param = nextP.getResource("?param");
                 Literal paramValue = nextP.getLiteral("?paramValue");
-                //add param, add its value and link it to execution        
+                //add param, add its value and link it to execution
                 String parameterURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT + "/" + runID + "_" + param.getLocalName();
                 Individual parameter = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT).createIndividual(parameterURI);
                 parameter.addLabel(param.getLocalName(), null);
@@ -277,13 +280,6 @@ public class WorkflowExecutionExport {
         //link execution account to expanded template.
         weInstance.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE), concreteTemplateExport.getTransformedTemplateIndividual());
         return we;
-    }
-
-    private Individual getIndividual(String runID, Resource variable) {
-        String executionArtifactURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_WORKFLOW_EXECUTION_ARTIFACT + "/" + runID + "_" + variable.getLocalName();
-        Individual executionArtifact = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT).createIndividual(executionArtifactURI);
-        executionArtifact.addLabel(variable.getLocalName(), null);
-        return executionArtifact;
     }
 
     /**
