@@ -28,9 +28,27 @@ public class WorkflowExecutionExport {
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
     private boolean isExecPublished;
+
+    public void setUploadURL(String uploadURL) {
+        this.uploadURL = uploadURL;
+    }
+
+    public void setUploadUsername(String uploadUsername) {
+        this.uploadUsername = uploadUsername;
+    }
+
+    public void setUploadPassword(String uploadPassword) {
+        this.uploadPassword = uploadPassword;
+    }
+
+    public void setUploadMaxSize(long uploadMaxSize) {
+        this.uploadMaxSize = uploadMaxSize;
+    }
+
     private String uploadURL;
     private String uploadUsername;
     private String uploadPassword;
+    private long uploadMaxSize;
     //private OntModel provModel;//TO IMPLEMENT AT THE END. Can it be done with constructs?
 
     /**
@@ -40,12 +58,8 @@ public class WorkflowExecutionExport {
      * @param catalog
      * @param exportName
      * @param endpointURI
-     * @param uploadURL
-     * @param uploadUsername
-     * @param uploadPassword
      */
-    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportName, String endpointURI,
-                                   String uploadURL, String uploadUsername, String uploadPassword) {
+    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportName, String endpointURI) {
         this.wingsExecutionModel = ModelUtils.loadModel(executionFile);
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
@@ -53,6 +67,7 @@ public class WorkflowExecutionExport {
         PREFIX_EXPORT_RESOURCE = Constants.PREFIX_EXPORT_GENERIC + exportName + "/" + "resource/";
         this.endpointURI = endpointURI;
         this.exportName = exportName;
+
         this.uploadURL = uploadURL;
         this.uploadUsername = uploadUsername;
         this.uploadPassword = uploadPassword;
@@ -183,7 +198,7 @@ public class WorkflowExecutionExport {
                 executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAD_END_TIME), end);
             }
             //Creation of the software config. This may be moved to another class for simplicity and because it
-            //can be used in the catalog too.
+            //can be used in the catalog too.http://localhost:8080/wings_portal/users/admin/CaesarCypher/data/fetch?data_id=http%3A//localhost%3A8080/wings_portal/export/users/admin/CaesarCypher/data/library.owl%23USconstitution.txt
             //TODO: if there are errors, then create a config URI based on the node and URI (i.e., unique)
 
             /*
@@ -192,6 +207,9 @@ public class WorkflowExecutionExport {
             */
 
             String configURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_SOFTWARE_CONFIGURATION + "/" + runID + "_" + wingsStep.getLocalName() + "_config";
+            Individual stepConfig = opmwModel.createClass(Constants.OPMW_SOFTWARE_CONFIGURATION).createIndividual(configURI);
+            stepConfig.addLabel(stepConfig.getLocalName(), null);
+
             String configLocation = executionScript.getString().replace("/run", "");
             File directory = new File(configLocation);
             StorageHandler storage = new StorageHandler();
@@ -201,8 +219,6 @@ public class WorkflowExecutionExport {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Individual stepConfig = opmwModel.createClass(Constants.OPMW_SOFTWARE_CONFIGURATION).createIndividual(configURI);
-            stepConfig.addLabel(stepConfig.getLocalName(), null);
             stepConfig.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION), configLocation);
 
 
@@ -291,6 +307,9 @@ public class WorkflowExecutionExport {
         try {
             Uploader upload = new Uploader(this.uploadURL, this.uploadUsername, this.uploadPassword);
             File mainScriptFile = new File(filePath);
+            if (this.uploadMaxSize != 0 && mainScriptFile.length() > this.uploadMaxSize ){
+                return mainScriptFile.getAbsolutePath();
+            }
             upload.addFilePart("file_param_1", mainScriptFile);
             return upload.finish();
         } catch (Exception e) {
