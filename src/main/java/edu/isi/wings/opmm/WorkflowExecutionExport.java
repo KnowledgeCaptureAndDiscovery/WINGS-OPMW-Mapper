@@ -30,6 +30,11 @@ public class WorkflowExecutionExport {
     private final String exportName;//needed to pass it on to template exports
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
+
+    public boolean isExecPublished() {
+        return isExecPublished;
+    }
+
     private boolean isExecPublished;
 
     public void setUploadURL(String uploadURL) {
@@ -176,7 +181,7 @@ public class WorkflowExecutionExport {
             expandedTemplateURI = rs.next().getResource("?expTemplate").getNameSpace();//the namespace is better for later.
             System.out.println("Execution expanded template " + expandedTemplateURI + " loaded successfully");
             //publish expanded template. The expanded template will publish the template if necessary.
-            concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog, this.exportName, this.endpointURI, this.domain);
+            concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog, this.exportName, this.endpointURI, this.domain,true);
             concreteTemplateExport.transform();
             System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
         } else {
@@ -359,17 +364,18 @@ public class WorkflowExecutionExport {
      * Function that exports the transformed template in OPMW. This function should be called after
      * "transform". If not, it will call transform() automatically.
      *
-     * @param outFilePath   path where to write the serialized model
+     * @param filepath   path where to write the serialized model
      * @param serialization serialization of choice: RDF/XML, TTL, etc.
      */
-    public void exportAsOPMW(String outFilePath, String serialization) {
+    public String exportAsOPMW(String filepath, String serialization) {
         if (transformedExecutionURI == null) {
             this.transform();
         }
         if (!isExecPublished) {
             //opmwModel.write(System.out, "TTL");
-            ModelUtils.exportRDFFile(outFilePath + File.separator + opmwModel.getResource(transformedExecutionURI).getLocalName(), opmwModel, serialization);
+            ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
         }
+        return transformedExecutionURI;
     }
 
     /**

@@ -37,8 +37,15 @@ public class WorkflowTemplateExport {
 
     private boolean isTemplatePublished;//boolean value to know if the template has already been published on the repository
     private final String exportName;//needed to pass it on to template exports
+
+    public WorkflowTemplateExport getAbstractTemplateExport() {
+        return abstractTemplateExport;
+    }
+
     private WorkflowTemplateExport abstractTemplateExport;//a template may implement a template, and therefore publish its abstract template (on a separate file)
     private String domain;
+    private boolean isConcreteTemplate;
+    private String filepath;
     //private OntModel PplanModel;//TO IMPLEMENT AT THE END. Can it be done with constructs?
     
     
@@ -49,7 +56,7 @@ public class WorkflowTemplateExport {
      * @param exportName name of the dataset to export (will be part of the URI)
      * @param endpointURI
      */
-    public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportName, String endpointURI, String domain) {
+    public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportName, String endpointURI, String domain, boolean isConcrete) {
         this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
@@ -58,6 +65,7 @@ public class WorkflowTemplateExport {
         isTemplatePublished = false;
         this.exportName = exportName;
         this.domain = domain;
+        this.isConcreteTemplate = isConcrete;
     }
 
     /**
@@ -210,7 +218,7 @@ public class WorkflowTemplateExport {
         if(rsD.hasNext()){
             //publish abstract template with the URI taken from derivation
             QuerySolution qs = rsD.next();
-            this.abstractTemplateExport = new WorkflowTemplateExport(qs.getResource("?dest").getURI(), componentCatalog, exportName, endpointURI, domain);
+            this.abstractTemplateExport = new WorkflowTemplateExport(qs.getResource("?dest").getURI(), componentCatalog, exportName, endpointURI, domain,false);
             abstractTemplateExport.transform();
             abstractTemplateInstance = abstractTemplateExport.getTransformedTemplateIndividual();
             System.out.println("Abstract template: "+abstractTemplateInstance.getURI());
@@ -365,17 +373,20 @@ public class WorkflowTemplateExport {
     /**
      * Function that exports the transformed template in OPMW. This function should be called after
      * "transform". If not, it will call transform() automatically.
-     * @param outFileDirectory path where to write the serialized model
+     * @param filepath path of the file where to write the template
      * @param serialization serialization of choice: RDF/XML, TTL, etc.
      * @return 
      */
-    public String exportAsOPMW(String outFileDirectory, String serialization){
+    public String exportAsOPMW(String filepath, String serialization){
         if(transformedTemplate == null){
             this.transform();
         }
         if(!isTemplatePublished){
             //opmwModel.write(System.out, "TTL");
-            ModelUtils.exportRDFFile(outFileDirectory+File.separator+transformedTemplate.getLocalName()+"_opmw", opmwModel, serialization);
+            if(this.abstractTemplateExport!=null){
+                abstractTemplateExport.exportAsOPMW(filepath,serialization);
+            }
+            ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
         }
         return transformedTemplate.getURI();
     }
@@ -430,7 +441,7 @@ public class WorkflowTemplateExport {
         String templatePath = "http://datascience4all.org/wings-portal/export/users/admin/mint/workflows/storyboard_isi_cag_64kpzcza7.owl";
         String domain = "mint";
         Catalog c = new Catalog(domain, "testExport", "domains", taxonomyURL);
-        WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "exportTest", "http://localhost:3030/test/query", domain);
+        WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "exportTest", "http://localhost:3030/test/query", domain,true);
         w.exportAsOPMW(".", "TTL");
         c.exportCatalog(null, "RDF/XML");
     }
