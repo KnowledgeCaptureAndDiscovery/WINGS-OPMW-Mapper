@@ -2,6 +2,7 @@ package edu.isi.wings.opmm;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -31,6 +32,14 @@ public class WorkflowExecutionExport {
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
 
+    private String uploadURL;
+    private String uploadUsername;
+    private String uploadPassword;
+    private String uploadDirectory;
+    private long uploadMaxSize;
+    //private OntModel provModel;//TO IMPLEMENT AT THE END. Can it be done with constructs?
+    private String domain;
+    
     public boolean isExecPublished() {
         return isExecPublished;
     }
@@ -53,12 +62,10 @@ public class WorkflowExecutionExport {
         this.uploadMaxSize = uploadMaxSize;
     }
 
-    private String uploadURL;
-    private String uploadUsername;
-    private String uploadPassword;
-    private long uploadMaxSize;
-    //private OntModel provModel;//TO IMPLEMENT AT THE END. Can it be done with constructs?
-    private String domain;
+    public void setUploadDirectory(String uploadDirectory) {
+      this.uploadDirectory = uploadDirectory;
+    }
+
     /**
      * Default constructor for exporting executions
      *
@@ -76,9 +83,6 @@ public class WorkflowExecutionExport {
         this.endpointURI = endpointURI;
         this.exportName = exportName;
 
-        this.uploadURL = uploadURL;
-        this.uploadUsername = uploadUsername;
-        this.uploadPassword = uploadPassword;
         isExecPublished = false;
         this.domain = domain;
     }
@@ -342,6 +346,13 @@ public class WorkflowExecutionExport {
      */
     private String uploadFile(String filePath) {
         try {
+          if(this.uploadDirectory != null) {
+            File mainScriptFile = new File(filePath);
+            File toFile = new File(this.uploadDirectory + File.separator + mainScriptFile.getName());
+            FileUtils.copyFile(mainScriptFile, toFile);
+            return this.uploadURL + "/" + mainScriptFile.getName();
+          }
+          else {
             Uploader upload = new Uploader(this.uploadURL, this.uploadUsername, this.uploadPassword);
             File mainScriptFile = new File(filePath);
             if (this.uploadMaxSize != 0 && mainScriptFile.length() > this.uploadMaxSize ){
@@ -349,6 +360,7 @@ public class WorkflowExecutionExport {
             }
             upload.addFilePart("file_param_1", mainScriptFile);
             return upload.finish().replaceAll("\n", "");
+          }
         } catch (Exception e) {
             e.printStackTrace();
         }
