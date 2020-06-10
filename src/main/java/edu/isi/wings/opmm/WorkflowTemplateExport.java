@@ -289,7 +289,8 @@ public class WorkflowTemplateExport {
                 if(derivedFrom!=null){
                     Resource abstractVariable = ModelUtils.getIndividualWithLabel(derivedFrom.getLocalName(), abstractTemplateExport.getOpmwModel());
                     //System.out.println(concreteVatiable.getURI());
-                    workflowVariable.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_IMPLEMENTS_TEMPLATE_ARTIFACT), abstractVariable);
+                    if(abstractVariable != null)
+                      workflowVariable.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_IMPLEMENTS_TEMPLATE_ARTIFACT), abstractVariable);
                 }
             }
         }
