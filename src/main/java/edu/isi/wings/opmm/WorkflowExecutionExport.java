@@ -28,6 +28,7 @@ public class WorkflowExecutionExport {
     private final Catalog componentCatalog;//needed to publish expanded templates and the extensions of opmw.
     private final String PREFIX_EXPORT_RESOURCE;
     private final String endpointURI;//URI of the endpoint where everything is published.
+    private final String exportUrl;
     private final String exportName;//needed to pass it on to template exports
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
@@ -74,14 +75,17 @@ public class WorkflowExecutionExport {
      * @param exportName
      * @param endpointURI
      */
-    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportName, String endpointURI, String domain) {
+    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName, String endpointURI, String domain) {
         this.wingsExecutionModel = ModelUtils.loadModel(executionFile);
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
+        if(exportUrl == null)
+          exportUrl = Constants.PREFIX_EXPORT_GENERIC;
 
-        PREFIX_EXPORT_RESOURCE = Constants.PREFIX_EXPORT_GENERIC + exportName + "/" + "resource/";
+        PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
         this.endpointURI = endpointURI;
         this.exportName = exportName;
+        this.exportUrl = exportUrl;
 
         isExecPublished = false;
         this.domain = domain;
@@ -183,7 +187,8 @@ public class WorkflowExecutionExport {
             expandedTemplateURI = rs.next().getResource("?expTemplate").getNameSpace();//the namespace is better for later.
             System.out.println("Execution expanded template " + expandedTemplateURI + " loaded successfully");
             //publish expanded template. The expanded template will publish the template if necessary.
-            concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog, this.exportName, this.endpointURI, this.domain,true);
+            concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog, 
+                this.exportUrl, this.exportName, this.endpointURI, this.domain,true);
             concreteTemplateExport.transform();
             System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
         } else {

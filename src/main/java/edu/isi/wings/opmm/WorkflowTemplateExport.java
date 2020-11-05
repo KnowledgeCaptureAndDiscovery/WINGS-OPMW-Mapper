@@ -37,6 +37,7 @@ public class WorkflowTemplateExport {
     }
 
     private boolean isTemplatePublished;//boolean value to know if the template has already been published on the repository
+    private final String exportUrl;
     private final String exportName;//needed to pass it on to template exports
 
     public WorkflowTemplateExport getAbstractTemplateExport() {
@@ -57,14 +58,18 @@ public class WorkflowTemplateExport {
      * @param exportName name of the dataset to export (will be part of the URI)
      * @param endpointURI
      */
-    public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportName, String endpointURI, String domain, boolean isConcrete) {
+    public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportUrl, String exportName, String endpointURI, String domain, boolean isConcrete) {
         this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
-        PREFIX_EXPORT_RESOURCE = Constants.PREFIX_EXPORT_GENERIC+exportName+"/"+"resource/";
+        if(exportUrl == null)
+          exportUrl = Constants.PREFIX_EXPORT_GENERIC;
+        PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
+        
         this.endpointURI = endpointURI;
         isTemplatePublished = false;
         this.exportName = exportName;
+        this.exportUrl = exportUrl;
         this.domain = domain;
         this.isConcreteTemplate = isConcrete;
     }
@@ -223,7 +228,7 @@ public class WorkflowTemplateExport {
         if(rsD.hasNext()){
             //publish abstract template with the URI taken from derivation
             QuerySolution qs = rsD.next();
-            this.abstractTemplateExport = new WorkflowTemplateExport(qs.getResource("?dest").getURI(), componentCatalog, exportName, endpointURI, domain,false);
+            this.abstractTemplateExport = new WorkflowTemplateExport(qs.getResource("?dest").getURI(), componentCatalog, exportUrl, exportName, endpointURI, domain,false);
             abstractTemplateExport.transform();
             abstractTemplateInstance = abstractTemplateExport.getTransformedTemplateIndividual();
             System.out.println("Abstract template: "+abstractTemplateInstance.getURI());
@@ -447,7 +452,7 @@ public class WorkflowTemplateExport {
         String templatePath = "http://datascience4all.org/wings-portal/export/users/admin/mint/workflows/storyboard_isi_cag_64kpzcza7.owl";
         String domain = "mint";
         Catalog c = new Catalog(domain, "testExport", "domains", taxonomyURL);
-        WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "exportTest", "http://localhost:3030/test/query", domain,true);
+        WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "http://www.opmw.org", "exportTest", "http://localhost:3030/test/query", domain,true);
         w.exportAsOPMW(".", "TTL");
         c.exportCatalog(null, "RDF/XML");
     }
