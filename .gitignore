@@ -1,3 +1,5 @@
+.release-it.json
+.vscode
 # Compiled class file
 .idea/
 *.class
