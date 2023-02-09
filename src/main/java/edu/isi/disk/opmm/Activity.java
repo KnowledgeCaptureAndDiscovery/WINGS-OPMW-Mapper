@@ -2,7 +2,6 @@ package edu.isi.disk.opmm;
 
 import java.util.Date;
 
-import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -22,28 +21,28 @@ public class Activity {
     public String type = "http://www.w3.org/ns/prov#Agent";
     public String comment;
 
-    public Individual atLocation;
+    public Resource atLocation;
     public Date endedAtTime;
     public Date startedAtTime;
 
-    public Individual generated;
-    public Individual hadActivity;
-    public Individual invalidated;
-    public Individual qualifiedAssociation;
-    public Individual qualifiedCommunication;
-    public Individual qualifiedEnd;
-    public Individual qualifiedInfluence;
-    public Individual qualifiedStart;
-    public Individual qualifiedUsage;
+    public Resource generated;
+    public Resource hadActivity;
+    public Resource invalidated;
+    public Resource qualifiedAssociation;
+    public Resource qualifiedCommunication;
+    public Resource qualifiedEnd;
+    public Resource qualifiedInfluence;
+    public Resource qualifiedStart;
+    public Resource qualifiedUsage;
 
-    public Individual used;
-    public Individual wasAssociatedWith;
-    public Individual wasEndedBy;
-    public Individual wasGeneratedBy;
-    public Individual wasInfluencedBy;
-    public Individual wasInformedBy;
-    public Individual wasInvalidatedBy;
-    public Individual wasStartedBy;
+    public Resource used;
+    public Resource wasAssociatedWith;
+    public Resource wasEndedBy;
+    public Resource wasGeneratedBy;
+    public Resource wasInfluencedBy;
+    public Resource wasInformedBy;
+    public Resource wasInvalidatedBy;
+    public Resource wasStartedBy;
 
     public Activity(IRI id, String label, String comment) {
         this.model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
@@ -156,6 +155,110 @@ public class Activity {
 
         return model;
         
+    }
+
+    public void setModel(OntModel model) {
+        this.model = model;
+    }
+
+    public void setId(IRI id) {
+        this.id = id;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setAtLocation(Resource atLocation) {
+        this.atLocation = atLocation;
+    }
+
+    public void setEndedAtTime(Date endedAtTime) {
+        this.endedAtTime = endedAtTime;
+    }
+
+    public void setStartedAtTime(Date startedAtTime) {
+        this.startedAtTime = startedAtTime;
+    }
+
+    public void setGenerated(Resource generated) {
+        this.generated = generated;
+    }
+
+    public void setHadActivity(Resource hadActivity) {
+        this.hadActivity = hadActivity;
+    }
+
+    public void setInvalidated(Resource invalidated) {
+        this.invalidated = invalidated;
+    }
+
+    public void setQualifiedAssociation(Resource qualifiedAssociation) {
+        this.qualifiedAssociation = qualifiedAssociation;
+    }
+
+    public void setQualifiedCommunication(Resource qualifiedCommunication) {
+        this.qualifiedCommunication = qualifiedCommunication;
+    }
+
+    public void setQualifiedEnd(Resource qualifiedEnd) {
+        this.qualifiedEnd = qualifiedEnd;
+    }
+
+    public void setQualifiedInfluence(Resource qualifiedInfluence) {
+        this.qualifiedInfluence = qualifiedInfluence;
+    }
+
+    public void setQualifiedStart(Resource qualifiedStart) {
+        this.qualifiedStart = qualifiedStart;
+    }
+
+    public void setQualifiedUsage(Resource qualifiedUsage) {
+        this.qualifiedUsage = qualifiedUsage;
+    }
+
+    public void setUsed(Resource used) {
+        this.used = used;
+    }
+
+    public void setWasAssociatedWith(Resource wasAssociatedWith) {
+        this.wasAssociatedWith = wasAssociatedWith;
+    }
+
+    public void setWasEndedBy(Resource wasEndedBy) {
+        this.wasEndedBy = wasEndedBy;
+    }
+
+    public void setWasGeneratedBy(Resource wasGeneratedBy) {
+        this.wasGeneratedBy = wasGeneratedBy;
+    }
+
+    public void setWasInfluencedBy(Resource wasInfluencedBy) {
+        this.wasInfluencedBy = wasInfluencedBy;
+    }
+
+    public void setWasInformedBy(Resource wasInformedBy) {
+        this.wasInformedBy = wasInformedBy;
+    }
+
+    public void setWasInvalidatedBy(Resource wasInvalidatedBy) {
+        this.wasInvalidatedBy = wasInvalidatedBy;
+    }
+
+    public void setWasStartedBy(Resource wasStartedBy) {
+        this.wasStartedBy = wasStartedBy;
     }
 
 }

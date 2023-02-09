@@ -26,6 +26,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.sparql.core.DatasetGraph;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.RDF;
@@ -116,6 +117,8 @@ public class Mapper {
         Entity hypothesisEntity = new Entity("http://provenance.isi.edu/entities/" + name, label,
                 label);
 
+        mapHypothesisQuestion(hypothesesGraphModel, hypothesisResource, hypothesisEntity);
+
         // Get the variables binding
         mapHypothesisVariableBinding(hypothesesGraphModel, hypothesisResource);
 
@@ -123,21 +126,54 @@ public class Mapper {
 
     }
 
+    private void mapHypothesisQuestion(Model hypothesesGraphModel, Resource hypothesisResource,
+            Entity hypothesisEntity) {
+        // TODO: Enigma graph is hardcoded
+        String enigmaGraphId = "https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/QuestionOntology/main/development/EnigmaQuestions.xml";
+        Graph questionGraph = loadGraphFromDataset(enigmaGraphId);
+        Model questionGraphModel = ModelFactory.createModelForGraph(questionGraph);
+        StmtIterator statements = getResourcesByProperty(hypothesisResource, questionGraphModel, "hasQuestion");
+
+        Activity createHypothesisByQuestion = new Activity(
+                "http://provenance.isi.edu/activities/" + hypothesisResource.getLocalName()
+                        + "/CreateHypothesisByQuestion",
+                "Create Hypothesis By Question", "Create Hypothesis By Question");
+
+        statements.forEachRemaining(statement -> {
+            String questionNode = statement.getObject().asLiteral().getString();
+            Resource questionResource = questionGraphModel.getResource(questionNode);
+            String name = questionResource.getLocalName();
+            String label = questionGraphModel.getProperty(questionResource, RDFS.label).getString();
+            Entity questionEntity = new Entity("http://provenance.isi.edu/entities/" + name, label,
+                    label);
+
+            createHypothesisByQuestion.setUsed(questionEntity.getModel().getResource(questionEntity.id.toString()));
+            createHypothesisByQuestion
+                    .setWasGeneratedBy(hypothesisEntity.getModel().getResource(hypothesisEntity.id.toString()) );
+
+            opmwModel.add(questionEntity.getModel());
+            opmwModel.add(createHypothesisByQuestion.populateModel());
+        });
+
+    }
+
     private void mapHypothesisVariableBinding(Model hypothesisGraphModel, Resource hypothesisResource) {
         if (hypothesisGraphModel == null || hypothesisResource == null) {
             return;
         }
-        StmtIterator statements = getResourcesByProperty(hypothesisResource, hypothesisGraphModel, "hasVariableBinding");
-        
+        StmtIterator statements = getResourcesByProperty(hypothesisResource, hypothesisGraphModel,
+                "hasVariableBinding");
+
         statements // get
                 .forEachRemaining(
                         statement -> {
                             if (statement != null) {
                                 Resource variableBinding = statement.getObject().asResource();
                                 String variableBindingName = variableBinding.getLocalName();
-                                // TODO: extract information from graph  https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/QuestionOntology/main/development/EnigmaQuestions.xml
+                                // TODO: extract information from graph
+                                // https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/QuestionOntology/main/development/EnigmaQuestions.xml
                                 Entity variableBindingEntity = new Entity(
-                                        "http://provenance.isi.edu/entities/" + variableBindingName,
+                                        "http://provenance.isi.edu/entities/QuestionVariable" + variableBindingName,
                                         variableBindingName, variableBindingName);
                                 opmwModel.add(variableBindingEntity.getModel());
                             }
@@ -432,6 +468,11 @@ public class Mapper {
     public static Individual createIndividual(OntModel model, String iriPrefix, String localName, String type) {
         String iri = iriPrefix + localName;
         Individual i = model.createIndividual(iri, model.getResource(type));
+        return i;
+    }
+
+    public static Individual createIndividual(OntModel model, Resource resource) {
+        Individual i = model.createIndividual(resource);
         return i;
     }
 

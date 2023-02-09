@@ -3,13 +3,21 @@
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://provenance.isi.edu/entities/EnigmaQuestion3V4>
+<http://provenance.isi.edu/entities/EnigmaQuestion5>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "Is the effect size of Genotype on Brain Imaging Trait of Region associated with Demographic Attribute for cohorts of Ethnic ancestry?" .
+
+<http://provenance.isi.edu/entities/QuestionVariableEnigmaQuestion3V4>
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "EnigmaQuestion3V4" .
 
-<http://provenance.isi.edu/entities/EnigmaQuestion3V2>
-        a           <http://www.w3.org/ns/prov#Entity> ;
-        rdfs:label  "EnigmaQuestion3V2" .
+<http://provenance.isi.edu/activities/Hypothesis-geEzxPNJ9c8a/CreateHypothesisByQuestion>
+        a           <http://www.w3.org/ns/prov#Agent> ;
+        rdfs:label  "Create Hypothesis By Question" ;
+        <http://www.w3.org/ns/prov#used>
+                <http://provenance.isi.edu/entities/EnigmaQuestion5> ;
+        <http://www.w3.org/ns/prov#wasGeneratedBy>
+                <http://provenance.isi.edu/entities/Hypothesis-geEzxPNJ9c8a> .
 
 <http://provenance.isi.edu/entities/TriggeredLOI-usPnQQPLbwyn/data_query>
         a           <http://www.w3.org/ns/prov#Entity> ;
@@ -19,26 +27,30 @@
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "Is the effect size of rs1080066 on Surface Area of Precentral associated with Mean Age for cohorts of European ancestry" .
 
+<http://provenance.isi.edu/entities/QuestionVariableEnigmaQuestion3V2>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "EnigmaQuestion3V2" .
+
 <http://provenance.isi.edu/entities/TriggeredLOI-usPnQQPLbwyn>
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "Triggered: Meta regression with ancestry" .
-
-<http://provenance.isi.edu/entities/EnigmaQuestion4v1>
-        a           <http://www.w3.org/ns/prov#Entity> ;
-        rdfs:label  "EnigmaQuestion4v1" .
 
 <http://provenance.isi.edu/agents/hvargas>
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "Hernan Vargas" , "NeuroDISK" .
 
-<http://provenance.isi.edu/entities/EnigmaQuestion3V3>
+<http://provenance.isi.edu/entities/QuestionVariableEnigmaQuestion4v1>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "EnigmaQuestion4v1" .
+
+<http://provenance.isi.edu/entities/QuestionVariableEnigmaQuestion3V3>
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "EnigmaQuestion3V3" .
-
-<http://provenance.isi.edu/entities/EnigmaQuestion3V1>
-        a           <http://www.w3.org/ns/prov#Entity> ;
-        rdfs:label  "EnigmaQuestion3V1" .
 
 <http://provenance.isi.edu/entities/LOI-R12qZl77tJJ9>
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "Meta regression with ancestry" .
+
+<http://provenance.isi.edu/entities/QuestionVariableEnigmaQuestion3V1>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "EnigmaQuestion3V1" .
