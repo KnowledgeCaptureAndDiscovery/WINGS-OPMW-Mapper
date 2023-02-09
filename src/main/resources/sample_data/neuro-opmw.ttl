@@ -3,14 +3,42 @@
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://provenance.isi.edu/agents/hvargas>
+<http://provenance.isi.edu/entities/EnigmaQuestion3V4>
         a           <http://www.w3.org/ns/prov#Entity> ;
-        rdfs:label  "Hernan Vargas" , "NeuroDISK" .
+        rdfs:label  "EnigmaQuestion3V4" .
+
+<http://provenance.isi.edu/entities/EnigmaQuestion3V2>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "EnigmaQuestion3V2" .
 
 <http://provenance.isi.edu/entities/TriggeredLOI-usPnQQPLbwyn/data_query>
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "Gets files from the wiki for specific cohort that follows all question constraints" .
 
+<http://provenance.isi.edu/entities/Hypothesis-geEzxPNJ9c8a>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "Is the effect size of rs1080066 on Surface Area of Precentral associated with Mean Age for cohorts of European ancestry" .
+
 <http://provenance.isi.edu/entities/TriggeredLOI-usPnQQPLbwyn>
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "Triggered: Meta regression with ancestry" .
+
+<http://provenance.isi.edu/entities/EnigmaQuestion4v1>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "EnigmaQuestion4v1" .
+
+<http://provenance.isi.edu/agents/hvargas>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "Hernan Vargas" , "NeuroDISK" .
+
+<http://provenance.isi.edu/entities/EnigmaQuestion3V3>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "EnigmaQuestion3V3" .
+
+<http://provenance.isi.edu/entities/EnigmaQuestion3V1>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "EnigmaQuestion3V1" .
+
+<http://provenance.isi.edu/entities/LOI-R12qZl77tJJ9>
+        a           <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "Meta regression with ancestry" .

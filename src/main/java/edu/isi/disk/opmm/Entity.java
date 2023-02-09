@@ -56,6 +56,7 @@ public class Entity {
         this.label = label;
         this.comment = comment;
     }
+
     // Constructors
     // Default constructor with all fields as null
     public Entity() {

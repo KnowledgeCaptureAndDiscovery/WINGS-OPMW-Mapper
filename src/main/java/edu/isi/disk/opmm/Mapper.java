@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.lang3.ObjectUtils.Null;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
-import org.apache.jena.iri.IRIFactory;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.graph.Triple;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -25,13 +25,14 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.sparql.core.DatasetGraph;
+import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -69,61 +70,29 @@ public class Mapper {
     public String PREFIX_EXPORT_RESOURCE = "http://www.isi.edu/disk/resource/";
     public OntModel opmwModel;
     public OntModel sourceModel;
-
+    public Graph tLoisGraph;
+    public Graph loisGraph;
+    public Graph hypothesesGraph;
+    public DatasetGraph diskDataset;
     public HashMap<String, IRI> diskProperties = new HashMap<>();
 
     /**
      * @throws OWLOntologyCreationException
      * 
      */
-    public Mapper() {
-        this.opmwModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        IRI diskOntologyIRI = IRI.create(
-                "https://knowledgecaptureanddiscovery.github.io/DISK-Ontologies/disk/release/1.2.4/ontology.ttl");
-        IRI opmwOntologyIRI = IRI.create("https://www.opmw.org/model/OPMW/opmw3.1.owl");
-        OWLOntology diskOntology = null;
-        OWLOntology opmwOntology = null;
-        try {
-            diskOntology = manager.loadOntologyFromOntologyDocument(diskOntologyIRI);
-        } catch (OWLOntologyCreationException e) {
-            // TODO Auto-generated catch block
-            System.out.println("Error loading the disk ontology");
+    public Mapper(DatasetGraph diskDataset, String tLoisGraphId, String hypothesisGraphId, String loisGraphId)
+            throws OWLOntologyCreationException {
+        {
+            this.opmwModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+            this.diskDataset = diskDataset;
+            OWLOntology diskOntology = readDiskOntology();
+            readDependenciesOntology();
+            prepareMappingShortProperties(diskOntology);
+            hypothesesGraph = loadGraphFromDataset(hypothesisGraphId);
+            tLoisGraph = loadGraphFromDataset(tLoisGraphId);
+            loisGraph = loadGraphFromDataset(loisGraphId);
+
         }
-        try {
-            // read a ontology written in the file system
-            File opmvFile = new File(
-                    "/home/mosorio/repos/wings-project/DISK-OPMW-Mapper/src/main/resources/ontologies/opmv.ttl");
-            File pplanFile = new File(
-                    "/home/mosorio/repos/wings-project/DISK-OPMW-Mapper/src/main/resources/ontologies/p-plan.owl");
-            OWLOntology pplanOntology = manager.loadOntologyFromOntologyDocument(pplanFile);
-            OWLOntology opmvOntology = manager.loadOntologyFromOntologyDocument(opmvFile);
-            opmwOntology = manager.loadOntologyFromOntologyDocument(opmwOntologyIRI);
-        } catch (OWLOntologyCreationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.out.println("Error loading the opmw ontology");
-        }
-
-        diskOntology.getDataPropertiesInSignature().forEach(
-                t -> {
-                    System.out.println(t.getIRI().getShortForm() + " " + t.getIRI().getNamespace());
-                    diskProperties.put(t.getIRI().getShortForm(), t.getIRI());
-                });
-
-        diskOntology.getObjectPropertiesInSignature().forEach(
-                t -> {
-                    System.out.println(t.getIRI().getShortForm() + " " + t.getIRI().getNamespace());
-                    diskProperties.put(t.getIRI().getShortForm(), t.getIRI());
-                });
-        
-        // TODO: Workaround, the triples are wrong
-        // https://github.com/KnowledgeCaptureAndDiscovery/DISK-API/issues/93
-        // http://disk-project.org/ontology/disk#hasDataQueryDescription
-
-        String incorrectHasDataQueryDescriptionIRI = "http://disk-project.org/ontology/disk#dataQueryDescription";
-        diskProperties.remove("hasDataQueryDescription");
-        diskProperties.put("hasDataQueryDescription", IRI.create(incorrectHasDataQueryDescriptionIRI));
-
 
     }
 
@@ -133,57 +102,124 @@ public class Mapper {
         return null;
     }
 
-    public void mapTriggerLineOfInquiry(Graph tloiGraph, Node tloiNode) throws ParseException {
+    public void map(String triggerURI) throws ParseException {
+        Model tLoisGraphModel = ModelFactory.createModelForGraph(tLoisGraph);
+        mapTriggerLineOfInquiry(tLoisGraphModel, triggerURI);
+    }
 
-        Model tloiModel = ModelFactory.createModelForGraph(tloiGraph);
+    public void mapHypothesis(String hypothesisURI) throws ParseException {
+        Model hypothesesGraphModel = ModelFactory.createModelForGraph(hypothesesGraph);
+        Resource hypothesisResource = hypothesesGraphModel.getResource(hypothesisURI);
+        String name = hypothesisResource.getLocalName();
+        String label = hypothesesGraphModel.getProperty(hypothesisResource, RDFS.label).getString();
+        String dateCreated = getLiteralByProperty(hypothesisResource, hypothesesGraphModel, "dateCreated");
+        Entity hypothesisEntity = new Entity("http://provenance.isi.edu/entities/" + name, label,
+                label);
+
+        // Get the variables binding
+        mapHypothesisVariableBinding(hypothesesGraphModel, hypothesisResource);
+
+        opmwModel.add(hypothesisEntity.getModel());
+
+    }
+
+    private void mapHypothesisVariableBinding(Model hypothesisGraphModel, Resource hypothesisResource) {
+        if (hypothesisGraphModel == null || hypothesisResource == null) {
+            return;
+        }
+        StmtIterator statements = getResourcesByProperty(hypothesisResource, hypothesisGraphModel, "hasVariableBinding");
+        
+        statements // get
+                .forEachRemaining(
+                        statement -> {
+                            if (statement != null) {
+                                Resource variableBinding = statement.getObject().asResource();
+                                String variableBindingName = variableBinding.getLocalName();
+                                // TODO: extract information from graph  https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/QuestionOntology/main/development/EnigmaQuestions.xml
+                                Entity variableBindingEntity = new Entity(
+                                        "http://provenance.isi.edu/entities/" + variableBindingName,
+                                        variableBindingName, variableBindingName);
+                                opmwModel.add(variableBindingEntity.getModel());
+                            }
+                        });
+    }
+
+    public void mapLineOfInquiry(String lineOfInquiryURI) throws ParseException {
+        Model loisGraphModel = ModelFactory.createModelForGraph(loisGraph);
+        Resource lineOfInquiryResource = loisGraphModel.getResource(lineOfInquiryURI);
+        String name = lineOfInquiryResource.getLocalName();
+        String label = loisGraphModel.getProperty(lineOfInquiryResource, RDFS.label).getString();
+        String dateCreated = getLiteralByProperty(lineOfInquiryResource, loisGraphModel, "dateCreated");
+        Entity lineOfInquiryEntity = new Entity("http://provenance.isi.edu/entities/" + name, label,
+                label);
+        opmwModel.add(lineOfInquiryEntity.getModel());
+    }
+
+    public void mapTriggerLineOfInquiry(Model tLoisGraphModel, String triggerURI) throws ParseException {
+        Node triggerNode = NodeFactory.createURI(triggerURI);
         /**
          * Obtain the information from the trigger
          */
 
-        Resource tloi = tloiModel.getResource(tloiNode.getURI());
-        String triggerLineName = tloiNode.getLocalName();
-        String label = tloiModel.getProperty(tloi, RDFS.label).getString();
+        Resource triggerResource = tLoisGraphModel.getResource(triggerNode.getURI());
+        if (triggerResource == null) {
+            System.out.println("Trigger resource not found");
+            throw new RuntimeException("Trigger resource not found");
+        }
+        String triggerLineName = triggerNode.getLocalName();
+        String label = tLoisGraphModel.getProperty(triggerResource, RDFS.label).getString();
 
-        String dateCreated = getLiteralByProperty(tloi, tloiModel, "dateCreated"); 
-        String hasDataQuery = getLiteralByProperty(tloi, tloiModel, "hasDataQuery"); 
-        String hasDataQueryDescription  = getLiteralByProperty(tloi, tloiModel, "dataQueryDescription"); 
-        //Resource hasLineOfInquiryResource = getResourcesByProperty(tloiNode, tloiModel, hasLineOfInquiryIRI.toString());
-
+        String dateCreated = getLiteralByProperty(triggerResource, tLoisGraphModel, "dateCreated");
+        String hasDataQuery = getLiteralByProperty(triggerResource, tLoisGraphModel, "hasDataQuery");
+        String hasDataQueryDescription = getLiteralByProperty(triggerResource, tLoisGraphModel, "dataQueryDescription");
+        Resource lineOfInquiry = getResourcesByProperty(triggerNode, tLoisGraphModel, "hasLineOfInquiry");
+        Resource hypothesisResource = getResourcesByProperty(triggerNode, tLoisGraphModel, "hasParentHypothesis");
+        mapLineOfInquiry(lineOfInquiry.getURI());
+        mapHypothesis(hypothesisResource.getURI());
         /**
          * Starting converting the trigger to an OPMW entity
          */
 
-        Entity diskAgentEntity = new Entity("http://provenance.isi.edu/agents/hvargas", "NeuroDISK", "DISK instance for NeuroScience");
+        Entity diskAgentEntity = new Entity("http://provenance.isi.edu/agents/hvargas", "NeuroDISK",
+                "DISK instance for NeuroScience");
         opmwModel.add(diskAgentEntity.getModel());
-        
-        Entity diskUserEntity = new Entity("http://provenance.isi.edu/agents/hvargas", "Hernan Vargas", "Hernan Vargas");
+
+        Entity diskUserEntity = new Entity("http://provenance.isi.edu/agents/hvargas", "Hernan Vargas",
+                "Hernan Vargas");
         opmwModel.add(diskUserEntity.getModel());
 
-        Entity triggerLineOfInquiryEntity = new Entity("http://provenance.isi.edu/entities/" + triggerLineName, label, label);
+        Entity triggerLineOfInquiryEntity = new Entity("http://provenance.isi.edu/entities/" + triggerLineName, label,
+                label);
         opmwModel.add(triggerLineOfInquiryEntity.getModel());
-       
-        Entity dataQueryEntity = new Entity("http://provenance.isi.edu/entities/" + triggerLineName + "/data_query", hasDataQueryDescription, hasDataQuery);
+
+        Entity dataQueryEntity = new Entity("http://provenance.isi.edu/entities/" + triggerLineName + "/data_query",
+                hasDataQueryDescription, hasDataQuery);
         opmwModel.add(dataQueryEntity.getModel());
 
         // // Create the trigger individual on the OPMW model
-        // Individual entityInstance = createTriggerLine(triggerLineName, label, dateCreatedDate,
-        //         hasLineOfInquiryResource);
+        // Individual entityInstance = createTriggerLine(triggerLineName, label,
+        // dateCreatedDate,
+        // hasLineOfInquiryResource);
 
         // // Create a new prov activity with name: localName + "data_query_activity"
         // String dataActivityLocalName = triggerLineName + "/data_query_activity";
-        // Individual dataActivityInstance = createActivity(dateCreatedDate, hasDataQueryDescription, diskAgent, diskUser,
-        //         dataActivityLocalName, null);
+        // Individual dataActivityInstance = createActivity(dateCreatedDate,
+        // hasDataQueryDescription, diskAgent, diskUser,
+        // dataActivityLocalName, null);
 
         // // Create a new entity for the data query
         // String dataQueryLocalName = triggerLineName + "/data_query";
-        // createEntity(dateCreatedDate, hasDataQuery, hasDataQueryDescription, entityInstance, dataActivityInstance,
-        //         dataQueryLocalName);
+        // createEntity(dateCreatedDate, hasDataQuery, hasDataQueryDescription,
+        // entityInstance, dataActivityInstance,
+        // dataQueryLocalName);
 
         // // Create a new prov activity with name: localName +
         // // "meta_workflow_start_activity"
 
-        // mappingRuns(tloiNode, tloiModel, triggerLineName, dateCreatedDate, diskUser, diskAgent, entityInstance);
+        // mappingRuns(tloiNode, tloiModel, triggerLineName, dateCreatedDate, diskUser,
+        // diskAgent, entityInstance);
     }
+
     private void mappingRuns(Node tloiNode, Model tloiModel, String triggerLineName, Date dateCreatedDate,
             Individual diskUser, Individual diskAgent, Individual entityInstance) throws ParseException {
         // Create a new entity for the execution of the meta workflow
@@ -213,7 +249,7 @@ public class Mapper {
                     entityInstance,
                     runActivityInstance,
                     runLocalName);
-                     
+
         }
         // Obtain the object property
         // http://disk-project.org/ontology/disk#hasWorkflowBinding from the trigger
@@ -227,15 +263,21 @@ public class Mapper {
 
     }
 
-    private Resource getResourcesByProperty(Node tloiNode, Model tloiModel, String propertyName) {
+    private Resource getResourcesByProperty(Node node, Model model, String propertyName) {
         IRI hasWorkflowBindingIRI = diskProperties.get(propertyName);
-        Property hasWorkflowBindingProperty = tloiModel.getProperty(hasWorkflowBindingIRI.toString());
-        Statement hasWorkflowBindingStatement = tloiModel.getResource(tloiNode.getURI())
+        Property hasWorkflowBindingProperty = model.getProperty(hasWorkflowBindingIRI.toString());
+        Statement hasWorkflowBindingStatement = model.getResource(node.getURI())
                 .getProperty(hasWorkflowBindingProperty);
         if (hasWorkflowBindingStatement != null) {
             return hasWorkflowBindingStatement.getObject().asResource();
         }
         return null;
+    }
+
+    private StmtIterator getResourcesByProperty(Resource resource, Model model, String propertyName) {
+        IRI propertyIRI = diskProperties.get(propertyName);
+        Property property = model.getProperty(propertyIRI.toString());
+        return resource.listProperties(property);
     }
 
     private String getLiteralByProperty(Resource resource, Model tloiModel, String propertyName) {
@@ -476,4 +518,66 @@ public class Mapper {
         return descriptionValue;
     }
 
+    private void prepareMappingShortProperties(OWLOntology diskOntology) {
+        /**
+         * We need to map the properties to their short form, because the
+         * templates are using the short form.
+         */
+        diskOntology.getDataPropertiesInSignature().forEach(
+                t -> {
+                    diskProperties.put(t.getIRI().getShortForm(), t.getIRI());
+                });
+
+        diskOntology.getObjectPropertiesInSignature().forEach(
+                t -> {
+                    diskProperties.put(t.getIRI().getShortForm(), t.getIRI());
+                });
+
+        // TODO: Workaround, the triples are wrong
+        // https://github.com/KnowledgeCaptureAndDiscovery/DISK-API/issues/93
+        // http://disk-project.org/ontology/disk#hasDataQueryDescription
+
+        String incorrectHasDataQueryDescriptionIRI = "http://disk-project.org/ontology/disk#dataQueryDescription";
+        diskProperties.remove("hasDataQueryDescription");
+        diskProperties.put("hasDataQueryDescription", IRI.create(incorrectHasDataQueryDescriptionIRI));
+    }
+
+    private void readDependenciesOntology() throws OWLOntologyCreationException {
+        IRI opmwOntologyIRI = IRI.create("https://www.opmw.org/model/OPMW/opmw3.1.owl");
+        // read a ontology written in the file system
+        File opmvFile = new File(
+                "/home/mosorio/repos/wings-project/DISK-OPMW-Mapper/src/main/resources/ontologies/opmv.ttl");
+        File pplanFile = new File(
+                "/home/mosorio/repos/wings-project/DISK-OPMW-Mapper/src/main/resources/ontologies/p-plan.owl");
+        OWLOntology pplanOntology = manager.loadOntologyFromOntologyDocument(pplanFile);
+        OWLOntology opmvOntology = manager.loadOntologyFromOntologyDocument(opmvFile);
+        OWLOntology opmwOntology = manager.loadOntologyFromOntologyDocument(opmwOntologyIRI);
+    }
+
+    private OWLOntology readDiskOntology()
+            throws OWLOntologyCreationException {
+
+        OWLOntology diskOntology;
+        IRI diskOntologyIRI = IRI.create(
+                "https://knowledgecaptureanddiscovery.github.io/DISK-Ontologies/disk/release/1.2.4/ontology.ttl");
+        diskOntology = manager.loadOntologyFromOntologyDocument(diskOntologyIRI);
+        return diskOntology;
+    }
+
+    private Graph loadGraphFromDataset(String graphName) {
+        Node tloiGraphNode = NodeFactory.createURI(graphName);
+        Graph graph = diskDataset.getGraph(tloiGraphNode);
+        if (graph == null) {
+            throw new RuntimeException("Graph " + graphName + " not found in dataset");
+        }
+        // Count the number of triples in the graph
+        ExtendedIterator<Triple> triples = graph.find();
+        int count = 0;
+        while (triples.hasNext()) {
+            count++;
+            triples.next();
+        }
+        System.out.println("Graph " + graphName + " has " + count + " triples");
+        return graph;
+    }
 }

@@ -21,19 +21,23 @@ public class OPMM {
      */
     public static void main(String[] args) throws Exception {
         String diskTriples = "/home/mosorio/repos/wings-project/DISK-OPMW-Mapper/src/main/resources/sample_data/neuro-disk.nq";
-        String tloiGraphId = "http://localhost:8080/disk-server/admin/tlois";
+        String tLoisGraphId = "http://localhost:8080/disk-server/admin/tlois";
+        String hypothesisGraphId = "http://localhost:8080/disk-server/admin/hypotheses";
+        String loisGraphId = "http://localhost:8080/disk-server/admin/lois";
+        
+
         String tloiId = "http://localhost:8080/disk-server/admin/tlois/TriggeredLOI-usPnQQPLbwyn";
         DatasetGraph diskDataset = ModelUtils.loadDatasetGraph(diskTriples);
+        // List all graphs in the dataset
+        diskDataset.listGraphNodes().forEachRemaining(System.out::println);
         // Get a graph from the dataset
-        Node graphNode = NodeFactory.createURI(tloiGraphId);
+        Node tloiGraph = NodeFactory.createURI(tLoisGraphId);
         Node tloiNode = NodeFactory.createURI(tloiId);
-        Graph graphTLOIGraph = diskDataset.getGraph(graphNode);
+        Graph graphTLOIGraph = diskDataset.getGraph(tloiGraph);
     
-        Mapper mapper = new Mapper();
-        mapper.mapTriggerLineOfInquiry(graphTLOIGraph, tloiNode);
-        
+        Mapper mapper = new Mapper(diskDataset, tLoisGraphId, hypothesisGraphId, loisGraphId);
+        mapper.map(tloiId);
         mapper.opmwModel.write(System.out, "TURTLE"); 
-
         // write model into a file as turtle
         mapper.opmwModel.write(new FileOutputStream("/home/mosorio/repos/wings-project/DISK-OPMW-Mapper/src/main/resources/sample_data/neuro-opmw.ttl"), Lang.TURTLE.getName());
 
