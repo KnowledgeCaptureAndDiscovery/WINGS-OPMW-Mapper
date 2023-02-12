@@ -73,7 +73,14 @@
       <groupId>net.sourceforge.owlapi</groupId>
       <artifactId>owlapi-apibinding</artifactId>
       <version>5.1.10</version>
-    </dependency>
+    </dependency><!-- https://mvnrepository.com/artifact/org.openprovenance.prov/ProvToolbox -->
+<dependency>
+    <groupId>org.openprovenance.prov</groupId>
+    <artifactId>ProvToolbox</artifactId>
+    <version>0.9.27</version>
+    <type>pom</type>
+</dependency>
+
   </dependencies>
 
   <distributionManagement>

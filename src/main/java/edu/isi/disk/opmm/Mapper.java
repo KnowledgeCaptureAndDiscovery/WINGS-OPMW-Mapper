@@ -144,17 +144,45 @@ public class Mapper {
             Resource questionResource = questionGraphModel.getResource(questionNode);
             String name = questionResource.getLocalName();
             String label = questionGraphModel.getProperty(questionResource, RDFS.label).getString();
-            Entity questionEntity = new Entity("http://provenance.isi.edu/entities/" + name, label,
+            Entity questionBundleEntity = new Entity("http://provenance.isi.edu/entities/EnigmaOntology", label,
+                    label, "Bundle");
+            Entity questionEntity = new Entity("http://provenance.isi.edu/entities/EnigmaOntology/" + name, label,
                     label);
 
-            createHypothesisByQuestion.setUsed(questionEntity.getModel().getResource(questionEntity.id.toString()));
-            createHypothesisByQuestion
-                    .setWasGeneratedBy(hypothesisEntity.getModel().getResource(hypothesisEntity.id.toString()) );
+            Agent diskAgentEntity = new Agent("http://provenance.isi.edu/agents/hvargas", "NeuroDISK",
+                    "DISK instance for NeuroScience");
+            questionBundleEntity.setWasAttributedTo(diskAgentEntity.getResource());
+            opmwModel.add(diskAgentEntity.getModel());
 
+            createHypothesisByQuestion.setUsed(questionEntity.getResource());
+            createHypothesisByQuestion.setWasGeneratedBy(hypothesisEntity.getResource());
             opmwModel.add(questionEntity.getModel());
-            opmwModel.add(createHypothesisByQuestion.populateModel());
+            opmwModel.add(createHypothesisByQuestion.getModel());
+            opmwModel.add(questionBundleEntity.getModel());
+
+            mapQuestionHasQuestionVariable(questionGraphModel, questionResource, questionEntity);
         });
 
+    }
+
+    private void mapQuestionHasQuestionVariable(Model questionGraphModel, Resource questionResource,
+            Entity questionEntity) {
+
+        StmtIterator statements = questionResource
+                .listProperties(questionGraphModel.getProperty("https://w3id.org/sqo#hasQuestionVariable"));
+        Property hasVariableName = questionGraphModel.getProperty("https://w3id.org/sqo#hasVariableName");
+
+        statements.forEachRemaining(statement -> {
+            Resource questionVariableResource = statement.getObject().asResource();
+            String name = questionVariableResource.getLocalName();
+            String label = questionGraphModel.getProperty(questionVariableResource, hasVariableName).getString();
+            Entity questionVariableEntity = new Entity("http://provenance.isi.edu/entities/questionVariables/" + name,
+                    label, label);
+
+            questionEntity.setWasInfluencedBy(questionVariableEntity.getResource());
+            opmwModel.add(questionVariableEntity.getModel());
+            opmwModel.add(questionEntity.getModel());
+        });
     }
 
     private void mapHypothesisVariableBinding(Model hypothesisGraphModel, Resource hypothesisResource) {

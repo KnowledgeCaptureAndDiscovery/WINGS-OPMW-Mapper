@@ -16,9 +16,10 @@ public class Activity {
     public OntModel model;
 
     public IRI id;
+    public Resource resource;
     public String label;
     public String description;
-    public String type = "http://www.w3.org/ns/prov#Agent";
+    public String type = "http://www.w3.org/ns/prov#Activity";
     public String comment;
 
     public Resource atLocation;
@@ -49,6 +50,9 @@ public class Activity {
         this.id = id;
         this.label = label;
         this.comment = comment;
+        resource = model.createResource(id.toString());
+        resource.addProperty(model.getProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+                model.createResource(type));
     }
 
     public Activity(String id, String label, String comment) {
@@ -56,15 +60,12 @@ public class Activity {
         this.id = IRI.create(id);
         this.label = label;
         this.comment = comment;
-    }
-
-    public OntModel populateModel() {
-
-        String idString = id.toString();
-        Resource resource = model.createResource(idString);
-        // Add type
+        resource = model.createResource(id);
         resource.addProperty(model.getProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
                 model.createResource(type));
+    }
+
+    public OntModel getModel() {
         // Add label
         if (label != null) {
             resource.addProperty(model.getProperty("http://www.w3.org/2000/01/rdf-schema#label"), label);
@@ -259,6 +260,10 @@ public class Activity {
 
     public void setWasStartedBy(Resource wasStartedBy) {
         this.wasStartedBy = wasStartedBy;
+    }
+
+    public Resource getResource() {
+        return this.resource;
     }
 
 }

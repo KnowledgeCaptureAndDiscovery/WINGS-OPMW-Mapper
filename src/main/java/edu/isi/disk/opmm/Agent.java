@@ -12,6 +12,12 @@ import org.semanticweb.owlapi.model.IRI;
 public class Agent {
 
     public OntModel model;
+    public Resource resource;
+
+    public Resource getResource() {
+        return resource;
+    }
+
     public IRI id;
     public String label;
     public String description;
@@ -31,6 +37,9 @@ public class Agent {
         this.id = id;
         this.label = label;
         this.comment = comment;
+        this.resource = model.createResource(id.toString());
+        resource.addProperty(model.getProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+                model.createResource(type));
     }
 
     public Agent(String id, String label, String comment) {
@@ -38,16 +47,12 @@ public class Agent {
         this.id = IRI.create(id);
         this.label = label;
         this.comment = comment;
-    }
-
-    public OntModel populateModel() {
-
-        String idString = id.toString();
-        Resource resource = model.createResource(idString);
-        // Add type
+        this.resource = model.createResource(id);
         resource.addProperty(model.getProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
                 model.createResource(type));
-        // Add label
+    }
+
+    public OntModel getModel() {
         if (label != null) {
             resource.addProperty(model.getProperty("http://www.w3.org/2000/01/rdf-schema#label"), label);
         }
