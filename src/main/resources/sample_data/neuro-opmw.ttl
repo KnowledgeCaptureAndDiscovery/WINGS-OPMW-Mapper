@@ -3,11 +3,6 @@
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://provenance.isi.edu/entities/EnigmaOntology>
-        a  <http://www.w3.org/ns/prov#Entity>,  <http://www.w3.org/ns/prov#Bundle> ;
-        rdfs:label  "Is the effect size of Genotype on Brain Imaging Trait of Region associated with Demographic Attribute for cohorts of Ethnic ancestry?" ;
-        <http://www.w3.org/ns/prov#wasAttributedTo>
-                <http://provenance.isi.edu/agents/hvargas> .
 <http://provenance.isi.edu/entities/TriggeredLOI-usPnQQPLbwyn/data_query>
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "Gets files from the wiki for specific cohort that follows all question constraints" .
@@ -36,6 +31,11 @@
         a           <http://www.w3.org/ns/prov#Entity> ;
         rdfs:label  "EnigmaQuestion3V1" .
 
+<http://provenance.isi.edu/entities/EnigmaOntology>
+        a           <http://www.w3.org/ns/prov#Bundle> , <http://www.w3.org/ns/prov#Entity> ;
+        rdfs:label  "Is the effect size of Genotype on Brain Imaging Trait of Region associated with Demographic Attribute for cohorts of Ethnic ancestry?" ;
+        <http://www.w3.org/ns/prov#wasAttributedTo>
+                <http://provenance.isi.edu/agents/hvargas> .
 
 <http://provenance.isi.edu/activities/Hypothesis-geEzxPNJ9c8a/CreateHypothesisByQuestion>
         a           <http://www.w3.org/ns/prov#Activity> ;

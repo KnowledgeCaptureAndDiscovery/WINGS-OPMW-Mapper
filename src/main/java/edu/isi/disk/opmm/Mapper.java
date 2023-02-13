@@ -26,11 +26,16 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.sparql.core.DatasetGraph;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.openprovenance.prov.interop.InteropFramework;
+import org.openprovenance.prov.model.Document;
+// import prov
+import org.openprovenance.prov.model.Namespace;
+import org.openprovenance.prov.model.ProvFactory;
+import org.openprovenance.prov.model.QualifiedName;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -47,11 +52,10 @@ import org.semanticweb.owlapi.search.EntitySearcher;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 
 /**
- *
- * @author Daniel Garijo
+ * @author Maximiliano Osorio
+ * 
  */
 public class Mapper {
-
     /**
      * Most of these will be reused from the old code, because it works.
      * The mapper initializes the catalog and calls to the template exporter.
@@ -76,6 +80,7 @@ public class Mapper {
     public Graph hypothesesGraph;
     public DatasetGraph diskDataset;
     public HashMap<String, IRI> diskProperties = new HashMap<>();
+    public ProvFactory provFactory;
 
     /**
      * @throws OWLOntologyCreationException
@@ -106,6 +111,12 @@ public class Mapper {
     public void map(String triggerURI) throws ParseException {
         Model tLoisGraphModel = ModelFactory.createModelForGraph(tLoisGraph);
         mapTriggerLineOfInquiry(tLoisGraphModel, triggerURI);
+        String file = "test.provn";
+        DocumentProv documentProv = new DocumentProv(InteropFramework.getDefaultFactory());
+        documentProv.openingBanner();
+        Document document = documentProv.makeDocument();
+        documentProv.doConversions(document, file);
+        documentProv.closingBanner();
     }
 
     public void mapHypothesis(String hypothesisURI) throws ParseException {
@@ -144,6 +155,7 @@ public class Mapper {
             Resource questionResource = questionGraphModel.getResource(questionNode);
             String name = questionResource.getLocalName();
             String label = questionGraphModel.getProperty(questionResource, RDFS.label).getString();
+            
             Entity questionBundleEntity = new Entity("http://provenance.isi.edu/entities/EnigmaOntology", label,
                     label, "Bundle");
             Entity questionEntity = new Entity("http://provenance.isi.edu/entities/EnigmaOntology/" + name, label,
