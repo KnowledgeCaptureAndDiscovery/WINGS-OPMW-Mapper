@@ -31,11 +31,19 @@ import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.openprovenance.prov.interop.InteropFramework;
+import org.openprovenance.prov.model.Activity;
+import org.openprovenance.prov.model.Agent;
+import org.openprovenance.prov.model.Bundle;
 import org.openprovenance.prov.model.Document;
+import org.openprovenance.prov.model.Entity;
 // import prov
 import org.openprovenance.prov.model.Namespace;
 import org.openprovenance.prov.model.ProvFactory;
 import org.openprovenance.prov.model.QualifiedName;
+import org.openprovenance.prov.model.Used;
+import org.openprovenance.prov.model.WasAttributedTo;
+import org.openprovenance.prov.model.WasDerivedFrom;
+import org.openprovenance.prov.model.WasGeneratedBy;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -60,6 +68,11 @@ public class Mapper {
      * Most of these will be reused from the old code, because it works.
      * The mapper initializes the catalog and calls to the template exporter.
      */
+    public static final String PROVBOOK_NS = "http://www.provbook.org";
+    public static final String PROVBOOK_PREFIX = "provbook";
+
+    public static final String JIM_PREFIX = "jim";
+    public static final String JIM_NS = "http://www.cs.rpi.edu/~hendler/";
     public static final String RDFS_COMMENT = "http://www.w3.org/2000/01/rdf-schema#comment";
     public static final String SKOS_DEFINITION = "http://www.w3.org/2004/02/skos/core#definition";
     public static final String PROV_DEFINITION = "http://www.w3.org/ns/prov#definition";
@@ -80,7 +93,8 @@ public class Mapper {
     public Graph hypothesesGraph;
     public DatasetGraph diskDataset;
     public HashMap<String, IRI> diskProperties = new HashMap<>();
-    public ProvFactory provFactory;
+    public DocumentProv prov = new DocumentProv(InteropFramework.getDefaultFactory());
+    public ProvFactory pFactory = prov.factory;
 
     /**
      * @throws OWLOntologyCreationException
@@ -102,136 +116,191 @@ public class Mapper {
 
     }
 
-    public Model mapLineOfInquiry(Graph graph, String triggerURI) {
-        graph.find(null, null, null).forEachRemaining(
-                t -> System.out.println(t.getSubject() + " " + t.getPredicate() + " " + t.getObject()));
-        return null;
-    }
-
     public void map(String triggerURI) throws ParseException {
         Model tLoisGraphModel = ModelFactory.createModelForGraph(tLoisGraph);
-        mapTriggerLineOfInquiry(tLoisGraphModel, triggerURI);
-        String file = "test.provn";
-        DocumentProv documentProv = new DocumentProv(InteropFramework.getDefaultFactory());
-        documentProv.openingBanner();
-        Document document = documentProv.makeDocument();
-        documentProv.doConversions(document, file);
-        documentProv.closingBanner();
+        Bundle hypothesisBundle = pFactory.newNamedBundle(prov.qn("hypothesisBundle"), null);
+        Bundle loisBundle = pFactory.newNamedBundle(prov.qn("loisBundle"), null);
+        Bundle triggerBundle = pFactory.newNamedBundle(prov.qn("triggerBundle"), null);
+        hypothesisBundle.setNamespace(prov.ns);
+        loisBundle.setNamespace(prov.ns);
+        triggerBundle.setNamespace(prov.ns);
+
+        getTriggerLineOfInquiry(tLoisGraphModel, triggerURI, hypothesisBundle, loisBundle, triggerBundle);
+        prov.document.getStatementOrBundle().add(hypothesisBundle);
+        prov.document.getStatementOrBundle().add(loisBundle);
+        prov.document.getStatementOrBundle().add(triggerBundle);
+
+        String file = "test";
+        prov.document.setNamespace(prov.ns);
+        prov.doConversions(prov.document, file);
     }
 
-    public void mapHypothesis(String hypothesisURI) throws ParseException {
+    public Entity mapHypothesis(String hypothesisURI, Bundle hypothesisBundle) throws ParseException {
         Model hypothesesGraphModel = ModelFactory.createModelForGraph(hypothesesGraph);
         Resource hypothesisResource = hypothesesGraphModel.getResource(hypothesisURI);
-        String name = hypothesisResource.getLocalName();
-        String label = hypothesesGraphModel.getProperty(hypothesisResource, RDFS.label).getString();
+        String hypothesisName = hypothesisResource.getLocalName();
+        String hypothesisLabel = hypothesesGraphModel.getProperty(hypothesisResource, RDFS.label).getString();
         String dateCreated = getLiteralByProperty(hypothesisResource, hypothesesGraphModel, "dateCreated");
-        Entity hypothesisEntity = new Entity("http://provenance.isi.edu/entities/" + name, label,
-                label);
 
-        mapHypothesisQuestion(hypothesesGraphModel, hypothesisResource, hypothesisEntity);
+        Entity hypothesisEntity = pFactory.newEntity(prov.qn(hypothesisName), hypothesisLabel);
+        hypothesisBundle.getStatement().add(hypothesisEntity);
+        mapQuestion(hypothesesGraphModel, hypothesisResource, hypothesisEntity, hypothesisBundle);
 
         // Get the variables binding
-        mapHypothesisVariableBinding(hypothesesGraphModel, hypothesisResource);
+        // mapHypothesisVariableBinding(hypothesesGraphModel, hypothesisResource);
+        //
+        // opmwModel.add(hypothesisEntity.getModel());
 
-        opmwModel.add(hypothesisEntity.getModel());
-
+        return hypothesisEntity;
     }
 
-    private void mapHypothesisQuestion(Model hypothesesGraphModel, Resource hypothesisResource,
-            Entity hypothesisEntity) {
+    private void mapQuestion(Model hypothesesGraphModel, Resource hypothesisResource,
+            Entity hypothesisEntity, Bundle hypothesisBundle) {
         // TODO: Enigma graph is hardcoded
+        Activity activity = pFactory.newActivity(prov.qn("CreateHypothesisByQuestion"),
+                "Create Hypothesis By Question");
+
         String enigmaGraphId = "https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/QuestionOntology/main/development/EnigmaQuestions.xml";
+        String bundleName = "EnigmaQuestions";
         Graph questionGraph = loadGraphFromDataset(enigmaGraphId);
         Model questionGraphModel = ModelFactory.createModelForGraph(questionGraph);
-        StmtIterator statements = getResourcesByProperty(hypothesisResource, questionGraphModel, "hasQuestion");
 
-        Activity createHypothesisByQuestion = new Activity(
-                "http://provenance.isi.edu/activities/" + hypothesisResource.getLocalName()
-                        + "/CreateHypothesisByQuestion",
-                "Create Hypothesis By Question", "Create Hypothesis By Question");
+        // Get the question
+        Statement statement = getResourceByProperty(hypothesisResource, questionGraphModel, "hasQuestion");
 
-        statements.forEachRemaining(statement -> {
-            String questionNode = statement.getObject().asLiteral().getString();
-            Resource questionResource = questionGraphModel.getResource(questionNode);
-            String name = questionResource.getLocalName();
-            String label = questionGraphModel.getProperty(questionResource, RDFS.label).getString();
-            
-            Entity questionBundleEntity = new Entity("http://provenance.isi.edu/entities/EnigmaOntology", label,
-                    label, "Bundle");
-            Entity questionEntity = new Entity("http://provenance.isi.edu/entities/EnigmaOntology/" + name, label,
-                    label);
+        // Get the variables binding from the question
+        String questionNode = statement.getObject().asLiteral().getString();
+        Resource questionResource = questionGraphModel.getResource(questionNode);
+        String questionName = questionResource.getLocalName();
+        String questionLabel = questionGraphModel.getProperty(questionResource, RDFS.label).getString();
 
-            Agent diskAgentEntity = new Agent("http://provenance.isi.edu/agents/hvargas", "NeuroDISK",
-                    "DISK instance for NeuroScience");
-            questionBundleEntity.setWasAttributedTo(diskAgentEntity.getResource());
-            opmwModel.add(diskAgentEntity.getModel());
+        // Create the question entity
+        Entity questionEntity = pFactory.newEntity(prov.qn(questionName, DocumentProv.ENIGMA_PREFIX), questionLabel);
+        Used used = pFactory.newUsed(null, activity.getId(), questionEntity.getId(), null, null);
+        WasDerivedFrom wdf = pFactory.newWasDerivedFrom(null, hypothesisEntity.getId(), questionEntity.getId());
+        WasGeneratedBy wgb = pFactory.newWasGeneratedBy(null, hypothesisEntity.getId(), activity.getId(), null,
+                null);
+        Activity activity2 = pFactory.newActivity(prov.qn("select-values", DocumentProv.DISK_PREFIX),
+                "Create values of variables");
+        Used used2 = pFactory.newUsed(null, activity2.getId(), questionEntity.getId(), null, null);
+        // Added to the bundle
+        Bundle questionBundle = pFactory.newNamedBundle(prov.qn(bundleName), null);
+        questionBundle.setNamespace(prov.ns);
+        questionBundle.getStatement().addAll(Arrays.asList(questionEntity, used, wgb, used2, wdf     ));
 
-            createHypothesisByQuestion.setUsed(questionEntity.getResource());
-            createHypothesisByQuestion.setWasGeneratedBy(hypothesisEntity.getResource());
-            opmwModel.add(questionEntity.getModel());
-            opmwModel.add(createHypothesisByQuestion.getModel());
-            opmwModel.add(questionBundleEntity.getModel());
+        hypothesisBundle.getStatement().addAll(Arrays.asList(hypothesisEntity, activity, activity2));
 
-            mapQuestionHasQuestionVariable(questionGraphModel, questionResource, questionEntity);
+        // Hypothesis bundle
+        // Bundle oldHypothesisBundle = pFactory.newNamedBundle(prov.qn("Hypothesis"),
+        // null);
+        // oldHypothesisBundle.setNamespace(prov.ns);
+        // ldHypothesisBundle.getStatement().addAll(Arrays.asList(hypothesisEntity,
+        // activity, activity2));
+
+        // Question variables and Hypothesis variables binding mapping
+        HashMap<String, Entity> questionVariablesMap = new HashMap<>();
+
+        // [Question-ontology] Get the variables binding from the question
+        mapVariableBindingFromQuestion(questionGraphModel, questionResource, questionEntity, questionBundle,
+                questionVariablesMap);
+        // [DISK] Get the variables binding from the hypothesis
+        mapVariableFromHypothesis(hypothesesGraphModel, hypothesisResource, hypothesisEntity, hypothesisBundle,
+                questionGraphModel, activity, questionEntity, activity2);
+
+        StmtIterator getVariableBindingsOnHypothesisGraph = getResourcesByProperty(hypothesisResource,
+                hypothesesGraphModel,
+                "hasVariableBinding");
+
+        getVariableBindingsOnHypothesisGraph.forEachRemaining(statementHypothesis -> {
+            Resource variableBindingResource = statementHypothesis.getObject().asResource();
+            // Create the variable binding entity
+            String variableLocalName = variableBindingResource.getLocalName();
+            String value = getLiteralByProperty(variableBindingResource, hypothesesGraphModel, "hasBindingValue");
+            String hvLabel = value;
+            Entity variableBindingEntity = pFactory.newEntity(prov.qn(variableLocalName), hvLabel);
+
+            WasGeneratedBy hytpothesisWgb = pFactory.newWasGeneratedBy(null, variableBindingEntity.getId(),
+                    activity2.getId(),
+                    null, null);
+            hypothesisBundle.getStatement().addAll(Arrays.asList(variableBindingEntity, hytpothesisWgb));
         });
+
+        prov.document.getStatementOrBundle().add(questionBundle);
+    }
+
+    private void mapVariableFromHypothesis(Model hypothesesGraphModel, Resource hypothesisResource,
+            Entity hypothesisEntity,
+            Bundle diskBundle, Model questionGraphModel, Activity activity, Entity questionEntity, Activity activity2) {
+        StmtIterator getVariableBindingsOnHypothesisGraph = getResourcesByProperty(hypothesisResource,
+                hypothesesGraphModel,
+                "hasVariableBinding");
 
     }
 
-    private void mapQuestionHasQuestionVariable(Model questionGraphModel, Resource questionResource,
-            Entity questionEntity) {
-
+    private void mapVariableBindingFromQuestion(Model questionGraphModel, Resource questionResource,
+            Entity questionEntity,
+            Bundle questionBundle, HashMap<String, Entity> questionVariablesMap) {
         StmtIterator statements = questionResource
                 .listProperties(questionGraphModel.getProperty("https://w3id.org/sqo#hasQuestionVariable"));
         Property hasVariableName = questionGraphModel.getProperty("https://w3id.org/sqo#hasVariableName");
 
-        statements.forEachRemaining(statement -> {
-            Resource questionVariableResource = statement.getObject().asResource();
-            String name = questionVariableResource.getLocalName();
-            String label = questionGraphModel.getProperty(questionVariableResource, hasVariableName).getString();
-            Entity questionVariableEntity = new Entity("http://provenance.isi.edu/entities/questionVariables/" + name,
-                    label, label);
-
-            questionEntity.setWasInfluencedBy(questionVariableEntity.getResource());
-            opmwModel.add(questionVariableEntity.getModel());
-            opmwModel.add(questionEntity.getModel());
+        statements.forEachRemaining(s -> {
+            Resource questionVariableResource = s.getObject().asResource();
+            String qvName = questionVariableResource.getLocalName();
+            String qvLabel = questionGraphModel.getProperty(questionVariableResource, hasVariableName).getString();
+            Entity questionVariableEntity = pFactory.newEntity(prov.qn(qvName, DocumentProv.ENIGMA_PREFIX), qvLabel);
+            WasDerivedFrom wdf = pFactory.newWasDerivedFrom(null, questionEntity.getId(),
+                    questionVariableEntity.getId());
+            questionBundle.getStatement().addAll(Arrays.asList(questionVariableEntity, wdf));
+            questionVariablesMap.put(questionVariableResource.getURI(), questionVariableEntity);
         });
     }
 
-    private void mapHypothesisVariableBinding(Model hypothesisGraphModel, Resource hypothesisResource) {
-        if (hypothesisGraphModel == null || hypothesisResource == null) {
-            return;
-        }
-        StmtIterator statements = getResourcesByProperty(hypothesisResource, hypothesisGraphModel,
-                "hasVariableBinding");
-
-        statements // get
-                .forEachRemaining(
-                        statement -> {
-                            if (statement != null) {
-                                Resource variableBinding = statement.getObject().asResource();
-                                String variableBindingName = variableBinding.getLocalName();
-                                // TODO: extract information from graph
-                                // https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/QuestionOntology/main/development/EnigmaQuestions.xml
-                                Entity variableBindingEntity = new Entity(
-                                        "http://provenance.isi.edu/entities/QuestionVariable" + variableBindingName,
-                                        variableBindingName, variableBindingName);
-                                opmwModel.add(variableBindingEntity.getModel());
-                            }
-                        });
-    }
-
-    public void mapLineOfInquiry(String lineOfInquiryURI) throws ParseException {
+    public Entity mapLineOfInquiry(String lineOfInquiryURI, Bundle loisBundle, Entity hypothesis)
+            throws ParseException {
         Model loisGraphModel = ModelFactory.createModelForGraph(loisGraph);
         Resource lineOfInquiryResource = loisGraphModel.getResource(lineOfInquiryURI);
         String name = lineOfInquiryResource.getLocalName();
         String label = loisGraphModel.getProperty(lineOfInquiryResource, RDFS.label).getString();
         String dateCreated = getLiteralByProperty(lineOfInquiryResource, loisGraphModel, "dateCreated");
-        Entity lineOfInquiryEntity = new Entity("http://provenance.isi.edu/entities/" + name, label,
-                label);
-        opmwModel.add(lineOfInquiryEntity.getModel());
+        Entity lineOfInquiryEntity = pFactory.newEntity(prov.qn(name, DocumentProv.DISK_PREFIX), label);
+
+        Resource metaWorkflowBinding = getResourceByProperty(lineOfInquiryResource, loisGraphModel, name).getResource();
+        Resource workflowBinding = getResourceByProperty(metaWorkflowBinding, loisGraphModel, "workflowBinding").getResource();
+
+
+        String activityName = "LOI_creation_" + name;
+        Activity activity = pFactory.newActivity(prov.qn(activityName, DocumentProv.DISK_PREFIX), null, null, null);
+
+        WasGeneratedBy wgb = pFactory.newWasGeneratedBy(null, lineOfInquiryEntity.getId(), activity.getId(), null,
+                null);
+        Used used = pFactory.newUsed(null, activity.getId(), hypothesis.getId(), null, null);
+        WasDerivedFrom wdf = pFactory.newWasDerivedFrom(null, lineOfInquiryEntity.getId(), hypothesis.getId(), null,
+                null, null, null);
+        loisBundle.getStatement().addAll(Arrays.asList(lineOfInquiryEntity, activity, wgb, used, wdf));
+
+        Entity workflowBinding = pFactory.newEntity(prov.qn("workflowBinding", DocumentProv.DISK_PREFIX),
+                "workflowBinding");
+        WasGeneratedBy wgb2 = pFactory.newWasGeneratedBy(null, workflowBinding.getId(), activity.getId(), null,
+                null);
+
+        Entity dataQueryTemplate = pFactory.newEntity(prov.qn("dataQueryTemplate", DocumentProv.DISK_PREFIX),
+                "dataQueryTemplate");
+        WasGeneratedBy wgb3 = pFactory.newWasGeneratedBy(null, dataQueryTemplate.getId(), activity.getId(), null,
+                null);
+
+        loisBundle.getStatement().addAll(Arrays.asList(workflowBinding, wgb2, dataQueryTemplate, wgb3));
+
+        return lineOfInquiryEntity;
+        // Entity lineOfInquiryEntity = new Entity("http://provenance.isi.edu/entities/"
+        // + name, label,
+        // label);
+        // opmwModel.add(lineOfInquiryEntity.getModel());
     }
 
-    public void mapTriggerLineOfInquiry(Model tLoisGraphModel, String triggerURI) throws ParseException {
+    public void getTriggerLineOfInquiry(Model tLoisGraphModel, String triggerURI, Bundle hypothesisBundle,
+            Bundle loisBundle, Bundle triggerBundle)
+            throws ParseException {
         Node triggerNode = NodeFactory.createURI(triggerURI);
         /**
          * Obtain the information from the trigger
@@ -250,32 +319,37 @@ public class Mapper {
         String hasDataQueryDescription = getLiteralByProperty(triggerResource, tLoisGraphModel, "dataQueryDescription");
         Resource lineOfInquiry = getResourcesByProperty(triggerNode, tLoisGraphModel, "hasLineOfInquiry");
         Resource hypothesisResource = getResourcesByProperty(triggerNode, tLoisGraphModel, "hasParentHypothesis");
-        mapLineOfInquiry(lineOfInquiry.getURI());
-        mapHypothesis(hypothesisResource.getURI());
-        /**
-         * Starting converting the trigger to an OPMW entity
-         */
 
-        Entity diskAgentEntity = new Entity("http://provenance.isi.edu/agents/hvargas", "NeuroDISK",
-                "DISK instance for NeuroScience");
-        opmwModel.add(diskAgentEntity.getModel());
+        Entity parentHypothesis = mapHypothesis(hypothesisResource.getURI(), hypothesisBundle);
 
-        Entity diskUserEntity = new Entity("http://provenance.isi.edu/agents/hvargas", "Hernan Vargas",
-                "Hernan Vargas");
-        opmwModel.add(diskUserEntity.getModel());
+        Entity lineOfInquiryEntity = mapLineOfInquiry(lineOfInquiry.getURI(), loisBundle, parentHypothesis);
 
-        Entity triggerLineOfInquiryEntity = new Entity("http://provenance.isi.edu/entities/" + triggerLineName, label,
+        Entity triggerLineOfInquiryEntity = pFactory.newEntity(prov.qn(triggerLineName, DocumentProv.DISK_PREFIX),
                 label);
-        opmwModel.add(triggerLineOfInquiryEntity.getModel());
+        WasDerivedFrom wdf = pFactory.newWasDerivedFrom(triggerLineOfInquiryEntity.getId(), lineOfInquiryEntity.getId());
 
-        Entity dataQueryEntity = new Entity("http://provenance.isi.edu/entities/" + triggerLineName + "/data_query",
-                hasDataQueryDescription, hasDataQuery);
-        opmwModel.add(dataQueryEntity.getModel());
+        Activity activity = pFactory.newActivity(prov.qn(triggerLineName + "_update", DocumentProv.DISK_PREFIX),
+                label);
+        Used used = pFactory.newUsed(null, activity.getId(), lineOfInquiryEntity.getId());
+        WasGeneratedBy wgb = pFactory.newWasGeneratedBy(null, triggerLineOfInquiryEntity.getId(), activity.getId());
 
-        // // Create the trigger individual on the OPMW model
-        // Individual entityInstance = createTriggerLine(triggerLineName, label,
-        // dateCreatedDate,
-        // hasLineOfInquiryResource);
+        triggerBundle.getStatement().addAll(Arrays.asList(triggerLineOfInquiryEntity, wdf, activity, used, wgb));
+
+
+
+
+        // Entity dataQueryEntity = pFactory.newEntity(prov.qn(triggerLineName +
+        // "data_query", DocumentProv.DISK_PREFIX),
+        // hasDataQueryDescription);
+        // Activity dataQueryActivity = pFactory.newActivity(prov.qn(triggerLineName +
+        // "data_query_activity",
+        // DocumentProv.DISK_PREFIX), hasDataQueryDescription);
+        // WasDerivedFrom wdf = pFactory.newWasDerivedFrom(null,
+        // triggerLineOfInquiryEntity.getId(),
+        // dataQueryEntity.getId());
+        // Used used = pFactory.newUsed(null, dataQueryActivity.getId(),
+        // dataQueryEntity.getId());
+        // diskBundle.getStatement().add(used);
 
         // // Create a new prov activity with name: localName + "data_query_activity"
         // String dataActivityLocalName = triggerLineName + "/data_query_activity";
@@ -354,6 +428,12 @@ public class Mapper {
         IRI propertyIRI = diskProperties.get(propertyName);
         Property property = model.getProperty(propertyIRI.toString());
         return resource.listProperties(property);
+    }
+
+    private Statement getResourceByProperty(Resource resource, Model model, String propertyName) {
+        IRI propertyIRI = diskProperties.get(propertyName);
+        Property property = model.getProperty(propertyIRI.toString());
+        return resource.getProperty(property);
     }
 
     private String getLiteralByProperty(Resource resource, Model tloiModel, String propertyName) {
