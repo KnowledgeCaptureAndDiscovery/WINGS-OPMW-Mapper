@@ -24,7 +24,7 @@ public class OPMM {
         String tLoisGraphId = "http://localhost:8080/disk-server/admin/tlois";
         String hypothesisGraphId = "http://localhost:8080/disk-server/admin/hypotheses";
         String loisGraphId = "http://localhost:8080/disk-server/admin/lois";
-        
+        String questionGraphId = "https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/QuestionOntology/main/development/EnigmaQuestions.xml";
 
         String tloiId = "http://localhost:8080/disk-server/admin/tlois/TriggeredLOI-usPnQQPLbwyn";
         DatasetGraph diskDataset = ModelUtils.loadDatasetGraph(diskTriples);
@@ -35,8 +35,8 @@ public class OPMM {
         Node tloiNode = NodeFactory.createURI(tloiId);
         Graph graphTLOIGraph = diskDataset.getGraph(tloiGraph);
     
-        Mapper mapper = new Mapper(diskDataset, tLoisGraphId, hypothesisGraphId, loisGraphId);
-        mapper.map(tloiId);
+        Mapper mapper = new Mapper(diskDataset, tLoisGraphId, hypothesisGraphId, loisGraphId, questionGraphId);
+        mapper.transform(tloiId);
         mapper.opmwModel.write(System.out, "TURTLE"); 
         // write model into a file as turtle
         mapper.opmwModel.write(new FileOutputStream("/home/mosorio/repos/wings-project/DISK-OPMW-Mapper/src/main/resources/sample_data/neuro-opmw.ttl"), Lang.TURTLE.getName());
