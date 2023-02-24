@@ -26,7 +26,8 @@ public class OPMM {
         String loisGraphId = "http://localhost:8080/disk-server/admin/lois";
         String questionGraphId = "https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/QuestionOntology/main/development/EnigmaQuestions.xml";
 
-        String tloiId = "http://localhost:8080/disk-server/admin/tlois/TriggeredLOI-usPnQQPLbwyn";
+        String tloiId = "http://localhost:8080/disk-server/admin/tlois/TriggeredLOI-GKMsFE2EfTt5";
+        String hypothesisId = "http://localhost:8080/disk-server/admin/hypotheses/Hypothesis-geEzxPNJ9c8a";
         DatasetGraph diskDataset = ModelUtils.loadDatasetGraph(diskTriples);
         // List all graphs in the dataset
         diskDataset.listGraphNodes().forEachRemaining(System.out::println);

@@ -32,17 +32,36 @@ import org.openprovenance.prov.notation.Utility;
  */
 public class DocumentProv {
 
-    public static final String PROVBOOK_NS = "http://provenance.isi.edu/disk/neuro/";
-    public static final String PROVBOOK_PREFIX = "diskProv";
+    public static final String PROV_NEUROSCIENCE_NS = "http://provenance.isi.edu/disk/neuro/";
+    public static final String PROV_NEUROSCIENCE_PREFIX = "provNeuroScience";
 
-    public static final String JIM_PREFIX = "jim";
-    public static final String JIM_NS = "http://www.cs.rpi.edu/~hendler/";
+    public static final String PROV_NEUROSCIENCE_HYPOTHESIS_NS = "http://provenance.isi.edu/disk/neuro/hypothesis/";
+    public static final String PROV_NEUROSCIENCE_HYPOTHESIS_PREFIX = "provNeuroScienceHypothesis";
 
-    public static final String DISK_PREFIX = "disk";
+    public static final String PROV_NEUROSCIENCE_TLOI_NS = "http://provenance.isi.edu/disk/neuro/tloi/";
+    public static final String PROV_NEUROSCIENCE_TLOI_PREFIX = "provNeuroScienceTLOI";
+
+    public static final String PROV_NEUROSCIENCE_LOI_NS = "http://provenance.isi.edu/disk/neuro/loi/";
+    public static final String PROV_NEUROSCIENCE_LOI_PREFIX = "provNeuroScienceLOI";
+
+    public static final String DISK_PREFIX = "neuroScienceDisk";
     public static final String DISK_NS = "http://localhost:8080/disk-server/admin/";
 
     public static final String ENIGMA_PREFIX = "enigmaQuestion";
     public static final String ENIGMA_NS = "https://w3id.org/sqo/resource/";
+
+    public static final String WINGS_ONTOLOGY_PREFIX = "wings";
+    public static final String WINGS_ONTOLOGY_NS = "http://www.wings-workflows.org/ontology/";
+
+    public static final String RDF_PREFIX = "rdf";
+    public static final String RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
+    public static final String RDFS_PREFIX = "rdfs";
+    public static final String RDFS_NS = "http://www.w3.org/2000/01/rdf-schema#";
+
+    public static final String DCTERMS_NS = "http://purl.org/dc/terms/";
+    public static final String DCTERMS_PREFIX = "dcterms";
+
 
     public final ProvFactory factory;
     public final Namespace ns;
@@ -53,14 +72,24 @@ public class DocumentProv {
         this.document = pFactory.newDocument();
         ns = new Namespace();
         ns.addKnownNamespaces();
+        ns.register(PROV_NEUROSCIENCE_HYPOTHESIS_PREFIX, PROV_NEUROSCIENCE_HYPOTHESIS_NS);
+        ns.register(PROV_NEUROSCIENCE_TLOI_PREFIX, PROV_NEUROSCIENCE_TLOI_NS);
+        ns.register(PROV_NEUROSCIENCE_LOI_PREFIX, PROV_NEUROSCIENCE_LOI_NS);
+        ns.register(PROV_NEUROSCIENCE_PREFIX, PROV_NEUROSCIENCE_NS);
         ns.register(DISK_PREFIX, DISK_NS);
-        ns.register(JIM_PREFIX, JIM_NS);
-        ns.register(PROVBOOK_PREFIX, PROVBOOK_NS);
         ns.register(ENIGMA_PREFIX, ENIGMA_NS);
+        ns.register(WINGS_ONTOLOGY_PREFIX, WINGS_ONTOLOGY_NS);
+        ns.register(RDFS_PREFIX, RDFS_NS);
+        ns.register(RDF_PREFIX, RDF_NS);
+        ns.register(DCTERMS_PREFIX, DCTERMS_NS);
+    }
+
+    public void registerNamespace(String prefix, String iri) {
+        ns.register(prefix, iri);
     }
 
     public QualifiedName qn(String n) {
-        return ns.qualifiedName(PROVBOOK_PREFIX, n, factory);
+        return ns.qualifiedName(PROV_NEUROSCIENCE_PREFIX, n, factory);
     }
 
     
@@ -76,25 +105,6 @@ public class DocumentProv {
 
 
 
-    public Document makeDocument() {
-        Entity quote = factory.newEntity(qn("a-little-provenance-goes-a-long-way"));
-        quote.setValue(factory.newValue("A little provenance goes a long way", factory.getName().XSD_STRING));
-
-        Entity original = factory.newEntity(ns.qualifiedName(JIM_PREFIX, "LittleSemanticsWeb.html", factory));
-
-        Agent paul = factory.newAgent(qn("Paul"), "Paul Groth");
-        Agent luc = factory.newAgent(qn("Luc"), "Luc Moreau");
-
-        WasAttributedTo attr1 = factory.newWasAttributedTo(null, quote.getId(), paul.getId());
-        WasAttributedTo attr2 = factory.newWasAttributedTo(null, quote.getId(), luc.getId());
-
-        WasDerivedFrom wdf = factory.newWasDerivedFrom(quote.getId(), original.getId());
-
-        Document document = factory.newDocument();
-        document.getStatementOrBundle().addAll(Arrays.asList(quote, paul, luc, attr1, attr2, original, wdf));
-        document.setNamespace(ns);
-        return document;
-    }
 
     public void doConversions(Document document, String file) {
         String pngFile = file + ".png";
