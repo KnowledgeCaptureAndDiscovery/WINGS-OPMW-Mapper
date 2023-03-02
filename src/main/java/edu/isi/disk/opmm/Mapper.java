@@ -14,7 +14,6 @@ import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
-import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
@@ -180,12 +179,14 @@ public class Mapper {
                 Entity triggerEntity = createTriggerEntity(triggerResource);
 
                 String commentText = "The agent selects a Question and the values for each of the variables of the selected question. The agent then creates a hypothesis.";
+                String commentText2 = "The agent creates a Question and each of the variables of them. The agent then creates a hypothesis.";
                 Activity createQuestionActivity = linkActivityEntities(hvargas, neda, questionEntity, questionBundle,
                                 "createQuestion", "Create Question",
-                                "The agent creates a Question and each of the variables of them. The agent then creates a hypothesis.");
+                                commentText2, DocumentProv.PROV_NEUROSCIENCE_HYPOTHESIS_PREFIX);
                 Activity createHypothesisActivity = linkActivityEntities(hvargas, neda, hypothesisEntity,
                                 hypothesisBundle,
-                                "createHypothesis", "Create Hypothesis", commentText);
+                                "createHypothesis", "Create Hypothesis", commentText,
+                                DocumentProv.PROV_NEUROSCIENCE_HYPOTHESIS_PREFIX);
 
                 level1WasDerived(questionEntity, hypothesisEntity, lineOfInquiryEntity, triggerEntity);
 
@@ -206,17 +207,25 @@ public class Mapper {
                         Entity variablesBindingWorkflowEntity, Entity variablesBindingMetaWorkflowEntity,
                         Entity hypothesisVariableCollection) {
 
+                String triggerPrefix = triggerEntity.getId().getLocalPart();
+                String triggerNamespace = DocumentProv.PROV_NEUROSCIENCE_TLOI_NS + triggerPrefix + "/";
+                prov.registerNamespace(triggerPrefix, triggerNamespace);
                 List<Resource> metaWorkflowBindingResources = getMetaOrWorkflow("hasMetaWorkflowBinding",
                                 tLoisGraphModel,
                                 triggerResource);
                 List<Resource> workflowBindingResources = getMetaOrWorkflow("hasWorkflowBinding", tLoisGraphModel,
                                 triggerResource);
 
-                Entity dataQuery = pFactory.newEntity(prov.qn("dataQuery"), "Data Query ready to be executed");
-                Activity transformDataQuery = pFactory.newActivity(prov.qn("transformDataQueryTemplate"),
+                Entity dataQuery = pFactory.newEntity(prov.qn("dataQuery", triggerPrefix),
+                                "Data Query ready to be executed");
+                Activity transformDataQuery = pFactory.newActivity(prov.qn("transformDataQueryTemplate", triggerPrefix),
                                 "Replace the variables in the data query template with the variables of the hypothesis");
-                Activity executeDataQuery = pFactory.newActivity(prov.qn("executeDataQuery"), "Execute the data query");
+                Activity executeDataQuery = pFactory.newActivity(prov.qn("executeDataQuery", triggerPrefix),
+                                "Execute the data query");
 
+                WasInformedBy transformDataQueryWasInformedBy = pFactory.newWasInformedBy(null,
+                                executeDataQuery.getId(), transformDataQuery.getId());
+                triggerBundle.getStatement().add(transformDataQueryWasInformedBy);
                 WasGeneratedBy toiWasGeneratedBy = pFactory.newWasGeneratedBy(null, triggerEntity.getId(),
                                 transformDataQuery.getId(), null, null);
 
@@ -236,19 +245,23 @@ public class Mapper {
                 WasGeneratedBy dataQueryWasGeneratedBy = pFactory.newWasGeneratedBy(null, dataQuery.getId(),
                                 transformDataQuery.getId(), null, null);
 
-                Activity createRunActivity = pFactory.newActivity(prov.qn("createRun"), "Create run");
+                Activity createRunActivity = pFactory.newActivity(prov.qn("createRun", triggerPrefix), "Create run");
                 /**
                  * Workflow Plan
                  */
                 for (Resource metaWorkflowBindingResource : metaWorkflowBindingResources) {
-                        String workflowLabel = getIRIByProperty(metaWorkflowBindingResource, tLoisGraphModel, "hasId")
+                        String workflowTemplateUri = getIRIByProperty(metaWorkflowBindingResource, tLoisGraphModel,
+                                        "hasId")
                                         .toString();
-                        String workflowLocalName = workflowLabel.substring(workflowLabel.lastIndexOf("#") + 1);
                         String workflowSystemName = getLiteralByProperty(metaWorkflowBindingResource, tLoisGraphModel,
                                         "hasSource");
+                        String workflowPrefix = (workflowSystemName != null) ? workflowSystemName
+                                        : "unknownWorkflowSystem";
+                        addNewSpaceFromExternalUrl(workflowTemplateUri, workflowPrefix);
+                        String workflowLocalName = IRI.create(workflowTemplateUri).getShortForm();
                         Entity metaWorkflowRun = pFactory.newEntity(
-                                        prov.qn(workflowLocalName, DocumentProv.WINGS_ONTOLOGY_PREFIX),
-                                        workflowLabel);
+                                        prov.qn(workflowLocalName, workflowPrefix),
+                                        workflowTemplateUri);
                         WasGeneratedBy metaWorkflowWasGeneratedBy = pFactory.newWasGeneratedBy(null,
                                         metaWorkflowRun.getId(), createRunActivity.getId(), null, null);
                         workflowSystem = pFactory.newEntity(
@@ -260,14 +273,15 @@ public class Mapper {
 
                         // Add the Variable Binding generated by the Data Query
                         Entity runVariableBindingMetaWorkflow = pFactory.newEntity(
-                                        prov.qn("triggerVariableBinding", DocumentProv.DISK_PREFIX),
+                                        prov.qn("triggerVariableBinding", DocumentProv.PROV_NEUROSCIENCE_TLOI_PREFIX),
                                         "Stores the run parameters for the Meta Workflow");
-
-                        getResourcesByProperty(metaWorkflowBindingResource, tLoisGraphModel,
-                                        "hasVariableBinding")
-                                        .forEachRemaining(s -> {
-                                                addRunBinding(runVariableBindingMetaWorkflow, s);
-                                        });
+                        if (true) {
+                                getResourcesByProperty(metaWorkflowBindingResource, tLoisGraphModel,
+                                                "hasVariableBinding")
+                                                .forEachRemaining(s -> {
+                                                        addRunBinding(runVariableBindingMetaWorkflow, s);
+                                                });
+                        }
                         triggerBundle.getStatement().add(runVariableBindingMetaWorkflow);
 
                         // Execute Data Query Activity generates the Variable Binding
@@ -295,7 +309,8 @@ public class Mapper {
                                         "Analyze the Workflow Run");
                         Used analyzeWorkflowRunUsedWorkflowRun = pFactory.newUsed(null, metaWorkflowRun.getId(),
                                         analyzeWorkflowRun.getId(), null, null);
-                        Entity analysis = pFactory.newEntity(prov.qn("analysis"), "Analysis");
+                        Entity analysis = pFactory.newEntity(prov.qn("analysis", prov.PROV_NEUROSCIENCE_TLOI_PREFIX),
+                                        "Analysis");
                         WasGeneratedBy analysisWasGeneratedBy = pFactory.newWasGeneratedBy(null, analysis.getId(),
                                         analyzeWorkflowRun.getId(), null, null);
                         triggerBundle.getStatement().add(analyzeWorkflowRun);
@@ -303,6 +318,9 @@ public class Mapper {
                         triggerBundle.getStatement().add(analyzeWorkflowRunUsedWorkflowRun);
                         triggerBundle.getStatement().add(analysisWasGeneratedBy);
 
+                        WasInformedBy analyzeWorkflowRunWasInformedBy = pFactory.newWasInformedBy(null,
+                                        analyzeWorkflowRun.getId(), createRunActivity.getId(), null);
+                        triggerBundle.getStatement().add(analyzeWorkflowRunWasInformedBy);
                         /*
                          * Entity `metaWorkflowRun` generates a Collection of Entity `outputCollection`
                          * Entity `outputItem` is a member of Entity `outputCollection`
@@ -324,9 +342,15 @@ public class Mapper {
                 triggerBundle.getStatement().add(dataQueryWasGeneratedBy);
 
                 // Add the entities to the bundle
+                triggerBundle.getStatement().add(dataQuery);
+                triggerBundle.getStatement().add(transformDataQuery);
                 triggerBundle.getStatement().add(executeDataQuery);
                 triggerBundle.getStatement().add(transformDataQuery);
                 triggerBundle.getStatement().add(createRunActivity);
+
+                WasInformedBy createRunWasInformedBy = pFactory.newWasInformedBy(null, createRunActivity.getId(),
+                                executeDataQuery.getId(), null);
+                triggerBundle.getStatement().add(createRunWasInformedBy);
 
         }
 
@@ -379,8 +403,8 @@ public class Mapper {
         }
 
         private Activity linkActivityEntities(Agent delegate, Agent responsible, Entity generated, Bundle bundle,
-                        String activityName, String activityLabel, String commentText) {
-                Activity activity = pFactory.newActivity(prov.qn(activityName), activityLabel);
+                        String activityName, String activityLabel, String commentText, String prefix) {
+                Activity activity = pFactory.newActivity(prov.qn(activityName, prefix), activityLabel);
                 WasGeneratedBy wasGeneratedBy = pFactory.newWasGeneratedBy(null, generated.getId(), activity.getId(),
                                 null, null);
                 ActedOnBehalfOf actedOnBehalfOf = pFactory.newActedOnBehalfOf(null, delegate.getId(),
@@ -395,31 +419,24 @@ public class Mapper {
                 return activity;
         }
 
-        private void oneActivityGeneratesMultipleEntities(Agent delegate, Agent responsible,
-                        List<Entity> generatedEntities,
-                        Bundle bundle, String activityName, String activityLabel) {
-                Activity activity = pFactory.newActivity(prov.qn(activityName), activityLabel);
-                for (Entity generatedEntity : generatedEntities) {
-                        WasGeneratedBy wasGeneratedBy = pFactory.newWasGeneratedBy(null, generatedEntity.getId(),
-                                        activity.getId(),
-                                        null, null);
-                        bundle.getStatement().add(wasGeneratedBy);
-                }
-                ActedOnBehalfOf actedOnBehalfOf = pFactory.newActedOnBehalfOf(null, delegate.getId(),
-                                responsible.getId(),
-                                activity.getId(), null);
-                bundle.getStatement().add(actedOnBehalfOf);
-                bundle.getStatement().add(activity);
+        public Agent createDummyAgent(String localName, String label) {
+                Agent agent = pFactory.newAgent(prov.qn(localName, DocumentProv.PROV_NEUROSCIENCE_PREFIX), label);
+                return agent;
         }
 
-        public Agent createDummyAgent(String localName, String label) {
-                Agent agent = pFactory.newAgent(prov.qn(localName, DocumentProv.DISK_PREFIX), label);
-                return agent;
+        public void addNewSpaceFromExternalUrl(String url, String prefixName) {
+                IRI iri = IRI.create(url);
+                String namespace = iri.getNamespace();
+                prov.registerNamespace(prefixName, namespace);
         }
 
         public void level2LineAdd(Resource lineOfInquiryResource, Entity hypothesis, Entity questionEntity,
                         Entity lineOfInquiryEntity, Entity triggerEntity, Entity hypothesisVariablesCollection)
                         throws ParseException {
+                String prefix = lineOfInquiryEntity.getId().getLocalPart();
+                String namespace = DocumentProv.PROV_NEUROSCIENCE_LOI_NS + prefix + "/";
+                prov.registerNamespace(prefix, namespace);
+
                 String dateCreated = getLiteralByProperty(lineOfInquiryResource, loisGraphModel, "dateCreated");
                 String dataQuery = getLiteralByProperty(lineOfInquiryResource, loisGraphModel, "hasDataQuery");
                 String dataQueryDescription = getLiteralByProperty(lineOfInquiryResource, loisGraphModel,
@@ -434,16 +451,16 @@ public class Mapper {
 
                 // create the activity for writing the data query
                 Activity activitySelectQuestion = pFactory.newActivity(
-                                prov.qn("select_question", DocumentProv.DISK_PREFIX),
+                                prov.qn("select_question", prefix),
                                 "Select the question");
                 Activity activitySelectDataSource = pFactory.newActivity(
-                                prov.qn("select_data_source", DocumentProv.DISK_PREFIX),
+                                prov.qn("select_data_source", prefix),
                                 "Select the data source");
                 Activity activityWriteDataQueryTemplate = pFactory
-                                .newActivity(prov.qn("write_data_query_template", DocumentProv.DISK_PREFIX),
+                                .newActivity(prov.qn("write_data_query_template", prefix),
                                                 "Write data query template");
                 Activity activitySavedLineOfInquiry = pFactory
-                                .newActivity(prov.qn("saved_line_of_inquiry", DocumentProv.DISK_PREFIX),
+                                .newActivity(prov.qn("saved_line_of_inquiry", prefix),
                                                 "Saved line of inquiry");
 
                 WasInformedBy wib = pFactory.newWasInformedBy(null, activitySelectDataSource.getId(),
@@ -457,12 +474,13 @@ public class Mapper {
                 loisBundle.getStatement().add(wib);
                 loisBundle.getStatement().add(wib1);
 
-                Entity dataQueryTemplateEntity = pFactory.newEntity(prov.qn("data_query", DocumentProv.DISK_PREFIX),
+                Entity dataQueryTemplateEntity = pFactory.newEntity(prov.qn("data_query", prefix),
                                 dataQueryDescription);
                 // TODO: Rename the data source
-                Entity dataSource = pFactory.newEntity(prov.qn("data_source", DocumentProv.DISK_PREFIX), dataSourceIRI);
+                Entity dataSource = pFactory.newEntity(prov.qn("data_source", prefix), dataSourceIRI);
 
                 loisBundle.getStatement().add(dataQueryTemplateEntity);
+                triggerBundle.getStatement().add(dataQueryTemplateEntity);
                 prov.document.getStatementOrBundle().add(dataSource);
 
                 // Activties details
@@ -502,7 +520,7 @@ public class Mapper {
                         workflow = pFactory.newEntity(prov.qn(workflowLocalName, DocumentProv.WINGS_ONTOLOGY_PREFIX),
                                         workflowLabel);
                         variableBindingWorkflow = pFactory.newEntity(
-                                        prov.qn("variable_binding_workflow", DocumentProv.DISK_PREFIX),
+                                        prov.qn("variable_binding_workflow", prefix),
                                         "Variable binding workflow collection");
                         String activitySelectWorkflowLabel = "Select the workflow";
                         String activitySelectVariableWorkflowLabel = "Select the variable workflow";
@@ -514,7 +532,7 @@ public class Mapper {
                                         variableBindingWorkflow, activitySelectWorkflowLabel,
                                         activitySelectVariableWorkflowLabel,
                                         activitySelectVariableLocalName, activitySelectWorkflowName,
-                                        workflowBindingResource);
+                                        workflowBindingResource, prefix);
                 }
                 for (Resource metaWorkflowBindingResource : metaWorkflowBindingResources) {
                         String workflowLabel = metaWorkflowBindingResource
@@ -530,7 +548,7 @@ public class Mapper {
                                         prov.qn(workflowSystemName, DocumentProv.WINGS_ONTOLOGY_PREFIX),
                                         workflowSystemName);
                         variableBindingMetaWorkflow = pFactory.newEntity(
-                                        prov.qn("variable_binding_meta_workflow", DocumentProv.DISK_PREFIX),
+                                        prov.qn("variable_binding_meta_workflow", prefix),
                                         "Stores the binding between Question or Data Queries variables and the Meta Workflow variables");
                         String activitySelectWorkflowLabel = "Select the workflow";
                         String activitySelectVariableWorkflowLabel = "Select the variable workflow";
@@ -541,7 +559,7 @@ public class Mapper {
                                         metaWorkflow, variableBindingMetaWorkflow, activitySelectWorkflowLabel,
                                         activitySelectVariableWorkflowLabel, activitySelectVariableLocalName,
                                         activitySelectWorkflowName,
-                                        metaWorkflowBindingResource);
+                                        metaWorkflowBindingResource, prefix);
                 }
                 loisBundle.getStatement().add(usedSelectQuestion);
                 prov.document.getStatementOrBundle().add(usedSelectDataSource);
@@ -560,15 +578,15 @@ public class Mapper {
                         Entity workflowSystem, Entity workflow, Entity variableBindingWorkflow,
                         String activitySelectWorkflowLabel,
                         String activitySelectVariableWorkflowLabel, String activitySelectVariableLocalName,
-                        String activitySelectWorkflowName, Resource workflowBindingResource) {
+                        String activitySelectWorkflowName, Resource workflowBindingResource, String prefix) {
                 prov.document.getStatementOrBundle().add(workflowSystem);
                 Activity activitySelectWorkflow = pFactory
-                                .newActivity(prov.qn(activitySelectWorkflowName, DocumentProv.DISK_PREFIX),
+                                .newActivity(prov.qn(activitySelectWorkflowName, prefix),
                                                 activitySelectWorkflowLabel);
                 WasInformedBy wib2 = pFactory.newWasInformedBy(null, activitySelectWorkflow.getId(),
                                 activityWriteDataQueryTemplate.getId(), null);
                 Activity activitySelectVariableWorkflow = pFactory
-                                .newActivity(prov.qn(activitySelectVariableLocalName, DocumentProv.DISK_PREFIX),
+                                .newActivity(prov.qn(activitySelectVariableLocalName, prefix),
                                                 activitySelectVariableWorkflowLabel);
                 WasGeneratedBy wgbSelectVariableWorkflow = pFactory.newWasGeneratedBy(null,
                                 variableBindingWorkflow.getId(),
@@ -621,7 +639,7 @@ public class Mapper {
                         String[] split = hasVariable.split("#");
                         String variableName = split[split.length - 1];
                         Entity variableBindingCollectionItem = pFactory.newEntity(
-                                        prov.qn(variableName, DocumentProv.DISK_PREFIX),
+                                        prov.qn(variableName, prefix),
                                         hasVariable);
                         variableBindingCollectionItem.setValue(pFactory.newValue(hasBindingValue));
 
@@ -920,77 +938,6 @@ public class Mapper {
                 return lineOfInquiryEntity;
         }
 
-        // private void mappingRuns(Node tloiNode, Model tloiModel, String
-        // triggerLineName, Date dateCreatedDate,
-        // Individual diskUser, Individual diskAgent, Individual entityInstance) throws
-        // ParseException {
-        // // Create a new entity for the execution of the meta workflow
-        // // Obtain the object property
-        // // http://disk-project.org/ontology/disk#hasMetaWorkflowBinding from the
-        // trigger
-        // Resource metaWorkflowBindingResource = getResourcesByProperty(tloiNode,
-        // tloiModel, "hasMetaWorkflowBinding");
-        // if (metaWorkflowBindingResource != null) {
-        // IRI metaWorkflowBindingIRI = getIRIByProperty(metaWorkflowBindingResource,
-        // tloiModel, "hasId");
-        // IRI metaWorkflowRunBindingIRI = getIRIByProperty(metaWorkflowBindingResource,
-        // tloiModel, "hasRunLink");
-        // String hasRunEndString = getLiteralByProperty(metaWorkflowBindingResource,
-        // tloiModel, "hasRunEndDate");
-        // String hasRunStartString = getLiteralByProperty(metaWorkflowBindingResource,
-        // tloiModel, "hasRunStartDate");
-        // String hasRunStatus = getLiteralByProperty(metaWorkflowBindingResource,
-        // tloiModel, "hasRunStatus");
-        // String hasSourceString = getLiteralByProperty(metaWorkflowBindingResource,
-        // tloiModel, "hasSource");
-
-        // Date hasRunStartDate = hasRunStartString != null ?
-        // DATE_FORMAT.parse(hasRunStartString) : null;
-        // Date hasRunEndDate = hasRunEndString != null ?
-        // DATE_FORMAT.parse(hasRunEndString) : null;
-
-        // String runLocalName = triggerLineName + "/executions/"
-        // + metaWorkflowBindingIRI.getShortForm();
-        // String runActivityLocalName = runLocalName + "/start_activity";
-        // Individual runActivityInstance = createActivity(hasRunStartDate,
-        // runActivityLocalName,
-        // diskAgent,
-        // diskUser, runActivityLocalName, hasRunEndDate);
-
-        // Individual runEntity = createEntity(dateCreatedDate,
-        // metaWorkflowBindingIRI.toString(),
-        // metaWorkflowBindingIRI.toString(),
-        // entityInstance,
-        // runActivityInstance,
-        // runLocalName);
-
-        // }
-        // // Obtain the object property
-        // // http://disk-project.org/ontology/disk#hasWorkflowBinding from the trigger
-        // Resource workflowBindingResource = getResourcesByProperty(tloiNode,
-        // tloiModel, "hasWorkflowBinding");
-        // IRI workflowBindingIRI = null;
-        // IRI workflowRunBindingIRI = null;
-        // if (workflowBindingResource != null) {
-        // workflowBindingIRI = getIRIByProperty(workflowBindingResource, tloiModel,
-        // "hasId");
-        // workflowRunBindingIRI = getIRIByProperty(workflowBindingResource, tloiModel,
-        // "hasRunId");
-        // }
-
-        // }
-
-        private Resource getResourcesByProperty(Node node, Model model, String propertyName) {
-                IRI hasWorkflowBindingIRI = diskProperties.get(propertyName);
-                Property hasWorkflowBindingProperty = model.getProperty(hasWorkflowBindingIRI.toString());
-                Statement hasWorkflowBindingStatement = model.getResource(node.getURI())
-                                .getProperty(hasWorkflowBindingProperty);
-                if (hasWorkflowBindingStatement != null) {
-                        return hasWorkflowBindingStatement.getObject().asResource();
-                }
-                return null;
-        }
-
         private StmtIterator getResourcesByProperty(Resource resource, Model model, String propertyName) {
                 IRI propertyIRI = diskProperties.get(propertyName);
                 Property property = model.getProperty(propertyIRI.toString());
@@ -1055,8 +1002,6 @@ public class Mapper {
                 return null;
         }
 
-
-
         public static void printElement(IRI iri, String description) {
                 System.out.println(iri + "&" + description);
         }
@@ -1065,7 +1010,79 @@ public class Mapper {
                 System.out.println(iri + "&" + description + " Domain: " + domain + " Range: " + range);
         }
 
+        public static void listClasses(OWLOntology o) {
+                // TODO Auto-generated method stub
+                for (OWLEntity c : o.getClassesInSignature()) {
+                        String description = getDescription(c, o);
+                        description = description.split("\\r?\\n")[0];
+                        printElement(c.getIRI(), description);
+                }
+        }
 
+        public static void listObjectProperties(OWLOntology o, Boolean include) {
+                // TODO Auto-generated method stub
+                Set<OWLObjectProperty> allProperties;
+                if (include == true) {
+                        allProperties = o.getObjectPropertiesInSignature(Imports.INCLUDED);
+                } else {
+                        allProperties = o.getObjectPropertiesInSignature();
+                }
+                for (OWLObjectProperty p : allProperties) {
+                        String description = getDescription(p, o);
+                        description = description.split("\\r?\\n")[0];
+                        printElement(p.getIRI(), description);
+                }
+
+        }
+
+        public static void listDataProperties(OWLOntology o, Boolean include) {
+                // TODO Auto-generated method stub
+                Set<OWLDataProperty> allProperties;
+                if (include == true) {
+                        allProperties = o.getDataPropertiesInSignature(Imports.INCLUDED);
+                } else {
+                        allProperties = o.getDataPropertiesInSignature();
+                }
+                for (OWLDataProperty p : allProperties) {
+                        String description = getDescription(p, o);
+                        description = description.split("\\r?\\n")[0];
+                        printElement(p.getIRI(), description);
+                }
+
+        }
+
+        /**
+         * Method that given a class, property or data property, searches for the best
+         * description.
+         * 
+         * @param entity   entity to search.
+         * @param ontology ontology to be used to search descriptions.
+         * @return Description String (prioritizes English language)
+         */
+        public static String getDescription(OWLEntity entity, OWLOntology ontology) {
+                String descriptionValue = "Description not available";
+                for (String description : DESCRIPTION_PROPERTIES) {
+                        Object[] annotationsObjects = EntitySearcher
+                                        .getAnnotationObjects(entity, ontology,
+                                                        new OWLAnnotationPropertyImpl(new IRI(description) {
+                                                        }))
+                                        .toArray();
+                        if (annotationsObjects.length != 0) {
+                                Optional<OWLLiteral> descriptionLiteral;
+                                for (Object annotation : annotationsObjects) {
+                                        descriptionLiteral = ((OWLAnnotation) annotation).getValue().asLiteral();
+                                        if (descriptionLiteral.isPresent()) {
+                                                if (annotationsObjects.length == 1
+                                                                || descriptionLiteral.get().getLang().equals("en")) {
+                                                        descriptionValue = descriptionLiteral.get().getLiteral();
+                                                }
+                                        }
+                                }
+                                break;
+                        }
+                }
+                return descriptionValue;
+        }
 
         private void prepareMappingShortProperties(OWLOntology diskOntology) {
                 /**

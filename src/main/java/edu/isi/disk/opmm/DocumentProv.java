@@ -53,6 +53,8 @@ public class DocumentProv {
     public static final String WINGS_ONTOLOGY_PREFIX = "wings";
     public static final String WINGS_ONTOLOGY_NS = "http://www.wings-workflows.org/ontology/";
 
+    
+
     public static final String RDF_PREFIX = "rdf";
     public static final String RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
