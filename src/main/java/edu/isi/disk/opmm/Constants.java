@@ -404,5 +404,10 @@ public class Constants {
     public static final String PROV_PROP_STARTED_AT_TIME = "http://www.w3.org/ns/prov#startedAtTime";
     public static final String PROV_PROP_ENDED_AT_TIME = "http://www.w3.org/ns/prov#endedAtTime";
     public static final String PROV_PROP_USED = "http://www.w3.org/ns/prov#used";
-    
+
+    //Identifiers
+    public static final String QUESTION_VARIABLES_BINDING = "questionVariablesBinding";
+    public static final String HYPOTHESIS_VARIABLES_BINDING = "hypothesisVariablesBinding";
+
+
 }

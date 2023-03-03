@@ -19,6 +19,8 @@ import org.openprovenance.prov.model.WasDerivedFrom;
 
 
 import org.openprovenance.prov.notation.Utility;
+
+import com.fasterxml.jackson.core.sym.Name;
 /**
  * A little provenance goes a long way.
  * ProvToolbox Tutorial 1: creating a provenance document in Java and
@@ -34,6 +36,9 @@ public class DocumentProv {
 
     public static final String PROV_NEUROSCIENCE_NS = "http://provenance.isi.edu/disk/neuro/";
     public static final String PROV_NEUROSCIENCE_PREFIX = "provNeuroScience";
+    
+    public static final String PROV_NEUROSCIENCE_QUESTION_NS = "http://provenance.isi.edu/disk/neuro/question/";
+    public static final String PROV_NEUROSCIENCE_QUESTION_PREFIX = "provNeuroScienceQuestion";
 
     public static final String PROV_NEUROSCIENCE_HYPOTHESIS_NS = "http://provenance.isi.edu/disk/neuro/hypothesis/";
     public static final String PROV_NEUROSCIENCE_HYPOTHESIS_PREFIX = "provNeuroScienceHypothesis";
@@ -71,7 +76,12 @@ public class DocumentProv {
         this.factory = pFactory;
         this.document = pFactory.newDocument();
         ns = new Namespace();
+        register(ns);
+    }
+
+    public void register(Namespace ns){
         ns.addKnownNamespaces();
+        ns.register(PROV_NEUROSCIENCE_QUESTION_PREFIX, PROV_NEUROSCIENCE_QUESTION_NS);
         ns.register(PROV_NEUROSCIENCE_HYPOTHESIS_PREFIX, PROV_NEUROSCIENCE_HYPOTHESIS_NS);
         ns.register(PROV_NEUROSCIENCE_TLOI_PREFIX, PROV_NEUROSCIENCE_TLOI_NS);
         ns.register(PROV_NEUROSCIENCE_LOI_PREFIX, PROV_NEUROSCIENCE_LOI_NS);
