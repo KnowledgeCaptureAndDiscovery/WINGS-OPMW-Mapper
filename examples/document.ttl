@@ -1,0 +1,404 @@
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix disk: <http://disk-project.org/ontology/disk#> .
+@prefix provNeuroScienceLOI: <http://provenance.isi.edu/disk/neuro/loi/> .
+@prefix wings: <http://www.wings-workflows.org/ontology/> .
+@prefix enigmaQuestion: <https://w3id.org/sqo/resource/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix provNeuroScienceHypothesis: <http://provenance.isi.edu/disk/neuro/hypothesis/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix neuroScienceDisk: <http://localhost:8080/disk-server/admin/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix provNeuroScience: <http://provenance.isi.edu/disk/neuro/> .
+@prefix provNeuroScienceQuestion: <http://provenance.isi.edu/disk/neuro/question/> .
+@prefix provNeuroScienceTLOI: <http://provenance.isi.edu/disk/neuro/tloi/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+
+provNeuroScience:hvargas a prov:Agent ;
+	rdfs:label "Hernan Vargas" .
+
+provNeuroScience:neda a prov:Agent ;
+	rdfs:label "Neda Jahanshad" .
+
+_:blank1 a prov:Delegation ;
+	prov:agent provNeuroScience:neda .
+
+provNeuroScience:hvargas prov:qualifiedDelegation _:blank1 .
+
+_:blank1 prov:hadActivity provNeuroScience:createQuestion .
+
+_:blank2 a prov:Delegation ;
+	prov:agent provNeuroScience:neda .
+
+provNeuroScience:hvargas prov:qualifiedDelegation _:blank2 .
+
+_:blank2 prov:hadActivity provNeuroScience:createHypothesis .
+
+wings:Enigma a prov:Entity ;
+	rdfs:label "Enigma" .
+
+wings:unknown a prov:Entity ;
+	rdfs:label "Meta regression is considered as an extended statistical model of meta analysis, regressing the effect size against variable(s) of interest to account for the systematic differences of the effect sizes being meta-analyzed" ;
+	prov:hadMember wings:Enigma .
+
+neuroScienceDisk:select_workflow prov:used wings:Enigma .
+
+wings:unknown prov:wasGeneratedBy neuroScienceDisk:select_workflow .
+
+neuroScienceDisk:select_variable_workflow prov:used wings:unknown .
+
+neuroScienceDisk:select_data_source prov:used provNeuroScienceLOI:data_source .
+
+provNeuroScienceQuestion:EnigmaQuestion5 a prov:Entity ;
+	rdfs:label "Is the effect size of Genotype on Brain Imaging Trait of Region associated with Demographic Attribute for cohorts of Ethnic ancestry?" ;
+	rdfs:comment "Question class represents a scientific question. Is linked to the template, the pattern and all the variables this question uses."^^xsd:Name .
+
+provNeuroScience:createQuestion a prov:Activity ;
+	rdfs:label "Create Question" ;
+	rdfs:comment "The agent creates a Question and each of the variables of them. The agent then creates a hypothesis."^^xsd:Name .
+
+provNeuroScienceQuestion:EnigmaQuestion5 prov:wasGeneratedBy provNeuroScience:createQuestion .
+
+provNeuroScienceHypothesis:Hypothesis-geEzxPNJ9c8a prov:wasDerivedFrom provNeuroScienceQuestion:EnigmaQuestion5 .
+
+<http://provenance.isi.edu/disk/neuro/question/EnigmaQuestion5/questionVariablesBinding> prov:hadMember provNeuroScienceQuestion:EnigmaQuestion3V3 .
+
+provNeuroScienceQuestion:EnigmaQuestion3V3 a prov:Entity ;
+	rdfs:label "?Region" ;
+	neuroScienceDisk:hasConstraints """[] ?regprop ?Region .
+?regprop rdfs:label \"BrainRegion\" .""" .
+
+<http://provenance.isi.edu/disk/neuro/question/EnigmaQuestion5/questionVariablesBinding> prov:hadMember provNeuroScienceQuestion:EnigmaQuestion4v1 .
+
+provNeuroScienceQuestion:EnigmaQuestion4v1 a prov:Entity ;
+	rdfs:label "?EthnicGroup" ;
+	neuroScienceDisk:hasConstraints """[] ?hasEthnicGroupProp ?EthnicGroup .
+?hasEthnicGroupProp rdfs:label \"HasEthnicGroup (E)\" .""" .
+
+<http://provenance.isi.edu/disk/neuro/question/EnigmaQuestion5/questionVariablesBinding> prov:hadMember provNeuroScienceQuestion:EnigmaQuestion3V2 .
+
+provNeuroScienceQuestion:EnigmaQuestion3V2 a prov:Entity ;
+	rdfs:label "?BrainImagingTrait" ;
+	neuroScienceDisk:hasConstraints """[] ?traitprop ?BrainImagingTrait .
+?traitprop rdfs:label \"Trait\" .
+BIND(REPLACE (REPLACE (?BrainImagingTrait, \"SA\", \"Surface Area\"), \"TH\", \"Thickness\")
+  AS ?BrainImagingTraitLabel)""" .
+
+<http://provenance.isi.edu/disk/neuro/question/EnigmaQuestion5/questionVariablesBinding> prov:hadMember provNeuroScienceQuestion:EnigmaQuestion3V4 .
+
+provNeuroScienceQuestion:EnigmaQuestion3V4 a prov:Entity ;
+	rdfs:label "?DemographicAttribute" ;
+	neuroScienceDisk:hasConstraints """?hasCohortProj rdfs:label \"HasCohortProject (E)\" .
+[] ?hasCohortProj ?CohortProjects .
+?CohortProjects ?DemographicAttribute [] .
+?DemographicAttribute rdfs:label ?DemographicAttributeLabel .
+FILTER (
+  REGEX(?DemographicAttributeLabel, \"HasAge Mean\") ||
+  REGEX(?DemographicAttributeLabel, \"HasNumberOfParticipants\") ||
+  REGEX(?DemographicAttributeLabel, \"HasNumberOfMaleSex\") ||
+  REGEX(?DemographicAttributeLabel, \"HasNumberOfFemaleSex\")
+)""" .
+
+<http://provenance.isi.edu/disk/neuro/question/EnigmaQuestion5/questionVariablesBinding> prov:hadMember provNeuroScienceQuestion:EnigmaQuestion3V1 .
+
+provNeuroScienceQuestion:EnigmaQuestion3V1 a prov:Entity ;
+	rdfs:label "?Genotype" ;
+	neuroScienceDisk:hasConstraints """[] ?snpprop ?Genotype .
+?snpprop rdfs:label \"SNP\" .""" .
+
+provNeuroScienceQuestion:EnigmaQuestion5 prov:wasDerivedFrom <http://provenance.isi.edu/disk/neuro/question/EnigmaQuestion5/questionVariablesBinding> .
+
+<http://provenance.isi.edu/disk/neuro/question/EnigmaQuestion5/questionVariablesBinding> a prov:Entity ;
+	rdfs:label "Collection of question variables" ;
+	prov:wasGeneratedBy provNeuroScience:createQuestion .
+
+provNeuroScienceHypothesis:Hypothesis-geEzxPNJ9c8a a prov:Entity ;
+	rdfs:label "Is the effect size of rs1080066 on Surface Area of Precentral associated with Mean Age for cohorts of European ancestry" ;
+	dcterms:created "17:46:20 2022-09-28"^^xsd:Name .
+
+provNeuroScience:createHypothesis a prov:Activity ;
+	rdfs:label "Create Hypothesis" ;
+	rdfs:comment "The agent selects a Question and the values for each of the variables of the selected question. The agent then creates a hypothesis."^^xsd:Name .
+
+provNeuroScienceHypothesis:Hypothesis-geEzxPNJ9c8a prov:wasGeneratedBy provNeuroScience:createHypothesis .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding> a prov:Entity ;
+	rdfs:label "Collection of question variables" ;
+	prov:wasDerivedFrom <http://provenance.isi.edu/disk/neuro/question/EnigmaQuestion5/questionVariablesBinding> .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V4> a prov:Entity ;
+	rdfs:label "http://localhost:8080/enigma_dev/Special:URIResolver/Property-3AHasAge_Mean_-28E-29" .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V4> .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V4> prov:wasDerivedFrom provNeuroScienceQuestion:EnigmaQuestion3V4 .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V2> a prov:Entity ;
+	rdfs:label "SA" .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V2> .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V2> prov:wasDerivedFrom provNeuroScienceQuestion:EnigmaQuestion3V2 .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V1> a prov:Entity ;
+	rdfs:label "rs1080066" .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V1> .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V1> prov:wasDerivedFrom provNeuroScienceQuestion:EnigmaQuestion3V1 .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V3> a prov:Entity ;
+	rdfs:label "Precentral" .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V3> .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion3V3> prov:wasDerivedFrom provNeuroScienceQuestion:EnigmaQuestion3V3 .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion4v1> a prov:Entity ;
+	rdfs:label "European" .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion4v1> .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding/EnigmaQuestion4v1> prov:wasDerivedFrom provNeuroScienceQuestion:EnigmaQuestion4v1 .
+
+provNeuroScienceHypothesis:Hypothesis-geEzxPNJ9c8a prov:wasDerivedFrom <http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding> .
+
+<http://provenance.isi.edu/disk/neuro/hypothesis/Hypothesis-geEzxPNJ9c8a/hypothesisVariablesBinding> prov:wasGeneratedBy provNeuroScience:createHypothesis .
+
+provNeuroScience:LOI-R12qZl77tJJ9 a prov:Entity ;
+	rdfs:label "Meta regression with ancestry" ;
+	prov:wasDerivedFrom provNeuroScienceQuestion:EnigmaQuestion5 .
+
+neuroScienceDisk:select_question a prov:Activity ;
+	rdfs:label "Select the question" ;
+	rdfs:comment "17:50:54 2022-09-28"^^xsd:Name .
+
+neuroScienceDisk:select_data_source a prov:Activity ;
+	rdfs:label "Select the data source" .
+
+neuroScienceDisk:write_data_query_template a prov:Activity ;
+	rdfs:label "Write data query template" .
+
+neuroScienceDisk:saved_line_of_inquiry a prov:Activity ;
+	rdfs:label "Saved line of inquiry" .
+
+neuroScienceDisk:select_data_source prov:wasInformedBy neuroScienceDisk:select_question .
+
+neuroScienceDisk:write_data_query_template prov:wasInformedBy neuroScienceDisk:select_data_source .
+
+provNeuroScienceLOI:data_query a prov:Entity ;
+	rdfs:label """?project a ?projectClass .
+?projectClass rdfs:label \"Project (E)\" .
+?project ?hasCohort ?Cohorts .
+?hasCohort rdfs:label \"HasCohort (E)\" .
+?Cohorts ?hasCohortProj ?CohortProjects .
+?hasCohortProj rdfs:label \"HasCohortProject (E)\" .
+?CohortProjects ?hasProjectResults ?ProjectResults .
+?hasProjectResults rdfs:label \"HasProjectResults (E)\" .
+?ProjectResults ?regionprop ?Region .
+?regionprop rdfs:label \"BrainRegion\" .
+?ProjectResults ?traitprop ?BrainImagingTrait .
+?traitprop rdfs:label \"Trait\" .
+?ProjectResults ?snpprop ?Genotype .
+?snpprop rdfs:label \"SNP\" .
+?ProjectResults ?contenturlProp ?CohortData .
+?contenturlProp rdfs:label \"HasContentUrl (E)\" .
+#Ethnic Group
+?Cohorts ?hasEthnicGroupProp ?EthnicGroup .
+?hasEthnicGroupProp rdfs:label \"HasEthnicGroup (E)\" .
+#Demographic
+optional {
+  ?participantsProp rdfs:label \"HasNumberOfParticipants (E)\" .
+  ?CohortProjects ?participantsProp ?nParticipants
+}
+?CohortProjects ?DemographicAttribute ?demographicValue .
+?DemographicAttribute rdfs:label ?DemographicLabel .
+
+BIND(
+    IF(?DemographicLabel = \"HasNumberOfFemaleSex (E)\" || ?DemographicLabel = \"HasNumberOfMaleSex (E)\" ,
+      (xsd:integer(?demographicValue)/xsd:integer(?nParticipants)), 
+      ?demographicValue)
+as ?realDemographic)""" .
+
+provNeuroScienceLOI:data_source a prov:Entity ;
+	rdfs:label "https://enigma-endpoint.disk.isi.edu/enigma_dev" .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding a prov:Entity ;
+	rdfs:label "Stores the binding between Question or Data Queries variables and the Meta Workflow variables" .
+
+neuroScienceDisk:select_workflow a prov:Activity ;
+	rdfs:label "Select the workflow" ;
+	prov:wasInformedBy neuroScienceDisk:write_data_query_template .
+
+neuroScienceDisk:saved_line_of_inquiry prov:wasInformedBy neuroScienceDisk:select_variable_workflow .
+
+neuroScienceDisk:select_variable_workflow a prov:Activity ;
+	rdfs:label "Select the variable workflow" ;
+	prov:wasInformedBy neuroScienceDisk:select_workflow .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding prov:wasGeneratedBy neuroScienceDisk:select_variable_workflow .
+
+neuroScienceDisk:saved_line_of_inquiry prov:used provNeuroScienceLOI:metaWorkflowVariablesBinding .
+
+provNeuroScienceLOI:area a prov:Entity ;
+	rdfs:label "https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/workflows/Meta-Regression.owl#area" ;
+	prov:value "?Region" .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding prov:hadMember provNeuroScienceLOI:area .
+
+provNeuroScienceLOI:demographic_value a prov:Entity ;
+	rdfs:label "https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/workflows/Meta-Regression.owl#demographic_value" ;
+	prov:value "[?realDemographic]" .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding prov:hadMember provNeuroScienceLOI:demographic_value .
+
+provNeuroScienceLOI:demographic a prov:Entity ;
+	rdfs:label "https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/workflows/Meta-Regression.owl#demographic" ;
+	prov:value "?DemographicLabel" .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding prov:hadMember provNeuroScienceLOI:demographic .
+
+provNeuroScienceLOI:snp a prov:Entity ;
+	rdfs:label "https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/workflows/Meta-Regression.owl#snp" ;
+	prov:value "?Genotype" .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding prov:hadMember provNeuroScienceLOI:snp .
+
+provNeuroScienceLOI:trait a prov:Entity ;
+	rdfs:label "https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/workflows/Meta-Regression.owl#trait" ;
+	prov:value "?BrainImagingTrait" .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding prov:hadMember provNeuroScienceLOI:trait .
+
+provNeuroScienceLOI:cohortData a prov:Entity ;
+	rdfs:label "https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/workflows/Meta-Regression.owl#cohortData" ;
+	prov:value "[?CohortData]" .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding prov:hadMember provNeuroScienceLOI:cohortData .
+
+neuroScienceDisk:select_question prov:used provNeuroScienceQuestion:EnigmaQuestion5 .
+
+neuroScienceDisk:write_data_query_template prov:used provNeuroScienceQuestion:EnigmaQuestion5 .
+
+provNeuroScienceLOI:data_query prov:wasGeneratedBy neuroScienceDisk:write_data_query_template .
+
+provNeuroScience:LOI-R12qZl77tJJ9 prov:wasGeneratedBy neuroScienceDisk:saved_line_of_inquiry .
+
+provNeuroScience:TriggeredLOI-GKMsFE2EfTt5 a prov:Entity , "http://disk-project.org/ontology/disk#TriggeredLineOfInquiry"^^xsd:anyURI ;
+	rdfs:label "Triggered: Meta regression with ancestry" ;
+	prov:wasDerivedFrom provNeuroScience:LOI-R12qZl77tJJ9 .
+
+provNeuroScienceTLOI:dataQuery a prov:Entity ;
+	rdfs:label """?project a ?projectClass .
+?projectClass rdfs:label \"Project (E)\" .
+?project ?hasCohort ?Cohorts .
+?hasCohort rdfs:label \"HasCohort (E)\" .
+?Cohorts ?hasCohortProj ?CohortProjects .
+?hasCohortProj rdfs:label \"HasCohortProject (E)\" .
+?CohortProjects ?hasProjectResults ?ProjectResults .
+?hasProjectResults rdfs:label \"HasProjectResults (E)\" .
+?ProjectResults ?regionprop \"Precentral\" .
+?regionprop rdfs:label \"BrainRegion\" .
+?ProjectResults ?traitprop \"SA\" .
+?traitprop rdfs:label \"Trait\" .
+?ProjectResults ?snpprop \"rs1080066\" .
+?snpprop rdfs:label \"SNP\" .
+?ProjectResults ?contenturlProp ?CohortData .
+?contenturlProp rdfs:label \"HasContentUrl (E)\" .
+#Ethnic Group
+?Cohorts ?hasEthnicGroupProp \"European\" .
+?hasEthnicGroupProp rdfs:label \"HasEthnicGroup (E)\" .
+#Demographic
+optional {
+?participantsProp rdfs:label \"HasNumberOfParticipants (E)\" .
+?CohortProjects ?participantsProp ?nParticipants
+}
+?CohortProjects <http://localhost:8080/enigma_dev/Special:URIResolver/Property-3AHasAge_Mean_-28E-29> ?demographicValue .
+<http://localhost:8080/enigma_dev/Special:URIResolver/Property-3AHasAge_Mean_-28E-29> rdfs:label ?DemographicLabel .
+BIND(
+IF(?DemographicLabel = \"HasNumberOfFemaleSex (E)\" || ?DemographicLabel = \"HasNumberOfMaleSex (E)\" ,
+(xsd:integer(?demographicValue)/xsd:integer(?nParticipants)),
+?demographicValue)
+as ?realDemographic)
+""" .
+
+provNeuroScienceTLOI:dataSource a prov:Entity ;
+	rdfs:label "https://enigma-endpoint.disk.isi.edu/enigma_dev" ;
+	prov:wasDerivedFrom provNeuroScienceLOI:data_source .
+
+provNeuroScience:TriggeredLOI-GKMsFE2EfTt5 prov:wasGeneratedBy provNeuroScience:transformDataQueryTemplate .
+
+provNeuroScience:executeDataQuery a prov:Activity ;
+	rdfs:label "Execute the data query" .
+
+provNeuroScience:transformDataQueryTemplate a prov:Activity ;
+	rdfs:label "Replace the variables in the data query template with the variables of the hypothesis" .
+
+provNeuroScienceLOI:data_query prov:used provNeuroScience:transformDataQueryTemplate .
+
+provNeuroScienceTLOI:dataQuery prov:wasGeneratedBy provNeuroScience:transformDataQueryTemplate .
+
+provNeuroScienceLOI:metaWorkflowVariablesBinding prov:used provNeuroScience:transformDataQueryTemplate .
+
+provNeuroScienceTLOI:Meta-Regression--8c91ba13-954b-4096-91e1-eb471838876e a prov:Entity ;
+	rdfs:label "http://localhost:8080/wings-portal/export/users/admin/Enigma/executions/Meta-Regression--8c91ba13-954b-4096-91e1-eb471838876e.owl#Meta-Regression--8c91ba13-954b-4096-91e1-eb471838876e" .
+
+wings:Enigma a prov:Entity ;
+	rdfs:label "Enigma" .
+
+provNeuroScienceTLOI:Meta-Regression--8c91ba13-954b-4096-91e1-eb471838876e prov:wasGeneratedBy provNeuroScienceTLOI:createRun .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/snp> a prov:Entity ;
+	rdfs:label "Variable Binding" ;
+	prov:value "rs1080066" .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/snp> .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/area> a prov:Entity ;
+	rdfs:label "Variable Binding" ;
+	prov:value "Precentral" .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/area> .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/demographic> a prov:Entity ;
+	rdfs:label "Variable Binding" ;
+	prov:value "HasAge Mean (E)" .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/demographic> .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/trait> a prov:Entity ;
+	rdfs:label "Variable Binding" ;
+	prov:value "SA" .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/trait> .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/cohortData> a prov:Entity ;
+	rdfs:label "Variable Binding" ;
+	prov:value "[SHA4fe5c4_1000BRAINS_Significant_GWAS.csv, SHA4815c5_ADNI1_Significant_GWAS.csv, SHA4a85c5_ADNI2GO_Significant_GWAS.csv, SHA4bf5c6_ALSPACa_Significant_GWAS.csv, SHA47a5c5_ASRB_Significant_GWAS.csv, SHA4aa5c5_BETULA_Significant_GWAS.csv, SHA4945c5_BIG_Significant_GWAS.csv, SHA5305c4_BIG-PsychChip_Significant_GWAS.csv, SHA4c45c5_BONN_Significant_GWAS.csv, SHA4ad5c5_BrainScale_Significant_GWAS.csv, SHA4ca5c5_CARDIFF_Significant_GWAS.csv, SHA4a75c5_DNS-V3_Significant_GWAS.csv, SHA4b15c5_DNS-V4_Significant_GWAS.csv, SHA4c65c5_EPIGEN_Significant_GWAS.csv, SHA4b15c5_FOR2107_Significant_GWAS.csv, SHA4925c5_GIG_Significant_GWAS.csv, SHA4935c5_GSP_Significant_GWAS.csv, SHA4b15c5_HUBIN_Significant_GWAS.csv, SHA4925c5_HUNT_Significant_GWAS.csv, SHA4b85c5_IMAGEN_Significant_GWAS.csv, SHA4bf5c5_ImpACT_Significant_GWAS.csv, SHA4b45c5_LBC1936_Significant_GWAS.csv, SHA48a5c5_LIBD_Significant_GWAS.csv, SHA4835c5_MCIC_Significant_GWAS.csv, SHA4905c5_MooDS_Significant_GWAS.csv, SHA4775c5_MPIP_Significant_GWAS.csv, SHA4825c5_MPRC_Significant_GWAS.csv, SHA4945c5_MUNSTER_Significant_GWAS.csv, SHA4865c5_NCNG_Significant_GWAS.csv, SHA4835c5_NESDA_Significant_GWAS.csv, SHA4f55c5_NeuroIMAGE_Significant_GWAS.csv, SHA46d5c5_NTR_Significant_GWAS.csv, SHA4765c5_OATS_Significant_GWAS.csv, SHA4a65c5_PAFIP_Significant_GWAS.csv, SHA4865c5_PDNZ_Significant_GWAS.csv, SHA47a5c5_PING_Significant_GWAS.csv, SHA3f15c5_PPMI_Significant_GWAS.csv, SHA4875c5_QTIM_Significant_GWAS.csv, SHA4bb5c5_SHIP_Significant_GWAS.csv, SHA4ee5c5_SHIP-Trend_Significant_GWAS.csv, SHA4ba5c5_SydneyMAS_Significant_GWAS.csv, SHA4a85c5_SYS_Significant_GWAS.csv, SHA4c15c5_TCD-NUIG_Significant_GWAS.csv, SHA4865c5_TOP_Significant_GWAS.csv, SHA4945c5_TOP3T_Significant_GWAS.csv, SHA4ae5c5_UiO2016_Significant_GWAS.csv, SHA4aa5c5_UiO2017_Significant_GWAS.csv, SHA4c95c5_UKBB_Significant_GWAS.csv, SHA4335c5_UMCU_Significant_GWAS.csv]" .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/cohortData> .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/demographic_value> a prov:Entity ;
+	rdfs:label "Variable Binding" ;
+	prov:value "[67.3, 74.8, 72.4, 19.6, 38.5, 62.4, 22.6, 22.5, 38.2, 10, 24.8, 19.7, 19.9, 38.4, 34.4, 24.2, 21.4, 41.9, 58.9, 14.6, 40.8, 72.7, 33.2, 33.7, 33.6, 48.3, 37.2, 35.8, 51.6, 37.5, 17.1, 29.4, 70.5, 28.3, 68.2, 11.8, 61.7, 22.4, 55.8, 50.4, 78.4, 28.3, 29.9, 35.2, 33.2, 31.8, 42.1, 62.8, 33.1]" .
+
+<http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding> prov:hadMember <http://provenance.isi.edu/disk/neuro/tloi/TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/demographic_value> ;
+	a prov:Entity ;
+	rdfs:label "Stores the run parameters for the Meta Workflow" ;
+	prov:wasGeneratedBy provNeuroScience:executeDataQuery ;
+	prov:used provNeuroScienceTLOI:createRun .
+
+wings:unknown prov:used provNeuroScienceTLOI:createRun .
+
+provNeuroScience:analyzeWorkflowRun a prov:Activity ;
+	rdfs:label "Analyze the Workflow Run" .
+
+provNeuroScience:analysis a prov:Entity ;
+	rdfs:label "Analysis" .
+
+provNeuroScienceTLOI:Meta-Regression--8c91ba13-954b-4096-91e1-eb471838876e prov:used provNeuroScience:analyzeWorkflowRun .
+
+provNeuroScience:analysis prov:wasGeneratedBy provNeuroScience:analyzeWorkflowRun .
+
+provNeuroScienceTLOI:createRun a prov:Activity ;
+	rdfs:label "Create run" .
