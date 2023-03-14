@@ -1,19 +1,12 @@
 package edu.isi.disk.opmm;
 
-import java.util.concurrent.locks.StampedLock;
-
-import org.apache.jena.base.Sys;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.vocabulary.RDF;
-import org.apache.jena.vocabulary.VCARD;
 
 public class TriggerLineInquiryExport {
 
@@ -38,8 +31,8 @@ public class TriggerLineInquiryExport {
     }
 
     public void convertObjectProperties(){
-        
-    }    
+
+    }
 
     public void convertDataProperties() {
         Statement dateCreated = this.model.getProperty(this.tloiResource, DISK.dateCreated);

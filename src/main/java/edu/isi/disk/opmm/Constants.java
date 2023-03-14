@@ -408,6 +408,7 @@ public class Constants {
     //Identifiers
     public static final String QUESTION_VARIABLES_BINDING = "questionVariablesBinding";
     public static final String HYPOTHESIS_VARIABLES_BINDING = "hypothesisVariablesBinding";
+    public static final String META_WORKFLOW_VARIABLES_BINDING = "metaWorkflowVariablesBinding";
 
 
 }
