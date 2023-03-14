@@ -75,7 +75,7 @@
         },
         "_:hM15": {
           "prov:entity": [
-            "area"
+            "snp"
           ],
           "prov:collection": "metaWorkflowVariablesBinding"
         },
@@ -87,19 +87,19 @@
         },
         "_:hM13": {
           "prov:entity": [
-            "demographic"
+            "demographic_value"
           ],
           "prov:collection": "metaWorkflowVariablesBinding"
         },
         "_:hM14": {
           "prov:entity": [
-            "snp"
+            "demographic"
           ],
           "prov:collection": "metaWorkflowVariablesBinding"
         },
         "_:hM12": {
           "prov:entity": [
-            "demographic_value"
+            "area"
           ],
           "prov:collection": "metaWorkflowVariablesBinding"
         }
@@ -534,19 +534,19 @@
       "hadMember": {
         "_:hM20": {
           "prov:entity": [
-            "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/demographic_value"
+            "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/demographic"
           ],
           "prov:collection": "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding"
         },
         "_:hM21": {
           "prov:entity": [
-            "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/demographic"
+            "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/trait"
           ],
           "prov:collection": "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding"
         },
         "_:hM19": {
           "prov:entity": [
-            "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/trait"
+            "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/area"
           ],
           "prov:collection": "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding"
         },
@@ -564,7 +564,7 @@
         },
         "_:hM23": {
           "prov:entity": [
-            "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/area"
+            "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding/demographic_value"
           ],
           "prov:collection": "TriggeredLOI-GKMsFE2EfTt5/metaWorkflowVariablesBinding"
         }
