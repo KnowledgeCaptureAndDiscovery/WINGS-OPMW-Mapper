@@ -1,0 +1,1531 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.wings-workflows.org/ontology/workflow.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="http://www.wings-workflows.org/wings-omics-portal/export/users/ravali/genomics/workflows/genomics_analysis.owl">
+      <owl:Ontology rdf:about="">
+            <owl:imports rdf:resource="/ontology/workflow.owl"/>
+      </owl:Ontology>
+      <j.0:WorkflowTemplate rdf:ID="genomics_analysis">
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="minBaseQuality_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="minBaseQuality">
+                                    <rdfs:comment>x=289.5,y=184.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>minBaseQuality</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="minAlignmentMappingQual_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="minAlignmentMappingQual">
+                                    <rdfs:comment>x=100.5,y=184.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>minAlignmentMappingQual</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="getCosmicIDs_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="getCosmicIDs">
+                                    <rdfs:comment>x=884.5,y=628.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>getCosmicIDs</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="hasIndels_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="hasIndels">
+                                    <rdfs:comment>x=1093.5,y=628.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>hasIndels</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="minSNPQuality_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="minSNPQuality">
+                                    <rdfs:comment>x=423.5,y=480.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>minSNPQuality</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="minReadDepth_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="minReadDepth">
+                                    <rdfs:comment>x=306.5,y=480.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>minReadDepth</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="getbSNPIDs_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="getbSNPIDs">
+                                    <rdfs:comment>x=995.5,y=628.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>getbSNPIDs</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="inputZippedFASTQs_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:DataVariable rdf:ID="inputZippedFASTQs">
+                                    <rdfs:comment>x=509.5,y=36.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>InputFASTQ</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="segLengthDecrease_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="segLengthDecrease">
+                                    <rdfs:comment>x=798.5,y=36.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>segLengthDecrease</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="annot_path_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="annot_path">
+                                    <rdfs:comment>x=790.5,y=628.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>annot_path</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="minGappedReads_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="minGappedReads">
+                                    <rdfs:comment>x=411.5,y=184.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>minGappedReads</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="inputFASTA_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:DataVariable rdf:ID="inputFASTA">
+                                    <rdfs:comment>x=31.5,y=36.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>InputFASTA</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="maxHitsPerRead_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="maxHitsPerRead">
+                                    <rdfs:comment>x=672.5,y=36.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>maxHitsPerRead</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="sampleIDColname_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="sampleIDColname">
+                                    <rdfs:comment>x=1333.5,y=776.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>sampleIDColname</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="RPKMColname_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="RPKMColname">
+                                    <rdfs:comment>x=1113.5,y=776.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>RPKMColname</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="featColname_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="featColname">
+                                    <rdfs:comment>x=1230.5,y=776.5</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>featColname</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="getCosmicIDs_Input_To_port_getCosmicIDs">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="CustomProDBNode">
+                                    <rdfs:comment>x=715.5,y=702.5</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="CustomProDBNode_component">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#CustomProDB"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="CustomProDBNode_crule">
+                                                <j.0:createSetsOn rdf:resource="#CustomProDBNode_component"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_getCosmicIDs">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_getCosmicIDs_role">
+                                                            <j.0:hasRoleID
+                                                            >getCosmicIDs</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_hasIndels">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_hasIndels_role">
+                                                            <j.0:hasRoleID
+                                                            >hasIndels</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_InputVCF">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_InputVCF_role">
+                                                            <j.0:hasRoleID
+                                                            >InputVCF</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_getbSNPIDs">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_getbSNPIDs_role">
+                                                            <j.0:hasRoleID
+                                                            >getbSNPIDs</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_annot_path">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_annot_path_role">
+                                                            <j.0:hasRoleID
+                                                            >annot_path</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_InputBAM">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_InputBAM_role">
+                                                            <j.0:hasRoleID
+                                                            >InputBAM</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_InputBed">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_InputBed_role">
+                                                            <j.0:hasRoleID
+                                                            >InputBed</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_InputFASTA">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_InputFASTA_role">
+                                                            <j.0:hasRoleID
+                                                            >InputFASTA</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_ProteinIndelFasta">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_ProteinIndelFasta_role">
+                                                            <j.0:hasRoleID
+                                                            >ProteinIndelFasta</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_ProteinSNVTable">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_ProteinSNVTable_role">
+                                                            <j.0:hasRoleID
+                                                            >ProteinSNVTable</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_ProteinRPKMFasta">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_ProteinRPKMFasta_role">
+                                                            <j.0:hasRoleID
+                                                            >ProteinRPKMFasta</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_ProteinSNVFasta">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_ProteinSNVFasta_role">
+                                                            <j.0:hasRoleID
+                                                            >ProteinSNVFasta</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="CustomProDBNode_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-d3dff3f7-2357-4106-bef0-95acdce0e637">
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_getCosmicIDs"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_hasIndels"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_InputVCF"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_getbSNPIDs"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_annot_path"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_InputBAM"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_InputBed"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_InputFASTA"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#port_getCosmicIDs"/>
+                        <j.0:hasVariable rdf:resource="#getCosmicIDs"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="hasIndels_Input_To_port_hasIndels">
+                        <j.0:hasDestinationNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_hasIndels"/>
+                        <j.0:hasVariable rdf:resource="#hasIndels"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="maxHitsPerRead_Input_To_port_maxHitsPerRead">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="wTopHat2Node">
+                                    <rdfs:comment>x=651.5,y=110.5</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="wTopHat2Node_component">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#wTopHat2"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="wTopHat2Node_crule">
+                                                <j.0:createSetsOn rdf:resource="#wTopHat2Node_component"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_maxHitsPerRead">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_maxHitsPerRead_role">
+                                                            <j.0:hasRoleID
+                                                            >maxHitsPerRead</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_inputZippedFASTQs">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_inputZippedFASTQs_role">
+                                                            <j.0:hasRoleID
+                                                            >inputZippedFASTQs</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_inputFASTA">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_inputFASTA_role">
+                                                            <j.0:hasRoleID
+                                                            >inputFASTA</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_segLengthDecrease">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_segLengthDecrease_role">
+                                                            <j.0:hasRoleID
+                                                            >segLengthDecrease</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_juncBED">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_juncBED_role">
+                                                            <j.0:hasRoleID
+                                                            >juncBED</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_unmappedBAM">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_unmappedBAM_role">
+                                                            <j.0:hasRoleID
+                                                            >unmappedBAM</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_insertionsBED">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_insertionsBED_role">
+                                                            <j.0:hasRoleID
+                                                            >insertionsBED</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_deletionsBED">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_deletionsBED_role">
+                                                            <j.0:hasRoleID
+                                                            >deletionsBED</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_alignedBAM">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_alignedBAM_role">
+                                                            <j.0:hasRoleID
+                                                            >alignedBAM</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="wTopHat2Node_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-ea3bb59c-d146-4165-95cf-140468189094">
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_maxHitsPerRead"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_inputZippedFASTQs"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_inputFASTA"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_segLengthDecrease"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#port_maxHitsPerRead"/>
+                        <j.0:hasVariable rdf:resource="#maxHitsPerRead"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="alignedBAM_port_alignedBAM_port_inputBamFile">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="SamtoolsBamIndexNode">
+                                    <rdfs:comment>x=586.5,y=258.5</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="SamtoolsBamIndexNode_component">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#SamtoolsBamIndex"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="SamtoolsBamIndexNode_crule">
+                                                <j.0:createSetsOn rdf:resource="#SamtoolsBamIndexNode_component"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_inputBamFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_inputBamFile_role">
+                                                            <j.0:hasRoleID
+                                                            >inputBamFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_outputBamIndexFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_outputBamIndexFile_role">
+                                                            <j.0:hasRoleID
+                                                            >outputBamIndexFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="SamtoolsBamIndexNode_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-0f8c20d5-dc84-4fbe-a95b-305b60b181c0">
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_inputBamFile"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#port_inputBamFile"/>
+                        <j.0:hasOriginNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasOriginPort rdf:resource="#port_alignedBAM"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="alignedBAM">
+                                    <rdfs:comment>x=560.5,y=184.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="unmappedBAM_port_unmappedBAM_Output">
+                        <j.0:hasOriginNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasOriginPort rdf:resource="#port_unmappedBAM"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="unmappedBAM">
+                                    <rdfs:comment>x=900.5,y=184.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="juncBED_port_juncBED_port_InputBed">
+                        <j.0:hasDestinationNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_InputBed"/>
+                        <j.0:hasOriginNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasOriginPort rdf:resource="#port_juncBED"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="juncBED">
+                                    <rdfs:comment>x=813.5,y=406.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="inputFASTA_Input_To_port_InputFASTA">
+                        <j.0:hasDestinationNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_InputFASTA"/>
+                        <j.0:hasVariable rdf:resource="#inputFASTA"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="ProteinRPKMFasta_port_ProteinRPKMFasta_Output">
+                        <j.0:hasOriginNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasOriginPort rdf:resource="#port_ProteinRPKMFasta"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="ProteinRPKMFasta">
+                                    <rdfs:comment>x=709.5,y=776.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="ProteinSNVFasta_port_ProteinSNVFasta_Output">
+                        <j.0:hasOriginNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasOriginPort rdf:resource="#port_ProteinSNVFasta"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="ProteinSNVFasta">
+                                    <rdfs:comment>x=851.5,y=776.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="getbSNPIDs_Input_To_port_getbSNPIDs">
+                        <j.0:hasDestinationNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_getbSNPIDs"/>
+                        <j.0:hasVariable rdf:resource="#getbSNPIDs"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="deletionsBED_port_deletionsBED_Output">
+                        <j.0:hasOriginNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasOriginPort rdf:resource="#port_deletionsBED"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="deletionsBED">
+                                    <rdfs:comment>x=662.5,y=184.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="outputBamIndexFile_port_outputBamIndexFile_Output">
+                        <j.0:hasOriginNode rdf:resource="#SamtoolsBamIndexNode"/>
+                        <j.0:hasOriginPort rdf:resource="#port_outputBamIndexFile"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="outputBamIndexFile">
+                                    <rdfs:comment>x=592.5,y=332.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="insertionsBED_port_insertionsBED_Output">
+                        <j.0:hasOriginNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasOriginPort rdf:resource="#port_insertionsBED"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="insertionsBED">
+                                    <rdfs:comment>x=771.5,y=184.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="annot_path_Input_To_port_annot_path">
+                        <j.0:hasDestinationNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_annot_path"/>
+                        <j.0:hasVariable rdf:resource="#annot_path"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="variantFiltVCFFile_port_variantFiltVCFFile_port_InputVCF">
+                        <j.0:hasDestinationNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_InputVCF"/>
+                        <j.0:hasOriginNode>
+                              <j.0:Node rdf:ID="varFilterSamtoolsNode">
+                                    <rdfs:comment>x=317.5,y=554.5</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="varFilterSamtoolsNode_component">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#varFilterSamtools"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="varFilterSamtoolsNode_crule">
+                                                <j.0:createSetsOn rdf:resource="#varFilterSamtoolsNode_component"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_inputVCFFile1">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_inputVCFFile1_role">
+                                                            <j.0:hasRoleID
+                                                            >inputVCFFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_minReadDepth">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_minReadDepth_role">
+                                                            <j.0:hasRoleID
+                                                            >minReadDepth</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_minSNPQuality">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_minSNPQuality_role">
+                                                            <j.0:hasRoleID
+                                                            >minSNPQuality</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_variantFiltVCFFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_variantFiltVCFFile_role">
+                                                            <j.0:hasRoleID
+                                                            >variantFiltVCFFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="varFilterSamtoolsNode_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-35336207-895e-4d28-8119-fe6e42275696">
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_inputVCFFile1"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_minReadDepth"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_minSNPQuality"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasOriginNode>
+                        <j.0:hasOriginPort rdf:resource="#port_variantFiltVCFFile"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="variantFiltVCFFile">
+                                    <rdfs:comment>x=379.5,y=628.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="alignedBAM_port_alignedBAM_port_inputBamFile1">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="MpileupCallerNode">
+                                    <rdfs:comment>x=230.5,y=258.5</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="MpileupCallerNode_component">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#MpileupCaller"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="MpileupCallerNode_crule">
+                                                <j.0:createSetsOn rdf:resource="#MpileupCallerNode_component"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_inputFastaFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_inputFastaFile_role">
+                                                            <j.0:hasRoleID
+                                                            >inputFastaFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_minAlignmentMappingQual">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_minAlignmentMappingQual_role">
+                                                            <j.0:hasRoleID
+                                                            >minAlignmentMappingQual</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_inputBamFile1">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_inputBamFile1_role">
+                                                            <j.0:hasRoleID
+                                                            >inputBamFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_minGappedReads">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_minGappedReads_role">
+                                                            <j.0:hasRoleID
+                                                            >minGappedReads</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_minBaseQuality">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_minBaseQuality_role">
+                                                            <j.0:hasRoleID
+                                                            >minBaseQuality</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_mpileupVCFFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_mpileupVCFFile_role">
+                                                            <j.0:hasRoleID
+                                                            >mpileupVCFFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="MpileupCallerNode_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-d2179f18-0ce5-430f-82e6-a470b97b15f7">
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_inputFastaFile"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_minAlignmentMappingQual"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_inputBamFile1"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_minGappedReads"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_minBaseQuality"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#port_inputBamFile1"/>
+                        <j.0:hasOriginNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasOriginPort rdf:resource="#port_alignedBAM"/>
+                        <j.0:hasVariable rdf:resource="#alignedBAM"/>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="inputFASTA_Input_To_port_inputFastaFile">
+                        <j.0:hasDestinationNode rdf:resource="#MpileupCallerNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_inputFastaFile"/>
+                        <j.0:hasVariable rdf:resource="#inputFASTA"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="segLengthDecrease_Input_To_port_segLengthDecrease">
+                        <j.0:hasDestinationNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_segLengthDecrease"/>
+                        <j.0:hasVariable rdf:resource="#segLengthDecrease"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="mpileupVCFFile_port_mpileupVCFFile_port_inputVCFFile">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="bcftoolsCallVariantsNode">
+                                    <rdfs:comment>x=175.5,y=406.5</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="bcftoolsCallVariantsNode_component">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#bcftoolsCallVariants"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="bcftoolsCallVariantsNode_crule">
+                                                <j.0:createSetsOn rdf:resource="#bcftoolsCallVariantsNode_component"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_inputVCFFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_inputVCFFile_role">
+                                                            <j.0:hasRoleID
+                                                            >inputVCFFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_variantVCFFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_variantVCFFile_role">
+                                                            <j.0:hasRoleID
+                                                            >variantVCFFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="bcftoolsCallVariantsNode_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-eef0bda8-f549-4a73-8532-ee3f048fe5de">
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_inputVCFFile"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#port_inputVCFFile"/>
+                        <j.0:hasOriginNode rdf:resource="#MpileupCallerNode"/>
+                        <j.0:hasOriginPort rdf:resource="#port_mpileupVCFFile"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="mpileupVCFFile">
+                                    <rdfs:comment>x=237.5,y=332.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="minReadDepth_Input_To_port_minReadDepth">
+                        <j.0:hasDestinationNode rdf:resource="#varFilterSamtoolsNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_minReadDepth"/>
+                        <j.0:hasVariable rdf:resource="#minReadDepth"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="inputFASTA_Input_To_port_inputFASTA">
+                        <j.0:hasDestinationNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_inputFASTA"/>
+                        <j.0:hasVariable rdf:resource="#inputFASTA"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="variantVCFFile_port_variantVCFFile_port_inputVCFFile1">
+                        <j.0:hasDestinationNode rdf:resource="#varFilterSamtoolsNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_inputVCFFile1"/>
+                        <j.0:hasOriginNode rdf:resource="#bcftoolsCallVariantsNode"/>
+                        <j.0:hasOriginPort rdf:resource="#port_variantVCFFile"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="variantVCFFile">
+                                    <rdfs:comment>x=190.5,y=480.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="minGappedReads_Input_To_port_minGappedReads">
+                        <j.0:hasDestinationNode rdf:resource="#MpileupCallerNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_minGappedReads"/>
+                        <j.0:hasVariable rdf:resource="#minGappedReads"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="ProteinIndelFasta_port_ProteinIndelFasta_Output">
+                        <j.0:hasOriginNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasOriginPort rdf:resource="#port_ProteinIndelFasta"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="ProteinIndelFasta">
+                                    <rdfs:comment>x=575.5,y=776.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="minAlignmentMappingQual_Input_To_port_minAlignmentMappingQual">
+                        <j.0:hasDestinationNode rdf:resource="#MpileupCallerNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_minAlignmentMappingQual"/>
+                        <j.0:hasVariable rdf:resource="#minAlignmentMappingQual"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="alignedBAM_port_alignedBAM_port_InputBAM">
+                        <j.0:hasDestinationNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_InputBAM"/>
+                        <j.0:hasOriginNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasOriginPort rdf:resource="#port_alignedBAM"/>
+                        <j.0:hasVariable rdf:resource="#alignedBAM"/>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="minSNPQuality_Input_To_port_minSNPQuality">
+                        <j.0:hasDestinationNode rdf:resource="#varFilterSamtoolsNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_minSNPQuality"/>
+                        <j.0:hasVariable rdf:resource="#minSNPQuality"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="inputZippedFASTQs_Input_To_port_inputZippedFASTQs">
+                        <j.0:hasDestinationNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_inputZippedFASTQs"/>
+                        <j.0:hasVariable rdf:resource="#inputZippedFASTQs"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="minBaseQuality_Input_To_port_minBaseQuality">
+                        <j.0:hasDestinationNode rdf:resource="#MpileupCallerNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_minBaseQuality"/>
+                        <j.0:hasVariable rdf:resource="#minBaseQuality"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="RPKMColname_Input_To_port_RPKMColname">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="CalcRPKMValuesNode">
+                                    <rdfs:comment>x=931.5,y=850.5</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <rdf:Description rdf:ID="CalcRPKMValuesNode_component">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#CalcRPKMValues"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </rdf:Description>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="CalcRPKMValuesNode_crule">
+                                                <j.0:createSetsOn rdf:resource="#CalcRPKMValuesNode_component"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_RPKMColname">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_RPKMColname_role">
+                                                            <j.0:hasRoleID
+                                                            >RPKMColname</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_InputFASTQ">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_InputFASTQ_role">
+                                                            <j.0:hasRoleID
+                                                            >InputFASTQ</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_sampleIDColname">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_sampleIDColname_role">
+                                                            <j.0:hasRoleID
+                                                            >sampleIDColname</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_ProteinSNVTable1">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_ProteinSNVTable1_role">
+                                                            <j.0:hasRoleID
+                                                            >ProteinSNVTable</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_featColname">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_featColname_role">
+                                                            <j.0:hasRoleID
+                                                            >featColname</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_InputBAM1">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_InputBAM1_role">
+                                                            <j.0:hasRoleID
+                                                            >InputBAM</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="port_InputFASTA1">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_InputFASTA1_role">
+                                                            <j.0:hasRoleID
+                                                            >InputFASTA</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="port_ProteinRPKMTable">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="port_ProteinRPKMTable_role">
+                                                            <j.0:hasRoleID
+                                                            >ProteinRPKMTable</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="CalcRPKMValuesNode_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-03b386ea-99de-472d-b61d-2c9399e24d9d">
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_RPKMColname"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_InputFASTQ"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_sampleIDColname"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_ProteinSNVTable1"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_featColname"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_InputBAM1"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#port_InputFASTA1"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#port_RPKMColname"/>
+                        <j.0:hasVariable rdf:resource="#RPKMColname"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="ProteinRPKMTable_port_ProteinRPKMTable_Output">
+                        <j.0:hasOriginNode rdf:resource="#CalcRPKMValuesNode"/>
+                        <j.0:hasOriginPort rdf:resource="#port_ProteinRPKMTable"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="ProteinRPKMTable">
+                                    <rdfs:comment>x=977.5,y=924.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="ProteinSNVTable_port_ProteinSNVTable_port_ProteinSNVTable1">
+                        <j.0:hasDestinationNode rdf:resource="#CalcRPKMValuesNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_ProteinSNVTable1"/>
+                        <j.0:hasOriginNode rdf:resource="#CustomProDBNode"/>
+                        <j.0:hasOriginPort rdf:resource="#port_ProteinSNVTable"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="ProteinSNVTable">
+                                    <rdfs:comment>x=982.5,y=776.5</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="alignedBAM_port_alignedBAM_port_InputBAM1">
+                        <j.0:hasDestinationNode rdf:resource="#CalcRPKMValuesNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_InputBAM1"/>
+                        <j.0:hasOriginNode rdf:resource="#wTopHat2Node"/>
+                        <j.0:hasOriginPort rdf:resource="#port_alignedBAM"/>
+                        <j.0:hasVariable rdf:resource="#alignedBAM"/>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="inputZippedFASTQs_Input_To_port_InputFASTQ">
+                        <j.0:hasDestinationNode rdf:resource="#CalcRPKMValuesNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_InputFASTQ"/>
+                        <j.0:hasVariable rdf:resource="#inputZippedFASTQs"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="featColname_Input_To_port_featColname">
+                        <j.0:hasDestinationNode rdf:resource="#CalcRPKMValuesNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_featColname"/>
+                        <j.0:hasVariable rdf:resource="#featColname"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="inputFASTA_Input_To_port_InputFASTA1">
+                        <j.0:hasDestinationNode rdf:resource="#CalcRPKMValuesNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_InputFASTA1"/>
+                        <j.0:hasVariable rdf:resource="#inputFASTA"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="sampleIDColname_Input_To_port_sampleIDColname">
+                        <j.0:hasDestinationNode rdf:resource="#CalcRPKMValuesNode"/>
+                        <j.0:hasDestinationPort rdf:resource="#port_sampleIDColname"/>
+                        <j.0:hasVariable rdf:resource="#sampleIDColname"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasMetadata>
+                  <j.0:Metadata rdf:ID="genomics_analysis_meta">
+                        <j.0:hasContributor>ravali</j.0:hasContributor>
+                        <j.0:lastUpdateTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2016-09-10T07:00:00Z</j.0:lastUpdateTime>
+                  </j.0:Metadata>
+            </j.0:hasMetadata>
+            <j.0:hasNode rdf:resource="#CustomProDBNode"/>
+            <j.0:hasNode rdf:resource="#wTopHat2Node"/>
+            <j.0:hasNode rdf:resource="#SamtoolsBamIndexNode"/>
+            <j.0:hasNode rdf:resource="#MpileupCallerNode"/>
+            <j.0:hasNode rdf:resource="#varFilterSamtoolsNode"/>
+            <j.0:hasNode rdf:resource="#bcftoolsCallVariantsNode"/>
+            <j.0:hasNode rdf:resource="#CalcRPKMValuesNode"/>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="insertionsBED_orole">
+                        <j.0:mapsToVariable rdf:resource="#insertionsBED"/>
+                        <j.0:hasRoleID>insertionsBED</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="ProteinSNVFasta_orole">
+                        <j.0:mapsToVariable rdf:resource="#ProteinSNVFasta"/>
+                        <j.0:hasRoleID>ProteinSNVFasta</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="outputBamIndexFile_orole">
+                        <j.0:mapsToVariable rdf:resource="#outputBamIndexFile"/>
+                        <j.0:hasRoleID>outputBamIndexFile</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="ProteinRPKMFasta_orole">
+                        <j.0:mapsToVariable rdf:resource="#ProteinRPKMFasta"/>
+                        <j.0:hasRoleID>ProteinRPKMFasta</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="ProteinIndelFasta_orole">
+                        <j.0:mapsToVariable rdf:resource="#ProteinIndelFasta"/>
+                        <j.0:hasRoleID>ProteinIndelFasta</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="unmappedBAM_orole">
+                        <j.0:mapsToVariable rdf:resource="#unmappedBAM"/>
+                        <j.0:hasRoleID>unmappedBAM</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="deletionsBED_orole">
+                        <j.0:mapsToVariable rdf:resource="#deletionsBED"/>
+                        <j.0:hasRoleID>deletionsBED</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="ProteinRPKMTable_orole">
+                        <j.0:mapsToVariable rdf:resource="#ProteinRPKMTable"/>
+                        <j.0:hasRoleID>ProteinRPKMTable</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasVersion rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+            >3</j.0:hasVersion>
+      </j.0:WorkflowTemplate>
+</rdf:RDF>
+

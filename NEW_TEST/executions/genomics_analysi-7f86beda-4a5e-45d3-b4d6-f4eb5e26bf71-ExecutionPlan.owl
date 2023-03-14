@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://purl.org/net/wf-invocation#"
+    xmlns:j.1="http://www.wings-workflows.org/ontology/workflow.owl#"
+    xmlns:j.2="http://purl.org/net/p-plan#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="http://www.wings-workflows.org/wings-omics-portal/export/users/ravali/genomics/executions/genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71.owl">
+      <j.0:Step rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#CalcRPKMValuesNode">
+            <j.1:canRunOn rdf:resource="/ontology/resource.owl#Localhost"/>
+            <j.0:hasCodeBinding>/scratch/data/wings/storage/default/users/ravali/genomics/code/library/CalcRPKMValues/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#inputFASTA">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/HomoSapiens/genomeBuildVersions/hg19/hg19.fa</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan>
+                              <j.2:Plan rdf:ID="genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                        </j.2:isVariableOfPlan>
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#inputZippedFASTQs">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/colorectalDataTCGACPTAC/fastqTCGA/TCGA-AF-3400-01A-41-2150-27.zip</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#ProteinSNVTable">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinSNVTable-e5vqm7xqg5dr0o12hkp4qu7jg</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#alignedBAM">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/alignedBAM-28jo5iz2saduj1z92zxbsn65w</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#ProteinRPKMTable">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinRPKMTable-7e6hj5jx8d77zuv64pelsy68</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:isStepOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+            <j.2:hasInvocationLine>-p3 RPKM -i1 /scratch/data/wings/storage/default/users/ravali/genomics/data/alignedBAM-28jo5iz2saduj1z92zxbsn65w -i2 /scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinSNVTable-e5vqm7xqg5dr0o12hkp4qu7jg -i3 /scratch/data/wings/storage/default/users/ravali/genomics/data/colorectalDataTCGACPTAC/fastqTCGA/TCGA-AF-3400-01A-41-2150-27.zip -i4 /scratch/data/wings/storage/default/users/ravali/genomics/data/HomoSapiens/genomeBuildVersions/hg19/hg19.fa -p1 proname -p2 sample_id -o1 /scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinRPKMTable-7e6hj5jx8d77zuv64pelsy68 </j.2:hasInvocationLine>
+            <j.1:hasCustomData>CodeDirectory=/scratch/data/wings/storage/default/users/ravali/genomics/code/library/CalcRPKMValues</j.1:hasCustomData>
+      </j.0:Step>
+      <j.0:Step rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#MpileupCallerNode">
+            <j.1:canRunOn rdf:resource="/ontology/resource.owl#Localhost"/>
+            <j.0:hasCodeBinding>/scratch/data/wings/storage/default/users/ravali/genomics/code/library/MpileupCaller/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#inputFASTA"/>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#alignedBAM"/>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#mpileupVCFFile">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/mpileupVCFFile-1f1g5cuav49tkv29xzw0xgjbo</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:isStepOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+            <j.2:hasInvocationLine>-p3 0 -i1 /scratch/data/wings/storage/default/users/ravali/genomics/data/alignedBAM-28jo5iz2saduj1z92zxbsn65w -i2 /scratch/data/wings/storage/default/users/ravali/genomics/data/HomoSapiens/genomeBuildVersions/hg19/hg19.fa -p1 20 -p2 3 -o1 /scratch/data/wings/storage/default/users/ravali/genomics/data/mpileupVCFFile-1f1g5cuav49tkv29xzw0xgjbo </j.2:hasInvocationLine>
+            <j.1:hasCustomData>CodeDirectory=/scratch/data/wings/storage/default/users/ravali/genomics/code/library/MpileupCaller</j.1:hasCustomData>
+      </j.0:Step>
+      <j.0:Step rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#bcftoolsCallVariantsNode">
+            <j.1:canRunOn rdf:resource="/ontology/resource.owl#Localhost"/>
+            <j.0:hasCodeBinding>/scratch/data/wings/storage/default/users/ravali/genomics/code/library/bcftoolsCallVariants/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#mpileupVCFFile"/>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#variantVCFFile">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/variantVCFFile-52asz03nl936b5qaimfa8fo2y</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:isStepOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+            <j.2:hasInvocationLine>-i1 /scratch/data/wings/storage/default/users/ravali/genomics/data/mpileupVCFFile-1f1g5cuav49tkv29xzw0xgjbo -o1 /scratch/data/wings/storage/default/users/ravali/genomics/data/variantVCFFile-52asz03nl936b5qaimfa8fo2y </j.2:hasInvocationLine>
+            <j.1:hasCustomData>CodeDirectory=/scratch/data/wings/storage/default/users/ravali/genomics/code/library/bcftoolsCallVariants</j.1:hasCustomData>
+      </j.0:Step>
+      <j.0:Step rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#CustomProDBNode">
+            <j.1:canRunOn rdf:resource="/ontology/resource.owl#Localhost"/>
+            <j.0:hasCodeBinding>/scratch/data/wings/storage/default/users/ravali/genomics/code/library/CustomProDB/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#juncBED">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/juncBED-845oapkdcqip0va6yhhqw7n2u</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#inputFASTA"/>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#alignedBAM"/>
+            <j.2:hasInputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#variantFiltVCFFile">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/variantFiltVCFFile-9v1fiwhv3akx4bvbercvwg165</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#ProteinRPKMFasta">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinRPKMFasta-f1nf0z3ybvjo4gm8tpywoj6hc.fasta</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#ProteinIndelFasta">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinIndelFasta-87gzaagcxl74vc8k6jbv1lw1u.fasta</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:hasOutputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#ProteinSNVTable"/>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#ProteinSNVFasta">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinSNVFasta-a2i5pxikviaxp4uw0d7f0c7db.fasta</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:isStepOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+            <j.2:hasInvocationLine>-p3 true -o2 /scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinSNVFasta-a2i5pxikviaxp4uw0d7f0c7db.fasta -p4 /local/home/ravali/cpdbAnnotations/hg19ucscAnnotations/ -o3 /scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinSNVTable-e5vqm7xqg5dr0o12hkp4qu7jg -o4 /scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinIndelFasta-87gzaagcxl74vc8k6jbv1lw1u.fasta -i1 /scratch/data/wings/storage/default/users/ravali/genomics/data/alignedBAM-28jo5iz2saduj1z92zxbsn65w -i2 /scratch/data/wings/storage/default/users/ravali/genomics/data/variantFiltVCFFile-9v1fiwhv3akx4bvbercvwg165 -i3 /scratch/data/wings/storage/default/users/ravali/genomics/data/juncBED-845oapkdcqip0va6yhhqw7n2u -i4 /scratch/data/wings/storage/default/users/ravali/genomics/data/HomoSapiens/genomeBuildVersions/hg19/hg19.fa -p1 true -p2 true -o1 /scratch/data/wings/storage/default/users/ravali/genomics/data/ProteinRPKMFasta-f1nf0z3ybvjo4gm8tpywoj6hc.fasta </j.2:hasInvocationLine>
+            <j.1:hasCustomData>CodeDirectory=/scratch/data/wings/storage/default/users/ravali/genomics/code/library/CustomProDB</j.1:hasCustomData>
+      </j.0:Step>
+      <j.0:Step rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#varFilterSamtoolsNode">
+            <j.1:canRunOn rdf:resource="/ontology/resource.owl#Localhost"/>
+            <j.0:hasCodeBinding>/scratch/data/wings/storage/default/users/ravali/genomics/code/library/varFilterSamtools/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#variantVCFFile"/>
+            <j.2:hasOutputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#variantFiltVCFFile"/>
+            <j.2:isStepOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+            <j.2:hasInvocationLine>-i1 /scratch/data/wings/storage/default/users/ravali/genomics/data/variantVCFFile-52asz03nl936b5qaimfa8fo2y -p1 3 -p2 20 -o1 /scratch/data/wings/storage/default/users/ravali/genomics/data/variantFiltVCFFile-9v1fiwhv3akx4bvbercvwg165 </j.2:hasInvocationLine>
+            <j.1:hasCustomData>CodeDirectory=/scratch/data/wings/storage/default/users/ravali/genomics/code/library/varFilterSamtools</j.1:hasCustomData>
+      </j.0:Step>
+      <j.0:Step rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#wTopHat2Node">
+            <j.1:canRunOn rdf:resource="/ontology/resource.owl#Localhost"/>
+            <j.0:hasCodeBinding>/scratch/data/wings/storage/default/users/ravali/genomics/code/library/wTopHat2/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#inputFASTA"/>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#inputZippedFASTQs"/>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#unmappedBAM">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/unmappedBAM-6biles7f85o04rfcth4nur71r</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:hasOutputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#juncBED"/>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#insertionsBED">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/insertionsBED-8973ltg9lwd83vzhlv7wnt7lh</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:hasOutputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#alignedBAM"/>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#deletionsBED">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/deletionsBED-w8daxmyt4ek03vx6smzjl256</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:isStepOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+            <j.2:hasInvocationLine>-o2 /scratch/data/wings/storage/default/users/ravali/genomics/data/unmappedBAM-6biles7f85o04rfcth4nur71r -o3 /scratch/data/wings/storage/default/users/ravali/genomics/data/juncBED-845oapkdcqip0va6yhhqw7n2u -o4 /scratch/data/wings/storage/default/users/ravali/genomics/data/insertionsBED-8973ltg9lwd83vzhlv7wnt7lh -o5 /scratch/data/wings/storage/default/users/ravali/genomics/data/deletionsBED-w8daxmyt4ek03vx6smzjl256 -i1 /scratch/data/wings/storage/default/users/ravali/genomics/data/colorectalDataTCGACPTAC/fastqTCGA/TCGA-AF-3400-01A-41-2150-27.zip -i2 /scratch/data/wings/storage/default/users/ravali/genomics/data/HomoSapiens/genomeBuildVersions/hg19/hg19.fa -p1 18 -p2 10 -o1 /scratch/data/wings/storage/default/users/ravali/genomics/data/alignedBAM-28jo5iz2saduj1z92zxbsn65w </j.2:hasInvocationLine>
+            <j.1:hasCustomData>CodeDirectory=/scratch/data/wings/storage/default/users/ravali/genomics/code/library/wTopHat2</j.1:hasCustomData>
+      </j.0:Step>
+      <j.0:Step rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#SamtoolsBamIndexNode">
+            <j.1:canRunOn rdf:resource="/ontology/resource.owl#Localhost"/>
+            <j.0:hasCodeBinding>/scratch/data/wings/storage/default/users/ravali/genomics/code/library/SamtoolsBamIndex/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar rdf:resource="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#alignedBAM"/>
+            <j.2:hasOutputVar>
+                  <j.0:Variable rdf:about="genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#outputBamIndexFile">
+                        <j.0:hasDataBinding>/scratch/data/wings/storage/default/users/ravali/genomics/data/outputBamIndexFile-f1uz7hb087t3ht7ophpofl5q3</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:isStepOfPlan rdf:resource="#genomics_analysi-7f86beda-4a5e-45d3-b4d6-f4eb5e26bf71"/>
+            <j.2:hasInvocationLine>-i1 /scratch/data/wings/storage/default/users/ravali/genomics/data/alignedBAM-28jo5iz2saduj1z92zxbsn65w -o1 /scratch/data/wings/storage/default/users/ravali/genomics/data/outputBamIndexFile-f1uz7hb087t3ht7ophpofl5q3 </j.2:hasInvocationLine>
+            <j.1:hasCustomData>CodeDirectory=/scratch/data/wings/storage/default/users/ravali/genomics/code/library/SamtoolsBamIndex</j.1:hasCustomData>
+      </j.0:Step>
+</rdf:RDF>
+
