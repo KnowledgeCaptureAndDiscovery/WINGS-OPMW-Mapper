@@ -1,0 +1,13 @@
+graph TD
+    DISK[Workflow system 1] --> MAPPER
+    subgraph DISK[DISK System]
+        direction LR
+        Question --> Hypothesis
+        Question --> Loi[Line of Inquiry]
+        Loi --> TLOI[Trigger Line of Inquiry]
+        TLOI -->  Runs[Executions]
+    end
+        MAPPER[DISK Provenance Mapper] --> PROVDOCUMENT[PROV Document]    
+    User[fa:fa-user User]  --> PROVDOCUMENT
+    User --> DataNarratives
+    PROVDOCUMENT --> DataNarratives
