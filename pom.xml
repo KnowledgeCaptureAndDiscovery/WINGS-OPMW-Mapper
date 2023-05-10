@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/maven-v4_0_0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>edu.isi.wings</groupId>
+  <groupId>edu.isi.kcap.wings</groupId>
   <artifactId>wings-opmm</artifactId>
   <name>Wings OPM Mapper</name>
   <packaging>jar</packaging>
   <description>Wings OPM (Open Provenance Model) Mapper</description>
   <version>1.2.4</version>
+
 
   <properties>
     <log4j.version>2.16.0</log4j.version>
@@ -19,6 +19,63 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
+
+  <scm>
+    <connection>
+    scm:git:git@github.com/KnowledgeCaptureAndDiscovery/WINGS-OPMW-MAPPER
+    </connection>
+    <developerConnection>
+    scm:git:git@github.com/KnowledgeCaptureAndDiscovery/WINGS-OPMW-MAPPER
+    </developerConnection>
+    <url>https://github.com/KnowledgeCaptureAndDiscovery/WINGS-OPMW-MAPPER</url>
+  </scm>
+  <url>https://github.com/KnowledgeCaptureAndDiscovery/WINGS-OPMW-MAPPER</url>
+
+  <licenses>
+    <license>
+      <name>Apache-2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>USC/Information Sciences Institute</name>
+    <url>http://www.isi.edu/ikcap</url>
+  </organization>
+
+  <developers>
+    <!-- //Develop Daniel Garijo dgarijo@isi.edu, role: architect and developer <developer> -->
+    <developer>
+      <id>dgarijo</id>
+      <name>Daniel Garijo</name>
+      <email>
+      dgarijo@isi.edu </email>
+      <url>http://dgarijo.com</url>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>mosorio</id>
+      <name>Maximiliano Osorio</name>
+      <email>mosorio@isi.edu</email>
+      <url>https://mosorio.dev</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <!-- Dependencies -->
   <dependencies>
@@ -53,15 +110,79 @@
       <artifactId>async-http-client</artifactId>
       <version>2.7.0</version>
     </dependency>
+    <!-- API, java.xml.bind module -->
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>2.3.2</version>
+    </dependency>
   </dependencies>
 
-  <distributionManagement>
-   <repository>
-     <id>github</id>
-     <name>GitHub OWNER Apache Maven Packages</name>
-     <url>https://maven.pkg.github.com/KnowledgeCaptureAndDiscovery/WINGS-OPMW-Mapper</url>
-   </repository>
-  </distributionManagement>
+  <build>
+    <finalName>maven-unit-test</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.13</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <additionalparam>-Xdoclint:none</additionalparam>
+        </configuration>
 
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M5</version>
+      </plugin>
+
+    </plugins>
+  </build>
 
 </project>
