@@ -44,7 +44,8 @@ public class Uploader {
     /**
      * Adds a upload file section to the request
      *
-     * @param fieldName  name attribute in <input type="file" name="..." />
+     * @param fieldName  name attribute in {@literal /} input type="file" name="..."
+     *                   {@literal />}
      * @param uploadFile a File to be uploaded
      * @throws IOException
      */
