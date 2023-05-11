@@ -1,4 +1,4 @@
-package edu.isi.wings.opmm;
+package edu.isi.kcap.wings.opmm;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -65,7 +65,7 @@ public class Uploader {
      * Completes the request and receives response from the server.
      *
      * @return a list of Strings as response in case the server returned
-     * status OK, otherwise an exception is thrown.
+     *         status OK, otherwise an exception is thrown.
      * @throws IOException
      */
     public String finish() throws IOException {
@@ -81,11 +81,9 @@ public class Uploader {
         // checks server's status code first
         int status = httpConn.getResponseCode();
         if (status == HttpURLConnection.HTTP_OK) {
-            InputStream responseStream = new
-                    BufferedInputStream(httpConn.getInputStream());
+            InputStream responseStream = new BufferedInputStream(httpConn.getInputStream());
 
-            BufferedReader responseStreamReader =
-                    new BufferedReader(new InputStreamReader(responseStream));
+            BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
 
             String line = "";
             StringBuilder stringBuilder = new StringBuilder();

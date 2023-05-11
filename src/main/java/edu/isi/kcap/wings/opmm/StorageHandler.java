@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.isi.wings.opmm;
+package edu.isi.kcap.wings.opmm;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -47,12 +47,12 @@ import static org.asynchttpclient.Dsl.basicAuthRealm;
 
 public class StorageHandler {
     public File zipFolder(File directory) throws Exception {
-        //Create zip file
+        // Create zip file
         File _tmpZip = File.createTempFile(directory.getAbsolutePath(), ".zip");
         String zipName = _tmpZip.getPath();
         Path zipPath = Paths.get(zipName);
 
-        //Obtain path source dir
+        // Obtain path source dir
         Path sourceFolderPath = directory.toPath();
 
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath.toFile()));
@@ -84,6 +84,5 @@ public class StorageHandler {
         zos.close();
         fos.close();
     }
-
 
 }
