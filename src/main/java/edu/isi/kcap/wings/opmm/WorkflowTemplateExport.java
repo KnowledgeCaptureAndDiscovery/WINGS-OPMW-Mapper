@@ -1,6 +1,7 @@
 package edu.isi.kcap.wings.opmm;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -111,73 +112,69 @@ public class WorkflowTemplateExport {
      * Different expanded templates will not be versioned.
      */
     public void transform() {
-        try {
-            Individual wingsTemplate = (Individual) wingsTemplateModel.getOntClass(Constants.WINGS_WF_TEMPLATE)
-                    .listInstances().next();
-            String wingsTemplateName = wingsTemplate.getLocalName();
-            String exportedTemplateURI;
-            // create hash for template
-            String templateHash = HashUtils.createMD5ForTemplate(wingsTemplate, wingsTemplateModel,
-                    this.componentCatalog.getWINGSDomainTaxonomy());
-            System.out.println("WINGS Template hash: " + templateHash);
-            String queryMd5 = QueriesWorkflowTemplateExport.getOPMWTemplatesWithMD5Hash(templateHash);
-            // if same MD5, return URI of the found template (there may be diferent versions
-            // and found a previous one)
-            QuerySolution solution = ModelUtils.queryOnlineRepository(queryMd5, endpointURI);
-            if (solution != null) {
-                Resource foundTemplateURI = solution.getResource("?t");
-                System.out.println("Template " + wingsTemplateName + " has already been published as "
-                        + foundTemplateURI.getURI());
-                // no export is necessary
-                transformedTemplate = opmwModel.createClass(Constants.OPMW_WORKFLOW_TEMPLATE)
-                        .createIndividual(foundTemplateURI.getURI());
-                // String queryExec =
-                // QueriesWorkflowExecutionExport.getOPMWExecutionsWithRunID(wingsExecution.getLocalName());
-                // QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec,
-                // endpointURI);
-                String queryTemplate = QueriesWorkflowTemplateExport
-                        .queryRetrieveAbstractTemplateElements(foundTemplateURI.getURI());
-                opmwModel.add(ModelUtils.constructOnlineRepository(queryTemplate, endpointURI));
-                isTemplatePublished = true;
-                return;
+        Individual wingsTemplate = (Individual) wingsTemplateModel.getOntClass(Constants.WINGS_WF_TEMPLATE)
+                .listInstances().next();
+        String wingsTemplateName = wingsTemplate.getLocalName();
+        String exportedTemplateURI;
+        // create hash for template
+        String templateHash = HashUtils.createMD5ForTemplate(wingsTemplate, wingsTemplateModel,
+                this.componentCatalog.getWINGSDomainTaxonomy());
+        System.out.println("WINGS Template hash: " + templateHash);
+        String queryMd5 = QueriesWorkflowTemplateExport.getOPMWTemplatesWithMD5Hash(templateHash);
+        // if same MD5, return URI of the found template (there may be diferent versions
+        // and found a previous one)
+        QuerySolution solution = ModelUtils.queryOnlineRepository(queryMd5, endpointURI);
+        if (solution != null) {
+            Resource foundTemplateURI = solution.getResource("?t");
+            System.out.println("Template " + wingsTemplateName + " has already been published as "
+                    + foundTemplateURI.getURI());
+            // no export is necessary
+            transformedTemplate = opmwModel.createClass(Constants.OPMW_WORKFLOW_TEMPLATE)
+                    .createIndividual(foundTemplateURI.getURI());
+            // String queryExec =
+            // QueriesWorkflowExecutionExport.getOPMWExecutionsWithRunID(wingsExecution.getLocalName());
+            // QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec,
+            // endpointURI);
+            String queryTemplate = QueriesWorkflowTemplateExport
+                    .queryRetrieveAbstractTemplateElements(foundTemplateURI.getURI());
+            opmwModel.add(ModelUtils.constructOnlineRepository(queryTemplate, endpointURI));
+            isTemplatePublished = true;
+            return;
+        } else {
+            // different MD5. Could it be a version of an existing template?
+            // get all templates published with the same label. All published templates will
+            // have a version
+            // note: union graph only works when there are more graphs than the defaul one.
+            String queryT = QueriesWorkflowTemplateExport.getOPMWTemplatesWithLabel(wingsTemplateName);
+            solution = ModelUtils.queryOnlineRepository(queryT, endpointURI);
+            if (solution == null) {
+                // template name does not exist, hence this is the first version
+                System.out.println("Template name does not exist. Publishing with latest version");
+                exportedTemplateURI = convertTemplateToOPMW(wingsTemplate, 1);
             } else {
-                // different MD5. Could it be a version of an existing template?
-                // get all templates published with the same label. All published templates will
-                // have a version
-                // note: union graph only works when there are more graphs than the defaul one.
-                String queryT = QueriesWorkflowTemplateExport.getOPMWTemplatesWithLabel(wingsTemplateName);
-                solution = ModelUtils.queryOnlineRepository(queryT, endpointURI);
-                if (solution == null) {
-                    // template name does not exist, hence this is the first version
-                    System.out.println("Template name does not exist. Publishing with latest version");
-                    exportedTemplateURI = convertTemplateToOPMW(wingsTemplate, 1);
-                } else {
-                    Resource latestTemplate = solution.getResource("?t");
-                    // check if there is a version number automatically associated to template.
-                    int latestTemplateVersionNumber;
-                    try {
-                        latestTemplateVersionNumber = solution.getLiteral("?v").getInt();
-                    } catch (Exception e) {
-                        // Existing template but no version number available, using default (1)
-                        latestTemplateVersionNumber = 1;
-                    }
-                    System.out.println("A previous version of template " + wingsTemplateName
-                            + " has been found, publishing as a new version ");
-                    exportedTemplateURI = convertTemplateToOPMW(wingsTemplate, latestTemplateVersionNumber + 1);
-                    // add the link between versions: exportedTemplate wasRevisionOf foundTemplate
-                    // This is commented because it's not always correct: If 2 users are publishing
-                    // templates from the same domain,
-                    // you don't know which one it really came from.
-                    // we do alternate of. It should be from each, but since it's transitive, it's
-                    // fine.
-                    Individual templateExported = opmwModel.getIndividual(exportedTemplateURI);
-                    templateExported.addProperty(opmwModel.createProperty(Constants.PROV_ALTERNATE_OF), latestTemplate);
+                Resource latestTemplate = solution.getResource("?t");
+                // check if there is a version number automatically associated to template.
+                int latestTemplateVersionNumber;
+                try {
+                    latestTemplateVersionNumber = solution.getLiteral("?v").getInt();
+                } catch (Exception e) {
+                    // Existing template but no version number available, using default (1)
+                    latestTemplateVersionNumber = 1;
                 }
+                System.out.println("A previous version of template " + wingsTemplateName
+                        + " has been found, publishing as a new version ");
+                exportedTemplateURI = convertTemplateToOPMW(wingsTemplate, latestTemplateVersionNumber + 1);
+                // add the link between versions: exportedTemplate wasRevisionOf foundTemplate
+                // This is commented because it's not always correct: If 2 users are publishing
+                // templates from the same domain,
+                // you don't know which one it really came from.
+                // we do alternate of. It should be from each, but since it's transitive, it's
+                // fine.
+                Individual templateExported = opmwModel.getIndividual(exportedTemplateURI);
+                templateExported.addProperty(opmwModel.createProperty(Constants.PROV_ALTERNATE_OF), latestTemplate);
             }
-            this.transformedTemplate = opmwModel.getIndividual(exportedTemplateURI);
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage() + "\n The template was not exported");
         }
+        this.transformedTemplate = opmwModel.getIndividual(exportedTemplateURI);
     }
 
     /**
@@ -448,8 +445,9 @@ public class WorkflowTemplateExport {
      * @param filepath      path of the file where to write the template
      * @param serialization serialization of choice: RDF/XML, TTL, etc.
      * @return
+     * @throws IOException
      */
-    public String exportAsOPMW(String filepath, String serialization) {
+    public String exportAsOPMW(String filepath, String serialization) throws IOException {
         if (transformedTemplate == null) {
             this.transform();
         }
@@ -485,8 +483,9 @@ public class WorkflowTemplateExport {
      * @param outFileDirectory path where to write the serialized model
      * @param serialization    serialization of choice: RDF/XML, TTL, etc.
      * @return URI of the template
+     * @throws IOException
      */
-    public String exportAll(String outFileDirectory, String serialization) {
+    public String exportAll(String outFileDirectory, String serialization) throws IOException {
         // TO DO
         System.out.println("Not done yet!");
         // this.export_as_OPMW(outFilePath, serialization);
@@ -496,7 +495,7 @@ public class WorkflowTemplateExport {
 
     // to do: tests of several templates, abstract and not abstract, and
     // collections.
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // //String taxonomyURL =
         // "http://www.wings-workflows.org/wings-omics-portal/export/users/ravali/genomics/components/library.owl";
         // String taxonomyURL = "C:\\Users\\dgarijo\\Dropbox

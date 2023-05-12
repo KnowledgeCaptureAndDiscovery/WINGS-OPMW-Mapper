@@ -7,7 +7,9 @@ package utils_deprecated;
 
 import static edu.isi.kcap.wings.opmm_deprecated.Mapper.NEW_TAXONOMY_CLASS;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.jena.datatypes.RDFDatatype;
@@ -35,7 +37,7 @@ public class ModelUtils {
     /**
      * Funtion to insert an individual as an instance of a class. If the class does
      * not exist, it is created.
-     * 
+     *
      * @param individualId Instance id. If exists it won't be created.
      * @param classURL     URL of the class from which we want to create the
      *                     instance
@@ -89,7 +91,7 @@ public class ModelUtils {
     /**
      * Function to add a property between two individuals. If the property does not
      * exist, it is created.
-     * 
+     *
      * @param orig     Domain of the property (Id, not complete URI)
      * @param dest     Range of the property (Id, not complete URI)
      * @param property URI of the property
@@ -110,7 +112,7 @@ public class ModelUtils {
 
     /**
      * Function to add dataProperties. Similar to addProperty
-     * 
+     *
      * @param origen       Domain of the property (Id, not complete URI)
      * @param literal      literal to be asserted
      * @param dataProperty URI of the data property to assign.
@@ -127,7 +129,7 @@ public class ModelUtils {
 
     /**
      * Function to add dataProperties. Similar to addProperty
-     * 
+     *
      * @param m            Model of the propery to be added
      * @param origen       Domain of the property
      * @param dato         literal to be asserted
@@ -144,7 +146,7 @@ public class ModelUtils {
 
     /**
      * Function to add a property as a subproperty of the other.
-     * 
+     *
      * @param uriProp
      * @param uriSubProp
      */
@@ -158,7 +160,7 @@ public class ModelUtils {
 
     /**
      * Method to retrieve the name of a URI class object
-     * 
+     *
      * @param classAndVoc URI from which retrieve the name
      * @return
      */
@@ -184,7 +186,7 @@ public class ModelUtils {
     /**
      * Function to determine whether a run has already been published or not.
      * If the run has been published, it should not be republished again.
-     * 
+     *
      * @param endpointURL URL of the repository where we store the runs
      * @param runURL      URL of the physical file of containing the run.
      * @return True if the run has been published. False in other case.
@@ -198,7 +200,7 @@ public class ModelUtils {
 
     /**
      * Query a local repository, specified in the second argument
-     * 
+     *
      * @param queryIn    sparql query to be performed
      * @param repository repository on which the query will be performed
      * @return
@@ -214,19 +216,15 @@ public class ModelUtils {
 
     /**
      * Function to export the stored model as an RDF file, using ttl syntax
-     * 
+     *
      * @param outFile name and path of the outFile must be created.
+     * @throws IOException
      */
-    public static void exportRDFFile(String outFile, OntModel model, String mode) {
+    public static void exportRDFFile(String outFile, OntModel model, String mode) throws IOException {
         OutputStream out;
-        try {
-            out = new FileOutputStream(outFile);
-            model.write(out, mode);
-            // model.write(out,"RDF/XML");
-            out.close();
-        } catch (Exception ex) {
-            System.out.println("Error while writing the model to file " + ex.getMessage() + " oufile " + outFile);
-        }
+        out = new FileOutputStream(outFile);
+        model.write(out, mode);
+        out.close();
     }
 
     /**
@@ -234,7 +232,7 @@ public class ModelUtils {
      * Method that loads a file or URL into an OntModel. Throws an exception if
      * file/URL could not be opened.
      * The method will attempt to read the file in RDF/XML and turtle.
-     * 
+     *
      * @param path path to the file/URL from which to load
      * @return and OntModel object after reading it from pathToFile
      */

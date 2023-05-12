@@ -1,6 +1,8 @@
 package edu.isi.kcap.wings.opmm;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.jena.ontology.OntModel;
@@ -25,7 +27,7 @@ public class ModelUtils {
      * Method that loads a file or URL into an OntModel. Throws an exception if
      * file/URL could not be opened.
      * The method will attempt to read the file in RDF/XML and turtle.
-     * 
+     *
      * @param path path to the file/URL from which to load
      * @return and OntModel object after reading it from pathToFile
      */
@@ -52,26 +54,23 @@ public class ModelUtils {
 
     /**
      * Function to export the stored model as an RDF file, using ttl syntax
-     * 
+     *
      * @param outFile name and path of the outFile must be created.
      * @param model   model to serialize as rdf
      * @param mode    serialization to export the model in
+     * @throws IOException
      */
-    public static void exportRDFFile(String outFile, OntModel model, String mode) {
+    public static void exportRDFFile(String outFile, OntModel model, String mode) throws IOException {
         OutputStream out;
-        try {
-            out = new FileOutputStream(outFile);
-            model.write(out, mode);
-            // model.write(out,"RDF/XML");
-            out.close();
-        } catch (Exception ex) {
-            System.out.println("Error while writing the model to file " + ex.getMessage() + " oufile " + outFile);
-        }
+        out = new FileOutputStream(outFile);
+        model.write(out, mode);
+        // model.write(out,"RDF/XML");
+        out.close();
     }
 
     /**
      * Query a local repository, specified in the second argument
-     * 
+     *
      * @param queryIn    sparql query to be performed
      * @param repository repository on which the query will be performed
      * @return
@@ -86,7 +85,7 @@ public class ModelUtils {
 
     /**
      * Query an online repository
-     * 
+     *
      * @param queryIn     query to specify
      * @param endpointURI URI of the repository
      * @return
@@ -115,7 +114,7 @@ public class ModelUtils {
     /**
      * Function that initializes a model. If the model exists, it empties it.
      * If it doesn't exist (null) it returns a new instance of a model
-     * 
+     *
      * @param m model to initialize
      * @return clean new model
      */
@@ -132,7 +131,7 @@ public class ModelUtils {
      * Given a local file path, this method returns an individual of the class
      * provided
      * in the model provided and annotates it with label and location.
-     * 
+     *
      * @param path          path of the target file
      * @param model         model to add the annotations to
      * @param classURI      class of the new individual created
@@ -154,7 +153,7 @@ public class ModelUtils {
     /**
      * Given a label, this method returns a resource with that label.
      * Assumption: only a single resource will have that label
-     * 
+     *
      * @param label unique label you are asking for
      * @param model model where you want to perform the query
      * @return

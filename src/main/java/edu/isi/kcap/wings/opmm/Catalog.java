@@ -1,6 +1,7 @@
 package edu.isi.kcap.wings.opmm;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import org.apache.jena.ontology.Individual;
@@ -300,30 +301,40 @@ public class Catalog {
         while (rs.hasNext()) {
             QuerySolution qs = rs.next();
             Resource property = qs.getResource("?p");
-            try {
+            if (qs != null && qs.getResource("?o").isURIResource() && wingsComponentType != null) {
                 Resource object = qs.getResource("?o");
-                if (Constants.RDFS_SUBCLASS_OF.equals(property.getURI())
-                        && !object.getURI().equals(wingsComponentType)) {// we avoid asserting subclass of themselves.
-                    // if we reach the top level (COMPONENT), then stop
-                    String superclass;
-                    if (object.getURI().equals(Constants.WINGS_COMPONENT) ||
-                            object.getURI().equals("http://www.w3.org/2000/01/rdf-schema#Resource")) {
-                        superclass = Constants.WINGS_COMPONENT;
-                    } else {
-                        superclass = getCatalogTypeForComponentURI(object.getURI());
+                try {
+                    if (Constants.RDFS_SUBCLASS_OF.equals(property.getURI())
+                            && !object.getURI().equals(wingsComponentType)) {// we avoid asserting subclass of
+                                                                             // themselves.
+                        // if we reach the top level (COMPONENT), then stop
+                        String superclass;
+                        if (object.getURI().equals(Constants.WINGS_COMPONENT) ||
+                                object.getURI().equals("http://www.w3.org/2000/01/rdf-schema#Resource")) {
+                            superclass = Constants.WINGS_COMPONENT;
+                        } else {
+                            superclass = getCatalogTypeForComponentURI(object.getURI());
+                        }
+                        // add the subclass relationship
+                        newCatalogComponent.addProperty(localCatalog.createOntProperty(property.getURI()),
+                                localCatalog.createClass(superclass));
                     }
-                    // add the subclass relationship
-                    newCatalogComponent.addProperty(localCatalog.createOntProperty(property.getURI()),
-                            localCatalog.createClass(superclass));
+                } catch (Exception e) {
+                    throw new RuntimeException("Exception: " + e.getMessage());
                 }
-                // if it's a subclass of something from the catalog, add that class.
-            } catch (Exception e) {
+            }
+            // if it's a subclass of something from the catalog, add that class.
+            else {
                 // if there are annotations, we copy them too.
-                Literal object = qs.getLiteral("?o");
-                newCatalogComponent.addProperty(localCatalog.createOntProperty(property.getURI()), object.getString(),
-                        object.getDatatype());
+                if (qs.contains("?o") && qs.get("?o").isLiteral()) {
+                    Literal object = qs.getLiteral("?o");
+                    newCatalogComponent.addProperty(localCatalog.createOntProperty(property.getURI()),
+                            object.getString(),
+                            object.getDatatype());
+                }
             }
         }
+
         // create canonical instance
         Iterator cInstances = WINGSDomainTaxonomy.getOntClass(wingsComponentType).listInstances(true);
         String wingsCanonicalInstanceURI = null;
@@ -507,8 +518,9 @@ public class Catalog {
      * @param path FOLDER path where to export the catalog. If null, the repository
      *             will
      *             use the defaultRepositoryPath. The catalog is exported in TTL.
+     * @throws IOException
      */
-    public String exportCatalog(String path, String serialization) {
+    public String exportCatalog(String path, String serialization) throws IOException {
         String exportPath;
         if (path == null)
             exportPath = this.defaultRepositoryPath;
@@ -542,7 +554,7 @@ public class Catalog {
 
     // ----------------------
     // local tests (these will be translated to unit tests)
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // should load a local domain for tests.
         // http://www.wings-workflows.org/wings-omics-portal/export/users/ravali/genomics/components/library.owl
         String taxonomyURL = "http://www.wings-workflows.org/wings-omics-portal/export/users/alyssa/DataAbstractions/components/library.owl#";

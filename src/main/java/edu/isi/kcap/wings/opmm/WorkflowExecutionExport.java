@@ -3,6 +3,7 @@ package edu.isi.kcap.wings.opmm;
 import static edu.isi.kcap.wings.opmm.Constants.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.ontology.Individual;
@@ -392,7 +393,7 @@ public class WorkflowExecutionExport {
 
     /**
      * Upload a file to publisher
-     * 
+     *
      * @param filePath the path of the file
      * @return a string with URL
      */
@@ -425,8 +426,9 @@ public class WorkflowExecutionExport {
      *
      * @param filepath      path where to write the serialized model
      * @param serialization serialization of choice: RDF/XML, TTL, etc.
+     * @throws IOException
      */
-    public String exportAsOPMW(String filepath, String serialization) {
+    public String exportAsOPMW(String filepath, String serialization) throws IOException {
         if (transformedExecutionURI == null) {
             this.transform();
         }
