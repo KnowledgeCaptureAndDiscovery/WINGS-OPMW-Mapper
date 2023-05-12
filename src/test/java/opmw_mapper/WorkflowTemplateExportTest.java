@@ -20,7 +20,7 @@ public class WorkflowTemplateExportTest {
    * Test using the CaesarCypher workflow template:
    * Triple export to OPMW works
    * Catalog export works
-   * 
+   *
    * @throws IOException
    */
   public void exportAsOPMWTest() throws IOException {
@@ -46,7 +46,7 @@ public class WorkflowTemplateExportTest {
     File f1 = new File(catalogPath);
     File f2 = new File(expectedCatalogPath);
 
-    assertThat(Input.fromFile(f1)).and(Input.fromFile(f2)).areSimilar();
+    assertThat(Input.fromFile(f1)).and(Input.fromFile(f2)).areSimilar().withNodeMatcher(null);
 
     assertEquals("The files differ!", FileUtils.readFileToString(new File("catalog/CaesarCypher"), "utf-8"),
         FileUtils.readFileToString(new File("src/test/resources/CatalogCaesarCypher"), "utf-8"));
