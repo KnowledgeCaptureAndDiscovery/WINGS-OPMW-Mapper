@@ -15,44 +15,22 @@
  * limitations under the License.
  */
 
-package edu.isi.wings.opmm;
+package edu.isi.kcap.wings.opmm;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Base64;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.Dsl;
-import org.asynchttpclient.request.body.multipart.InputStreamPart;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.asynchttpclient.Dsl.basicAuthRealm;
-
 public class StorageHandler {
     public File zipFolder(File directory) throws Exception {
-        //Create zip file
+        // Create zip file
         File _tmpZip = File.createTempFile(directory.getAbsolutePath(), ".zip");
         String zipName = _tmpZip.getPath();
         Path zipPath = Paths.get(zipName);
 
-        //Obtain path source dir
+        // Obtain path source dir
         Path sourceFolderPath = directory.toPath();
 
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath.toFile()));
@@ -84,6 +62,5 @@ public class StorageHandler {
         zos.close();
         fos.close();
     }
-
 
 }
