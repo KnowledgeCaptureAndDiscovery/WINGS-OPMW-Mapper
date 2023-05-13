@@ -515,18 +515,17 @@ public class Catalog {
      * defaultRepository path.
      * The catalog will be saved under its domain.
      *
-     * @param path FOLDER path where to export the catalog. If null, the repository
-     *             will
-     *             use the defaultRepositoryPath. The catalog is exported in TTL.
+     * @param directory FOLDER path where to export the catalog
      * @throws IOException
      */
-    public String exportCatalog(String path, String serialization) throws IOException {
+    public String exportCatalog(String directory, String serialization) throws IOException {
         String exportPath;
-        if (path == null)
-            exportPath = this.defaultRepositoryPath;
-        else
-            exportPath = path;
-        exportPath += File.separator + domain;
+        // create directory if it does not exist
+        File dir = new File(directory);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        exportPath = directory + File.separator + this.domain;
         ModelUtils.exportRDFFile(exportPath, localCatalog, serialization);
         return exportPath;
     }

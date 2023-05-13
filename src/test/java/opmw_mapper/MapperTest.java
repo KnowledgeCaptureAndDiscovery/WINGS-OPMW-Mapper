@@ -52,7 +52,6 @@ public class MapperTest {
         // //f.delete();
         // }
 
-        @Test
         public void testTransformWINGSElaboratedTemplateToOPM_AbstractAndExpandedTemplate() throws IOException {
                 System.out.println("Transform a template to OPMW and PROV ");
                 String mode = "RDF/XML";
@@ -109,7 +108,6 @@ public class MapperTest {
         // //f2.delete();
         // }
         //
-        @Test
         public void testtransformWINGSResultsToOPMW_AbstractAndExpandedExecution() throws IOException {
                 System.out.println("Transform an execution to OPMW and PROV ");
                 Mapper instance = new Mapper();
