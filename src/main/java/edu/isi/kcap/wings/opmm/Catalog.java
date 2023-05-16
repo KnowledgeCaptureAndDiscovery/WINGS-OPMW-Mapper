@@ -251,8 +251,13 @@ public class Catalog {
 
         Individual individual = this.WINGSDomainTaxonomy.getIndividual(canonicalInstanceURI);
         if (individual == null) {
+            // TODO: This is a hack to make it work with the test cases. Fix it. The reason
+            // is that wings has a misconfiguration on the uri of the template
             canonicalInstanceURI = canonicalInstanceURI.replace("http://localhost:8080", "https://wings.disk.isi.edu");
             individual = this.WINGSDomainTaxonomy.getIndividual(canonicalInstanceURI);
+        }
+        if (individual == null) {
+            throw new RuntimeException("The requested component does not exist in the library file provided!");
         }
         String uri = individual.getOntClass(true).getURI();
         String compType = this.getCatalogTypeForComponentURI(uri);

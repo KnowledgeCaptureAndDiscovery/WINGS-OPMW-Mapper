@@ -68,9 +68,14 @@ public class WorkflowTemplateExport {
         try {
             this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
         } catch (Exception e) {
+            // TODO: This is a hack to make it work with the test cases. Fix it. The reason
+            // is that wings has a misconfiguration on the uri of the template
             System.out.println("Error loading template " + templateFile);
             templateFile = templateFile.replace("http://localhost:8080", "https://wings.disk.isi.edu");
             this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
+        }
+        if (this.wingsTemplateModel == null) {
+            throw new NullPointerException("Error loading template " + templateFile);
         }
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
