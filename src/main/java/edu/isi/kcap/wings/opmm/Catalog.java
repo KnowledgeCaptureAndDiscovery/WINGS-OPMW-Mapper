@@ -248,8 +248,18 @@ public class Catalog {
      */
     public String getCatalogTypeForComponentInstanceURI(String canonicalInstanceURI) {
         // each canonical instance has 1 direct class
-        String compType = this.getCatalogTypeForComponentURI(
-                this.WINGSDomainTaxonomy.getIndividual(canonicalInstanceURI).getOntClass(true).getURI());
+
+        Individual individual = this.WINGSDomainTaxonomy.getIndividual(canonicalInstanceURI);
+        if (individual == null) {
+            canonicalInstanceURI = canonicalInstanceURI.replace("http://localhost:8080", "https://wings.disk.isi.edu");
+            individual = this.WINGSDomainTaxonomy.getIndividual(canonicalInstanceURI);
+        }
+        String uri = individual.getOntClass(true).getURI();
+        String compType = this.getCatalogTypeForComponentURI(uri);
+        if (compType == null) {
+            System.out.println("The requested component does not exist in the library file provided!");
+            return null;
+        }
         // We return the type.
         return compType;
     }
@@ -521,11 +531,17 @@ public class Catalog {
     public String exportCatalog(String directory, String serialization) throws IOException {
         String exportPath;
         // create directory if it does not exist
-        File dir = new File(directory);
+        File dir;
+        if (directory == null || directory.isEmpty()) {
+            dir = new File(this.defaultRepositoryPath);
+        } else {
+
+            dir = new File(directory);
+        }
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        exportPath = directory + File.separator + this.domain;
+        exportPath = dir + File.separator + this.domain;
         ModelUtils.exportRDFFile(exportPath, localCatalog, serialization);
         return exportPath;
     }

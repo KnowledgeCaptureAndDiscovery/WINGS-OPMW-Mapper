@@ -1,4 +1,5 @@
 .release-it.json
+tmp
 .vscode
 # Compiled class file
 .idea/
@@ -254,4 +255,41 @@ xcode,xcodeinjection,xilinx,xilinxise,xilinxvivado
 xill,xojo,xtext,y86,yalc
 yarn,yeoman,yii,yii2,zendframework
 zephir,zig,zsh,zukencr8000
+
+# Created by https://www.toptal.com/developers/gitignore/api/macos
+# Edit at https://www.toptal.com/developers/gitignore?templates=macos
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### macOS Patch ###
+# iCloud generated files
+*.icloud
+
+# End of https://www.toptal.com/developers/gitignore/api/macos
 

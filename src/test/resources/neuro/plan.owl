@@ -1,0 +1,618 @@
+<?xml version="1.0"?>
+<rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:j.0="http://purl.org/net/wf-invocation#"
+      xmlns:j.1="http://www.wings-workflows.org/ontology/workflow.owl#"
+      xmlns:j.2="http://purl.org/net/p-plan#"
+      xmlns:j.3="http://www.wings-workflows.org/ontology/execution.owl#"
+      xmlns:owl="http://www.w3.org/2002/07/owl#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/executions/Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134.owl">
+
+      <j.3:Execution rdf:ID="Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd">
+            <j.3:hasPlan
+                  rdf:resource="Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134.owl#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+            <j.3:hasStep>
+                  <j.3:ExecutionStep
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#AddDemographicMergeAndFilterNode">
+                        <j.3:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                              2023-04-13T07:13:49.649Z</j.3:hasStartTime>
+                        <j.3:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                              2023-04-13T07:13:49.651Z</j.3:hasEndTime>
+                        <j.3:hasExecutionStatus>SUCCESS</j.3:hasExecutionStatus>
+                  </j.3:ExecutionStep>
+            </j.3:hasStep>
+            <j.3:hasStep>
+                  <j.3:ExecutionStep
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#MetaAnalysisNode">
+                        <j.3:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                              2023-04-13T07:13:49.653Z</j.3:hasStartTime>
+                        <j.3:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                              2023-04-13T07:13:49.654Z</j.3:hasEndTime>
+                        <j.3:hasExecutionStatus>SUCCESS</j.3:hasExecutionStatus>
+                  </j.3:ExecutionStep>
+            </j.3:hasStep>
+            <j.3:hasTemplate rdf:resource="../workflows/Meta-Analysis.owl#Meta-Analysis" />
+            <j.3:hasExpandedTemplate
+                  rdf:resource="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8" />
+            <j.3:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >
+                  2023-04-13T07:13:49.645Z</j.3:hasStartTime>
+            <j.3:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >
+                  2023-04-13T07:13:49.655Z</j.3:hasEndTime>
+            <j.3:hasExecutionStatus>SUCCESS</j.3:hasExecutionStatus>
+            <j.3:hasSeededTemplate
+                  rdf:resource="../workflows/Meta-Analysis-d10df752-5b5b-467f-9252-00333defe58b.owl#Meta-Analysis-d10df752-5b5b-467f-9252-00333defe58b" />
+      </j.3:Execution>
+      <j.0:Step
+            rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#AddDemographicMergeAndFilterNode">
+            <j.1:canRunOn
+                  rdf:resource="http://www.wings-workflows.org/ontology/resource.owl#Localhost" />
+            <j.0:hasCodeBinding>
+                  src/test/resources/neuro/code/library/AddDemographicMergeAndFilter/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0032">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA46d5c5_NTR_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan>
+                              <j.2:Plan
+                                    rdf:ID="Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                        </j.2:isVariableOfPlan>
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0019">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4925c5_HUNT_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0008">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA5305c4_BIG-PsychChip_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0047">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4aa5c5_UiO2017_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0031">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4f55c5_NeuroIMAGE_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0010">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4ad5c5_BrainScale_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0004">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4bf5c6_ALSPACa_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0028">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4945c5_MUNSTER_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0016">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4925c5_GIG_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0039">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4bb5c5_SHIP_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0041">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4ba5c5_SydneyMAS_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0018">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4b15c5_HUBIN_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0017">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4935c5_GSP_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0030">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4835c5_NESDA_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0026">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4775c5_MPIP_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0013">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4b15c5_DNS-V4_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0005">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA47a5c5_ASRB_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0040">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4ee5c5_SHIP-Trend_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0050">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA3215e5_ABCD_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0037">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA3f15c5_PPMI_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0007">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4945c5_BIG_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0034">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4a65c5_PAFIP_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0033">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4765c5_OATS_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0021">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4bf5c5_ImpACT_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0022">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4b45c5_LBC1936_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0042">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4a85c5_SYS_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0046">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4ae5c5_UiO2016_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0035">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4865c5_PDNZ_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0043">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4c15c5_TCD-NUIG_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0036">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA47a5c5_PING_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0029">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4865c5_NCNG_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0024">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4835c5_MCIC_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0012">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4a75c5_DNS-V3_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0003">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4a85c5_ADNI2GO_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0027">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4825c5_MPRC_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0015">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4b15c5_FOR2107_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0045">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4945c5_TOP3T_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0049">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4335c5_UMCU_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0011">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4ca5c5_CARDIFF_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0025">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4905c5_MooDS_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0006">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4aa5c5_BETULA_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0020">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4b85c5_IMAGEN_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0048">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4c95c5_UKBB_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0009">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4c45c5_BONN_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0014">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4c65c5_EPIGEN_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0023">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA48a5c5_LIBD_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0002">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4815c5_ADNI1_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0001">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4fe5c4_1000BRAINS_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0038">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4875c5_QTIM_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasInputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#cohortData_0044">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/SHA4865c5_TOP_Significant_GWAS.csv</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasInputVar>
+            <j.2:hasOutputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#mergedFile">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/mergedFile-2pi7muyj60jusqh46lonxmdm9</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:isStepOfPlan rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+            <j.2:hasInvocationLine>
+                  -p3 rs1080066 -p4 MEAN_AGE -p5 0 -p6 0 -p7 [67.3, 74.8, 72.4,
+                  19.6, 38.5, 62.4, 22.6, 22.5, 38.2, 10, 24.8, 19.7, 19.9, 38.4, 34.4, 24.2, 21.4,
+                  41.9, 58.9, 14.6, 40.8, 72.7, 33.2, 33.7, 33.6, 48.3, 37.2, 35.8, 51.6, 37.5,
+                  17.1, 29.4, 70.5, 28.3, 68.2, 11.8, 61.7, 22.4, 55.8, 50.4, 78.4, 28.3, 29.9,
+                  35.2, 33.2, 31.8, 42.1, 62.8, 33.1, 9.96] -i1
+                  src/test/resources/neuro/data/SHA4fe5c4_1000BRAINS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4815c5_ADNI1_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4a85c5_ADNI2GO_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4bf5c6_ALSPACa_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA47a5c5_ASRB_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4aa5c5_BETULA_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4945c5_BIG_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA5305c4_BIG-PsychChip_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4c45c5_BONN_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ad5c5_BrainScale_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ca5c5_CARDIFF_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4a75c5_DNS-V3_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b15c5_DNS-V4_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4c65c5_EPIGEN_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b15c5_FOR2107_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4925c5_GIG_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4935c5_GSP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b15c5_HUBIN_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4925c5_HUNT_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b85c5_IMAGEN_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4bf5c5_ImpACT_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b45c5_LBC1936_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA48a5c5_LIBD_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4835c5_MCIC_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4905c5_MooDS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4775c5_MPIP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4825c5_MPRC_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4945c5_MUNSTER_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4865c5_NCNG_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4835c5_NESDA_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4f55c5_NeuroIMAGE_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA46d5c5_NTR_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4765c5_OATS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4a65c5_PAFIP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4865c5_PDNZ_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA47a5c5_PING_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA3f15c5_PPMI_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4875c5_QTIM_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4bb5c5_SHIP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ee5c5_SHIP-Trend_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ba5c5_SydneyMAS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4a85c5_SYS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4c15c5_TCD-NUIG_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4865c5_TOP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4945c5_TOP3T_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ae5c5_UiO2016_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4aa5c5_UiO2017_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4c95c5_UKBB_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4335c5_UMCU_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA3215e5_ABCD_Significant_GWAS.csv
+                  -p1 SA -p2 Precentral -o1
+                  src/test/resources/neuro/data/mergedFile-2pi7muyj60jusqh46lonxmdm9 </j.2:hasInvocationLine>
+            <j.1:hasCustomData>
+                  CodeDirectory=src/test/resources/neuro/code/library/AddDemographicMergeAndFilter</j.1:hasCustomData>
+      </j.0:Step>
+      <j.0:Step
+            rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#MetaAnalysisNode">
+            <j.1:canRunOn
+                  rdf:resource="http://www.wings-workflows.org/ontology/resource.owl#Localhost" />
+            <j.0:hasCodeBinding>
+                  src/test/resources/neuro/code/library/MetaAnalysis/run</j.0:hasCodeBinding>
+            <j.2:hasInputVar
+                  rdf:resource="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#mergedFile" />
+            <j.2:hasOutputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#log">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/log-rfeihao6k5t2pu68928pizir</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:hasOutputVar>
+                  <j.0:Variable
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#p_value">
+                        <j.0:hasDataBinding>
+                              src/test/resources/neuro/data/p_value-9y0zaz2vt11afsqd03bwks6z9</j.0:hasDataBinding>
+                        <j.2:isVariableOfPlan
+                              rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+                  </j.0:Variable>
+            </j.2:hasOutputVar>
+            <j.2:isStepOfPlan rdf:resource="#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+            <j.2:hasInvocationLine>-o2
+                  src/test/resources/neuro/data/p_value-9y0zaz2vt11afsqd03bwks6z9
+                  -i1
+                  src/test/resources/neuro/data/mergedFile-2pi7muyj60jusqh46lonxmdm9
+                  -o1
+                  src/test/resources/neuro/data/log-rfeihao6k5t2pu68928pizir </j.2:hasInvocationLine>
+            <j.1:hasCustomData>
+                  CodeDirectory=src/test/resources/neuro/code/library/MetaAnalysis</j.1:hasCustomData>
+      </j.0:Step>
+</rdf:RDF>

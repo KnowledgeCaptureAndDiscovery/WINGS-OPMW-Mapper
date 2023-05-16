@@ -27,11 +27,11 @@ import org.apache.jena.rdf.model.Resource;
  */
 public class WorkflowTemplateExport {
 
-    private final OntModel wingsTemplateModel;
+    private OntModel wingsTemplateModel;
     private OntModel opmwModel;
-    private final Catalog componentCatalog;
-    private final String PREFIX_EXPORT_RESOURCE;
-    private final String endpointURI;// URI of the endpoint where everything is published.
+    private Catalog componentCatalog;
+    private String PREFIX_EXPORT_RESOURCE;
+    private String endpointURI;// URI of the endpoint where everything is published.
     private Individual transformedTemplate = null;
 
     public boolean isTemplatePublished() {
@@ -40,8 +40,8 @@ public class WorkflowTemplateExport {
 
     private boolean isTemplatePublished;// boolean value to know if the template has already been published on the
                                         // repository
-    private final String exportUrl;
-    private final String exportName;// needed to pass it on to template exports
+    private String exportUrl;
+    private String exportName;// needed to pass it on to template exports
 
     public WorkflowTemplateExport getAbstractTemplateExport() {
         return abstractTemplateExport;
@@ -65,7 +65,13 @@ public class WorkflowTemplateExport {
      */
     public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportUrl, String exportName,
             String endpointURI, String domain, boolean isConcrete) {
-        this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
+        try {
+            this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
+        } catch (Exception e) {
+            System.out.println("Error loading template " + templateFile);
+            templateFile = templateFile.replace("http://localhost:8080", "https://wings.disk.isi.edu");
+            this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
+        }
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
         if (exportUrl == null)
@@ -112,7 +118,8 @@ public class WorkflowTemplateExport {
      * Different expanded templates will not be versioned.
      */
     public void transform() {
-        Individual wingsTemplate = (Individual) wingsTemplateModel.getOntClass(Constants.WINGS_WF_TEMPLATE)
+        OntClass workflowTemplateClass = wingsTemplateModel.getOntClass(Constants.WINGS_WF_TEMPLATE);
+        Individual wingsTemplate = (Individual) workflowTemplateClass
                 .listInstances().next();
         String wingsTemplateName = wingsTemplate.getLocalName();
         String exportedTemplateURI;

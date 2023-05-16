@@ -20,6 +20,8 @@ import org.xmlunit.diff.DifferenceEvaluator;
 import org.xmlunit.util.Nodes;
 
 import edu.isi.kcap.wings.opmm.Catalog;
+import edu.isi.kcap.wings.opmm.FilePublisher;
+import edu.isi.kcap.wings.opmm.WorkflowExecutionExport;
 import edu.isi.kcap.wings.opmm.WorkflowTemplateExport;
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
@@ -68,6 +70,43 @@ public class WorkflowTemplateExportTest {
         .build();
 
     assertEquals(diff.hasDifferences(), false);
+
+  }
+
+  @Test
+  public void testNeuroDisk() throws IOException {
+    String taxonomyURL = "src/test/resources/neuro/components.owl";
+    String templatePath = "src/test/resources/neuro/originalTemplate.owl";
+    String seededTemplate = "src/test/resources/neuro/seededTemplate.owl";
+    String executionPath = "src/test/resources/neuro/execution.owl";
+    String planPath = "src/test/resources/neuro/plan.owl";
+    Catalog c = new Catalog("genomics", "testExport", "domains", taxonomyURL);
+    String domain = "neuroDisk";
+    WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "http://www.opmw.org/", "exportTest",
+        "https://endpoint.mint.isi.edu/provenance/query", domain, true);
+    w.exportAsOPMW("meta-regression", "TTL");
+    WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, "http://www.opmw.org/", "exportTest",
+        "https://endpoint.mint.isi.edu/provenance/query", domain);
+    e.exportAsOPMW("meta-regression-execution", "TTL");
+    c.exportCatalog(null, "RDF/XML");
+
+  }
+
+  @Test
+  public void testWorkflowExecutionExport() throws IOException {
+    FilePublisher p = new FilePublisher("tmp/", "http://localhost");
+    String components = "src/test/resources/neuro/components.owl";
+    String executionPath = "src/test/resources/neuro/execution.owl";
+    String expandedTemplatePath = "src/test/resources/neuro/expandedTemplate.owl";
+    String originalTemplatePath = "src/test/resources/neuro/originalTemplate.owl";
+    String planPath = "src/test/resources/neuro/plan.owl";
+    String seededTemplate = "src/test/resources/neuro/seededTemplate.owl";
+    Catalog c = new Catalog("genomics", "testExport", "domains", components);
+    String domain = "neuroDisk";
+    WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, "http://www.opmw.org/", "exportTest",
+        "https://endpoint.mint.isi.edu/provenance/query", domain, p);
+    e.exportAsOPMW("meta-regression-execution.ttl", "TTL");
+    // c.exportCatalog(null, "RDF/XML");
 
   }
 

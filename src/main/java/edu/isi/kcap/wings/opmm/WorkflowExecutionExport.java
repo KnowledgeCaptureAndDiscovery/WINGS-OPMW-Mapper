@@ -4,6 +4,8 @@ import static edu.isi.kcap.wings.opmm.Constants.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.ontology.Individual;
@@ -34,6 +36,7 @@ public class WorkflowExecutionExport {
     private final String exportName;// needed to pass it on to template exports
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
+    private FilePublisher filePublisher;
 
     private String uploadURL;
     private String uploadUsername;
@@ -96,6 +99,32 @@ public class WorkflowExecutionExport {
     }
 
     /**
+     * Default constructor for exporting executions
+     *
+     * @param executionFile
+     * @param catalog
+     * @param exportName
+     * @param endpointURI
+     */
+    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
+            String endpointURI, String domain, FilePublisher filePublisher) {
+        this.wingsExecutionModel = ModelUtils.loadModel(executionFile);
+        this.opmwModel = ModelUtils.initializeModel(opmwModel);
+        this.componentCatalog = catalog;
+        this.filePublisher = filePublisher;
+        if (exportUrl == null)
+            exportUrl = Constants.PREFIX_EXPORT_GENERIC;
+
+        PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
+        this.endpointURI = endpointURI;
+        this.exportName = exportName;
+        this.exportUrl = exportUrl;
+
+        isExecPublished = false;
+        this.domain = domain;
+    }
+
+    /**
      * Function that will return the transformed execution URI.
      *
      * @return transformed execution URI. Null if error
@@ -145,8 +174,9 @@ public class WorkflowExecutionExport {
      *
      * @param wingsExecution instance pointer to the execution
      * @return The URI of the template being generated.
+     * @throws IOException
      */
-    private String convertExecutionToOPMW(Individual wingsExecution) {
+    private String convertExecutionToOPMW(Individual wingsExecution) throws IOException {
         // Create the account and its metadata.
         final String executionTemplateNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_WORKFLOW_EXECUTION_ACCOUNT + "/";
         String runID = wingsExecution.getLocalName();
@@ -228,9 +258,7 @@ public class WorkflowExecutionExport {
                     invLine);
             executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAD_START_TIME), start);
             executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_STATUS), status);
-            if (end != null) {
-                executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAD_END_TIME), end);
-            }
+            executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAD_END_TIME), end);
             // Creation of the software config. This may be moved to another class for
             // simplicity and because it
             // can be used in the catalog
@@ -250,18 +278,33 @@ public class WorkflowExecutionExport {
             stepConfig.addLabel(stepConfig.getLocalName(), null);
 
             String configLocation = executionScript.getString().replace("/run", "");
+            configLocation = configLocation.replaceAll("\\s", "");
             File directory = new File(configLocation);
             StorageHandler storage = new StorageHandler();
+            File tempFile;
             try {
-                File tempFile = storage.zipFolder(directory);
-                configLocation = uploadFile(tempFile.getAbsolutePath());
+
+                tempFile = storage.zipFolder(directory);
+                try {
+                    filePublisher.publishFile(tempFile.getAbsolutePath());
+                } catch (Exception e) {
+                    System.out.println("Error publishing directory:" + directory + " compressed as " + tempFile);
+                    System.err.println(e.getMessage());
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Error compress directory:" + directory);
+                System.err.println(e.getMessage());
             }
             stepConfig.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION), configLocation);
 
             /* Export the mainscript and upload */
-            String mainScriptLocation = uploadFile(executionScript.getString());
+            // String mainScriptLocation = uploadFile(executionScript.getString());
+            String mainScriptLocation = executionScript.getString().replaceAll("\\s", "");
+            try {
+                mainScriptLocation = filePublisher.publishFile(mainScriptLocation);
+            } catch (Exception e) {
+                System.out.println("Error publishing file: " + mainScriptLocation);
+            }
             String mainScriptURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_SOFTWARE_CONFIGURATION + "/" + runID + "_"
                     + wingsStep.getLocalName() + "_mainscript";
             Resource mainScript = ModelUtils.getIndividualFromFile(mainScriptLocation, opmwModel,
@@ -285,7 +328,14 @@ public class WorkflowExecutionExport {
                         .createIndividual(executionArtifactURI);
                 executionArtifact.addLabel(variable.getLocalName(), null);
                 String pathFile = binding.toString();
-                String dataLocation = uploadFile(pathFile);
+                // String dataLocation = uploadFile(pathFile);
+                String dataLocation;
+                try {
+                    dataLocation = filePublisher.publishFile(pathFile);
+                } catch (Exception e) {
+                    dataLocation = pathFile;
+                    System.out.println("Error publishing file: " + pathFile);
+                }
                 executionArtifact.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION),
                         dataLocation);
 
@@ -389,34 +439,6 @@ public class WorkflowExecutionExport {
         weInstance.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE),
                 concreteTemplateExport.getTransformedTemplateIndividual());
         return we;
-    }
-
-    /**
-     * Upload a file to publisher
-     *
-     * @param filePath the path of the file
-     * @return a string with URL
-     */
-    private String uploadFile(String filePath) {
-        try {
-            if (this.uploadDirectory != null) {
-                File mainScriptFile = new File(filePath);
-                File toFile = new File(this.uploadDirectory + File.separator + mainScriptFile.getName());
-                FileUtils.copyFile(mainScriptFile, toFile);
-                return this.uploadURL + "/" + mainScriptFile.getName();
-            } else {
-                Uploader upload = new Uploader(this.uploadURL, this.uploadUsername, this.uploadPassword);
-                File mainScriptFile = new File(filePath);
-                if (this.uploadMaxSize != 0 && mainScriptFile.length() > this.uploadMaxSize) {
-                    return mainScriptFile.getAbsolutePath();
-                }
-                upload.addFilePart("file_param_1", mainScriptFile);
-                return upload.finish().replaceAll("\n", "");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return filePath;
     }
 
     /**

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:j.3="http://www.wings-workflows.org/ontology/execution.owl#"
+      xmlns:owl="http://www.w3.org/2002/07/owl#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/executions/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd.owl">
+      <j.3:Execution rdf:ID="Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd">
+            <j.3:hasPlan
+                  rdf:resource="Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134.owl#Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134" />
+            <j.3:hasStep>
+                  <j.3:ExecutionStep
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#AddDemographicMergeAndFilterNode">
+                        <j.3:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                              2023-04-13T07:13:49.649Z</j.3:hasStartTime>
+                        <j.3:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                              2023-04-13T07:13:49.651Z</j.3:hasEndTime>
+                        <j.3:hasExecutionStatus>SUCCESS</j.3:hasExecutionStatus>
+                  </j.3:ExecutionStep>
+            </j.3:hasStep>
+            <j.3:hasStep>
+                  <j.3:ExecutionStep
+                        rdf:about="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#MetaAnalysisNode">
+                        <j.3:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                              2023-04-13T07:13:49.653Z</j.3:hasStartTime>
+                        <j.3:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                              2023-04-13T07:13:49.654Z</j.3:hasEndTime>
+                        <j.3:hasExecutionStatus>SUCCESS</j.3:hasExecutionStatus>
+                  </j.3:ExecutionStep>
+            </j.3:hasStep>
+            <j.3:hasTemplate rdf:resource="../workflows/Meta-Analysis.owl#Meta-Analysis" />
+            <j.3:hasExpandedTemplate
+                  rdf:resource="Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8.owl#Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8" />
+            <j.3:hasStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >
+                  2023-04-13T07:13:49.645Z</j.3:hasStartTime>
+            <j.3:hasEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+            >
+                  2023-04-13T07:13:49.655Z</j.3:hasEndTime>
+            <j.3:hasExecutionStatus>SUCCESS</j.3:hasExecutionStatus>
+            <j.3:hasSeededTemplate
+                  rdf:resource="../workflows/Meta-Analysis-d10df752-5b5b-467f-9252-00333defe58b.owl#Meta-Analysis-d10df752-5b5b-467f-9252-00333defe58b" />
+      </j.3:Execution>
+</rdf:RDF>
