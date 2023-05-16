@@ -122,19 +122,29 @@ public class WorkflowTemplateExportTest {
     e.exportAsOPMW("meta-regression-execution.ttl", "TTL");
     e.exportAsOPMW("meta-regression-execution.xml", "RDF/XML");
 
+    checkAttribute(
+        "http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_p_value");
+    checkAttribute("http://www.opmw.org/exportTest/resource/Agent/WINGS");
+    checkAttribute(
+        "http://www.opmw.org/exportTest/resource/SoftwareConfiguration/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode_config");
+    checkAttribute(
+        "http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0001");
+    checkAttribute(
+        "http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd");
+    checkAttribute(
+        "http://www.opmw.org/exportTest/resource/WorkflowExecutionProcess/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode");
+
+  }
+
+  private void checkAttribute(String attributeValue) throws IOException {
     Path xmlPath = Paths.get("meta-regression-execution.xml");
     Source source = Input.from(Files.newInputStream(xmlPath)).build();
-
-    // Step 2: Create XPath engine and evaluate the XPath expression
     XPathEngine xpathEngine = new JAXPXPathEngine();
-    Map<String, String> p2u = Collections.singletonMap("owl", "http://www.w3.org/2002/07/owl#");
+    Map<String, String> p2u = Collections.singletonMap("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
     xpathEngine.setNamespaceContext(p2u);
-
-    String xpathExpression = "//owl:Class";
+    String xpathExpression = "//*[@rdf:about='" + attributeValue + "']";
     Iterable<Node> text = xpathEngine.selectNodes(xpathExpression, source);
     Assert.assertTrue(text.iterator().hasNext());
-    // c.exportCatalog(null, "RDF/XML");
-
   }
 
   private String removeDates(String turtleFile) throws IOException {
