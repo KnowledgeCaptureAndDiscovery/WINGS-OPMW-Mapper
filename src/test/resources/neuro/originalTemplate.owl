@@ -1,0 +1,674 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.wings-workflows.org/ontology/workflow.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xml:base="https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/workflows/Meta-Analysis.owl">
+      <owl:Ontology rdf:about="">
+            <owl:imports rdf:resource="http://www.wings-workflows.org/ontology/workflow.owl"/>
+      </owl:Ontology>
+      <j.0:WorkflowTemplate rdf:ID="Meta-Analysis">
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="area_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="area">
+                                    <rdfs:comment>center:x=47.76079406738282,y=25.16195583343506</rdfs:comment>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>BrainVizCreator_node_area</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="snp_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="snp">
+                                    <rdfs:comment>center:x=172.4161647796631,y=26.544528007507324</rdfs:comment>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>AddDemographicMergeAndFilter_node_snp</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="trait_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="trait">
+                                    <rdfs:comment>center:x=209.32767505645757,y=26.544528007507324</rdfs:comment>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>AddDemographicMergeAndFilter_node_trait</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="cohortData_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:DataVariable rdf:ID="cohortData">
+                                    <rdfs:comment>center:x=110.78372716903687,y=24.816309928894043</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>AddDemographicMergeAndFilter_node_cohortData</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >1</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="demographic_value_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="demographic_value">
+                                    <rdfs:comment>center:x=291.6153564453125,y=25.818093299865723</rdfs:comment>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>AddDemographicMergeAndFilter_node_demographic_value</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="demographic_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="demographic">
+                                    <rdfs:comment>center:x=437.4694519042969,y=27.34836483001709</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>AddDemographicMergeAndFilter_node_demographic</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="demographic_max_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="demographic_max">
+                                    <rdfs:comment>center:x=454.2611083984375,y=129.52491092681885</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>AddDemographicMergeAndFilter_node_demographic_max</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasInputRole>
+                  <j.0:Role rdf:ID="demographic_min_irole">
+                        <j.0:mapsToVariable>
+                              <j.0:ParameterVariable rdf:ID="demographic_min">
+                                    <rdfs:comment>center:x=451.08074951171875,y=76.58688449859619</rdfs:comment>
+                                    <j.0:autoFill rdf:datatype=
+                                    "http://www.w3.org/2001/XMLSchema#boolean"
+                                    >true</j.0:autoFill>
+                              </j.0:ParameterVariable>
+                        </j.0:mapsToVariable>
+                        <j.0:hasRoleID>AddDemographicMergeAndFilter_node_demographic_min</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasInputRole>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="AddDemographicMergeAndFilter_node_trait_input">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="AddDemographicMergeAndFilter_node">
+                                    <rdfs:comment>center:x=164.33790588378906,y=94.06094360351562</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <j.0:ComponentVariable rdf:ID="AddDemographicMergeAndFilter_node_comp">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#AddDemographicMergeAndFilter"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </j.0:ComponentVariable>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="AddDemographicMergeAndFilter_node_crule">
+                                                <j.0:createSetsOn rdf:resource="#AddDemographicMergeAndFilter_node_comp"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_area">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_area_role">
+                                                            <j.0:hasRoleID
+                                                            >area</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_trait">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_trait_role">
+                                                            <j.0:hasRoleID
+                                                            >trait</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_snp">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_snp_role">
+                                                            <j.0:hasRoleID
+                                                            >snp</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_demographic_value">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_demographic_value_role">
+                                                            <j.0:hasRoleID
+                                                            >demographic_value</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_demographic_min">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_demographic_min_role">
+                                                            <j.0:hasRoleID
+                                                            >demographic_min</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_demographic_max">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_demographic_max_role">
+                                                            <j.0:hasRoleID
+                                                            >demographic_max</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_cohortData">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_cohortData_role">
+                                                            <j.0:hasRoleID
+                                                            >cohortData</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >1</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_demographic">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_demographic_role">
+                                                            <j.0:hasRoleID
+                                                            >demographic</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="AddDemographicMergeAndFilter_node_mergedFile">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="AddDemographicMergeAndFilter_node_mergedFile_role">
+                                                            <j.0:hasRoleID
+                                                            >mergedFile</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="AddDemographicMergeAndFilter_node_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-b2ab7bfe-8175-4449-989a-9cedbd83b42b">
+                                                            <j.0:hasExpressionArgument rdf:resource="#AddDemographicMergeAndFilter_node_area"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#AddDemographicMergeAndFilter_node_trait"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#AddDemographicMergeAndFilter_node_snp"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#AddDemographicMergeAndFilter_node_demographic_value"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#AddDemographicMergeAndFilter_node_demographic_min"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#AddDemographicMergeAndFilter_node_demographic_max"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#AddDemographicMergeAndFilter_node_cohortData"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#AddDemographicMergeAndFilter_node_demographic"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#AddDemographicMergeAndFilter_node_trait"/>
+                        <j.0:hasVariable rdf:resource="#trait"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="AddDemographicMergeAndFilter_node_area_input">
+                        <j.0:hasDestinationNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#AddDemographicMergeAndFilter_node_area"/>
+                        <j.0:hasVariable rdf:resource="#area"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="AddDemographicMergeAndFilter_node_cohortData_input">
+                        <j.0:hasDestinationNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#AddDemographicMergeAndFilter_node_cohortData"/>
+                        <j.0:hasVariable rdf:resource="#cohortData"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="AddDemographicMergeAndFilter_node_demographic_value_input">
+                        <j.0:hasDestinationNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#AddDemographicMergeAndFilter_node_demographic_value"/>
+                        <j.0:hasVariable rdf:resource="#demographic_value"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="AddDemographicMergeAndFilter_node_mergedFile_to_MetaAnalysis_node_input">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="MetaAnalysis_node">
+                                    <rdfs:comment>center:x=230.54444885253906,y=157.26821899414062</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <j.0:ComponentVariable rdf:ID="MetaAnalysis_node_comp">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#MetaAnalysis"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </j.0:ComponentVariable>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="MetaAnalysis_node_crule">
+                                                <j.0:createSetsOn rdf:resource="#MetaAnalysis_node_comp"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="MetaAnalysis_node_input">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="MetaAnalysis_node_input_role">
+                                                            <j.0:hasRoleID
+                                                            >input</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="MetaAnalysis_node_p_value">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="MetaAnalysis_node_p_value_role">
+                                                            <j.0:hasRoleID
+                                                            >p_value</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="MetaAnalysis_node_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-17a58b1c-45a3-449b-85f5-6f1eae37a26b">
+                                                            <j.0:hasExpressionArgument rdf:resource="#MetaAnalysis_node_input"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#MetaAnalysis_node_input"/>
+                        <j.0:hasOriginNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasOriginPort rdf:resource="#AddDemographicMergeAndFilter_node_mergedFile"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="input">
+                                    <rdfs:comment>center:x=300.79811096191406,y=127.59660339355469</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="AddDemographicMergeAndFilter_node_snp_input">
+                        <j.0:hasDestinationNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#AddDemographicMergeAndFilter_node_snp"/>
+                        <j.0:hasVariable rdf:resource="#snp"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="AddDemographicMergeAndFilter_node_demographic_max_input">
+                        <j.0:hasDestinationNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#AddDemographicMergeAndFilter_node_demographic_max"/>
+                        <j.0:hasVariable rdf:resource="#demographic_max"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="AddDemographicMergeAndFilter_node_demographic_input">
+                        <j.0:hasDestinationNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#AddDemographicMergeAndFilter_node_demographic"/>
+                        <j.0:hasVariable rdf:resource="#demographic"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="AddDemographicMergeAndFilter_node_demographic_min_input">
+                        <j.0:hasDestinationNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#AddDemographicMergeAndFilter_node_demographic_min"/>
+                        <j.0:hasVariable rdf:resource="#demographic_min"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="AddDemographicMergeAndFilter_node_mergedFile_to_ShinyMetaAnalysis_node_input">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="ShinyMetaAnalysis_node">
+                                    <rdfs:comment>center:x=298.9837646484375,y=211.5354461669922</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <j.0:ComponentVariable rdf:ID="ShinyMetaAnalysis_node_comp">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#ShinyMetaAnalysis"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </j.0:ComponentVariable>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="ShinyMetaAnalysis_node_crule">
+                                                <j.0:createSetsOn rdf:resource="#ShinyMetaAnalysis_node_comp"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="ShinyMetaAnalysis_node_input">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="ShinyMetaAnalysis_node_input_role">
+                                                            <j.0:hasRoleID
+                                                            >input</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="ShinyMetaAnalysis_node_log">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="ShinyMetaAnalysis_node_log_role">
+                                                            <j.0:hasRoleID
+                                                            >log</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="ShinyMetaAnalysis_node_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-f47c9d62-9a20-43f7-93ab-a0c13faa87fd">
+                                                            <j.0:hasExpressionArgument rdf:resource="#ShinyMetaAnalysis_node_input"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#ShinyMetaAnalysis_node_input"/>
+                        <j.0:hasOriginNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+                        <j.0:hasOriginPort rdf:resource="#AddDemographicMergeAndFilter_node_mergedFile"/>
+                        <j.0:hasVariable rdf:resource="#input"/>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="ShinyMetaAnalysis_node_log_output">
+                        <j.0:hasOriginNode rdf:resource="#ShinyMetaAnalysis_node"/>
+                        <j.0:hasOriginPort rdf:resource="#ShinyMetaAnalysis_node_log"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="log">
+                                    <rdfs:comment>center:x=299.3273620605469,y=281.56509828567505</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InOutLink rdf:ID="MetaAnalysis_node_p_value_to_BrainVizCreator_node_pval">
+                        <j.0:hasDestinationNode>
+                              <j.0:Node rdf:ID="BrainVizCreator_node">
+                                    <rdfs:comment>center:x=83.9898681640625,y=235.0374298095703</rdfs:comment>
+                                    <j.0:hasComponent>
+                                          <j.0:ComponentVariable rdf:ID="BrainVizCreator_node_comp">
+                                                <j.0:hasComponentBinding rdf:resource="../components/library.owl#BrainVizCreator"/>
+                                                <j.0:isConcrete
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:isConcrete>
+                                          </j.0:ComponentVariable>
+                                    </j.0:hasComponent>
+                                    <j.0:hasComponentSetCreationRule>
+                                          <j.0:ComponentSetRule rdf:ID="BrainVizCreator_node_crule">
+                                                <j.0:createSetsOn rdf:resource="#BrainVizCreator_node_comp"/>
+                                                <j.0:createWorkflowSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createWorkflowSets>
+                                          </j.0:ComponentSetRule>
+                                    </j.0:hasComponentSetCreationRule>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="BrainVizCreator_node_area">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="BrainVizCreator_node_area_role">
+                                                            <j.0:hasRoleID
+                                                            >area</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasInputPort>
+                                          <j.0:Port rdf:ID="BrainVizCreator_node_pval">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="BrainVizCreator_node_pval_role">
+                                                            <j.0:hasRoleID
+                                                            >pval</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasInputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="BrainVizCreator_node_brain_visualization">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="BrainVizCreator_node_brain_visualization_role">
+                                                            <j.0:hasRoleID
+                                                            >brain_visualization</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasOutputPort>
+                                          <j.0:Port rdf:ID="BrainVizCreator_node_p_value">
+                                                <j.0:satisfiesRole>
+                                                      <rdf:Description rdf:ID="BrainVizCreator_node_p_value_role">
+                                                            <j.0:hasRoleID
+                                                            >p_value</j.0:hasRoleID>
+                                                            <j.0:hasDimensionality
+                                                             rdf:datatype=
+                                                            "http://www.w3.org/2001/XMLSchema#integer"
+                                                            >0</j.0:hasDimensionality>
+                                                      </rdf:Description>
+                                                </j.0:satisfiesRole>
+                                          </j.0:Port>
+                                    </j.0:hasOutputPort>
+                                    <j.0:hasPortSetCreationRule>
+                                          <j.0:PortSetRule rdf:ID="BrainVizCreator_node_prule">
+                                                <j.0:createSetsOn>
+                                                      <j.0:XProduct rdf:ID="_xprod-57bb70e0-db6c-4c33-8707-587f56b8cb74">
+                                                            <j.0:hasExpressionArgument rdf:resource="#BrainVizCreator_node_area"/>
+                                                            <j.0:hasExpressionArgument rdf:resource="#BrainVizCreator_node_pval"/>
+                                                      </j.0:XProduct>
+                                                </j.0:createSetsOn>
+                                                <j.0:createComponentSets
+                                                 rdf:datatype=
+                                                "http://www.w3.org/2001/XMLSchema#boolean"
+                                                >true</j.0:createComponentSets>
+                                          </j.0:PortSetRule>
+                                    </j.0:hasPortSetCreationRule>
+                              </j.0:Node>
+                        </j.0:hasDestinationNode>
+                        <j.0:hasDestinationPort rdf:resource="#BrainVizCreator_node_pval"/>
+                        <j.0:hasOriginNode rdf:resource="#MetaAnalysis_node"/>
+                        <j.0:hasOriginPort rdf:resource="#MetaAnalysis_node_p_value"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="pval">
+                                    <rdfs:comment>center:x=184.55397033691406,y=194.868408203125</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:InOutLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:InputLink rdf:ID="BrainVizCreator_node_area_input">
+                        <j.0:hasDestinationNode rdf:resource="#BrainVizCreator_node"/>
+                        <j.0:hasDestinationPort rdf:resource="#BrainVizCreator_node_area"/>
+                        <j.0:hasVariable rdf:resource="#area"/>
+                  </j.0:InputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="BrainVizCreator_node_brain_visualization_output">
+                        <j.0:hasOriginNode rdf:resource="#BrainVizCreator_node"/>
+                        <j.0:hasOriginPort rdf:resource="#BrainVizCreator_node_brain_visualization"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="brain_visualization">
+                                    <rdfs:comment>center:x=107.49517059326172,y=291.29495668411255</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasLink>
+                  <j.0:OutputLink rdf:ID="BrainVizCreator_node_p_value_output">
+                        <j.0:hasOriginNode rdf:resource="#BrainVizCreator_node"/>
+                        <j.0:hasOriginPort rdf:resource="#BrainVizCreator_node_p_value"/>
+                        <j.0:hasVariable>
+                              <j.0:DataVariable rdf:ID="p_value">
+                                    <rdfs:comment>center:x=215.68161010742188,y=277.8148822784424</rdfs:comment>
+                              </j.0:DataVariable>
+                        </j.0:hasVariable>
+                  </j.0:OutputLink>
+            </j.0:hasLink>
+            <j.0:hasMetadata>
+                  <j.0:Metadata rdf:ID="Meta-Analysis_meta">
+                        <j.0:hasContributor>admin</j.0:hasContributor>
+                        <j.0:lastUpdateTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >2023-04-19T00:00:00Z</j.0:lastUpdateTime>
+                  </j.0:Metadata>
+            </j.0:hasMetadata>
+            <j.0:hasNode rdf:resource="#MetaAnalysis_node"/>
+            <j.0:hasNode rdf:resource="#AddDemographicMergeAndFilter_node"/>
+            <j.0:hasNode rdf:resource="#ShinyMetaAnalysis_node"/>
+            <j.0:hasNode rdf:resource="#BrainVizCreator_node"/>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="p_value_orole">
+                        <j.0:mapsToVariable rdf:resource="#p_value"/>
+                        <j.0:hasRoleID>p_value</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="log_orole">
+                        <j.0:mapsToVariable rdf:resource="#log"/>
+                        <j.0:hasRoleID>log</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasOutputRole>
+                  <j.0:Role rdf:ID="brain_visualization_orole">
+                        <j.0:mapsToVariable rdf:resource="#brain_visualization"/>
+                        <j.0:hasRoleID>brain_visualization</j.0:hasRoleID>
+                        <j.0:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        >0</j.0:hasDimensionality>
+                  </j.0:Role>
+            </j.0:hasOutputRole>
+            <j.0:hasVersion rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+            >3</j.0:hasVersion>
+      </j.0:WorkflowTemplate>
+</rdf:RDF>
+

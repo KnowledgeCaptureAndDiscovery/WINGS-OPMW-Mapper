@@ -6,12 +6,38 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Base64;
 
-public class Uploader {
+import org.apache.commons.io.FileUtils;
+
+public class FilePublisher {
     private HttpURLConnection httpConn;
     private DataOutputStream request;
     private final String boundary = "*****";
     private final String crlf = "\r\n";
     private final String twoHyphens = "--";
+    public String server = null;
+    public String username = null;
+    public String password = null;
+    // Use it when you need to copy (not upload) a file to a specific directory
+    // This directory must be accessible by the user through WebServer (nginx,
+    // apache, etc.)
+    // For example: webServerDirectory: /var/www/html
+    // For example: webServerDomain: http://localhost
+    private Boolean local = true;
+    public String webServerDirectory = null;
+    private String webServerDomain = null;
+
+    public FilePublisher(String server, String username, String password) {
+        this.server = server;
+        this.username = username;
+        this.password = password;
+        this.local = false;
+    }
+
+    public FilePublisher(String webServerDirectory, String webServerDomain) {
+        this.webServerDirectory = webServerDirectory;
+        this.webServerDomain = webServerDomain;
+        this.local = true;
+    }
 
     /**
      * This constructor initializes a new HTTP POST request with content type
@@ -20,7 +46,7 @@ public class Uploader {
      * @param requestURL
      * @throws IOException
      */
-    public Uploader(String requestURL, String username, String password)
+    public void upload(String requestURL, String username, String password)
             throws IOException {
 
         // creates a unique boundary based on time stamp
@@ -61,6 +87,35 @@ public class Uploader {
         byte[] bytes = Files.readAllBytes(uploadFile.toPath());
         request.write(bytes);
     }
+
+    /**
+     * Upload a file to publisher
+     *
+     * @param filePath the path of the file
+     * @return a string with URL
+     * @throws IOException
+     */
+    public String publishFile(String filePath) throws IOException {
+        if (this.local) {
+            File mainScriptFile = new File(filePath.replaceAll("\\s", ""));
+            File toFile = new File(this.webServerDirectory + File.separator + mainScriptFile.getName());
+            FileUtils.copyFile(mainScriptFile, toFile);
+            return this.webServerDirectory + "/" + mainScriptFile.getName();
+        } else {
+            throw new IOException("Server returned non-OK status: " + 500);
+        }
+    }
+    // } else {
+    // Publisher upload = new Publisher(this.uploadURL, this.uploadUsername,
+    // this.uploadPassword);
+    // File mainScriptFile = new File(filePath);
+    // if (this.uploadMaxSize != 0 && mainScriptFile.length() > this.uploadMaxSize)
+    // {
+    // return mainScriptFile.getAbsolutePath();
+    // }
+    // upload.addFilePart("file_param_1", mainScriptFile);
+    // return upload.finish().replaceAll("\n", "");
+    // }
 
     /**
      * Completes the request and receives response from the server.
