@@ -30,7 +30,6 @@ public class ProvNUtils {
    * Convert from ttl/xml to ProvN format and return it as string
    *
    * @param source
-   * @param target
    */
   public static String convertToProvN(Path source) {
     File file = source.toFile();
@@ -44,7 +43,7 @@ public class ProvNUtils {
   /**
    * Get the entity with the given local name from the Document.
    *
-   * @param Document  A document
+   * @param document  A document
    * @param localname The local name of the entity
    * @return The entity with the given local name
    * @throws RuntimeException if the entity is not found
