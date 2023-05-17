@@ -16,6 +16,8 @@ import javax.xml.transform.Source;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+import org.openprovenance.prov.interop.InteropFramework;
+import org.openprovenance.prov.model.Document;
 import org.w3c.dom.Node;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -33,6 +35,7 @@ import org.xmlunit.xpath.XPathEngine;
 
 import edu.isi.kcap.wings.opmm.Catalog;
 import edu.isi.kcap.wings.opmm.FilePublisher;
+import edu.isi.kcap.wings.opmm.ProvNUtils;
 import edu.isi.kcap.wings.opmm.WorkflowExecutionExport;
 import edu.isi.kcap.wings.opmm.WorkflowTemplateExport;
 import junit.framework.Assert;
@@ -133,7 +136,18 @@ public class WorkflowTemplateExportTest {
         "http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd");
     checkAttribute(
         "http://www.opmw.org/exportTest/resource/WorkflowExecutionProcess/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode");
+  }
 
+  @Test
+  public void convertToProvTest() {
+    String source = "meta-regression-execution.ttl";
+    String target = "meta-regression-execution.provn";
+    Path sourcePath = Paths.get(source);
+    Path targetPath = Paths.get(target);
+    String documentString = ProvNUtils.convertToProvN(sourcePath);
+    Document document = ProvNUtils.convertToProvN(sourcePath, targetPath);
+    String entityForSearch = "Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode";
+    ProvNUtils.getEntityByLocalName(document, entityForSearch);
   }
 
   private void checkAttribute(String attributeValue) throws IOException {

@@ -141,6 +141,42 @@
       <artifactId>commons-io</artifactId>
       <version>2.7</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-model</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-xml</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-interop</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-n</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-json</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-rdf</artifactId>
+      <version>0.9.27</version>
+    </dependency>
   </dependencies>
 
   <build>
