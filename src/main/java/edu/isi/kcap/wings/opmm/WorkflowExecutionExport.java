@@ -14,6 +14,7 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 
 /**
@@ -182,6 +183,7 @@ public class WorkflowExecutionExport {
         String runID = wingsExecution.getLocalName();
         String we = executionTemplateNS + runID;
         Individual weInstance = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ACCOUNT).createIndividual(we);
+        ModelUtils.addClassesToIndividual(weInstance, Constants.PROV_ENTITY, opmwModel);
         // add label, run id (local name)
         weInstance.addLabel(runID, null);
         weInstance.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_RUN_ID), runID);
@@ -208,6 +210,7 @@ public class WorkflowExecutionExport {
         user = user.substring(0, user.indexOf("/"));
         String userURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_AGENT + "/" + user;
         Individual userInstance = opmwModel.createClass(Constants.PROV_AGENT).createIndividual(userURI);
+        ModelUtils.addClassesToIndividual(userInstance, Constants.PROV_ENTITY, opmwModel);
         userInstance.addLabel(user, null);
         weInstance.addProperty(opmwModel.createProperty(Constants.PROP_HAS_CONTRIBUTOR), userInstance);
 
@@ -216,6 +219,7 @@ public class WorkflowExecutionExport {
         // Pegasus/OODT, etc.
         String wfSystemURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_AGENT + "/" + "WINGS";
         Individual wingsInstance = opmwModel.createClass(Constants.PROV_AGENT).createIndividual(wfSystemURI);
+        ModelUtils.addClassesToIndividual(wingsInstance, Constants.PROV_ENTITY, opmwModel);
         weInstance.addProperty(opmwModel.createProperty(Constants.PROP_HAS_CREATOR), wingsInstance);
         wingsInstance.addProperty(opmwModel.createProperty(Constants.PROV_ACTED_ON_BEHALF_OF), userInstance);
         wingsInstance.addLabel("WINGS", null);
@@ -253,6 +257,7 @@ public class WorkflowExecutionExport {
                     + runID + "_" + wingsStep.getLocalName();
             Individual executionStep = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_PROCESS)
                     .createIndividual(executionStepURI);
+            ModelUtils.addClassesToIndividual(executionStep, Constants.PROV_ENTITY, opmwModel);
             executionStep.addLabel(wingsStep.getLocalName(), null);
             executionStep.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAD_INVOCATION_COMMAND),
                     invLine);
@@ -275,6 +280,7 @@ public class WorkflowExecutionExport {
                     + wingsStep.getLocalName() + "_config";
             Individual stepConfig = opmwModel.createClass(Constants.OPMW_SOFTWARE_CONFIGURATION)
                     .createIndividual(configURI);
+            ModelUtils.addClassesToIndividual(stepConfig, Constants.PROV_ENTITY, opmwModel);
             stepConfig.addLabel(stepConfig.getLocalName(), null);
 
             String configLocation = executionScript.getString().replace("/run", "");
@@ -326,6 +332,7 @@ public class WorkflowExecutionExport {
                         + "/" + runID + "_" + variable.getLocalName();
                 Individual executionArtifact = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT)
                         .createIndividual(executionArtifactURI);
+                ModelUtils.addClassesToIndividual(executionArtifact, Constants.PROV_ENTITY, opmwModel);
                 executionArtifact.addLabel(variable.getLocalName(), null);
                 String pathFile = binding.toString();
                 // String dataLocation = uploadFile(pathFile);
@@ -358,12 +365,14 @@ public class WorkflowExecutionExport {
                 // create the individual
                 if (concreteTemplateExport.isTemplatePublished()) {
                     OntClass aClass = concreteTemplateExport.getOpmwModel().createClass(OPMW_DATA_VARIABLE);
+
                     concreteTemplateVariable = concreteTemplateExport.getOpmwModel()
                             .createIndividual(concreteTemplateVariableURI, aClass);
                 } else {
                     concreteTemplateVariable = concreteTemplateExport.getOpmwModel()
                             .getIndividual(concreteTemplateVariableURI);
                 }
+                ModelUtils.addClassesToIndividual(concreteTemplateVariable, Constants.PROV_ENTITY, opmwModel);
                 executionArtifact.addProperty(
                         opmwModel.createAnnotationProperty(Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT),
                         concreteTemplateVariable);
@@ -383,6 +392,7 @@ public class WorkflowExecutionExport {
                         + runID + "_" + param.getLocalName();
                 Individual parameter = opmwModel.createClass(Constants.OPMW_WORKFLOW_EXECUTION_ARTIFACT)
                         .createIndividual(parameterURI);
+                ModelUtils.addClassesToIndividual(parameter, Constants.PROV_ENTITY, opmwModel);
                 parameter.addLabel(param.getLocalName(), null);
                 parameter.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_VALUE), paramValue);
                 parameter.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_IS_ARTIFACT_OF_EXECUTION),
@@ -405,7 +415,7 @@ public class WorkflowExecutionExport {
                     concreteTemplateParameter = concreteTemplateExport.getOpmwModel()
                             .getIndividual(concreteTemplateParameterURI);
                 }
-
+                ModelUtils.addClassesToIndividual(concreteTemplateParameter, Constants.PROV_ENTITY, opmwModel);
                 parameter.addProperty(
                         opmwModel.createAnnotationProperty(Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_ARTIFACT),
                         concreteTemplateParameter);
@@ -431,6 +441,7 @@ public class WorkflowExecutionExport {
                 concreteTemplateProcess = concreteTemplateExport.getOpmwModel()
                         .getIndividual(concreteTemplateProcessURI);
             }
+            ModelUtils.addClassesToIndividual(executionStep, Constants.PROV_ENTITY, opmwModel);
             executionStep.addProperty(
                     opmwModel.createAnnotationProperty(Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE_PROCESS),
                     concreteTemplateProcess);

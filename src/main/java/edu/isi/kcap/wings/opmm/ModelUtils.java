@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -148,6 +150,17 @@ public class ModelUtils {
         }
         i.addProperty(model.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION), path);
         return i;
+    }
+
+    /**
+     * Add a class to an individual
+     * 
+     * @param i
+     * @param classUri
+     * @param model
+     */
+    public static void addClassesToIndividual(Individual i, String classUri, OntModel model) {
+        i.addProperty(model.createProperty(Constants.RDF_TYPE), model.createClass(classUri));
     }
 
     /**
