@@ -143,6 +143,7 @@ public class WorkflowTemplateExport {
             // no export is necessary
             transformedTemplate = opmwModel.createClass(Constants.OPMW_WORKFLOW_TEMPLATE)
                     .createIndividual(foundTemplateURI.getURI());
+            ModelUtils.addClassesToIndividual(transformedTemplate, Constants.PROV_ENTITY, opmwModel);
             // String queryExec =
             // QueriesWorkflowExecutionExport.getOPMWExecutionsWithRunID(wingsExecution.getLocalName());
             // QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec,
@@ -201,6 +202,7 @@ public class WorkflowTemplateExport {
         String wt = workflowTemplateNS + wingsTemplate.getLocalName() + "_v" + versionNumber;
         Individual abstractTemplateInstance;
         Individual wtInstance = opmwModel.createClass(Constants.OPMW_WORKFLOW_TEMPLATE).createIndividual(wt);
+        ModelUtils.addClassesToIndividual(wtInstance, Constants.PROV_ENTITY, opmwModel);
         // add label
         wtInstance.addLabel(wingsTemplate.getLocalName(), null);
         // add version number (internal, with owlInfo)
@@ -292,6 +294,7 @@ public class WorkflowTemplateExport {
                     varNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_DATA_VARIABLE + "/";
                     varURI = varNS + wingsTemplate.getLocalName() + "_v" + versionNumber + "_" + var.getLocalName();
                     workflowVariable = opmwModel.createClass(Constants.OPMW_DATA_VARIABLE).createIndividual(varURI);
+                    ModelUtils.addClassesToIndividual(workflowVariable, Constants.PROV_ENTITY, opmwModel);
                     workflowVariable.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_IS_VARIABLE_OF_TEMPLATE),
                             wtInstance);
                     if (dim != null) {
@@ -331,6 +334,7 @@ public class WorkflowTemplateExport {
                             .createIndividual(varURI);
                     workflowVariable.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_IS_PARAMETER_OF_TEMPLATE),
                             wtInstance);
+                    ModelUtils.addClassesToIndividual(workflowVariable, Constants.PROV_ENTITY, opmwModel);
                 }
                 // common for both variables and parameters
                 workflowVariable.addLabel(var.getLocalName(), null);
@@ -367,12 +371,14 @@ public class WorkflowTemplateExport {
             // the same type, that is what it's used to disambiguate.
             Individual templateProcessInstance = opmwModel.createClass(Constants.OPMW_WORKFLOW_TEMPLATE_PROCESS)
                     .createIndividual(templateProcessURI);
+            ModelUtils.addClassesToIndividual(templateProcessInstance, Constants.PROV_ENTITY, opmwModel);
             templateProcessInstance.addLabel(nodeID.getLocalName(), null);
             // retrieve the right type from the component catalog, and add it as the type as
             // well
             String componentBindingURI = componentBinding.getURI();
             opmwModel.createClass(componentCatalog.getCatalogTypeForComponentInstanceURI(componentBindingURI))
                     .createIndividual(templateProcessURI);
+
             // add that that step belongs to the template above.
             templateProcessInstance.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_IS_STEP_OF_TEMPLATE),
                     wtInstance);
@@ -435,6 +441,7 @@ public class WorkflowTemplateExport {
                 String varURI = varNS + wingsTemplate.getLocalName() + "_v" + versionNumber + "_"
                         + outVar.getLocalName();
                 Individual outputVar = this.opmwModel.getIndividual(varURI);
+                ModelUtils.addClassesToIndividual(outputVar, Constants.PROV_ENTITY, opmwModel);
                 outputVar.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_IGB), templateProcessInstance);
                 if (role != null) {
                     String roleSpecialization = componentCatalog.addRoleProperty(role.getString(),
