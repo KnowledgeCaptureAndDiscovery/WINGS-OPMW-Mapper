@@ -10,7 +10,6 @@
   <description>Wings OPM (Open Provenance Model) Mapper</description>
   <version>1.2.4</version>
 
-
   <properties>
     <log4j.version>2.16.0</log4j.version>
     <apache-jena.version>3.7.0</apache-jena.version>
@@ -140,6 +139,42 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-model</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-xml</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-interop</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-n</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-json</artifactId>
+      <version>0.9.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openprovenance.prov</groupId>
+      <artifactId>prov-rdf</artifactId>
+      <version>0.9.27</version>
     </dependency>
   </dependencies>
 
