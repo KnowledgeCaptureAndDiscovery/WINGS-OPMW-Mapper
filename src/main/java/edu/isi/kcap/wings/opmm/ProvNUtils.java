@@ -2,18 +2,13 @@ package edu.isi.kcap.wings.opmm;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.OutputStream;
-import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.List;
 
 import org.openprovenance.prov.interop.InteropFramework;
-import org.openprovenance.prov.model.Bundle;
 import org.openprovenance.prov.model.Document;
 import org.openprovenance.prov.model.Entity;
 import org.openprovenance.prov.model.ProvUtilities;
-import org.openprovenance.prov.model.Statement;
-import org.openprovenance.prov.model.StatementOrBundle;
 
 public class ProvNUtils {
 
