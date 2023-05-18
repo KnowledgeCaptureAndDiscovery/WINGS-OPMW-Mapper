@@ -1,12 +1,20 @@
 package edu.isi.kcap.wings.opmm;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+
+import edu.isi.kcap.wings.opmm.DataTypes.Links;
 
 /**
  *
  * @author Daniel Garijo
  */
 public class Mapper {
+    private static final String EXECUTION = "execution";
+    private static final String EXPANDED_TEMPLATE = "expandedTemplate";
+    private static final String ABSTRACT_TEMPLATE = "abstractTemplate";
+
     /**
      * Most of these will be reused from the old code, because it works.
      * The mapper initializes the catalog and calls to the template exporter.
@@ -40,13 +48,17 @@ public class Mapper {
      *                                             mapper
      * @param filePublisher:                       The file publisher that will be
      *                                             used to publish the files
+     * @return
      * @throws IOException
      */
-    public static void main(String domain, String exportPrefix, String exportUrl, String catalogRepository,
+    public static HashMap<String, Links> main(String domain, String exportPrefix, String exportUrl,
+            String catalogRepository,
             String componentLibraryFilePath, String planFilePath, String endpointQueryURI, String endpointPostURI,
             String executionDestinationFilePath, String expandedTemplateDestinationFilePath, String abstractFilePath,
             FilePublisher filePublisher, String serialization)
             throws IOException {
+        // Response
+        HashMap<String, Links> response = new HashMap<String, Links>();
         // Create the catalog
         Catalog catalog = new Catalog(domain, exportPrefix,
                 catalogRepository, componentLibraryFilePath);
@@ -54,41 +66,84 @@ public class Mapper {
                 exportPrefix,
                 endpointQueryURI, domain,
                 filePublisher);
+
+        exportCatalog(catalogRepository, serialization, response, catalog);
+        exportExecution(executionDestinationFilePath, serialization, response, executionExport);
+        if (!executionExport.isExecPublished()) {
+            exportExpandedTemplate(expandedTemplateDestinationFilePath, serialization, response, executionExport);
+            exportAbstractTemplate(abstractFilePath, serialization, response, executionExport);
+        }
+        return response;
+    }
+
+    private static void exportCatalog(String catalogRepository, String serialization, HashMap<String, Links> response,
+            Catalog catalog) throws IOException {
         // Export the catalog
         String domainPath = catalog.exportCatalog(catalogRepository, serialization);
         // this.publishFile(tstoreurl, catalog.getDomainGraphURI(),
         // new File(domainPath).getAbsolutePath());
-
-        String abstractGraphUri = null;
-        String expandedTemplateGraphUri = null;
-
-        // execution
-        String graphUri = executionExport.exportAsOPMW(executionDestinationFilePath, serialization);
-        if (!executionExport.isExecPublished()) {
-            // TODO: enable publishing of execution
-            // this.publishFile(endpointPostURI, graphUri, executionFilePath);
-            expandedTemplateGraphUri = executionExport.getConcreteTemplateExport().exportAsOPMW(
-                    expandedTemplateDestinationFilePath,
-                    serialization);
-            // TODO: enable publishing of expanded template
-            // if (!executionExport.getConcreteTemplateExport().isTemplatePublished()){
-            // this.publishFile(endpointPostURI, expandedTemplateGraphUri,
-            // expandedTemplateFilePath);
-            // }
-
-            // abstract
-            WorkflowTemplateExport abstractTemplateExport = executionExport.getConcreteTemplateExport()
-                    .getAbstractTemplateExport();
-            if (abstractTemplateExport != null) {
-                abstractGraphUri = abstractTemplateExport.exportAsOPMW(abstractFilePath, serialization);
-                // if (!abstractTemplateExport.isTemplatePublished())
-                // this.publishFile(tstoreurl, abstractGraphUri, abstractFilePath);
+        response.put("catalog", new Links() {
+            {
+                path = domainPath;
+                url = catalog.getDomainGraphURI();
             }
+        });
+    }
+
+    private static void exportExpandedTemplate(String expandedTemplateDestinationFilePath, String serialization,
+            HashMap<String, Links> response, WorkflowExecutionExport executionExport) throws IOException {
+        String expandedTemplateGraphUri = executionExport.getConcreteTemplateExport().exportAsOPMW(
+                expandedTemplateDestinationFilePath,
+                serialization);
+        // TODO: enable publishing of expanded template
+        // if (!executionExport.getConcreteTemplateExport().isTemplatePublished()){
+        // this.publishFile(endpointPostURI, expandedTemplateGraphUri,
+        // expandedTemplateFilePath);
+        // }
+        response.put(EXPANDED_TEMPLATE, new Links() {
+            {
+                path = expandedTemplateDestinationFilePath;
+                url = expandedTemplateGraphUri;
+            }
+        });
+    }
+
+    private static void exportExecution(String executionDestinationFilePath, String serialization,
+            HashMap<String, Links> response, WorkflowExecutionExport executionExport)
+            throws IOException, FileNotFoundException {
+        String executionGraphUri = executionExport.exportAsOPMW(executionDestinationFilePath, serialization);
+        // this.publishFile(endpointPostURI, graphUri, executionFilePath);
+        response.put(EXECUTION, new Links() {
+            {
+                path = executionGraphUri;
+                url = executionDestinationFilePath;
+            }
+        });
+    }
+
+    private static void exportAbstractTemplate(String abstractFilePath, String serialization,
+            HashMap<String, Links> response,
+            WorkflowExecutionExport executionExport) throws IOException {
+        WorkflowTemplateExport abstractTemplateExport = executionExport.getConcreteTemplateExport()
+                .getAbstractTemplateExport();
+        if (abstractTemplateExport != null) {
+            String abstractGraphUri = abstractTemplateExport.exportAsOPMW(abstractFilePath, serialization);
+            // if (!abstractTemplateExport.isTemplatePublished())
+            // this.publishFile(tstoreurl, abstractGraphUri, abstractFilePath);
+            response.put(ABSTRACT_TEMPLATE, new Links() {
+                {
+                    path = abstractFilePath;
+                    url = abstractGraphUri;
+                }
+            });
+        } else {
+            response.put(ABSTRACT_TEMPLATE, new Links() {
+                {
+                    path = null;
+                    url = null;
+                }
+            });
         }
-        System.out.println(domainPath);
-        System.out.println(graphUri);
-        System.out.println(expandedTemplateGraphUri);
-        System.out.println(abstractGraphUri);
     }
 
 }
