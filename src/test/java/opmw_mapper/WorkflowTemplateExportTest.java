@@ -106,21 +106,60 @@ public class WorkflowTemplateExportTest {
   }
 
   @Test
-  public void testWorkflowExecutionExport() throws IOException {
+  public void testTheFullPipeline() throws IOException {
+    // Create a new FilePublisher who is responsible to publish the inputs, code,
+    // outputs, etc.
+    // In this case, we aren't uploading files to a server, so we just use a local
+    // directory
+    // and the local directory is connected to a Web server.
     FilePublisher p = new FilePublisher("tmp/", "http://localhost");
+    // Some directories are created to store the files to store:
+    // 1. the catalog of components (Catalog),
     String components = "src/test/resources/neuro/components.owl";
+    // 2. the execution of the workflow (WorkflowExecutionExport),
     String executionPath = "src/test/resources/neuro/execution.owl";
+    // 3. the expanded template
     String expandedTemplatePath = "src/test/resources/neuro/expandedTemplate.owl";
+    // 4. the original template
     String originalTemplatePath = "src/test/resources/neuro/originalTemplate.owl";
+    // 5. the plan (WorkflowExecutionExport).
     String planPath = "src/test/resources/neuro/plan.owl";
+    // 6. the seeded template
     String seededTemplate = "src/test/resources/neuro/seededTemplate.owl";
-    Catalog c = new Catalog("genomics", "testExport", "domains", components);
+
+    /*
+     * Fake data to test the export
+     */
+    // Domain: it is wings domain concept: it is the name of the domain
     String domain = "neuroDisk";
-    WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, "http://www.opmw.org/", "exportTest",
-        "https://endpoint.mint.isi.edu/provenance/query", domain, p);
+    // exportName: used by the catalog to create the URL:
+    // w3id.org/opmw/wings/{exportName}/{domain}#Components
+    // w3id.org/opmw/wings/{exportName}/{domain}#Data
+    String exportName = "testExport";
+    // catalogRepositoryDirectory: the directory where the catalog will be stored
+    String catalogRepositoryDirectory = "domains";
+
+    /**
+     * The catalog is a Class designed to deal the versioning of Data and Catalog
+     */
+    Catalog c = new Catalog(domain, exportName, catalogRepositoryDirectory, components);
+
+    // Variables used to export create the URL
+    String exportUrl = "http://www.opmw.org/";
+    String exportPrefix = "exportTest";
+    String endpointURI = "https://endpoint.mint.isi.edu/provenance/query";
+
+    // Create WorkflowExecutionExport: A class designed to export WINGS workflow
+    // execution traces in RDF according to the OPMW-PROV model.
+    WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, exportUrl, exportPrefix, endpointURI, domain,
+        p);
+
+    // Function: `exportAsOPMW` that will check if an execution exists and then
+    // transforms it as RDF under the OPMW model.
     e.exportAsOPMW("meta-regression-execution.ttl", "TTL");
     e.exportAsOPMW("meta-regression-execution.xml", "RDF/XML");
 
+    // Checking if some entities are in the RDF file
     checkAttribute(
         "http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_p_value");
     checkAttribute("http://www.opmw.org/exportTest/resource/Agent/WINGS");

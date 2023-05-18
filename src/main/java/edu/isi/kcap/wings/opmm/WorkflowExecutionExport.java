@@ -4,17 +4,12 @@ import static edu.isi.kcap.wings.opmm.Constants.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 
 /**
@@ -28,9 +23,13 @@ import org.apache.jena.rdf.model.Resource;
  * @author Daniel Garijo, with the help of Tirth Rajen Mehta
  */
 public class WorkflowExecutionExport {
-    private final OntModel wingsExecutionModel;
+    // Variable to store the execution model (source)
+    private final OntModel executionModel;
+    // Variable to store the opmwModel (target)
     private OntModel opmwModel;
-    private final Catalog componentCatalog;// needed to publish expanded templates and the extensions of opmw.
+    // Neeeded to publish the execution
+    private final Catalog componentCatalog;
+    //
     private final String PREFIX_EXPORT_RESOURCE;
     private final String endpointURI;// URI of the endpoint where everything is published.
     private final String exportUrl;
@@ -48,30 +47,43 @@ public class WorkflowExecutionExport {
     // constructs?
     private String domain;
 
-    public boolean isExecPublished() {
-        return isExecPublished;
-    }
+    /**
+     * Default constructor for exporting executions {@link #executionModel}
+     * Create a OntModel: wingsExecutionModel from the executionFile
+     * Create a Model to store the OPMW model from the wingsExecutionModel
+     * {@link #executionModel}
+     *
+     * @param executionFile: The execution file to be exported
+     * @param catalog        The class to deal with versioning
+     * @param exportUrl:     Used to create the export URL
+     *                       {exportUrl}/{exportName}/resource/
+     * @param exportName:    Used to create the export URL
+     *                       {exportUrl}/{exportName}/resource/
+     * @param endpointURI    URI of the endpoint where everything is published.
+     * @param domain:        The Wings domain where the execution is being exported
+     * @param filePublisher: The class to publish the files (e.g. to S3, local,
+     *                       remote)
+     */
+    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
+            String endpointURI, String domain, FilePublisher filePublisher) {
+        // Store the parameters as fields
+        this.componentCatalog = catalog;
+        this.filePublisher = filePublisher;
+        this.endpointURI = endpointURI;
+        this.exportName = exportName;
+        this.exportUrl = exportUrl;
+        this.domain = domain;
 
-    private boolean isExecPublished;
+        // Create the execution model from the execution file
+        this.executionModel = ModelUtils.loadModel(executionFile);
+        // Create the OPMW model to store the execution model data in OPMW format
+        this.opmwModel = ModelUtils.initializeModel(opmwModel);
+        // If the export url is not provided then use the default export url
+        if (exportUrl == null)
+            exportUrl = Constants.PREFIX_EXPORT_GENERIC;
 
-    public void setUploadURL(String uploadURL) {
-        this.uploadURL = uploadURL;
-    }
-
-    public void setUploadUsername(String uploadUsername) {
-        this.uploadUsername = uploadUsername;
-    }
-
-    public void setUploadPassword(String uploadPassword) {
-        this.uploadPassword = uploadPassword;
-    }
-
-    public void setUploadMaxSize(long uploadMaxSize) {
-        this.uploadMaxSize = uploadMaxSize;
-    }
-
-    public void setUploadDirectory(String uploadDirectory) {
-        this.uploadDirectory = uploadDirectory;
+        PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
+        isExecPublished = false;
     }
 
     /**
@@ -84,57 +96,17 @@ public class WorkflowExecutionExport {
      */
     public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
             String endpointURI, String domain) {
-        this.wingsExecutionModel = ModelUtils.loadModel(executionFile);
+        this.executionModel = ModelUtils.loadModel(executionFile);
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
         if (exportUrl == null)
             exportUrl = Constants.PREFIX_EXPORT_GENERIC;
-
-        PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
+        this.PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
         this.endpointURI = endpointURI;
         this.exportName = exportName;
         this.exportUrl = exportUrl;
-
-        isExecPublished = false;
+        this.isExecPublished = false;
         this.domain = domain;
-    }
-
-    /**
-     * Default constructor for exporting executions
-     *
-     * @param executionFile
-     * @param catalog
-     * @param exportName
-     * @param endpointURI
-     */
-    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
-            String endpointURI, String domain, FilePublisher filePublisher) {
-        this.wingsExecutionModel = ModelUtils.loadModel(executionFile);
-        this.opmwModel = ModelUtils.initializeModel(opmwModel);
-        this.componentCatalog = catalog;
-        this.filePublisher = filePublisher;
-        if (exportUrl == null)
-            exportUrl = Constants.PREFIX_EXPORT_GENERIC;
-
-        PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
-        this.endpointURI = endpointURI;
-        this.exportName = exportName;
-        this.exportUrl = exportUrl;
-
-        isExecPublished = false;
-        this.domain = domain;
-    }
-
-    /**
-     * Function that will return the transformed execution URI.
-     *
-     * @return transformed execution URI. Null if error
-     */
-    public String getTransformedExecutionURI() {
-        if (transformedExecutionURI == null) {
-            transform();
-        }
-        return transformedExecutionURI;
     }
 
     /**
@@ -145,13 +117,13 @@ public class WorkflowExecutionExport {
     public void transform() {
         try {
             // select THE execution instance
-            Individual wingsExecution = (Individual) wingsExecutionModel.getOntClass(Constants.WINGS_EXECUTION)
+            Individual wingsExecution = (Individual) executionModel.getOntClass(Constants.WINGS_EXECUTION)
                     .listInstances().next();
             // load the plan of the execution. It has critical information such as the
             String plan = wingsExecution
-                    .getPropertyValue(wingsExecutionModel.getProperty(Constants.WINGS_PROP_HAS_PLAN)).asResource()
+                    .getPropertyValue(executionModel.getProperty(Constants.WINGS_PROP_HAS_PLAN)).asResource()
                     .getURI();
-            wingsExecutionModel.add(ModelUtils.loadModel(plan));
+            executionModel.add(ModelUtils.loadModel(plan));
             // ask if an execution with same run id exists. If so, return URI. The local
             // name of the execution is its run id.
             String queryExec = QueriesWorkflowExecutionExport.getOPMWExecutionsWithRunID(wingsExecution.getLocalName());
@@ -193,7 +165,7 @@ public class WorkflowExecutionExport {
         // hasTime, endTime and execution status.
         String queryExecutionMetadata = QueriesWorkflowExecutionExport
                 .getWINGSExecutionMetadata(wingsExecution.getURI());
-        ResultSet rs = ModelUtils.queryLocalRepository(queryExecutionMetadata, wingsExecutionModel);
+        ResultSet rs = ModelUtils.queryLocalRepository(queryExecutionMetadata, executionModel);
         // there is only 1 execution per file
         if (rs.hasNext()) {
             QuerySolution qs = rs.next();
@@ -226,7 +198,7 @@ public class WorkflowExecutionExport {
 
         // get expanded template loaded in local model (for parameter linking)
         String queryExpandedTemplate = QueriesWorkflowExecutionExport.getWINGSExpandedTemplate();
-        rs = ModelUtils.queryLocalRepository(queryExpandedTemplate, wingsExecutionModel);
+        rs = ModelUtils.queryLocalRepository(queryExpandedTemplate, executionModel);
         String expandedTemplateURI = null;
         if (rs.hasNext()) {
             expandedTemplateURI = rs.next().getResource("?expTemplate").getNameSpace();// the namespace is better for
@@ -244,7 +216,7 @@ public class WorkflowExecutionExport {
 
         // transform all steps and data dependencies (params are in expanded template)
         String queryExecutionStepMetadata = QueriesWorkflowExecutionExport.getWINGSExecutionStepsAndMetadata();
-        rs = ModelUtils.queryLocalRepository(queryExecutionStepMetadata, wingsExecutionModel);
+        rs = ModelUtils.queryLocalRepository(queryExecutionStepMetadata, executionModel);
         while (rs.hasNext()) {
             QuerySolution qs = rs.next();
             Resource wingsStep = qs.getResource("?step");
@@ -322,7 +294,7 @@ public class WorkflowExecutionExport {
 
             // for each step get its i/o (plan)
             String stepVariables = QueriesWorkflowExecutionExport.getWINGSExecutionStepI_O(wingsStep.getURI());
-            ResultSet rsVar = ModelUtils.queryLocalRepository(stepVariables, wingsExecutionModel);
+            ResultSet rsVar = ModelUtils.queryLocalRepository(stepVariables, executionModel);
             while (rsVar.hasNext()) {
                 QuerySolution qsVar = rsVar.next();
                 String varType = qsVar.getResource("?varType").getURI();
@@ -510,4 +482,42 @@ public class WorkflowExecutionExport {
         this.concreteTemplateExport = concreteTemplateExport;
     }
 
+    /**
+     * Function that will return the transformed execution URI.
+     *
+     * @return transformed execution URI. Null if error
+     */
+    public String getTransformedExecutionURI() {
+        if (transformedExecutionURI == null) {
+            transform();
+        }
+        return transformedExecutionURI;
+    }
+
+    // Getters and setters
+    public boolean isExecPublished() {
+        return isExecPublished;
+    }
+
+    private boolean isExecPublished;
+
+    public void setUploadURL(String uploadURL) {
+        this.uploadURL = uploadURL;
+    }
+
+    public void setUploadUsername(String uploadUsername) {
+        this.uploadUsername = uploadUsername;
+    }
+
+    public void setUploadPassword(String uploadPassword) {
+        this.uploadPassword = uploadPassword;
+    }
+
+    public void setUploadMaxSize(long uploadMaxSize) {
+        this.uploadMaxSize = uploadMaxSize;
+    }
+
+    public void setUploadDirectory(String uploadDirectory) {
+        this.uploadDirectory = uploadDirectory;
+    }
 }
