@@ -164,24 +164,10 @@ public class WorkflowTemplateExportTest {
     e.exportAsOPMW(executionOPMW_XML, "RDF/XML");
 
     // Checking if some entities are in the RDF file
-    List<String> entitiesSearched = generatedExpectedValues();
+    List<String> entitiesSearched = MockupData.metaAnalysisWorkflowExecution();
     for (String entity : entitiesSearched) {
-      checkExecutionXML(entity, executionOPMW_XML);
+      Utils.checkExecutionXML(entity, executionOPMW_XML);
     }
-  }
-
-  private List<String> generatedExpectedValues() {
-    List<String> entitiesSearched = new ArrayList<String>();
-    entitiesSearched.add(
-        "http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_p_value");
-    entitiesSearched.add(
-        "http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0001");
-    entitiesSearched.add("http://www.opmw.org/exportTest/resource/Agent/WINGS");
-    entitiesSearched.add(
-        "http://www.opmw.org/exportTest/resource/SoftwareConfiguration/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode_config");
-    entitiesSearched.add(
-        "http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd");
-    return entitiesSearched;
   }
 
   @Test
@@ -194,25 +180,6 @@ public class WorkflowTemplateExportTest {
     Document document = ProvNUtils.convertToProvN(sourcePath, targetPath);
     String entityForSearch = "Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode";
     ProvNUtils.getEntityByLocalName(document, entityForSearch);
-  }
-
-  /*
-   * Check if AttributeValue is in the RDF file (format: RDF/XML)
-   *
-   * @param attributeValue: the value of the attribute rdf:about
-   *
-   * @param rdfFilePath: the path of the RDF file where the attributeValue should
-   * be
-   */
-  private void checkExecutionXML(String attributeValue, String rdfFilePath) throws IOException {
-    Path xmlPath = Paths.get(rdfFilePath);
-    Source source = Input.from(Files.newInputStream(xmlPath)).build();
-    XPathEngine xpathEngine = new JAXPXPathEngine();
-    Map<String, String> p2u = Collections.singletonMap("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-    xpathEngine.setNamespaceContext(p2u);
-    String xpathExpression = "//*[@rdf:about='" + attributeValue + "']";
-    Iterable<Node> text = xpathEngine.selectNodes(xpathExpression, source);
-    Assert.assertTrue(text.iterator().hasNext());
   }
 
   private String removeDates(String turtleFile) throws IOException {
