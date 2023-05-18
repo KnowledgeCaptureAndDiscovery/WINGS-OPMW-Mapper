@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
@@ -156,21 +158,30 @@ public class WorkflowTemplateExportTest {
 
     // Function: `exportAsOPMW` that will check if an execution exists and then
     // transforms it as RDF under the OPMW model.
-    e.exportAsOPMW("meta-regression-execution.ttl", "TTL");
-    e.exportAsOPMW("meta-regression-execution.xml", "RDF/XML");
+    String executionOPMW_TTL = "meta-regression-execution.ttl";
+    String executionOPMW_XML = "meta-regression-execution.xml";
+    e.exportAsOPMW(executionOPMW_TTL, "TTL");
+    e.exportAsOPMW(executionOPMW_XML, "RDF/XML");
 
     // Checking if some entities are in the RDF file
-    checkAttribute(
+    List<String> entitiesSearched = generatedExpectedValues();
+    for (String entity : entitiesSearched) {
+      checkExecutionXML(entity, executionOPMW_XML);
+    }
+  }
+
+  private List<String> generatedExpectedValues() {
+    List<String> entitiesSearched = new ArrayList<String>();
+    entitiesSearched.add(
         "http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_p_value");
-    checkAttribute("http://www.opmw.org/exportTest/resource/Agent/WINGS");
-    checkAttribute(
-        "http://www.opmw.org/exportTest/resource/SoftwareConfiguration/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode_config");
-    checkAttribute(
+    entitiesSearched.add(
         "http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0001");
-    checkAttribute(
+    entitiesSearched.add("http://www.opmw.org/exportTest/resource/Agent/WINGS");
+    entitiesSearched.add(
+        "http://www.opmw.org/exportTest/resource/SoftwareConfiguration/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode_config");
+    entitiesSearched.add(
         "http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd");
-    checkAttribute(
-        "http://www.opmw.org/exportTest/resource/WorkflowExecutionProcess/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode");
+    return entitiesSearched;
   }
 
   @Test
@@ -185,8 +196,16 @@ public class WorkflowTemplateExportTest {
     ProvNUtils.getEntityByLocalName(document, entityForSearch);
   }
 
-  private void checkAttribute(String attributeValue) throws IOException {
-    Path xmlPath = Paths.get("meta-regression-execution.xml");
+  /*
+   * Check if AttributeValue is in the RDF file (format: RDF/XML)
+   *
+   * @param attributeValue: the value of the attribute rdf:about
+   *
+   * @param rdfFilePath: the path of the RDF file where the attributeValue should
+   * be
+   */
+  private void checkExecutionXML(String attributeValue, String rdfFilePath) throws IOException {
+    Path xmlPath = Paths.get(rdfFilePath);
     Source source = Input.from(Files.newInputStream(xmlPath)).build();
     XPathEngine xpathEngine = new JAXPXPathEngine();
     Map<String, String> p2u = Collections.singletonMap("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
