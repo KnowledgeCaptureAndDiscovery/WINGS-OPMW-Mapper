@@ -1,9 +1,6 @@
 package edu.isi.kcap.wings.opmm;
 
-import java.io.File;
 import java.io.IOException;
-
-import org.apache.jena.dboe.base.file.FileException;
 
 /**
  *
@@ -44,7 +41,7 @@ public class Mapper {
             String componentLibraryFilePath, String planFilePath, String endpointQueryURI, String endpointPostURI,
             String executionDestinationFilePath, String expandedTemplateDestinationFilePath, String abstractFilePath,
             FilePublisher filePublisher, String serialization)
-            throws IOException, FileException {
+            throws IOException {
         // Create the catalog
         Catalog catalog = new Catalog(domain, exportPrefix,
                 catalogRepository, componentLibraryFilePath);
