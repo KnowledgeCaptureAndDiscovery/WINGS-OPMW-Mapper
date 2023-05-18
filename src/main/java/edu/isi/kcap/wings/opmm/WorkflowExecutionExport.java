@@ -3,6 +3,7 @@ package edu.isi.kcap.wings.opmm;
 import static edu.isi.kcap.wings.opmm.Constants.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
@@ -433,7 +434,7 @@ public class WorkflowExecutionExport {
      * @param serialization serialization of choice: RDF/XML, TTL, etc.
      * @throws IOException
      */
-    public String exportAsOPMW(String filepath, String serialization) throws IOException {
+    public String exportAsOPMW(String filepath, String serialization) throws IOException, FileNotFoundException {
         if (transformedExecutionURI == null) {
             this.transform();
         }

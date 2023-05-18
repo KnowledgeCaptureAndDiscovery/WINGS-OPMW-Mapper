@@ -62,7 +62,11 @@ public class ModelUtils {
      * @param mode    serialization to export the model in
      * @throws IOException
      */
-    public static void exportRDFFile(String outFile, OntModel model, String mode) throws IOException {
+    public static void exportRDFFile(String outFile, OntModel model, String mode)
+            throws IOException, FileNotFoundException {
+        if (outFile == null) {
+            throw new FileNotFoundException("File not found");
+        }
         OutputStream out;
         out = new FileOutputStream(outFile);
         model.write(out, mode);
@@ -154,7 +158,7 @@ public class ModelUtils {
 
     /**
      * Add a class to an individual
-     * 
+     *
      * @param i
      * @param classUri
      * @param model
