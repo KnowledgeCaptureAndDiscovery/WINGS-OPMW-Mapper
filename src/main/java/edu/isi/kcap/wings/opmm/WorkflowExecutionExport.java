@@ -208,7 +208,7 @@ public class WorkflowExecutionExport {
             // publish expanded template. The expanded template will publish the template if
             // necessary.
             concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog,
-                    this.exportUrl, this.exportName, this.endpointURI, this.domain, true);
+                    this.exportUrl, this.exportName, this.endpointURI, this.domain);
             concreteTemplateExport.transform();
             System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
         } else {

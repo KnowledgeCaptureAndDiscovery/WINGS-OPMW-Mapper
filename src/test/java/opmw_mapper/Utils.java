@@ -84,7 +84,6 @@ public class Utils {
 
     public static ArrayList<Integer> queryresult(String query, OntModel m, String varToQuery1, String varToQuery2) {
         ResultSet r = Utils.queryLocalRepository(query, m);
-        String result = "";
         HashSet<String> hs1 = new HashSet<>();
         HashSet<String> hs2 = new HashSet<>();
         while (r.hasNext()) {
@@ -109,7 +108,6 @@ public class Utils {
     public static ArrayList<Integer> queryresultALL(String query, OntModel m, String varToQuery1, String varToQuery2,
             String varToQuery3) {
         ResultSet r = Utils.queryLocalRepository(query, m);
-        String result = "";
         HashSet<String> hs1 = new HashSet<>();
         HashSet<String> hs2 = new HashSet<>();
         HashSet<String> hs3 = new HashSet<>();
@@ -139,7 +137,6 @@ public class Utils {
 
     public static HashSet<String> queryresult112(String query, OntModel m, String varToQuery) {
         ResultSet r = Utils.queryLocalRepository(query, m);
-        String result = "";
         HashSet<String> hs1 = new HashSet<>();
         while (r.hasNext()) {
             QuerySolution qs = r.nextSolution();

@@ -6,13 +6,12 @@ import java.util.HashSet;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Literal;
 
 /**
  * This class may be deleted
- * 
+ *
  */
 public class Scenario3 {
 
@@ -20,14 +19,12 @@ public class Scenario3 {
 		newTemplateName = newTemplateName.toUpperCase();
 		templateName = templateName.toUpperCase();
 		String result = "##########REPORT##########\n";
-		StringBuilder ans = new StringBuilder("");
 		int n = 0;
 		System.out
 				.println("VALIDATION TESTS FOR SCENARIO-1 (NUMBER OF EXECUTIONS, EXPANDED TEMPLATES AND ABSTRACT TEMPLATES)");
 		// TEST 1: DO WE HAVE ANY SIMILAR NAMED TEMPLATES?
 		result += "#TEST" + (++n) + ":DO WE HAVE ANY SIMILAR NAMED TEMPLATES?\n";
 		HashSet<String> hs1names = new HashSet<>();
-		HashSet<String> hs2times = new HashSet<>();
 
 		hs1names = Utils.queryresult112(Queries.DO_WE_HAVE_ANY_SIMILAR_NAMED_TEMPLATES, m, "t");
 		System.out.println();

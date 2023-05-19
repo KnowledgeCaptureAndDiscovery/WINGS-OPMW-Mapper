@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import edu.isi.kcap.wings.opmm.DataTypes.Links;
+import edu.isi.kcap.wings.opmm.DataTypes.ProvenanceResponseSchema;
 
 /**
  *
@@ -51,14 +52,14 @@ public class Mapper {
      * @return
      * @throws IOException
      */
-    public static HashMap<String, Links> main(String domain, String exportPrefix, String exportUrl,
+    public static ProvenanceResponseSchema main(String domain, String exportPrefix, String exportUrl,
             String catalogRepository,
             String componentLibraryFilePath, String planFilePath, String endpointQueryURI, String endpointPostURI,
             String executionDestinationFilePath, String expandedTemplateDestinationFilePath, String abstractFilePath,
             FilePublisher filePublisher, String serialization)
             throws IOException {
         // Response
-        HashMap<String, Links> response = new HashMap<String, Links>();
+        ProvenanceResponseSchema response = new ProvenanceResponseSchema();
         // Create the catalog
         Catalog catalog = new Catalog(domain, exportPrefix,
                 catalogRepository, componentLibraryFilePath);
@@ -76,22 +77,20 @@ public class Mapper {
         return response;
     }
 
-    private static void exportCatalog(String catalogRepository, String serialization, HashMap<String, Links> response,
+    private static void exportCatalog(String catalogRepository, String serialization, ProvenanceResponseSchema response,
             Catalog catalog) throws IOException {
         // Export the catalog
         String domainPath = catalog.exportCatalog(catalogRepository, serialization);
         // this.publishFile(tstoreurl, catalog.getDomainGraphURI(),
         // new File(domainPath).getAbsolutePath());
-        response.put("catalog", new Links() {
-            {
-                path = domainPath;
-                url = catalog.getDomainGraphURI();
-            }
-        });
+        Links links = new Links();
+        links.setFilePath(domainPath);
+        links.setFileUrl(catalog.getDomainGraphURI());
+        response.setCatalog(links);
     }
 
     private static void exportExpandedTemplate(String expandedTemplateDestinationFilePath, String serialization,
-            HashMap<String, Links> response, WorkflowExecutionExport executionExport) throws IOException {
+            ProvenanceResponseSchema response, WorkflowExecutionExport executionExport) throws IOException {
         String expandedTemplateGraphUri = executionExport.getConcreteTemplateExport().exportAsOPMW(
                 expandedTemplateDestinationFilePath,
                 serialization);
@@ -100,29 +99,25 @@ public class Mapper {
         // this.publishFile(endpointPostURI, expandedTemplateGraphUri,
         // expandedTemplateFilePath);
         // }
-        response.put(EXPANDED_TEMPLATE, new Links() {
-            {
-                path = expandedTemplateDestinationFilePath;
-                url = expandedTemplateGraphUri;
-            }
-        });
+        Links links = new Links();
+        links.setFilePath(expandedTemplateDestinationFilePath);
+        links.setFileUrl(expandedTemplateGraphUri);
+        response.setWorkflowExpandedTemplate(links);
     }
 
     private static void exportExecution(String executionDestinationFilePath, String serialization,
-            HashMap<String, Links> response, WorkflowExecutionExport executionExport)
+            ProvenanceResponseSchema response, WorkflowExecutionExport executionExport)
             throws IOException, FileNotFoundException {
         String executionGraphUri = executionExport.exportAsOPMW(executionDestinationFilePath, serialization);
         // this.publishFile(endpointPostURI, graphUri, executionFilePath);
-        response.put(EXECUTION, new Links() {
-            {
-                path = executionGraphUri;
-                url = executionDestinationFilePath;
-            }
-        });
+        Links links = new Links();
+        links.setFilePath(executionDestinationFilePath);
+        links.setFileUrl(executionGraphUri);
+        response.setWorkflowExecution(links);
     }
 
     private static void exportAbstractTemplate(String abstractFilePath, String serialization,
-            HashMap<String, Links> response,
+            ProvenanceResponseSchema response,
             WorkflowExecutionExport executionExport) throws IOException {
         WorkflowTemplateExport abstractTemplateExport = executionExport.getConcreteTemplateExport()
                 .getAbstractTemplateExport();
@@ -130,19 +125,10 @@ public class Mapper {
             String abstractGraphUri = abstractTemplateExport.exportAsOPMW(abstractFilePath, serialization);
             // if (!abstractTemplateExport.isTemplatePublished())
             // this.publishFile(tstoreurl, abstractGraphUri, abstractFilePath);
-            response.put(ABSTRACT_TEMPLATE, new Links() {
-                {
-                    path = abstractFilePath;
-                    url = abstractGraphUri;
-                }
-            });
-        } else {
-            response.put(ABSTRACT_TEMPLATE, new Links() {
-                {
-                    path = null;
-                    url = null;
-                }
-            });
+            Links links = new Links();
+            links.setFilePath(abstractFilePath);
+            links.setFileUrl(abstractGraphUri);
+            response.setWorkflowAbstractTemplate(links);
         }
     }
 
