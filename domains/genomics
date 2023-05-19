@@ -1,0 +1,394 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="https://w3id.org/wings/testExport/genomics/Data#"
+    xmlns:j.1="https://www.opmw.org/ontology/"
+    xmlns:j.2="http://www.wings-workflows.org/ontology/resource.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:j.3="https://w3id.org/wings/testExport/genomics/Component#"
+    xmlns:j.4="http://www.wings-workflows.org/ontology/component.owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Data#CSVInput"/>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#AddDemographicMergeAndFilterClass_V1">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#MergeAndFilterFilesClass_V1"/>
+    </rdfs:subClassOf>
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>AddDemographicMergeAndFilterClass</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AnalysisClass_V1">
+    <j.1:hasMD5>c7748e7baf867fe8b612c1ccb38e03f</j.1:hasMD5>
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>AnalysisClass</rdfs:label>
+    <rdf:type>
+      <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#AnalysisClass_V1"/>
+    </rdf:type>
+  </owl:Class>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#AnalysisClass_V1">
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>AnalysisClass</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://www.wings-workflows.org/ontology/resource.owl#HardwareDependency"/>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#VisualizationClass_V1">
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>VisualizationClass</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Data#ShinyLog"/>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Data#CSVOutput"/>
+  <owl:Class rdf:about="http://www.wings-workflows.org/ontology/component.owl#DataArgument"/>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#ShinyMetaAnalysisClass_V1">
+    <rdfs:subClassOf rdf:resource="https://w3id.org/wings/testExport/genomics/Component#AnalysisClass_V1"/>
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>ShinyMetaAnalysisClass</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://www.wings-workflows.org/ontology/component.owl#ParameterArgument"/>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#MergeAndFilterFilesClass_V1">
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>MergeAndFilterFilesClass</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#MetaAnalysisClass_V1">
+    <rdfs:subClassOf rdf:resource="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AnalysisClass_V1"/>
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>MetaAnalysisClass</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Component#BrainVizCreatorClass_V1">
+    <rdfs:subClassOf rdf:resource="https://w3id.org/wings/testExport/genomics/Component#VisualizationClass_V1"/>
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>BrainVizCreatorClass</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://w3id.org/wings/testExport/genomics/Data#OutputFile"/>
+  <owl:ObjectProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#label"/>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_trait">
+    <rdfs:subPropertyOf>
+      <rdf:Property rdf:about="https://www.opmw.org/ontology/uses"/>
+    </rdfs:subPropertyOf>
+    <rdfs:label>uses as trait</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_input">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as input</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_demographic_min">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as demographic_min</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/2002/07/owl#versionInfo"/>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_log">
+    <rdfs:subPropertyOf>
+      <rdf:Property rdf:about="https://www.opmw.org/ontology/isGeneratedBy"/>
+    </rdfs:subPropertyOf>
+    <rdfs:label>isGeneratedBy as log</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_demographic">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as demographic</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_demographic_value">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as demographic_value</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_area">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as area</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.wings-workflows.org/ontology/component.owl#isConcrete"/>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_demographic_max">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as demographic_max</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.wings-workflows.org/ontology/component.owl#hasOutput"/>
+  <rdf:Property rdf:about="http://www.wings-workflows.org/ontology/component.owl#hasDocumentation"/>
+  <rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_snp">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as snp</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.opmw.org/ontology/hasMD5"/>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_mergedFile">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/isGeneratedBy"/>
+    <rdfs:label>isGeneratedBy as mergedFile</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_cohortData">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as cohortData</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_p_value">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/isGeneratedBy"/>
+    <rdfs:label>isGeneratedBy as p_value</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.wings-workflows.org/ontology/component.owl#hasLocation"/>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_brain_visualization">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/isGeneratedBy"/>
+    <rdfs:label>isGeneratedBy as brain_visualization</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://w3id.org/wings/testExport/genomics/extension#uses_as_pval">
+    <rdfs:subPropertyOf rdf:resource="https://www.opmw.org/ontology/uses"/>
+    <rdfs:label>uses as pval</rdfs:label>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.wings-workflows.org/ontology/resource.owl#hasHardwareDependency"/>
+  <rdf:Property rdf:about="http://www.wings-workflows.org/ontology/component.owl#hasInput"/>
+  <rdf:Property rdf:about="http://www.wings-workflows.org/ontology/component.owl#hasVersion"/>
+  <j.3:ShinyMetaAnalysisClass_V1 rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/ShinyMetaAnalysis_V1">
+    <j.4:hasOutput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/ShinyMetaAnalysis_logV_1">
+        <rdfs:label>log</rdfs:label>
+        <j.4:hasArgumentID>log</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-o1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#ShinyLog"/>
+      </j.4:DataArgument>
+    </j.4:hasOutput>
+    <j.1:hasMD5>bd2ca69c45b5e9849d3441446a31ba81</j.1:hasMD5>
+    <j.4:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</j.4:isConcrete>
+    <j.2:hasHardwareDependency>
+      <j.2:HardwareDependency rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/HWDEP-ShinyMetaAnalysis_V1">
+        <j.2:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
+        >0.0</j.2:requiresMemoryGB>
+        <j.2:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
+        >0.0</j.2:requiresStorageGB>
+        <j.2:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+        >false</j.2:needs64bit>
+      </j.2:HardwareDependency>
+    </j.2:hasHardwareDependency>
+    <j.4:hasInput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/ShinyMetaAnalysis_inputV_1">
+        <rdfs:label>input</rdfs:label>
+        <j.4:hasArgumentID>input</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-i1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#CSVOutput"/>
+      </j.4:DataArgument>
+    </j.4:hasInput>
+    <j.4:hasVersion rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+    >43</j.4:hasVersion>
+    <rdfs:label>ShinyMetaAnalysis</rdfs:label>
+    <j.4:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/ShinyMetaAnalysis</j.4:hasLocation>
+    <owl:versionInfo>1</owl:versionInfo>
+  </j.3:ShinyMetaAnalysisClass_V1>
+  <j.3:MetaAnalysisClass_V1 rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/MetaAnalysis_V1">
+    <owl:versionInfo>1</owl:versionInfo>
+    <j.4:hasVersion rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+    >43</j.4:hasVersion>
+    <j.2:hasHardwareDependency>
+      <j.2:HardwareDependency rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/HWDEP-MetaAnalysis_V1">
+        <j.2:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
+        >0.0</j.2:requiresMemoryGB>
+        <j.2:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
+        >0.0</j.2:requiresStorageGB>
+        <j.2:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+        >false</j.2:needs64bit>
+      </j.2:HardwareDependency>
+    </j.2:hasHardwareDependency>
+    <j.4:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</j.4:isConcrete>
+    <j.4:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/MetaAnalysis</j.4:hasLocation>
+    <j.4:hasOutput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/MetaAnalysis_p_valueV_1">
+        <rdfs:label>p_value</rdfs:label>
+        <j.4:hasArgumentID>p_value</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-o1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#OutputFile"/>
+      </j.4:DataArgument>
+    </j.4:hasOutput>
+    <rdfs:label>MetaAnalysis</rdfs:label>
+    <j.4:hasInput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/MetaAnalysis_inputV_1">
+        <rdfs:label>input</rdfs:label>
+        <j.4:hasArgumentID>input</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-i1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#CSVOutput"/>
+      </j.4:DataArgument>
+    </j.4:hasInput>
+    <j.1:hasMD5>5a6e962aab7b6f7811b3d88be782c6d</j.1:hasMD5>
+  </j.3:MetaAnalysisClass_V1>
+  <j.3:MergeAndFilterFilesClass_V1 rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/MergeAndFilterFilesClass_V1">
+    <j.1:hasMD5>498c92a592dc76bdcb56c33259943a3e</j.1:hasMD5>
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>MergeAndFilterFilesClass</rdfs:label>
+  </j.3:MergeAndFilterFilesClass_V1>
+  <j.3:BrainVizCreatorClass_V1 rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/BrainVizCreator_V1">
+    <j.4:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/BrainVizCreator</j.4:hasLocation>
+    <j.4:hasOutput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/BrainVizCreator_p_valueV_1">
+        <rdfs:label>p_value</rdfs:label>
+        <j.4:hasArgumentID>p_value</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-o2</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#OutputFile"/>
+      </j.4:DataArgument>
+    </j.4:hasOutput>
+    <j.4:hasVersion rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+    >6</j.4:hasVersion>
+    <j.4:hasOutput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/BrainVizCreator_brain_visualizationV_1">
+        <rdfs:label>brain_visualization</rdfs:label>
+        <j.4:hasArgumentID>brain_visualization</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-o1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#OutputFile"/>
+      </j.4:DataArgument>
+    </j.4:hasOutput>
+    <j.4:hasInput>
+      <j.4:ParameterArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/BrainVizCreator_areaV_1">
+        <rdfs:label>area</rdfs:label>
+        <j.4:hasArgumentID>area</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-p1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <j.4:hasValue></j.4:hasValue>
+      </j.4:ParameterArgument>
+    </j.4:hasInput>
+    <j.4:hasInput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/BrainVizCreator_pvalV_1">
+        <rdfs:label>pval</rdfs:label>
+        <j.4:hasArgumentID>pval</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-i1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#OutputFile"/>
+      </j.4:DataArgument>
+    </j.4:hasInput>
+    <j.2:hasHardwareDependency>
+      <j.2:HardwareDependency rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/HWDEP-BrainVizCreator_V1">
+        <j.2:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
+        >0.0</j.2:requiresMemoryGB>
+        <j.2:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
+        >0.0</j.2:requiresStorageGB>
+        <j.2:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+        >false</j.2:needs64bit>
+      </j.2:HardwareDependency>
+    </j.2:hasHardwareDependency>
+    <rdfs:label>BrainVizCreator</rdfs:label>
+    <j.1:hasMD5>997a3fbe6eae827523406733d52f2c41</j.1:hasMD5>
+    <j.4:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</j.4:isConcrete>
+    <owl:versionInfo>1</owl:versionInfo>
+  </j.3:BrainVizCreatorClass_V1>
+  <j.3:AddDemographicMergeAndFilterClass_V1 rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_V1">
+    <j.4:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</j.4:isConcrete>
+    <j.2:hasHardwareDependency>
+      <j.2:HardwareDependency rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/HWDEP-AddDemographicMergeAndFilter_V1">
+        <j.2:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
+        >0.0</j.2:requiresMemoryGB>
+        <j.2:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
+        >0.0</j.2:requiresStorageGB>
+        <j.2:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+        >false</j.2:needs64bit>
+      </j.2:HardwareDependency>
+    </j.2:hasHardwareDependency>
+    <j.4:hasInput>
+      <j.4:ParameterArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_areaV_1">
+        <rdfs:label>area</rdfs:label>
+        <j.4:hasArgumentID>area</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-p2</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <j.4:hasValue></j.4:hasValue>
+      </j.4:ParameterArgument>
+    </j.4:hasInput>
+    <owl:versionInfo>1</owl:versionInfo>
+    <j.4:hasInput>
+      <j.4:ParameterArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_demographicV_1">
+        <rdfs:label>demographic</rdfs:label>
+        <j.4:hasArgumentID>demographic</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-p4</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <j.4:hasValue>MEAN_AGE</j.4:hasValue>
+      </j.4:ParameterArgument>
+    </j.4:hasInput>
+    <rdfs:label>AddDemographicMergeAndFilter</rdfs:label>
+    <j.1:hasMD5>b4c33c97998c64c446e7a87894920a8</j.1:hasMD5>
+    <j.4:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/AddDemographicMergeAndFilter</j.4:hasLocation>
+    <j.4:hasInput>
+      <j.4:ParameterArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_snpV_1">
+        <rdfs:label>snp</rdfs:label>
+        <j.4:hasArgumentID>snp</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-p3</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <j.4:hasValue></j.4:hasValue>
+      </j.4:ParameterArgument>
+    </j.4:hasInput>
+    <j.4:hasInput>
+      <j.4:ParameterArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_demographic_minV_1">
+        <rdfs:label>demographic_min</rdfs:label>
+        <j.4:hasArgumentID>demographic_min</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-p5</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <j.4:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasValue>
+      </j.4:ParameterArgument>
+    </j.4:hasInput>
+    <j.4:hasDocumentation></j.4:hasDocumentation>
+    <j.4:hasOutput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_mergedFileV_1">
+        <rdfs:label>mergedFile</rdfs:label>
+        <j.4:hasArgumentID>mergedFile</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-o1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#CSVOutput"/>
+      </j.4:DataArgument>
+    </j.4:hasOutput>
+    <j.4:hasInput>
+      <j.4:ParameterArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_traitV_1">
+        <rdfs:label>trait</rdfs:label>
+        <j.4:hasArgumentID>trait</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-p1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <j.4:hasValue></j.4:hasValue>
+      </j.4:ParameterArgument>
+    </j.4:hasInput>
+    <j.4:hasInput>
+      <j.4:DataArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_cohortDataV_1">
+        <rdfs:label>cohortData</rdfs:label>
+        <j.4:hasArgumentID>cohortData</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-i1</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >1</j.4:hasDimensionality>
+        <rdf:type rdf:resource="https://w3id.org/wings/testExport/genomics/Data#CSVInput"/>
+      </j.4:DataArgument>
+    </j.4:hasInput>
+    <j.4:hasInput>
+      <j.4:ParameterArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_demographic_valueV_1">
+        <rdfs:label>demographic_value</rdfs:label>
+        <j.4:hasArgumentID>demographic_value</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-p7</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <j.4:hasValue></j.4:hasValue>
+      </j.4:ParameterArgument>
+    </j.4:hasInput>
+    <j.4:hasVersion rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+    >88</j.4:hasVersion>
+    <j.4:hasInput>
+      <j.4:ParameterArgument rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_demographic_maxV_1">
+        <rdfs:label>demographic_max</rdfs:label>
+        <j.4:hasArgumentID>demographic_max</j.4:hasArgumentID>
+        <j.4:hasArgumentName>-p6</j.4:hasArgumentName>
+        <j.4:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasDimensionality>
+        <j.4:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+        >0</j.4:hasValue>
+      </j.4:ParameterArgument>
+    </j.4:hasInput>
+  </j.3:AddDemographicMergeAndFilterClass_V1>
+  <j.3:VisualizationClass_V1 rdf:about="https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/VisualizationClass_V1">
+    <j.1:hasMD5>7dfe5bff2e26479a5645ce731a81cd1</j.1:hasMD5>
+    <owl:versionInfo>1</owl:versionInfo>
+    <rdfs:label>VisualizationClass</rdfs:label>
+  </j.3:VisualizationClass_V1>
+</rdf:RDF>

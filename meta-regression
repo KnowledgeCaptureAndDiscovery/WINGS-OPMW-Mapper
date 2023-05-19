@@ -1,0 +1,290 @@
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://www.opmw.org/ontology/WorkflowTemplateProcess>
+        a       owl:Class .
+
+<http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_max>
+        a           <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/ParameterVariable> ;
+        rdfs:label  "demographic_max" ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isParameterOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic>
+        a           <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/ParameterVariable> ;
+        rdfs:label  "demographic" ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isParameterOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<https://www.opmw.org/ontology/ParameterVariable>
+        a       owl:Class .
+
+<https://w3id.org/wings/testExport/genomics/Component#BrainVizCreatorClass_V1>
+        a       owl:Class .
+
+<http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_value>
+        a           <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/ParameterVariable> ;
+        rdfs:label  "demographic_value" ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isParameterOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<https://w3id.org/wings/testExport/genomics/Component#AddDemographicMergeAndFilterClass_V1>
+        a       owl:Class .
+
+<http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_brain_visualization>
+        a           <https://w3id.org/wings/testExport/genomics/Data#OutputFile> , <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/DataVariable> ;
+        rdfs:label  "brain_visualization" ;
+        <https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_brain_visualization>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_BrainVizCreator_node> ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isCollection>
+                false ;
+        <https://www.opmw.org/ontology/isGeneratedBy>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_BrainVizCreator_node> ;
+        <https://www.opmw.org/ontology/isVariableOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_area>
+        a           <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/ParameterVariable> ;
+        rdfs:label  "area" ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isParameterOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_AddDemographicMergeAndFilter_node>
+        a           <http://www.w3.org/ns/prov#Entity> , <https://w3id.org/wings/testExport/genomics/Component#AddDemographicMergeAndFilterClass_V1> , <https://www.opmw.org/ontology/WorkflowTemplateProcess> ;
+        rdfs:label  "AddDemographicMergeAndFilter_node" ;
+        <http://www.wings-workflows.org/ontology/workflow.owl#hasComponentBinding>
+                <https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/AddDemographicMergeAndFilter_V1> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_area>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_area> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_cohortData>
+                <http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_cohortData> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_demographic>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_demographic_max>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_max> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_demographic_min>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_min> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_demographic_value>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_value> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_snp>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_snp> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_trait>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_trait> ;
+        <https://www.opmw.org/ontology/isConcrete>
+                true ;
+        <https://www.opmw.org/ontology/isStepOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> ;
+        <https://www.opmw.org/ontology/uses>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_max> , <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_area> , <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_value> , <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_snp> , <http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_cohortData> , <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic> , <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_min> , <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_trait> .
+
+<https://www.opmw.org/ontology/isGeneratedBy>
+        a       rdf:Property .
+
+<https://w3id.org/wings/testExport/genomics/Component#ShinyMetaAnalysisClass_V1>
+        a       owl:Class .
+
+<https://w3id.org/wings/testExport/genomics/Data#CSVFile>
+        a       owl:Class .
+
+<https://w3id.org/wings/testExport/genomics/Component#MetaAnalysisClass_V1>
+        a       owl:Class .
+
+<http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_snp>
+        a           <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/ParameterVariable> ;
+        rdfs:label  "snp" ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isParameterOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_log>
+        a           <https://w3id.org/wings/testExport/genomics/Data#ShinyLog> , <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/DataVariable> ;
+        rdfs:label  "log" ;
+        <https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_log>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_ShinyMetaAnalysis_node> ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isCollection>
+                false ;
+        <https://www.opmw.org/ontology/isGeneratedBy>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_ShinyMetaAnalysis_node> ;
+        <https://www.opmw.org/ontology/isVariableOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<https://www.opmw.org/export/resource/Agent/admin>
+        a           <http://www.w3.org/ns/prov#Agent> ;
+        rdfs:label  "admin" .
+
+<https://w3id.org/wings/testExport/genomics/Data#OutputFile>
+        a       owl:Class .
+
+<https://w3id.org/wings/testExport/genomics/Data#ShinyLog>
+        a       owl:Class .
+
+<http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1>
+        a                <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/WorkflowTemplate> ;
+        rdfs:label       "Meta-Analysis" ;
+        <http://purl.org/dc/terms/contributor>
+                <https://www.opmw.org/export/resource/Agent/admin> ;
+        <http://purl.org/dc/terms/issued>
+                "2023-05-19T12:05:03.202864"^^xsd:dateTime ;
+        <http://purl.org/dc/terms/license>
+                "http://creativecommons.org/licenses/by/3.0/"^^xsd:anyURI ;
+        <http://purl.org/dc/terms/modified>
+                "2023-04-19T00:00:00Z"^^xsd:dateTime ;
+        owl:versionInfo  "1"^^xsd:long ;
+        <https://www.opmw.org/ontology/createdInWorkflowSystem>
+                "http://wings.isi.edu"^^xsd:anyURI ;
+        <https://www.opmw.org/ontology/hasDomain>
+                "neuroDisk" ;
+        <https://www.opmw.org/ontology/hasMD5>
+                "b71deedf951069efd722649587a3e8fa" ;
+        <https://www.opmw.org/ontology/hasNativeSystemTemplate>
+                "https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/workflows/Meta-Analysis.owl#Meta-Analysis"^^xsd:anyURI ;
+        <https://www.opmw.org/ontology/releaseVersion>
+                3 .
+
+<http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_BrainVizCreator_node>
+        a           <https://w3id.org/wings/testExport/genomics/Component#BrainVizCreatorClass_V1> , <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/WorkflowTemplateProcess> ;
+        rdfs:label  "BrainVizCreator_node" ;
+        <http://www.wings-workflows.org/ontology/workflow.owl#hasComponentBinding>
+                <https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/BrainVizCreator_V1> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_area>
+                <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_area> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_pval>
+                <http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_pval> ;
+        <https://www.opmw.org/ontology/isConcrete>
+                true ;
+        <https://www.opmw.org/ontology/isStepOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> ;
+        <https://www.opmw.org/ontology/uses>
+                <http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_pval> , <http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_area> .
+
+<http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_cohortData>
+        a           <https://w3id.org/wings/testExport/genomics/Data#CSVInput> , <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/DataVariable> ;
+        rdfs:label  "cohortData" ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                1 ;
+        <https://www.opmw.org/ontology/isCollection>
+                true ;
+        <https://www.opmw.org/ontology/isVariableOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<https://w3id.org/wings/testExport/genomics/Data#CSVInput>
+        a       owl:Class .
+
+<http://www.w3.org/ns/prov#Entity>
+        a       owl:Class .
+
+<http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_input>
+        a           <https://www.opmw.org/ontology/DataVariable> , <https://w3id.org/wings/testExport/genomics/Data#CSVOutput> , <http://www.w3.org/ns/prov#Entity> , <https://w3id.org/wings/testExport/genomics/Data#CSVFile> ;
+        rdfs:label  "input" ;
+        <https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_mergedFile>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_AddDemographicMergeAndFilter_node> ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isCollection>
+                false ;
+        <https://www.opmw.org/ontology/isGeneratedBy>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_AddDemographicMergeAndFilter_node> ;
+        <https://www.opmw.org/ontology/isVariableOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_p_value>
+        a           <https://w3id.org/wings/testExport/genomics/Data#OutputFile> , <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/DataVariable> ;
+        rdfs:label  "p_value" ;
+        <https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_p_value>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_BrainVizCreator_node> ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isCollection>
+                false ;
+        <https://www.opmw.org/ontology/isGeneratedBy>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_BrainVizCreator_node> ;
+        <https://www.opmw.org/ontology/isVariableOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<https://www.opmw.org/ontology/DataVariable>
+        a       owl:Class .
+
+<http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_ShinyMetaAnalysis_node>
+        a           <https://w3id.org/wings/testExport/genomics/Component#ShinyMetaAnalysisClass_V1> , <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/WorkflowTemplateProcess> ;
+        rdfs:label  "ShinyMetaAnalysis_node" ;
+        <http://www.wings-workflows.org/ontology/workflow.owl#hasComponentBinding>
+                <https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/ShinyMetaAnalysis_V1> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_input>
+                <http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_input> ;
+        <https://www.opmw.org/ontology/isConcrete>
+                true ;
+        <https://www.opmw.org/ontology/isStepOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> ;
+        <https://www.opmw.org/ontology/uses>
+                <http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_input> .
+
+<http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_trait>
+        a           <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/ParameterVariable> ;
+        rdfs:label  "trait" ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isParameterOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<http://www.opmw.org/exportTest/resource/ParameterVariable/Meta-Analysis_v1_demographic_min>
+        a           <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/ParameterVariable> ;
+        rdfs:label  "demographic_min" ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isParameterOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<https://w3id.org/wings/testExport/genomics/Data#CSVOutput>
+        a       owl:Class .
+
+<https://www.opmw.org/ontology/WorkflowTemplate>
+        a       owl:Class .
+
+<http://www.w3.org/ns/prov#Agent>
+        a       owl:Class .
+
+<http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_pval>
+        a           <https://w3id.org/wings/testExport/genomics/Data#OutputFile> , <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/DataVariable> ;
+        rdfs:label  "pval" ;
+        <https://w3id.org/wings/testExport/genomics/extension#isGeneratedBy_as_p_value>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_MetaAnalysis_node> ;
+        <https://www.opmw.org/ontology/hasDimensionality>
+                0 ;
+        <https://www.opmw.org/ontology/isCollection>
+                false ;
+        <https://www.opmw.org/ontology/isGeneratedBy>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_MetaAnalysis_node> ;
+        <https://www.opmw.org/ontology/isVariableOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> .
+
+<https://www.opmw.org/ontology/uses>
+        a       rdf:Property .
+
+<http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis_v1_MetaAnalysis_node>
+        a           <https://w3id.org/wings/testExport/genomics/Component#MetaAnalysisClass_V1> , <http://www.w3.org/ns/prov#Entity> , <https://www.opmw.org/ontology/WorkflowTemplateProcess> ;
+        rdfs:label  "MetaAnalysis_node" ;
+        <http://www.wings-workflows.org/ontology/workflow.owl#hasComponentBinding>
+                <https://w3id.org/wings/testExport/genomics/resource/CanonicalInstance/MetaAnalysis_V1> ;
+        <https://w3id.org/wings/testExport/genomics/extension#uses_as_input>
+                <http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_input> ;
+        <https://www.opmw.org/ontology/isConcrete>
+                true ;
+        <https://www.opmw.org/ontology/isStepOfTemplate>
+                <http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis_v1> ;
+        <https://www.opmw.org/ontology/uses>
+                <http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis_v1_input> .

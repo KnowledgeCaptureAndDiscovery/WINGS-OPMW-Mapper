@@ -1,0 +1,642 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://purl.org/dc/terms/"
+    xmlns:j.1="https://www.opmw.org/ontology/"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:j.2="http://www.w3.org/ns/prov#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <owl:Class rdf:about="https://www.opmw.org/ontology/WorkflowExecutionAccount"/>
+  <owl:Class rdf:about="http://www.w3.org/ns/prov#Entity"/>
+  <owl:Class rdf:about="https://www.opmw.org/ontology/SoftwareScript"/>
+  <owl:Class rdf:about="https://www.opmw.org/ontology/SoftwareConfiguration"/>
+  <owl:Class rdf:about="https://www.opmw.org/ontology/WorkflowExecutionProcess"/>
+  <owl:Class rdf:about="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+  <owl:Class rdf:about="http://www.w3.org/ns/prov#Agent"/>
+  <owl:AnnotationProperty rdf:about="https://www.opmw.org/ontology/correspondsToTemplateArtifact"/>
+  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_p_value">
+    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_p_value"/>
+    <j.2:wasGeneratedBy>
+      <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionProcess/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode">
+        <j.1:hadEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+        >
+                              2023-04-13T07:13:49.654Z</j.1:hadEndTime>
+        <j.1:executionStatus>SUCCESS</j.1:executionStatus>
+        <j.1:hadSoftwareConfiguration>
+          <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/SoftwareConfiguration/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode_config">
+            <j.1:hasMainScript>
+              <j.1:SoftwareScript rdf:about="http://www.opmw.org/exportTest/resource/SoftwareConfiguration/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode_mainscript">
+                <j.1:hasLocation>tmp//run</j.1:hasLocation>
+                <rdfs:label>Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode_mainscript</rdfs:label>
+              </j.1:SoftwareScript>
+            </j.1:hasMainScript>
+            <j.1:hasLocation>src/test/resources/neuro/code/library/MetaAnalysis</j.1:hasLocation>
+            <rdfs:label>Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode_config</rdfs:label>
+            <rdf:type rdf:resource="https://www.opmw.org/ontology/SoftwareConfiguration"/>
+          </j.2:Entity>
+        </j.1:hadSoftwareConfiguration>
+        <j.1:hadInvocationCommand>-o2
+                  src/test/resources/neuro/data/p_value-9y0zaz2vt11afsqd03bwks6z9
+                  -i1
+                  src/test/resources/neuro/data/mergedFile-2pi7muyj60jusqh46lonxmdm9
+                  -o1
+                  src/test/resources/neuro/data/log-rfeihao6k5t2pu68928pizir </j.1:hadInvocationCommand>
+        <j.1:correspondsToTemplateProcess rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_MetaAnalysisNode"/>
+        <j.2:used>
+          <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_mergedFile">
+            <j.2:wasGeneratedBy>
+              <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionProcess/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode">
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0006">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0006"/>
+                    <j.1:isArtifactOfExecution>
+                      <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd">
+                        <j.1:executionStatus>SUCCESS</j.1:executionStatus>
+                        <j.0:contributor>
+                          <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/Agent/admin">
+                            <rdfs:label>admin</rdfs:label>
+                            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                          </j.2:Entity>
+                        </j.0:contributor>
+                        <rdfs:label>Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd</rdfs:label>
+                        <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionAccount"/>
+                        <j.1:hasRunID>Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd</j.1:hasRunID>
+                        <j.1:overallStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                  2023-04-13T07:13:49.645Z</j.1:overallStartTime>
+                        <j.1:overallEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                        >
+                  2023-04-13T07:13:49.655Z</j.1:overallEndTime>
+                        <j.1:correspondsToTemplate rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowTemplate/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1"/>
+                        <j.0:creator>
+                          <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/Agent/WINGS">
+                            <rdfs:label>WINGS</rdfs:label>
+                            <j.2:actedOnBehalfOf rdf:resource="http://www.opmw.org/exportTest/resource/Agent/admin"/>
+                            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                          </j.2:Entity>
+                        </j.0:creator>
+                        <j.1:hasOriginalExecutionFile>https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/executions/Meta-Analysis-57-648d11cc-d86b-4eb6-a95b-b91997127134.owl#Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd</j.1:hasOriginalExecutionFile>
+                      </j.2:Entity>
+                    </j.1:isArtifactOfExecution>
+                    <j.1:hasLocation>tmp//SHA4aa5c5_BETULA_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0006</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0032">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0032"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA46d5c5_NTR_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0032</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0012">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0012"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4a75c5_DNS-V3_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0012</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0011">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0011"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4ca5c5_CARDIFF_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0011</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0040">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0040"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4ee5c5_SHIP-Trend_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0040</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0020">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0020"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4b85c5_IMAGEN_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0020</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0044">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0044"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4865c5_TOP_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0044</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0024">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0024"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4835c5_MCIC_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0024</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0041">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0041"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4ba5c5_SydneyMAS_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0041</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.1:hadEndTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                >
+                              2023-04-13T07:13:49.651Z</j.1:hadEndTime>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0045">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0045"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4945c5_TOP3T_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0045</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0025">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0025"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4905c5_MooDS_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0025</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0029">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0029"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4865c5_NCNG_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0029</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0002">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0002"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4815c5_ADNI1_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0002</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0038">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0038"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4875c5_QTIM_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0038</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0037">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0037"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA3f15c5_PPMI_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0037</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.1:hadInvocationCommand>
+                  -p3 rs1080066 -p4 MEAN_AGE -p5 0 -p6 0 -p7 [67.3, 74.8, 72.4,
+                  19.6, 38.5, 62.4, 22.6, 22.5, 38.2, 10, 24.8, 19.7, 19.9, 38.4, 34.4, 24.2, 21.4,
+                  41.9, 58.9, 14.6, 40.8, 72.7, 33.2, 33.7, 33.6, 48.3, 37.2, 35.8, 51.6, 37.5,
+                  17.1, 29.4, 70.5, 28.3, 68.2, 11.8, 61.7, 22.4, 55.8, 50.4, 78.4, 28.3, 29.9,
+                  35.2, 33.2, 31.8, 42.1, 62.8, 33.1, 9.96] -i1
+                  src/test/resources/neuro/data/SHA4fe5c4_1000BRAINS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4815c5_ADNI1_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4a85c5_ADNI2GO_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4bf5c6_ALSPACa_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA47a5c5_ASRB_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4aa5c5_BETULA_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4945c5_BIG_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA5305c4_BIG-PsychChip_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4c45c5_BONN_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ad5c5_BrainScale_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ca5c5_CARDIFF_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4a75c5_DNS-V3_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b15c5_DNS-V4_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4c65c5_EPIGEN_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b15c5_FOR2107_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4925c5_GIG_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4935c5_GSP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b15c5_HUBIN_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4925c5_HUNT_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b85c5_IMAGEN_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4bf5c5_ImpACT_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4b45c5_LBC1936_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA48a5c5_LIBD_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4835c5_MCIC_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4905c5_MooDS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4775c5_MPIP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4825c5_MPRC_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4945c5_MUNSTER_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4865c5_NCNG_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4835c5_NESDA_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4f55c5_NeuroIMAGE_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA46d5c5_NTR_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4765c5_OATS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4a65c5_PAFIP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4865c5_PDNZ_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA47a5c5_PING_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA3f15c5_PPMI_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4875c5_QTIM_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4bb5c5_SHIP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ee5c5_SHIP-Trend_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ba5c5_SydneyMAS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4a85c5_SYS_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4c15c5_TCD-NUIG_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4865c5_TOP_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4945c5_TOP3T_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4ae5c5_UiO2016_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4aa5c5_UiO2017_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4c95c5_UKBB_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA4335c5_UMCU_Significant_GWAS.csv
+                  src/test/resources/neuro/data/SHA3215e5_ABCD_Significant_GWAS.csv
+                  -p1 SA -p2 Precentral -o1
+                  src/test/resources/neuro/data/mergedFile-2pi7muyj60jusqh46lonxmdm9 </j.1:hadInvocationCommand>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0017">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0017"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4935c5_GSP_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0017</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.1:hadSoftwareConfiguration>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/SoftwareConfiguration/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode_config">
+                    <j.1:hasMainScript>
+                      <j.1:SoftwareScript rdf:about="http://www.opmw.org/exportTest/resource/SoftwareConfiguration/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode_mainscript">
+                        <j.1:hasLocation>tmp//run</j.1:hasLocation>
+                        <rdfs:label>Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode_mainscript</rdfs:label>
+                      </j.1:SoftwareScript>
+                    </j.1:hasMainScript>
+                    <j.1:hasLocation>src/test/resources/neuro/code/library/AddDemographicMergeAndFilter</j.1:hasLocation>
+                    <rdfs:label>Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_AddDemographicMergeAndFilterNode_config</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/SoftwareConfiguration"/>
+                  </j.2:Entity>
+                </j.1:hadSoftwareConfiguration>
+                <rdfs:label>AddDemographicMergeAndFilterNode</rdfs:label>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0003">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0003"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4a85c5_ADNI2GO_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0003</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0007">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0007"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4945c5_BIG_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0007</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0021">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0021"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4bf5c5_ImpACT_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0021</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0050">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0050"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA3215e5_ABCD_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0050</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0030">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0030"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4835c5_NESDA_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0030</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.1:hadStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+                >
+                              2023-04-13T07:13:49.649Z</j.1:hadStartTime>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0034">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0034"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4a65c5_PAFIP_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0034</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0014">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0014"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4c65c5_EPIGEN_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0014</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0033">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0033"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4765c5_OATS_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0033</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0013">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0013"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4b15c5_DNS-V4_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0013</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:wasAssociatedWith rdf:resource="http://www.opmw.org/exportTest/resource/Agent/WINGS"/>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0042">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0042"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4a85c5_SYS_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0042</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0018">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0018"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4b15c5_HUBIN_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0018</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.1:isProcessOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0046">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0046"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4ae5c5_UiO2016_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0046</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0026">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0026"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4775c5_MPIP_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0026</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.1:correspondsToTemplateProcess rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowTemplateProcess/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_AddDemographicMergeAndFilterNode"/>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0047">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0047"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4aa5c5_UiO2017_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0047</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0027">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0027"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4825c5_MPRC_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0027</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0004">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0004"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4bf5c6_ALSPACa_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0004</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0039">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0039"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4bb5c5_SHIP_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0039</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0008">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0008"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA5305c4_BIG-PsychChip_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0008</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0009">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0009"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4c45c5_BONN_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0009</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0010">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0010"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4ad5c5_BrainScale_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0010</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0005">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0005"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA47a5c5_ASRB_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0005</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0022">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0022"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4b45c5_LBC1936_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0022</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.1:executionStatus>SUCCESS</j.1:executionStatus>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0043">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0043"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4c15c5_TCD-NUIG_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0043</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0023">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0023"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA48a5c5_LIBD_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0023</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0031">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0031"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4f55c5_NeuroIMAGE_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0031</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0036">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0036"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA47a5c5_PING_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0036</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0035">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0035"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4865c5_PDNZ_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0035</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0016">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0016"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4925c5_GIG_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0016</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0015">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0015"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4b15c5_FOR2107_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0015</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionProcess"/>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0019">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0019"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4925c5_HUNT_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0019</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0048">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0048"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4c95c5_UKBB_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0048</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0028">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0028"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4945c5_MUNSTER_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0028</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0001">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0001"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4fe5c4_1000BRAINS_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0001</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+                <j.2:used>
+                  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_cohortData_0049">
+                    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_cohortData_0049"/>
+                    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+                    <j.1:hasLocation>tmp//SHA4335c5_UMCU_Significant_GWAS.csv</j.1:hasLocation>
+                    <rdfs:label>cohortData_0049</rdfs:label>
+                    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+                  </j.2:Entity>
+                </j.2:used>
+              </j.2:Entity>
+            </j.2:wasGeneratedBy>
+            <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_mergedFile"/>
+            <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+            <j.1:hasLocation>tmp//mergedFile-2pi7muyj60jusqh46lonxmdm9</j.1:hasLocation>
+            <rdfs:label>mergedFile</rdfs:label>
+            <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+          </j.2:Entity>
+        </j.2:used>
+        <j.2:wasAssociatedWith rdf:resource="http://www.opmw.org/exportTest/resource/Agent/WINGS"/>
+        <j.1:hadStartTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+        >
+                              2023-04-13T07:13:49.653Z</j.1:hadStartTime>
+        <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionProcess"/>
+        <j.1:isProcessOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+        <rdfs:label>MetaAnalysisNode</rdfs:label>
+      </j.2:Entity>
+    </j.2:wasGeneratedBy>
+    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+    <j.1:hasLocation>tmp//p_value-9y0zaz2vt11afsqd03bwks6z9</j.1:hasLocation>
+    <rdfs:label>p_value</rdfs:label>
+    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+  </j.2:Entity>
+  <j.2:Entity rdf:about="http://www.opmw.org/exportTest/resource/WorkflowExecutionArtifact/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_log">
+    <j.1:correspondsToTemplateArtifact rdf:resource="http://www.opmw.org/exportTest/resource/DataVariable/Meta-Analysis-57-6d68e63d-6c74-4986-b640-a97ce8b667c8_v1_log"/>
+    <j.2:wasGeneratedBy rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionProcess/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode"/>
+    <j.1:isArtifactOfExecution rdf:resource="http://www.opmw.org/exportTest/resource/WorkflowExecutionAccount/Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd"/>
+    <j.1:hasLocation>tmp//log-rfeihao6k5t2pu68928pizir</j.1:hasLocation>
+    <rdfs:label>log</rdfs:label>
+    <rdf:type rdf:resource="https://www.opmw.org/ontology/WorkflowExecutionArtifact"/>
+  </j.2:Entity>
+  <owl:AnnotationProperty rdf:about="https://www.opmw.org/ontology/correspondsToTemplateProcess"/>
+</rdf:RDF>

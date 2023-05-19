@@ -8,7 +8,7 @@
   <name>Wings OPM Mapper</name>
   <packaging>jar</packaging>
   <description>Wings OPM (Open Provenance Model) Mapper</description>
-  <version>1.2.7</version>
+  <version>1.2.5</version>
 
   <properties>
     <log4j.version>2.16.0</log4j.version>
@@ -175,11 +175,6 @@
       <groupId>org.openprovenance.prov</groupId>
       <artifactId>prov-rdf</artifactId>
       <version>0.9.27</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.14.2</version>
     </dependency>
   </dependencies>
 
