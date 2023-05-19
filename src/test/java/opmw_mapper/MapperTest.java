@@ -5,15 +5,7 @@
  */
 package opmw_mapper;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.jena.ontology.OntModel;
-import org.junit.Test;
-
-import edu.isi.kcap.wings.opmm.Mapper;
-import edu.isi.kcap.wings.opmm.ModelUtils;
-
 import static org.junit.Assert.*;
 
 /**

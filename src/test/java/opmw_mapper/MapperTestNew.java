@@ -2,7 +2,6 @@ package opmw_mapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Assert;
@@ -10,7 +9,7 @@ import org.junit.Test;
 
 import edu.isi.kcap.wings.opmm.FilePublisher;
 import edu.isi.kcap.wings.opmm.Mapper;
-import edu.isi.kcap.wings.opmm.DataTypes.Links;
+import edu.isi.kcap.wings.opmm.DataTypes.ProvenanceResponseSchema;
 
 public class MapperTestNew {
   private static String webServerDirectory = "tmp/";
@@ -61,7 +60,7 @@ public class MapperTestNew {
     String expandedTemplateFilePath = "tmp/" + serialization + "/expandedTemplate.xml";
     String abstractFilePath = "tmp/" + serialization + "/abstractTemplate.xml";
     try {
-      HashMap<String, Links> response = Mapper.main(domain, exportPrefix, exportUrl, catalogRepositoryDirectory,
+      ProvenanceResponseSchema response = Mapper.main(domain, exportPrefix, exportUrl, catalogRepositoryDirectory,
           componentLibraryFilePath, planFilePath,
           endpointQueryURI, endpointPostURI, executionFilePath, expandedTemplateFilePath, abstractFilePath,
           filePublisher, serialization);

@@ -1,6 +1,5 @@
 package edu.isi.kcap.wings.opmm;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -50,8 +49,6 @@ public class WorkflowTemplateExport {
     private WorkflowTemplateExport abstractTemplateExport;// a template may implement a template, and therefore publish
                                                           // its abstract template (on a separate file)
     private String domain;
-    private boolean isConcreteTemplate;
-    private String filepath;
     // private OntModel PplanModel;//TO IMPLEMENT AT THE END. Can it be done with
     // constructs?
 
@@ -64,7 +61,7 @@ public class WorkflowTemplateExport {
      * @param endpointURI
      */
     public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportUrl, String exportName,
-            String endpointURI, String domain, boolean isConcrete) {
+            String endpointURI, String domain) {
         try {
             this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
         } catch (Exception e) {
@@ -88,7 +85,6 @@ public class WorkflowTemplateExport {
         this.exportName = exportName;
         this.exportUrl = exportUrl;
         this.domain = domain;
-        this.isConcreteTemplate = isConcrete;
     }
 
     /**
@@ -266,7 +262,7 @@ public class WorkflowTemplateExport {
             // publish abstract template with the URI taken from derivation
             QuerySolution qs = rsD.next();
             this.abstractTemplateExport = new WorkflowTemplateExport(qs.getResource("?dest").getURI(), componentCatalog,
-                    exportUrl, exportName, endpointURI, domain, false);
+                    exportUrl, exportName, endpointURI, domain);
             abstractTemplateExport.transform();
             abstractTemplateInstance = abstractTemplateExport.getTransformedTemplateIndividual();
             System.out.println("Abstract template: " + abstractTemplateInstance.getURI());
@@ -545,7 +541,7 @@ public class WorkflowTemplateExport {
         String domain = "mint";
         Catalog c = new Catalog(domain, "testExport", "domains", taxonomyURL);
         WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "http://www.opmw.org", "exportTest",
-                "http://localhost:3030/test/query", domain, true);
+                "http://localhost:3030/test/query", domain);
         w.exportAsOPMW(".", "TTL");
         c.exportCatalog(null, "RDF/XML");
     }

@@ -4,41 +4,23 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.transform.Source;
-
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.openprovenance.prov.model.Document;
-import org.w3c.dom.Node;
 import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.builder.Input;
 import org.xmlunit.diff.ComparisonType;
 import org.xmlunit.diff.DefaultNodeMatcher;
 import org.xmlunit.diff.DifferenceEvaluators;
 import org.xmlunit.diff.ElementSelectors;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.DifferenceEvaluator;
-import org.xmlunit.xpath.JAXPXPathEngine;
-import org.xmlunit.xpath.XPathEngine;
-
 import edu.isi.kcap.wings.opmm.Catalog;
 import edu.isi.kcap.wings.opmm.FilePublisher;
 import edu.isi.kcap.wings.opmm.ProvNUtils;
 import edu.isi.kcap.wings.opmm.WorkflowExecutionExport;
 import edu.isi.kcap.wings.opmm.WorkflowTemplateExport;
-import junit.framework.Assert;
-
-import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class WorkflowTemplateExportTest {
 
@@ -57,14 +39,8 @@ public class WorkflowTemplateExportTest {
     String turtleFile = domain + ".ttl";
     Catalog c = new Catalog(domain, "testExport", "domains", taxonomyURL);
     WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "http://www.opmw.org/", "exportTest",
-        "https://endpoint.mint.isi.edu/provenance/query", domain, true);
+        "https://endpoint.mint.isi.edu/provenance/query", domain);
     w.exportAsOPMW(turtleFile, "TTL");
-
-    String expectedTurtlePath = "src/test/resources/" + turtleFile;
-    String lines1NoDate = removeDates(turtleFile);
-    String lines2NoDate = removeDates(expectedTurtlePath);
-
-    // assertEquals("The files differ!", lines1NoDate, lines2NoDate);
 
     // Catalog
     c.exportCatalog("catalog", "RDF/XML");
@@ -92,13 +68,11 @@ public class WorkflowTemplateExportTest {
   public void testNeuroDisk() throws IOException {
     String taxonomyURL = "src/test/resources/neuro/components.owl";
     String templatePath = "src/test/resources/neuro/originalTemplate.owl";
-    String seededTemplate = "src/test/resources/neuro/seededTemplate.owl";
-    String executionPath = "src/test/resources/neuro/execution.owl";
     String planPath = "src/test/resources/neuro/plan.owl";
     Catalog c = new Catalog("genomics", "testExport", "domains", taxonomyURL);
     String domain = "neuroDisk";
     WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "http://www.opmw.org/", "exportTest",
-        "https://endpoint.mint.isi.edu/provenance/query", domain, true);
+        "https://endpoint.mint.isi.edu/provenance/query", domain);
     w.exportAsOPMW("meta-regression", "TTL");
     WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, "http://www.opmw.org/", "exportTest",
         "https://endpoint.mint.isi.edu/provenance/query", domain);
@@ -182,13 +156,6 @@ public class WorkflowTemplateExportTest {
     ProvNUtils.getEntityByLocalName(document, entityForSearch);
   }
 
-  private String removeDates(String turtleFile) throws IOException {
-    File f1 = new File(turtleFile);
-    String lines1 = FileUtils.readFileToString(f1, "utf-8");
-    String lines1NoDate = removeLineMatch(lines1, "xsd:dateTime");
-    return lines1NoDate;
-  }
-
   public String removeLineMatch(String lines, String match) {
     String[] linesArray = lines.split("\n");
     for (int i = 0; i < linesArray.length; i++) {
@@ -204,25 +171,4 @@ public class WorkflowTemplateExportTest {
     return result;
   }
 
-  private static class CustomNamespaceContext implements NamespaceContext {
-    @Override
-    public String getNamespaceURI(String prefix) {
-      if ("rdf".equals(prefix)) {
-        return "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-      } else if ("owl".equals(prefix)) {
-        return "http://www.w3.org/2002/07/owl#";
-      }
-      return null;
-    }
-
-    @Override
-    public String getPrefix(String namespaceURI) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Iterator<String> getPrefixes(String namespaceURI) {
-      throw new UnsupportedOperationException();
-    }
-  }
 }
