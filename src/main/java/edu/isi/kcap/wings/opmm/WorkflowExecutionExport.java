@@ -265,7 +265,7 @@ public class WorkflowExecutionExport {
 
                 tempFile = storage.zipFolder(directory);
                 try {
-                    filePublisher.publishFile(tempFile.getAbsolutePath());
+                    filePublisher.publishFile(tempFile);
                 } catch (Exception e) {
                     System.out.println("Error publishing directory:" + directory + " compressed as " + tempFile);
                     System.err.println(e.getMessage());
@@ -279,11 +279,7 @@ public class WorkflowExecutionExport {
             /* Export the mainscript and upload */
             // String mainScriptLocation = uploadFile(executionScript.getString());
             String mainScriptLocation = executionScript.getString().replaceAll("\\s", "");
-            try {
-                mainScriptLocation = filePublisher.publishFile(mainScriptLocation);
-            } catch (Exception e) {
-                System.out.println("Error publishing file: " + mainScriptLocation);
-            }
+            mainScriptLocation = filePublisher.publishFile(mainScriptLocation).getFileUrl();
             String mainScriptURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_SOFTWARE_CONFIGURATION + "/" + runID + "_"
                     + wingsStep.getLocalName() + "_mainscript";
             Resource mainScript = ModelUtils.getIndividualFromFile(mainScriptLocation, opmwModel,
@@ -310,12 +306,7 @@ public class WorkflowExecutionExport {
                 String pathFile = binding.toString();
                 // String dataLocation = uploadFile(pathFile);
                 String dataLocation;
-                try {
-                    dataLocation = filePublisher.publishFile(pathFile);
-                } catch (Exception e) {
-                    dataLocation = pathFile;
-                    System.out.println("Error publishing file: " + pathFile);
-                }
+                dataLocation = filePublisher.publishFile(pathFile).getFileUrl();
                 executionArtifact.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION),
                         dataLocation);
 

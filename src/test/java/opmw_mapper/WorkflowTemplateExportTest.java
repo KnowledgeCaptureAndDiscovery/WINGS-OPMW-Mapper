@@ -88,7 +88,7 @@ public class WorkflowTemplateExportTest {
     // In this case, we aren't uploading files to a server, so we just use a local
     // directory
     // and the local directory is connected to a Web server.
-    FilePublisher p = new FilePublisher("tmp/", "http://localhost");
+    FilePublisher p = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, "tmp/", "http://localhost");
     // Some directories are created to store the files to store:
     // 1. the catalog of components (Catalog),
     String components = "src/test/resources/neuro/components.owl";
