@@ -11,12 +11,12 @@ public class TriplePublisherTest {
 
   @Test
   public void publishTriplesTest() throws MalformedURLException {
-    String updateEndpoint = "https://endpoint.mint.isi.edu/wings-provenance/update";
+    String updateEndpoint = "https://endpoint.mint.isi.edu/wings-provenance/data";
     String graph = "http://localhost:3030/ds/data/opmw";
     TriplesPublisher tp = new TriplesPublisher(updateEndpoint, graph);
-    // import file from resources
     String fileName = "src/test/resources/CaesarCypher.ttl";
     File file = new File(fileName);
     tp.publish(file);
   }
+
 }
