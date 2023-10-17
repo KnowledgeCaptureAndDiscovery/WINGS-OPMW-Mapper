@@ -88,29 +88,6 @@ public class WorkflowExecutionExport {
     }
 
     /**
-     * Default constructor for exporting executions
-     *
-     * @param executionFile
-     * @param catalog
-     * @param exportName
-     * @param endpointURI
-     */
-    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
-            String endpointURI, String domain) {
-        this.executionModel = ModelUtils.loadModel(executionFile);
-        this.opmwModel = ModelUtils.initializeModel(opmwModel);
-        this.componentCatalog = catalog;
-        if (exportUrl == null)
-            exportUrl = Constants.PREFIX_EXPORT_GENERIC;
-        this.PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
-        this.endpointURI = endpointURI;
-        this.exportName = exportName;
-        this.exportUrl = exportUrl;
-        this.isExecPublished = false;
-        this.domain = domain;
-    }
-
-    /**
      * Function that will check if an execution exists and then transforms it as RDF
      * under the OPMW model.
      * Assumption: there is a single execution per file.
@@ -279,7 +256,11 @@ public class WorkflowExecutionExport {
             /* Export the mainscript and upload */
             // String mainScriptLocation = uploadFile(executionScript.getString());
             String mainScriptLocation = executionScript.getString().replaceAll("\\s", "");
-            mainScriptLocation = filePublisher.publishFile(mainScriptLocation).getFileUrl();
+            if (mainScriptLocation != null) {
+                mainScriptLocation = filePublisher.publishFile(mainScriptLocation).getFileUrl();
+            } else {
+                System.out.println("Error publishing main script:" + mainScriptLocation);
+            }
             String mainScriptURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_SOFTWARE_CONFIGURATION + "/" + runID + "_"
                     + wingsStep.getLocalName() + "_mainscript";
             Resource mainScript = ModelUtils.getIndividualFromFile(mainScriptLocation, opmwModel,

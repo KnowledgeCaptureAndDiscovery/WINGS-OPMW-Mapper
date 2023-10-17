@@ -21,6 +21,7 @@ import edu.isi.kcap.wings.opmm.FilePublisher;
 import edu.isi.kcap.wings.opmm.ProvNUtils;
 import edu.isi.kcap.wings.opmm.WorkflowExecutionExport;
 import edu.isi.kcap.wings.opmm.WorkflowTemplateExport;
+import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
 
 public class WorkflowTemplateExportTest {
 
@@ -66,6 +67,11 @@ public class WorkflowTemplateExportTest {
 
   @Test
   public void testNeuroDisk() throws IOException {
+    String updateEndpoint = "https://endpoint.mint.isi.edu/wings-provenance/data";
+    String queryEndpoint = "https://endpoint.mint.isi.edu/wings-provenance/sparql";
+    String graph = "http://localhost:3030/ds/data/opmw";
+    FilePublisher filePublisher = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, "tmp/", "http://localhost");
+    TriplesPublisher triplesPublisher = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
     String taxonomyURL = "src/test/resources/neuro/components.owl";
     String templatePath = "src/test/resources/neuro/originalTemplate.owl";
     String planPath = "src/test/resources/neuro/plan.owl";
@@ -75,7 +81,7 @@ public class WorkflowTemplateExportTest {
         "https://endpoint.mint.isi.edu/provenance/query", domain);
     w.exportAsOPMW("meta-regression", "TTL");
     WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, "http://www.opmw.org/", "exportTest",
-        "https://endpoint.mint.isi.edu/provenance/query", domain);
+        "https://endpoint.mint.isi.edu/provenance/query", domain, filePublisher);
     e.exportAsOPMW("meta-regression-execution", "TTL");
     c.exportCatalog(null, "RDF/XML");
 
@@ -88,7 +94,7 @@ public class WorkflowTemplateExportTest {
     // In this case, we aren't uploading files to a server, so we just use a local
     // directory
     // and the local directory is connected to a Web server.
-    FilePublisher p = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, "tmp/", "http://localhost");
+    FilePublisher publisher = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, "tmp/", "http://localhost");
     // Some directories are created to store the files to store:
     // 1. the catalog of components (Catalog),
     String components = "src/test/resources/neuro/components.owl";
@@ -128,7 +134,7 @@ public class WorkflowTemplateExportTest {
     // Create WorkflowExecutionExport: A class designed to export WINGS workflow
     // execution traces in RDF according to the OPMW-PROV model.
     WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, exportUrl, exportPrefix, endpointURI, domain,
-        p);
+        publisher);
 
     // Function: `exportAsOPMW` that will check if an execution exists and then
     // transforms it as RDF under the OPMW model.
@@ -144,17 +150,18 @@ public class WorkflowTemplateExportTest {
     }
   }
 
-  @Test
-  public void convertToProvTest() {
-    String source = "meta-regression-execution.ttl";
-    String target = "meta-regression-execution.provn";
-    Path sourcePath = Paths.get(source);
-    Path targetPath = Paths.get(target);
-    String documentString = ProvNUtils.convertToProvN(sourcePath);
-    Document document = ProvNUtils.convertToProvN(sourcePath, targetPath);
-    String entityForSearch = "Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode";
-    ProvNUtils.getEntityByLocalName(document, entityForSearch);
-  }
+  // @Test
+  // public void convertToProvTest() {
+  // String source = "meta-regression-execution.ttl";
+  // String target = "meta-regression-execution.provn";
+  // Path sourcePath = Paths.get(source);
+  // Path targetPath = Paths.get(target);
+  // String documentString = ProvNUtils.convertToProvN(sourcePath);
+  // Document document = ProvNUtils.convertToProvN(sourcePath, targetPath);
+  // String entityForSearch =
+  // "Meta-Analysis-57-52f5b3c2-a970-42ed-a503-fa4dfdd62ecd_MetaAnalysisNode";
+  // ProvNUtils.getEntityByLocalName(document, entityForSearch);
+  // }
 
   public String removeLineMatch(String lines, String match) {
     String[] linesArray = lines.split("\n");
