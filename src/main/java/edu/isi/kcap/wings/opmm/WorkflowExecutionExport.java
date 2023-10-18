@@ -13,6 +13,8 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
 
+import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
+
 /**
  * Class designed to export WINGS workflow execution traces in RDF according to
  * the OPMW-PROV model.
@@ -32,12 +34,13 @@ public class WorkflowExecutionExport {
     private final Catalog componentCatalog;
     //
     private final String PREFIX_EXPORT_RESOURCE;
-    private final String endpointURI;// URI of the endpoint where everything is published.
+    private final String endpointQueryURI;// URI of the endpoint where everything is published.
     private final String exportUrl;
     private final String exportName;// needed to pass it on to template exports
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
     private FilePublisher filePublisher;
+    private TriplesPublisher triplesPublisher;
 
     private String uploadURL;
     private String uploadUsername;
@@ -66,11 +69,12 @@ public class WorkflowExecutionExport {
      *                       remote)
      */
     public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
-            String endpointURI, String domain, FilePublisher filePublisher) {
+            String domain, FilePublisher filePublisher, TriplesPublisher triplesPublisher) {
         // Store the parameters as fields
         this.componentCatalog = catalog;
         this.filePublisher = filePublisher;
-        this.endpointURI = endpointURI;
+        this.triplesPublisher = triplesPublisher;
+        this.endpointQueryURI = triplesPublisher.queryEndpoint;
         this.exportName = exportName;
         this.exportUrl = exportUrl;
         this.domain = domain;
@@ -105,7 +109,7 @@ public class WorkflowExecutionExport {
             // ask if an execution with same run id exists. If so, return URI. The local
             // name of the execution is its run id.
             String queryExec = QueriesWorkflowExecutionExport.getOPMWExecutionsWithRunID(wingsExecution.getLocalName());
-            QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec, endpointURI);
+            QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec, endpointQueryURI);
             if (solution != null) {
                 System.out.println("Execution exists!");
                 this.transformedExecutionURI = (solution.getResource("?exec").getURI());
@@ -185,8 +189,9 @@ public class WorkflowExecutionExport {
             // publish expanded template. The expanded template will publish the template if
             // necessary.
             concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog,
-                    this.exportUrl, this.exportName, this.endpointURI, this.domain);
-            concreteTemplateExport.transform();
+                    this.exportUrl, this.exportName, this.endpointQueryURI, this.domain, this.triplesPublisher);
+            // concreteTemplateExport.transform();
+            concreteTemplateExport.exportAsOPMW("tmp.ttl", "TTL");
             System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
         } else {
             System.out.println("ERROR: Could not find an expanded template!");
@@ -413,6 +418,9 @@ public class WorkflowExecutionExport {
         if (!isExecPublished) {
             // opmwModel.write(System.out, "TTL");
             ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
+            File file = new File(filepath);
+            this.triplesPublisher.publish(file);
+
         }
         return transformedExecutionURI;
     }

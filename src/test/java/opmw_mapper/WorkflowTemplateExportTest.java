@@ -4,11 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
+
 import org.junit.Test;
-import org.openprovenance.prov.model.Document;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.ComparisonType;
 import org.xmlunit.diff.DefaultNodeMatcher;
@@ -18,7 +16,6 @@ import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.DifferenceEvaluator;
 import edu.isi.kcap.wings.opmm.Catalog;
 import edu.isi.kcap.wings.opmm.FilePublisher;
-import edu.isi.kcap.wings.opmm.ProvNUtils;
 import edu.isi.kcap.wings.opmm.WorkflowExecutionExport;
 import edu.isi.kcap.wings.opmm.WorkflowTemplateExport;
 import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
@@ -38,9 +35,11 @@ public class WorkflowTemplateExportTest {
     String templatePath = "https://gist.githubusercontent.com/mosoriob/7cb83dd2af2ff370ed6592b21fb07339/raw/f59bc8941bcbd947d54ffd69d7fe58f5f595fa63/CaesarCypherMapReduce.owl";
     String domain = "CaesarCypher";
     String turtleFile = domain + ".ttl";
+    TriplesPublisher triplesPublisher = new TriplesPublisher("https://endpoint.mint.isi.edu/provenance/query",
+        "https://endpoint.mint.isi.edu/provenance/data", "http://localhost:3030/ds/data/opmw");
     Catalog c = new Catalog(domain, "testExport", "domains", taxonomyURL);
     WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "http://www.opmw.org/", "exportTest",
-        "https://endpoint.mint.isi.edu/provenance/query", domain);
+        "https://endpoint.mint.isi.edu/provenance/query", domain, triplesPublisher);
     w.exportAsOPMW(turtleFile, "TTL");
 
     // Catalog
@@ -67,24 +66,58 @@ public class WorkflowTemplateExportTest {
 
   @Test
   public void testNeuroDisk() throws IOException {
-    String updateEndpoint = "https://endpoint.mint.isi.edu/wings-provenance/data";
-    String queryEndpoint = "https://endpoint.mint.isi.edu/wings-provenance/sparql";
-    String graph = "http://localhost:3030/ds/data/opmw";
-    FilePublisher filePublisher = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, "tmp/", "http://localhost");
-    TriplesPublisher triplesPublisher = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
     String taxonomyURL = "src/test/resources/neuro/components.owl";
     String templatePath = "src/test/resources/neuro/originalTemplate.owl";
     String planPath = "src/test/resources/neuro/plan.owl";
-    Catalog c = new Catalog("genomics", "testExport", "domains", taxonomyURL);
-    String domain = "neuroDisk";
-    WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "http://www.opmw.org/", "exportTest",
-        "https://endpoint.mint.isi.edu/provenance/query", domain);
-    w.exportAsOPMW("meta-regression", "TTL");
-    WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, "http://www.opmw.org/", "exportTest",
-        "https://endpoint.mint.isi.edu/provenance/query", domain, filePublisher);
-    e.exportAsOPMW("meta-regression-execution", "TTL");
-    c.exportCatalog(null, "RDF/XML");
+    String updateEndpoint = "https://endpoint.mint.isi.edu/provenance/data";
+    String queryEndpoint = "https://endpoint.mint.isi.edu/provenance/sparql";
+    String graph = "http://localhost:3030/ds/data/opmw";
+    String graphTemplate = "http://localhost:3030/ds/data/opmwTemplate";
 
+    /**
+     * Export variables
+     */
+    String exportUrl = "https://www.opmw.org/";
+    String exportPrefix = "export";
+    String domain = "neuroDisk";
+
+    // Directories
+    String temporalDirectory = "exportTestNeuroDisk";
+    File directory = mkdir(temporalDirectory);
+    String templateExportFilePath = directory.getAbsolutePath() + File.separator + "meta-template.ttl";
+    String executionExportFilePath = directory.getAbsolutePath() + File.separator + "meta-execution.ttl";
+    String defaultRepositoryFilePath = directory.getAbsolutePath() + File.separator + "domains";
+
+    String serialization = "TTL";
+
+    // Publishers
+    TriplesPublisher triplesPublisher = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
+    TriplesPublisher triplesPublisherTemplate = new TriplesPublisher(queryEndpoint, updateEndpoint, graphTemplate);
+    FilePublisher filePublisher = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, "tmp/", "http://localhost");
+    /*
+     * Execution:
+     * 1. Create a catalog of components
+     * 2. Export the template
+     * 3. Export the execution
+     */
+    Catalog catalog = new Catalog(domain, exportPrefix, defaultRepositoryFilePath, taxonomyURL);
+    WorkflowTemplateExport workflowTemplateExport = new WorkflowTemplateExport(templatePath, catalog, exportUrl,
+        exportPrefix,
+        queryEndpoint, domain, triplesPublisherTemplate);
+    workflowTemplateExport.exportAsOPMW(templateExportFilePath, serialization);
+    WorkflowExecutionExport workflowExecutionExport = new WorkflowExecutionExport(planPath, catalog, exportUrl,
+        exportPrefix, domain,
+        filePublisher, triplesPublisher);
+    workflowExecutionExport.exportAsOPMW(executionExportFilePath, serialization);
+    catalog.exportCatalog(null, "RDF/XML");
+  }
+
+  private File mkdir(String temporalDirectory) {
+    File directory = new File(temporalDirectory);
+    if (!new File(temporalDirectory).exists()) {
+      directory.mkdir();
+    }
+    return directory;
   }
 
   @Test
@@ -94,7 +127,7 @@ public class WorkflowTemplateExportTest {
     // In this case, we aren't uploading files to a server, so we just use a local
     // directory
     // and the local directory is connected to a Web server.
-    FilePublisher publisher = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, "tmp/", "http://localhost");
+    FilePublisher filePublisher = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, "tmp/", "http://localhost");
     // Some directories are created to store the files to store:
     // 1. the catalog of components (Catalog),
     String components = "src/test/resources/neuro/components.owl";
@@ -129,12 +162,15 @@ public class WorkflowTemplateExportTest {
     // Variables used to export create the URL
     String exportUrl = "http://www.opmw.org/";
     String exportPrefix = "exportTest";
-    String endpointURI = "https://endpoint.mint.isi.edu/provenance/query";
+    String queryEndpoint = "https://endpoint.mint.isi.edu/provenance/query";
+    String updateEndpoint = "https://endpoint.mint.isi.edu/provenance/data";
+    String graph = "http://localhost:3030/ds/data/opmw";
 
     // Create WorkflowExecutionExport: A class designed to export WINGS workflow
     // execution traces in RDF according to the OPMW-PROV model.
-    WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, exportUrl, exportPrefix, endpointURI, domain,
-        publisher);
+    TriplesPublisher triplesPublisher = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
+    WorkflowExecutionExport e = new WorkflowExecutionExport(planPath, c, exportUrl, exportPrefix, domain,
+        filePublisher, triplesPublisher);
 
     // Function: `exportAsOPMW` that will check if an execution exists and then
     // transforms it as RDF under the OPMW model.

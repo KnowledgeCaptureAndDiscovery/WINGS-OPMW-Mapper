@@ -1,5 +1,6 @@
 package edu.isi.kcap.wings.opmm;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -13,6 +14,8 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
+
+import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
 
 /**
  * Class designed to export WINGS workflow templates in RDF according to the
@@ -32,6 +35,7 @@ public class WorkflowTemplateExport {
     private String PREFIX_EXPORT_RESOURCE;
     private String endpointURI;// URI of the endpoint where everything is published.
     private Individual transformedTemplate = null;
+    public TriplesPublisher triplesPublisher;
 
     public boolean isTemplatePublished() {
         return isTemplatePublished;
@@ -61,7 +65,7 @@ public class WorkflowTemplateExport {
      * @param endpointURI
      */
     public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportUrl, String exportName,
-            String endpointURI, String domain) {
+            String endpointURI, String domain, TriplesPublisher triplesPublisher) {
         try {
             this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
         } catch (Exception e) {
@@ -74,6 +78,8 @@ public class WorkflowTemplateExport {
         if (this.wingsTemplateModel == null) {
             throw new NullPointerException("Error loading template " + templateFile);
         }
+        this.triplesPublisher = triplesPublisher;
+        endpointURI = triplesPublisher.queryEndpoint;
         this.opmwModel = ModelUtils.initializeModel(opmwModel);
         this.componentCatalog = catalog;
         if (exportUrl == null)
@@ -262,7 +268,7 @@ public class WorkflowTemplateExport {
             // publish abstract template with the URI taken from derivation
             QuerySolution qs = rsD.next();
             this.abstractTemplateExport = new WorkflowTemplateExport(qs.getResource("?dest").getURI(), componentCatalog,
-                    exportUrl, exportName, endpointURI, domain);
+                    exportUrl, exportName, endpointURI, domain, triplesPublisher);
             abstractTemplateExport.transform();
             abstractTemplateInstance = abstractTemplateExport.getTransformedTemplateIndividual();
             System.out.println("Abstract template: " + abstractTemplateInstance.getURI());
@@ -472,6 +478,8 @@ public class WorkflowTemplateExport {
                 abstractTemplateExport.exportAsOPMW(filepath, serialization);
             }
             ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
+            File file = new File(filepath);
+            this.triplesPublisher.publish(file);
         }
         return transformedTemplate.getURI();
     }
@@ -506,43 +514,5 @@ public class WorkflowTemplateExport {
         // this.export_as_OPMW(outFilePath, serialization);
         // this.export_as_PPlan(outFilePath, serialization);
         return exportAsOPMW(outFileDirectory, serialization);
-    }
-
-    // to do: tests of several templates, abstract and not abstract, and
-    // collections.
-    public static void main(String[] args) throws IOException {
-        // //String taxonomyURL =
-        // "http://www.wings-workflows.org/wings-omics-portal/export/users/ravali/genomics/components/library.owl";
-        // String taxonomyURL = "C:\\Users\\dgarijo\\Dropbox
-        // (OEG-UPM)\\NetBeansProjects\\WingsToOPMWMapper\\NEW_TEST\\templates\\concreteWorkflow\\library-gen.owl";
-        // //test 1: A regular template
-        // //String templatePath = "C:\\Users\\dgarijo\\Dropbox
-        // (OEG-UPM)\\NetBeansProjects\\WingsToOPMWMapper\\NEW_TEST\\templates\\concreteWorkflow\\MpileupVariantCaller.owl";
-        // //test 2: An expanded template of the same domain
-        // String templatePath =
-        // "http://www.wings-workflows.org/wings-omics-portal/export/users/ravali/genomics/executions/genomics_analysi-d3b54928-7c67-43ac-a618-9631e7dace42.owl#";
-        // //test 3: An expanded concrete template with abstract steps in the general.
-        // TAKES A LONG TIME!
-        //// String templatePath =
-        // "http://www.wings-workflows.org/wings-omics-portal/export/users/ravali/genomics/executions/SingleProteogeno-44579347-4076-4294-b8e8-6803a6ae74dc.owl#";
-        // //should get taxonomy URL from template. For the tests we will try local
-        // components.
-        // Catalog c = new Catalog("genomics", "testExport", "domains", taxonomyURL);
-        // WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c,
-        // "exportTest", "http://localhost:3030/test/query");
-        // w.exportAsOPMW("", "TTL");
-        // c.exportCatalog(null);
-
-        // test 4: an example from another domain, motivated because the instance of
-        // WINGS I was using does not work right now.
-        // set up on datascience4all
-        String taxonomyURL = "http://datascience4all.org/wings-portal/export/users/admin/mint/components/library.owl";
-        String templatePath = "http://datascience4all.org/wings-portal/export/users/admin/mint/workflows/storyboard_isi_cag_64kpzcza7.owl";
-        String domain = "mint";
-        Catalog c = new Catalog(domain, "testExport", "domains", taxonomyURL);
-        WorkflowTemplateExport w = new WorkflowTemplateExport(templatePath, c, "http://www.opmw.org", "exportTest",
-                "http://localhost:3030/test/query", domain);
-        w.exportAsOPMW(".", "TTL");
-        c.exportCatalog(null, "RDF/XML");
     }
 }

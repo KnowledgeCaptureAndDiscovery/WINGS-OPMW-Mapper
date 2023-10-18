@@ -6,18 +6,12 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.apache.jena.query.DatasetAccessor;
 import org.apache.jena.query.DatasetAccessorFactory;
 import org.apache.jena.query.QuerySolution;
@@ -25,9 +19,9 @@ import org.apache.jena.query.QuerySolution;
 import edu.isi.kcap.wings.opmm.ModelUtils;
 
 public class TriplesPublisher {
-  String updateEndpoint;
-  String queryEndpoint;
-  String graphURI;
+  public String updateEndpoint;
+  public String queryEndpoint;
+  public String graphURI;
   DatasetAccessor accessor;
 
   public TriplesPublisher(String queryEndpoint, String updateEndpoint, String graph) {
@@ -39,18 +33,18 @@ public class TriplesPublisher {
 
   public void publish(File file) throws IOException {
     String content = FileUtils.readFileToString(file, "UTF-8");
-    HttpPut putRequest = setUpRequest();
+    HttpPost request = setUpRequest();
     CloseableHttpClient httpClient = HttpClients.createDefault();
-    uploadTriples(content, putRequest, httpClient);
+    uploadTriples(content, request, httpClient);
   }
 
-  private void uploadTriples(String content, HttpPut putRequest, CloseableHttpClient httpClient)
+  private void uploadTriples(String content, HttpPost request, CloseableHttpClient httpClient)
       throws UnsupportedEncodingException, IOException, ClientProtocolException {
     if (content != null) {
       StringEntity input = new StringEntity(content);
       input.setContentType("text/turtle");
-      putRequest.setEntity(input);
-      HttpResponse response = httpClient.execute(putRequest);
+      request.setEntity(input);
+      HttpResponse response = httpClient.execute(request);
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode > 299) {
         throw new IOException("Unable to upload the domain " + statusCode);
@@ -60,8 +54,8 @@ public class TriplesPublisher {
     }
   }
 
-  private HttpPut setUpRequest() {
-    HttpPut putRequest = new HttpPut(this.updateEndpoint + "?graph=" + graphURI);
+  private HttpPost setUpRequest() {
+    HttpPost request = new HttpPost(this.updateEndpoint + "?graph=" + graphURI);
     int timeoutSeconds = 10;
     int CONNECTION_TIMEOUT_MS = timeoutSeconds * 1000;
     RequestConfig requestConfig = RequestConfig
@@ -70,8 +64,8 @@ public class TriplesPublisher {
         .setConnectTimeout(CONNECTION_TIMEOUT_MS)
         .setSocketTimeout(CONNECTION_TIMEOUT_MS)
         .build();
-    putRequest.setConfig(requestConfig);
-    return putRequest;
+    request.setConfig(requestConfig);
+    return request;
   }
 
   public static boolean findResourceOnRepository(String resourceUri, String queryEndpoint, String graph) {
