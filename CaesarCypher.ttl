@@ -85,7 +85,7 @@
         <http://purl.org/dc/terms/contributor>
                 <https://www.opmw.org/export/resource/Agent/yolanda> ;
         <http://purl.org/dc/terms/issued>
-                "2023-05-19T12:05:02.449337"^^xsd:dateTime ;
+                "2023-10-17T09:43:50.009939"^^xsd:dateTime ;
         <http://purl.org/dc/terms/license>
                 "http://creativecommons.org/licenses/by/3.0/"^^xsd:anyURI ;
         <http://purl.org/dc/terms/modified>
