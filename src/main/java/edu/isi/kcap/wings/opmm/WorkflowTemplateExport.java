@@ -479,7 +479,7 @@ public class WorkflowTemplateExport {
             }
             ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
             File file = new File(filepath);
-            this.triplesPublisher.publish(file);
+            this.triplesPublisher.publish(file, serialization);
         }
         return transformedTemplate.getURI();
     }

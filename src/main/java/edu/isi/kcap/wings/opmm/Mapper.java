@@ -69,7 +69,7 @@ public class Mapper {
         WorkflowExecutionExport executionExport = new WorkflowExecutionExport(planFilePath, catalog, exportUrl,
                 exportPrefix,
                 domain,
-                filePublisher, triplesPublisher);
+                filePublisher, triplesPublisher, serialization);
 
         exportCatalog(catalogRepository, serialization, response, catalog);
         exportExecution(executionDestinationFilePath, serialization, response, executionExport);

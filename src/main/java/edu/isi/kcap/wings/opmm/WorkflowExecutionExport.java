@@ -50,6 +50,7 @@ public class WorkflowExecutionExport {
     // private OntModel provModel;//TO IMPLEMENT AT THE END. Can it be done with
     // constructs?
     private String domain;
+    private String serialization;
 
     /**
      * Default constructor for exporting executions {@link #executionModel}
@@ -69,8 +70,9 @@ public class WorkflowExecutionExport {
      *                       remote)
      */
     public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
-            String domain, FilePublisher filePublisher, TriplesPublisher triplesPublisher) {
+            String domain, FilePublisher filePublisher, TriplesPublisher triplesPublisher, String serialization) {
         // Store the parameters as fields
+        this.serialization = serialization;
         this.componentCatalog = catalog;
         this.filePublisher = filePublisher;
         this.triplesPublisher = triplesPublisher;
@@ -191,7 +193,7 @@ public class WorkflowExecutionExport {
             concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog,
                     this.exportUrl, this.exportName, this.endpointQueryURI, this.domain, this.triplesPublisher);
             // concreteTemplateExport.transform();
-            concreteTemplateExport.exportAsOPMW("tmp.ttl", "TTL");
+            concreteTemplateExport.exportAsOPMW(null, serialization);
             System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
         } else {
             System.out.println("ERROR: Could not find an expanded template!");
@@ -419,8 +421,7 @@ public class WorkflowExecutionExport {
             // opmwModel.write(System.out, "TTL");
             ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
             File file = new File(filepath);
-            this.triplesPublisher.publish(file);
-
+            this.triplesPublisher.publish(file, serialization);
         }
         return transformedExecutionURI;
     }

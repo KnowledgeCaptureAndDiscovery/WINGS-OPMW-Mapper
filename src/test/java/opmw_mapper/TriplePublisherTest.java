@@ -14,32 +14,47 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.Test;
 
-import edu.isi.kcap.wings.opmm.ModelUtils;
 import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
 import junit.framework.Assert;
 
 public class TriplePublisherTest {
 
+  String updateEndpoint = "https://endpoint.mint.isi.edu/provenance/data";
+  String queryEndpoint = "https://endpoint.mint.isi.edu/provenance";
+  String graph = "http://localhost:3030/ds/data/opmw";
+
   @Test
-  public void publishTriplesTest() throws IOException {
-    String updateEndpoint = "https://endpoint.mint.isi.edu/wings-provenance/data";
-    String queryEndpoint = "https://endpoint.mint.isi.edu/wings-provenance";
-    String graph = "http://localhost:3030/ds/data/opmw";
+  public void publishTriplesTestTurtle() throws IOException {
     String resourceUri = "http://example.org/example#example";
     TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
-    File file = createTripleFile(resourceUri);
-    tp.publish(file);
+    File file = createTripleFile(resourceUri, "TTL");
+    tp.publish(file, "TTL");
     Assert.assertTrue(TriplesPublisher.findResourceOnRepository(resourceUri, queryEndpoint, graph));
   }
 
-  private File createTripleFile(String resourceUri) throws FileNotFoundException {
+  @Test
+  public void publishTriplesTestRDFXML() throws IOException {
+    String resourceUri = "http://example.org/example#examplerdf";
+    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
+    File file = createTripleFile(resourceUri, "RDF/XML");
+    tp.publish(file, "RDF/XML");
+    Assert.assertTrue(TriplesPublisher.findResourceOnRepository(resourceUri, queryEndpoint, graph));
+  }
+
+  private File createTripleFile(String resourceUri, String serialization) throws FileNotFoundException {
     // TODO Auto-generated method stub
     Model m = ModelFactory.createDefaultModel();
     Resource r = m.createResource(resourceUri);
     r.addProperty(RDF.type, OWL.Class);
     r.addProperty(RDFS.label, "example");
-    File f = new File("src/test/resources/example.ttl");
-    m.write(new java.io.FileOutputStream(f), "TTL");
+    File f = null;
+    if (serialization == "TTL")
+      f = new File("src/test/resources/example.ttl");
+    else if (serialization == "RDF/XML")
+      f = new File("src/test/resources/example.xml");
+    else
+      throw new FileNotFoundException("Serialization not supported");
+    m.write(new java.io.FileOutputStream(f), serialization);
     return f;
   }
 

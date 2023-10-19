@@ -1,5 +1,5 @@
-@prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
@@ -85,7 +85,7 @@
         <http://purl.org/dc/terms/contributor>
                 <https://www.opmw.org/export/resource/Agent/yolanda> ;
         <http://purl.org/dc/terms/issued>
-                "2023-10-17T09:43:50.009939"^^xsd:dateTime ;
+                "2023-10-18T11:58:43.829"^^xsd:dateTime ;
         <http://purl.org/dc/terms/license>
                 "http://creativecommons.org/licenses/by/3.0/"^^xsd:anyURI ;
         <http://purl.org/dc/terms/modified>

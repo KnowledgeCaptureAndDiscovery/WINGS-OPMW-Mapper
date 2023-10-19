@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -31,26 +32,27 @@ public class TriplesPublisher {
     this.accessor = DatasetAccessorFactory.createHTTP(updateEndpoint);
   }
 
-  public void publish(File file) throws IOException {
-    String content = FileUtils.readFileToString(file, "UTF-8");
+  public void publish(File file, String serialization) throws IOException {
+    byte[] data = FileUtils.readFileToByteArray(file);
     HttpPost request = setUpRequest();
     CloseableHttpClient httpClient = HttpClients.createDefault();
-    uploadTriples(content, request, httpClient);
+    uploadTriples(data, request, httpClient, serialization);
   }
 
-  private void uploadTriples(String content, HttpPost request, CloseableHttpClient httpClient)
+  private void uploadTriples(byte[] data, HttpPost request, CloseableHttpClient httpClient, String serialization)
       throws UnsupportedEncodingException, IOException, ClientProtocolException {
-    if (content != null) {
-      StringEntity input = new StringEntity(content);
-      input.setContentType("text/turtle");
-      request.setEntity(input);
-      HttpResponse response = httpClient.execute(request);
-      int statusCode = response.getStatusLine().getStatusCode();
-      if (statusCode > 299) {
-        throw new IOException("Unable to upload the domain " + statusCode);
-      }
-    } else {
-      throw new IOException("File content is null");
+    ByteArrayEntity entity = new ByteArrayEntity(data);
+    request.setEntity(entity);
+    if (serialization == "TTL")
+      request.setHeader("Content-Type", "text/turtle");
+    else if (serialization == "RDF/XML")
+      request.setHeader("Content-Type", "application/rdf+xml");
+    else
+      throw new UnsupportedEncodingException("Serialization not supported");
+    HttpResponse response = httpClient.execute(request);
+    int statusCode = response.getStatusLine().getStatusCode();
+    if (statusCode > 299) {
+      throw new IOException("Unable to upload the domain " + statusCode);
     }
   }
 

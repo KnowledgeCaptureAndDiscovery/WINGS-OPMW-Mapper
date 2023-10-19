@@ -24,8 +24,8 @@ public class MapperTestNew {
   String exportUrl = "http://www.opmw.org/";
   // catalogRepositoryDirectory: the directory where the catalog will be stored
   String catalogRepositoryDirectory = "domains";
-  String endpointQueryURI = "https://endpoint.mint.isi.edu/wings-provenance/query";
-  String endpointPostURI = "https://endpoint.mint.isi.edu/wings-provenance/query";
+  String endpointQueryURI = "https://endpoint.mint.isi.edu/provenance/query";
+  String endpointPostURI = "https://endpoint.mint.isi.edu/provenance/update";
   String componentLibraryFilePath = "src/test/resources/neuro/components.owl";
   String planFilePath = "src/test/resources/neuro/plan.owl";
 
@@ -51,7 +51,7 @@ public class MapperTestNew {
 
   @Test
   public void testXMLTurtle() throws IOException {
-    String serialization = "rdf/xml";
+    String serialization = "RDF/XML";
     File file = new File("tmp/" + serialization);
     if (!file.exists()) {
       file.mkdirs();
