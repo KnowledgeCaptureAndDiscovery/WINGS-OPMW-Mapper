@@ -1,56 +1,59 @@
 <?xml version="1.0"?>
 <rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:j.0="http://www.wings-workflows.org/ontology/resource.owl#"
-    xmlns:owl="http://www.w3.org/2002/07/owl#"
-    xmlns:j.1="https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/data/ontology.owl#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:j.2="https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/components/library.owl#"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-    xmlns:j.3="http://www.wings-workflows.org/ontology/component.owl#"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:j.0="http://www.wings-workflows.org/ontology/resource.owl#"
+      xmlns:owl="http://www.w3.org/2002/07/owl#"
+      xmlns:j.1="https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/data/ontology.owl#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:j.2="https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/components/library.owl#"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+      xmlns:j.3="http://www.wings-workflows.org/ontology/component.owl#"
       xml:base="https://wings.disk.isi.edu/wings-portal/export/users/admin/Enigma/components/library.owl">
       <rdf:Description rdf:about="">
             <owl:versionInfo>1</owl:versionInfo>
       </rdf:Description>
       <owl:Class rdf:ID="ShinyMetaAnalysisClass">
-            <rdfs:subClassOf rdf:resource="#AnalysisClass"/>
+            <rdfs:subClassOf rdf:resource="#AnalysisClass" />
       </owl:Class>
       <owl:Class rdf:ID="MetaRegressionClass">
-            <rdfs:subClassOf rdf:resource="#AnalysisClass"/>
+            <rdfs:subClassOf rdf:resource="#AnalysisClass" />
       </owl:Class>
       <owl:Class rdf:ID="MetaAnalysisClass">
-            <rdfs:subClassOf rdf:resource="#AnalysisClass"/>
+            <rdfs:subClassOf rdf:resource="#AnalysisClass" />
       </owl:Class>
       <owl:Class rdf:ID="ForesPlotDemographicClass">
-            <rdfs:subClassOf rdf:resource="#ShinyVisualizationClass"/>
+            <rdfs:subClassOf rdf:resource="#ShinyVisualizationClass" />
       </owl:Class>
       <owl:Class rdf:ID="ForestPlotClass">
-            <rdfs:subClassOf rdf:resource="#ShinyVisualizationClass"/>
+            <rdfs:subClassOf rdf:resource="#ShinyVisualizationClass" />
       </owl:Class>
       <owl:Class rdf:ID="ShinyMetaRegressionClass">
-            <rdfs:subClassOf rdf:resource="#AnalysisClass"/>
+            <rdfs:subClassOf rdf:resource="#AnalysisClass" />
       </owl:Class>
       <owl:Class rdf:ID="BrainVizCreatorClass">
-            <rdfs:subClassOf rdf:resource="#VisualizationClass"/>
+            <rdfs:subClassOf rdf:resource="#VisualizationClass" />
       </owl:Class>
       <owl:Class rdf:ID="MergeAndFilterClass">
-            <rdfs:subClassOf rdf:resource="#MergeAndFilterFilesClass"/>
+            <rdfs:subClassOf rdf:resource="#MergeAndFilterFilesClass" />
       </owl:Class>
       <owl:Class rdf:ID="AddDemographicMergeAndFilterClass">
-            <rdfs:subClassOf rdf:resource="#MergeAndFilterFilesClass"/>
+            <rdfs:subClassOf rdf:resource="#MergeAndFilterFilesClass" />
       </owl:Class>
       <owl:Class rdf:ID="ForestPlotWithDemographicClass">
-            <rdfs:subClassOf rdf:resource="#ShinyVisualizationClass"/>
+            <rdfs:subClassOf rdf:resource="#ShinyVisualizationClass" />
       </owl:Class>
-      <owl:DatatypeProperty rdf:about="http://www.wings-workflows.org/ontology/component.owl#isNoOperation"/>
-      <owl:DatatypeProperty rdf:about="http://www.wings-workflows.org/ontology/component.owl#hasVersion"/>
+      <owl:DatatypeProperty
+            rdf:about="http://www.wings-workflows.org/ontology/component.owl#isNoOperation" />
+      <owl:DatatypeProperty
+            rdf:about="http://www.wings-workflows.org/ontology/component.owl#hasVersion" />
       <j.2:ForestPlotWithDemographicClass rdf:ID="ForestPlotWithDemographic">
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="ForestPlotWithDemographic_input">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVFile" />
                         <j.3:hasArgumentID>input</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
@@ -58,7 +61,8 @@
                   <j.3:ParameterArgument rdf:ID="ForestPlotWithDemographic_demographic">
                         <j.3:hasArgumentID>demographic</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p2</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -67,7 +71,8 @@
                   <j.3:ParameterArgument rdf:ID="ForestPlotWithDemographic_area">
                         <j.3:hasArgumentID>area</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -76,7 +81,8 @@
                   <j.3:ParameterArgument rdf:ID="ForestPlotWithDemographic_snp">
                         <j.3:hasArgumentID>snp</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p3</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -85,29 +91,34 @@
                   <j.3:ParameterArgument rdf:ID="ForestPlotWithDemographic_trait">
                         <j.3:hasArgumentID>trait</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p4</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="ForestPlotWithDemographic_shiny_visualization">
-                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile" />
                         <j.3:hasArgumentID>shiny_visualization</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
-            <j.3:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/ForestPlotWithDemographic</j.3:hasLocation>
+            <j.3:hasLocation>
+                  /opt/wings/storage/default/users/admin/Enigma/code/library/ForestPlotWithDemographic</j.3:hasLocation>
             <j.3:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
             >true</j.3:isConcrete>
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -118,19 +129,21 @@
       <j.2:MetaAnalysisClass rdf:ID="MetaAnalysis">
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="MetaAnalysis_input">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput" />
                         <j.3:hasArgumentID>input</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="MetaAnalysis_p_value">
-                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile" />
                         <j.3:hasArgumentID>p_value</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
@@ -140,9 +153,11 @@
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -153,10 +168,11 @@
       <j.2:ShinyMetaRegressionClass rdf:ID="ShinyMetaRegression">
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="ShinyMetaRegression_input">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput" />
                         <j.3:hasArgumentID>input</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
@@ -164,29 +180,34 @@
                   <j.3:ParameterArgument rdf:ID="ShinyMetaRegression_demographic">
                         <j.3:hasArgumentID>demographic</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="ShinyMetaRegression_log">
-                        <rdf:type rdf:resource="../data/ontology.owl#ShinyLog"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#ShinyLog" />
                         <j.3:hasArgumentID>log</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
-            <j.3:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/ShinyMetaRegression</j.3:hasLocation>
+            <j.3:hasLocation>
+                  /opt/wings/storage/default/users/admin/Enigma/code/library/ShinyMetaRegression</j.3:hasLocation>
             <j.3:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
             >true</j.3:isConcrete>
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -197,10 +218,11 @@
       <j.2:BrainVizCreatorClass rdf:ID="BrainVizCreator">
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="BrainVizCreator_pval">
-                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile" />
                         <j.3:hasArgumentID>pval</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
@@ -208,38 +230,44 @@
                   <j.3:ParameterArgument rdf:ID="BrainVizCreator_area">
                         <j.3:hasArgumentID>area</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="BrainVizCreator_brain_visualization">
-                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile" />
                         <j.3:hasArgumentID>brain_visualization</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="BrainVizCreator_p_value">
-                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile" />
                         <j.3:hasArgumentID>p_value</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o2</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
-            <j.3:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/BrainVizCreator</j.3:hasLocation>
+            <j.3:hasLocation>
+                  /opt/wings/storage/default/users/admin/Enigma/code/library/BrainVizCreator</j.3:hasLocation>
             <j.3:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
             >true</j.3:isConcrete>
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -250,19 +278,21 @@
       <j.2:ForestPlotClass rdf:ID="ForestPlot">
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="ForestPlot_input">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVFile" />
                         <j.3:hasArgumentID>input</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="ForestPlot_shiny_visualization">
-                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile" />
                         <j.3:hasArgumentID>shiny_visualization</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
@@ -272,9 +302,11 @@
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -287,7 +319,8 @@
                   <j.3:ParameterArgument rdf:ID="AddDemographicMergeAndFilter_trait">
                         <j.3:hasArgumentID>trait</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -296,7 +329,8 @@
                   <j.3:ParameterArgument rdf:ID="AddDemographicMergeAndFilter_area">
                         <j.3:hasArgumentID>area</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p2</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -305,7 +339,8 @@
                   <j.3:ParameterArgument rdf:ID="AddDemographicMergeAndFilter_snp">
                         <j.3:hasArgumentID>snp</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p3</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -314,7 +349,8 @@
                   <j.3:ParameterArgument rdf:ID="AddDemographicMergeAndFilter_demographic">
                         <j.3:hasArgumentID>demographic</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p4</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue>MEAN_AGE</j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -323,7 +359,8 @@
                   <j.3:ParameterArgument rdf:ID="AddDemographicMergeAndFilter_demographic_min">
                         <j.3:hasArgumentID>demographic_min</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p5</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasValue>
@@ -333,7 +370,8 @@
                   <j.3:ParameterArgument rdf:ID="AddDemographicMergeAndFilter_demographic_max">
                         <j.3:hasArgumentID>demographic_max</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p6</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasValue>
@@ -343,39 +381,45 @@
                   <j.3:ParameterArgument rdf:ID="AddDemographicMergeAndFilter_demographic_value">
                         <j.3:hasArgumentID>demographic_value</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p7</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
             </j.3:hasInput>
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="AddDemographicMergeAndFilter_cohortData">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVInput"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVInput" />
                         <j.3:hasArgumentID>cohortData</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >1</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="AddDemographicMergeAndFilter_mergedFile">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput" />
                         <j.3:hasArgumentID>mergedFile</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
-            <j.3:hasDocumentation></j.3:hasDocumentation>
-            <j.3:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/AddDemographicMergeAndFilter</j.3:hasLocation>
+            <j.3:hasDocumentation>This component is doing things</j.3:hasDocumentation>
+            <j.3:hasLocation>
+                  /opt/wings/storage/default/users/admin/Enigma/code/library/AddDemographicMergeAndFilter</j.3:hasLocation>
             <j.3:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
             >true</j.3:isConcrete>
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -386,10 +430,11 @@
       <j.2:MetaRegressionClass rdf:ID="MetaRegression">
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="MetaRegression_input">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput" />
                         <j.3:hasArgumentID>input</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
@@ -397,30 +442,35 @@
                   <j.3:ParameterArgument rdf:ID="MetaRegression_demographic">
                         <j.3:hasArgumentID>demographic</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="MetaRegression_confidence">
-                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile" />
                         <j.3:hasArgumentID>confidence</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
             <j.3:hasDocumentation></j.3:hasDocumentation>
-            <j.3:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/MetaRegression</j.3:hasLocation>
+            <j.3:hasLocation>
+                  /opt/wings/storage/default/users/admin/Enigma/code/library/MetaRegression</j.3:hasLocation>
             <j.3:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
             >true</j.3:isConcrete>
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -433,7 +483,8 @@
                   <j.3:ParameterArgument rdf:ID="MergeAndFilter_trait">
                         <j.3:hasArgumentID>trait</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -442,7 +493,8 @@
                   <j.3:ParameterArgument rdf:ID="MergeAndFilter_area">
                         <j.3:hasArgumentID>area</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p2</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -451,38 +503,44 @@
                   <j.3:ParameterArgument rdf:ID="MergeAndFilter_snp">
                         <j.3:hasArgumentID>snp</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p3</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
             </j.3:hasInput>
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="MergeAndFilter_cohortData">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVInput"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVInput" />
                         <j.3:hasArgumentID>cohortData</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >1</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="MergeAndFilter_mergedFile">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput" />
                         <j.3:hasArgumentID>mergedFile</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
-            <j.3:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/MergeAndFilter</j.3:hasLocation>
+            <j.3:hasLocation>
+                  /opt/wings/storage/default/users/admin/Enigma/code/library/MergeAndFilter</j.3:hasLocation>
             <j.3:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
             >true</j.3:isConcrete>
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -493,10 +551,11 @@
       <j.2:ForesPlotDemographicClass rdf:ID="ForesPlotDemographic">
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="ForesPlotDemographic_input">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVFile" />
                         <j.3:hasArgumentID>input</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
@@ -504,7 +563,8 @@
                   <j.3:ParameterArgument rdf:ID="ForesPlotDemographic_demographic">
                         <j.3:hasArgumentID>demographic</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -513,7 +573,8 @@
                   <j.3:ParameterArgument rdf:ID="ForesPlotDemographic_area">
                         <j.3:hasArgumentID>area</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p2</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -522,7 +583,8 @@
                   <j.3:ParameterArgument rdf:ID="ForesPlotDemographic_snp">
                         <j.3:hasArgumentID>snp</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p3</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
@@ -531,29 +593,34 @@
                   <j.3:ParameterArgument rdf:ID="ForesPlotDemographic_trait">
                         <j.3:hasArgumentID>trait</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-p4</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                         <j.3:hasValue></j.3:hasValue>
                   </j.3:ParameterArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="ForesPlotDemographic_shiny_visualization">
-                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#OutputFile" />
                         <j.3:hasArgumentID>shiny_visualization</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
-            <j.3:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/ForesPlotDemographic</j.3:hasLocation>
+            <j.3:hasLocation>
+                  /opt/wings/storage/default/users/admin/Enigma/code/library/ForesPlotDemographic</j.3:hasLocation>
             <j.3:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
             >true</j.3:isConcrete>
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -564,31 +631,36 @@
       <j.2:ShinyMetaAnalysisClass rdf:ID="ShinyMetaAnalysis">
             <j.3:hasInput>
                   <j.3:DataArgument rdf:ID="ShinyMetaAnalysis_input">
-                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#CSVOutput" />
                         <j.3:hasArgumentID>input</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-i1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasInput>
             <j.3:hasOutput>
                   <j.3:DataArgument rdf:ID="ShinyMetaAnalysis_log">
-                        <rdf:type rdf:resource="../data/ontology.owl#ShinyLog"/>
+                        <rdf:type rdf:resource="../data/ontology.owl#ShinyLog" />
                         <j.3:hasArgumentID>log</j.3:hasArgumentID>
                         <j.3:hasArgumentName>-o1</j.3:hasArgumentName>
-                        <j.3:hasDimensionality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
+                        <j.3:hasDimensionality
+                              rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"
                         >0</j.3:hasDimensionality>
                   </j.3:DataArgument>
             </j.3:hasOutput>
-            <j.3:hasLocation>/opt/wings/storage/default/users/admin/Enigma/code/library/ShinyMetaAnalysis</j.3:hasLocation>
+            <j.3:hasLocation>
+                  /opt/wings/storage/default/users/admin/Enigma/code/library/ShinyMetaAnalysis</j.3:hasLocation>
             <j.3:isConcrete rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
             >true</j.3:isConcrete>
             <j.0:hasHardwareDependency>
                   <j.0:HardwareDependency>
                         <j.0:requiresMemoryGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresMemoryGB>
+                        >
+                              0.0</j.0:requiresMemoryGB>
                         <j.0:requiresStorageGB rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-                        >0.0</j.0:requiresStorageGB>
+                        >
+                              0.0</j.0:requiresStorageGB>
                         <j.0:needs64bit rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
                         >false</j.0:needs64bit>
                   </j.0:HardwareDependency>
@@ -597,4 +669,3 @@
             >43</j.3:hasVersion>
       </j.2:ShinyMetaAnalysisClass>
 </rdf:RDF>
-

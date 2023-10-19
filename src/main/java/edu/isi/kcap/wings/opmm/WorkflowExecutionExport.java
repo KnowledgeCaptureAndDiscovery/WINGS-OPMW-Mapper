@@ -13,6 +13,8 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
 
+import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
+
 /**
  * Class designed to export WINGS workflow execution traces in RDF according to
  * the OPMW-PROV model.
@@ -32,12 +34,13 @@ public class WorkflowExecutionExport {
     private final Catalog componentCatalog;
     //
     private final String PREFIX_EXPORT_RESOURCE;
-    private final String endpointURI;// URI of the endpoint where everything is published.
+    private final String endpointQueryURI;// URI of the endpoint where everything is published.
     private final String exportUrl;
     private final String exportName;// needed to pass it on to template exports
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
     private FilePublisher filePublisher;
+    private TriplesPublisher triplesPublisher;
 
     private String uploadURL;
     private String uploadUsername;
@@ -47,6 +50,7 @@ public class WorkflowExecutionExport {
     // private OntModel provModel;//TO IMPLEMENT AT THE END. Can it be done with
     // constructs?
     private String domain;
+    private String serialization;
 
     /**
      * Default constructor for exporting executions {@link #executionModel}
@@ -66,11 +70,13 @@ public class WorkflowExecutionExport {
      *                       remote)
      */
     public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
-            String endpointURI, String domain, FilePublisher filePublisher) {
+            String domain, FilePublisher filePublisher, TriplesPublisher triplesPublisher, String serialization) {
         // Store the parameters as fields
+        this.serialization = serialization;
         this.componentCatalog = catalog;
         this.filePublisher = filePublisher;
-        this.endpointURI = endpointURI;
+        this.triplesPublisher = triplesPublisher;
+        this.endpointQueryURI = triplesPublisher.queryEndpoint;
         this.exportName = exportName;
         this.exportUrl = exportUrl;
         this.domain = domain;
@@ -85,29 +91,6 @@ public class WorkflowExecutionExport {
 
         PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
         isExecPublished = false;
-    }
-
-    /**
-     * Default constructor for exporting executions
-     *
-     * @param executionFile
-     * @param catalog
-     * @param exportName
-     * @param endpointURI
-     */
-    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
-            String endpointURI, String domain) {
-        this.executionModel = ModelUtils.loadModel(executionFile);
-        this.opmwModel = ModelUtils.initializeModel(opmwModel);
-        this.componentCatalog = catalog;
-        if (exportUrl == null)
-            exportUrl = Constants.PREFIX_EXPORT_GENERIC;
-        this.PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
-        this.endpointURI = endpointURI;
-        this.exportName = exportName;
-        this.exportUrl = exportUrl;
-        this.isExecPublished = false;
-        this.domain = domain;
     }
 
     /**
@@ -128,7 +111,7 @@ public class WorkflowExecutionExport {
             // ask if an execution with same run id exists. If so, return URI. The local
             // name of the execution is its run id.
             String queryExec = QueriesWorkflowExecutionExport.getOPMWExecutionsWithRunID(wingsExecution.getLocalName());
-            QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec, endpointURI);
+            QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec, endpointQueryURI);
             if (solution != null) {
                 System.out.println("Execution exists!");
                 this.transformedExecutionURI = (solution.getResource("?exec").getURI());
@@ -208,8 +191,9 @@ public class WorkflowExecutionExport {
             // publish expanded template. The expanded template will publish the template if
             // necessary.
             concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog,
-                    this.exportUrl, this.exportName, this.endpointURI, this.domain);
-            concreteTemplateExport.transform();
+                    this.exportUrl, this.exportName, this.endpointQueryURI, this.domain, this.triplesPublisher);
+            // concreteTemplateExport.transform();
+            concreteTemplateExport.exportAsOPMW(null, serialization);
             System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
         } else {
             System.out.println("ERROR: Could not find an expanded template!");
@@ -265,7 +249,7 @@ public class WorkflowExecutionExport {
 
                 tempFile = storage.zipFolder(directory);
                 try {
-                    filePublisher.publishFile(tempFile.getAbsolutePath());
+                    filePublisher.publishFile(tempFile);
                 } catch (Exception e) {
                     System.out.println("Error publishing directory:" + directory + " compressed as " + tempFile);
                     System.err.println(e.getMessage());
@@ -279,10 +263,10 @@ public class WorkflowExecutionExport {
             /* Export the mainscript and upload */
             // String mainScriptLocation = uploadFile(executionScript.getString());
             String mainScriptLocation = executionScript.getString().replaceAll("\\s", "");
-            try {
-                mainScriptLocation = filePublisher.publishFile(mainScriptLocation);
-            } catch (Exception e) {
-                System.out.println("Error publishing file: " + mainScriptLocation);
+            if (mainScriptLocation != null) {
+                mainScriptLocation = filePublisher.publishFile(mainScriptLocation).getFileUrl();
+            } else {
+                System.out.println("Error publishing main script:" + mainScriptLocation);
             }
             String mainScriptURI = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_SOFTWARE_CONFIGURATION + "/" + runID + "_"
                     + wingsStep.getLocalName() + "_mainscript";
@@ -310,12 +294,7 @@ public class WorkflowExecutionExport {
                 String pathFile = binding.toString();
                 // String dataLocation = uploadFile(pathFile);
                 String dataLocation;
-                try {
-                    dataLocation = filePublisher.publishFile(pathFile);
-                } catch (Exception e) {
-                    dataLocation = pathFile;
-                    System.out.println("Error publishing file: " + pathFile);
-                }
+                dataLocation = filePublisher.publishFile(pathFile).getFileUrl();
                 executionArtifact.addProperty(opmwModel.createProperty(Constants.OPMW_DATA_PROP_HAS_LOCATION),
                         dataLocation);
 
@@ -441,6 +420,8 @@ public class WorkflowExecutionExport {
         if (!isExecPublished) {
             // opmwModel.write(System.out, "TTL");
             ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
+            File file = new File(filepath);
+            this.triplesPublisher.publish(file, serialization);
         }
         return transformedExecutionURI;
     }

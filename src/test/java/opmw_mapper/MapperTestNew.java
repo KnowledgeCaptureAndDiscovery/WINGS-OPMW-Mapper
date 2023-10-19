@@ -14,7 +14,7 @@ import edu.isi.kcap.wings.opmm.DataTypes.ProvenanceResponseSchema;
 public class MapperTestNew {
   private static String webServerDirectory = "tmp/";
   private static String webServerDomain = "http://localhost";
-  FilePublisher filePublisher = new FilePublisher(webServerDirectory, webServerDomain);
+  FilePublisher filePublisher = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, webServerDirectory, webServerDomain);
   // Domain: it is wings domain concept: it is the name of the domain
   String domain = "neuroDisk";
   // exportPrefix: used by the catalog to create the URL:
@@ -25,7 +25,7 @@ public class MapperTestNew {
   // catalogRepositoryDirectory: the directory where the catalog will be stored
   String catalogRepositoryDirectory = "domains";
   String endpointQueryURI = "https://endpoint.mint.isi.edu/provenance/query";
-  String endpointPostURI = "https://endpoint.mint.isi.edu/provenance/query";
+  String endpointPostURI = "https://endpoint.mint.isi.edu/provenance/update";
   String componentLibraryFilePath = "src/test/resources/neuro/components.owl";
   String planFilePath = "src/test/resources/neuro/plan.owl";
 
@@ -51,7 +51,7 @@ public class MapperTestNew {
 
   @Test
   public void testXMLTurtle() throws IOException {
-    String serialization = "rdf/xml";
+    String serialization = "RDF/XML";
     File file = new File("tmp/" + serialization);
     if (!file.exists()) {
       file.mkdirs();

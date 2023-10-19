@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import edu.isi.kcap.wings.opmm.DataTypes.Links;
 import edu.isi.kcap.wings.opmm.DataTypes.ProvenanceResponseSchema;
+import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
 
 /**
  *
@@ -58,6 +59,8 @@ public class Mapper {
             String executionDestinationFilePath, String expandedTemplateDestinationFilePath, String abstractFilePath,
             FilePublisher filePublisher, String serialization)
             throws IOException {
+        TriplesPublisher triplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
+                "http://localhost:3030/ds/data/opmw");
         // Response
         ProvenanceResponseSchema response = new ProvenanceResponseSchema();
         // Create the catalog
@@ -65,8 +68,8 @@ public class Mapper {
                 catalogRepository, componentLibraryFilePath);
         WorkflowExecutionExport executionExport = new WorkflowExecutionExport(planFilePath, catalog, exportUrl,
                 exportPrefix,
-                endpointQueryURI, domain,
-                filePublisher);
+                domain,
+                filePublisher, triplesPublisher, serialization);
 
         exportCatalog(catalogRepository, serialization, response, catalog);
         exportExecution(executionDestinationFilePath, serialization, response, executionExport);
