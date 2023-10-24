@@ -10,12 +10,12 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.query.DatasetAccessor;
 import org.apache.jena.query.DatasetAccessorFactory;
 import org.apache.jena.query.QuerySolution;
+import org.apache.jena.riot.RDFLanguages;
 
 import edu.isi.kcap.wings.opmm.ModelUtils;
 
@@ -43,9 +43,9 @@ public class TriplesPublisher {
       throws UnsupportedEncodingException, IOException, ClientProtocolException {
     ByteArrayEntity entity = new ByteArrayEntity(data);
     request.setEntity(entity);
-    if (serialization == "TTL")
+    if (serialization == RDFLanguages.TURTLE.getName())
       request.setHeader("Content-Type", "text/turtle");
-    else if (serialization == "RDF/XML")
+    else if (serialization == RDFLanguages.RDFXML.getName())
       request.setHeader("Content-Type", "application/rdf+xml");
     else
       throw new UnsupportedEncodingException("Serialization not supported");

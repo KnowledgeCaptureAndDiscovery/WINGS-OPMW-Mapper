@@ -9,6 +9,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -28,7 +29,7 @@ public class TriplePublisherTest {
     String resourceUri = "http://example.org/example#example";
     TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
     File file = createTripleFile(resourceUri, "TTL");
-    tp.publish(file, "TTL");
+    tp.publish(file, RDFLanguages.TURTLE.getName());
     Assert.assertTrue(TriplesPublisher.findResourceOnRepository(resourceUri, queryEndpoint, graph));
   }
 
@@ -36,8 +37,8 @@ public class TriplePublisherTest {
   public void publishTriplesTestRDFXML() throws IOException {
     String resourceUri = "http://example.org/example#examplerdf";
     TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
-    File file = createTripleFile(resourceUri, "RDF/XML");
-    tp.publish(file, "RDF/XML");
+    File file = createTripleFile(resourceUri, RDFLanguages.RDFXML.getName());
+    tp.publish(file, RDFLanguages.RDFXML.getName());
     Assert.assertTrue(TriplesPublisher.findResourceOnRepository(resourceUri, queryEndpoint, graph));
   }
 

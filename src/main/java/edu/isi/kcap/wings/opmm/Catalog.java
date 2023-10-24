@@ -534,7 +534,7 @@ public class Catalog {
      * @throws IOException
      */
     public String exportCatalog(String directory, String serialization) throws IOException {
-        String exportPath;
+        String exportFilePath;
         // create directory if it does not exist
         File dir;
         if (directory == null || directory.isEmpty()) {
@@ -546,9 +546,9 @@ public class Catalog {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        exportPath = dir + File.separator + this.domain;
-        ModelUtils.exportRDFFile(exportPath, localCatalog, serialization);
-        return exportPath;
+        exportFilePath = dir + File.separator + this.domain;
+        ModelUtils.exportRDFFile(exportFilePath, localCatalog, serialization);
+        return exportFilePath;
     }
 
     /**

@@ -183,6 +183,13 @@ public class Utils {
         Assert.assertTrue(text.iterator().hasNext());
     }
 
+    public static File mkdir(String directoryPath) {
+        File directory = new File(directoryPath);
+        if (!new File(directoryPath).exists()) {
+            directory.mkdir();
+        }
+        return directory;
+    }
     // given an online repository, perform a test against a template/run.
     // TO DO
 }

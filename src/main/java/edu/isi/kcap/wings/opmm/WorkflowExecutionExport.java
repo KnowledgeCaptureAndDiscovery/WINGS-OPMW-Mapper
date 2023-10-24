@@ -113,7 +113,7 @@ public class WorkflowExecutionExport {
             String queryExec = QueriesWorkflowExecutionExport.getOPMWExecutionsWithRunID(wingsExecution.getLocalName());
             QuerySolution solution = ModelUtils.queryOnlineRepository(queryExec, endpointQueryURI);
             if (solution != null) {
-                System.out.println("Execution exists!");
+                System.out.println("Execution exists in the triple store" + solution.getResource("?exec").getURI());
                 this.transformedExecutionURI = (solution.getResource("?exec").getURI());
                 isExecPublished = true;
             } else {
@@ -192,8 +192,8 @@ public class WorkflowExecutionExport {
             // necessary.
             concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog,
                     this.exportUrl, this.exportName, this.endpointQueryURI, this.domain, this.triplesPublisher);
-            // concreteTemplateExport.transform();
-            concreteTemplateExport.exportAsOPMW(null, serialization);
+            concreteTemplateExport.transform();
+            // concreteTemplateExport.exportAsOPMW(null, serialization);
             System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
         } else {
             System.out.println("ERROR: Could not find an expanded template!");
