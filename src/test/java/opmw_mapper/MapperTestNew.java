@@ -7,9 +7,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import edu.isi.kcap.wings.opmm.Constants;
 import edu.isi.kcap.wings.opmm.FilePublisher;
 import edu.isi.kcap.wings.opmm.Mapper;
-import edu.isi.kcap.wings.opmm.DataTypes.ProvenanceResponseSchema;
+import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
 
 public class MapperTestNew {
   private static String webServerDirectory = "tmp/";
@@ -21,7 +22,7 @@ public class MapperTestNew {
   // w3id.org/opmw/wings/{exportName}/{domain}#Components
   // w3id.org/opmw/wings/{exportName}/{domain}#Data
   String exportPrefix = "exportTest";
-  String exportUrl = "http://www.opmw.org/exportTest/";
+  String exportUrl = "http://www.opmw.org/";
   // catalogRepositoryDirectory: the directory where the catalog will be stored
   String catalogRepositoryDirectory = "domains";
   String endpointQueryURI = "https://endpoint.mint.isi.edu/provenance/query";
@@ -39,10 +40,15 @@ public class MapperTestNew {
     String executionFilePath = "tmp/" + serialization + "/execution.ttl";
     String expandedTemplateFilePath = "tmp/" + serialization + "/expandedTemplate.ttl";
     String abstractFilePath = "tmp/" + serialization + "/abstractTemplate.ttl";
+    TriplesPublisher executionTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI, exportUrl,
+        exportPrefix, serialization);
+    TriplesPublisher catalogTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
+        Constants.CATALOG_URI,
+        exportPrefix, serialization);
     try {
-      Mapper.main(domain, exportPrefix, exportUrl, catalogRepositoryDirectory, componentLibraryFilePath, planFilePath,
-          endpointQueryURI, endpointPostURI, executionFilePath, expandedTemplateFilePath, abstractFilePath,
-          filePublisher, serialization);
+      Mapper.main(domain, catalogRepositoryDirectory, componentLibraryFilePath, planFilePath, executionFilePath,
+          expandedTemplateFilePath, abstractFilePath,
+          filePublisher, executionTriplesPublisher, catalogTriplesPublisher);
     } catch (Exception e) {
       e.printStackTrace();
       Assert.assertTrue(false);
@@ -59,12 +65,15 @@ public class MapperTestNew {
     String executionFilePath = "tmp/" + serialization + "/execution.xml";
     String expandedTemplateFilePath = "tmp/" + serialization + "/expandedTemplate.xml";
     String abstractFilePath = "tmp/" + serialization + "/abstractTemplate.xml";
+    TriplesPublisher executionTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI, exportUrl,
+        exportPrefix, serialization);
+    TriplesPublisher catalogTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
+        Constants.CATALOG_URI,
+        exportPrefix, serialization);
     try {
-      ProvenanceResponseSchema response = Mapper.main(domain, exportPrefix, exportUrl, catalogRepositoryDirectory,
-          componentLibraryFilePath, planFilePath,
-          endpointQueryURI, endpointPostURI, executionFilePath, expandedTemplateFilePath, abstractFilePath,
-          filePublisher, serialization);
-      System.out.println(response);
+      Mapper.main(domain, catalogRepositoryDirectory, componentLibraryFilePath, planFilePath, executionFilePath,
+          expandedTemplateFilePath, abstractFilePath,
+          filePublisher, executionTriplesPublisher, catalogTriplesPublisher);
     } catch (Exception e) {
       e.printStackTrace();
       Assert.assertTrue(false);
