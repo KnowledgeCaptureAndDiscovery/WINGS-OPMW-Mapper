@@ -40,16 +40,7 @@ public class WorkflowExecutionExport {
     private WorkflowTemplateExport concreteTemplateExport;
     private FilePublisher filePublisher;
     private TriplesPublisher triplesPublisher;
-
-    private String uploadURL;
-    private String uploadUsername;
-    private String uploadPassword;
-    private String uploadDirectory;
-    private long uploadMaxSize;
-    // private OntModel provModel;//TO IMPLEMENT AT THE END. Can it be done with
-    // constructs?
     private String domain;
-    private String serialization;
 
     /**
      * Default constructor for exporting executions {@link #executionModel}
@@ -71,7 +62,6 @@ public class WorkflowExecutionExport {
     public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl,
             String domain, FilePublisher filePublisher, TriplesPublisher triplesPublisher) {
         // Store the parameters as fields
-        this.serialization = triplesPublisher.serialization;
         this.componentCatalog = catalog;
         this.filePublisher = filePublisher;
         this.triplesPublisher = triplesPublisher;
@@ -416,7 +406,6 @@ public class WorkflowExecutionExport {
             this.transform();
         }
         if (!isExecPublished) {
-            // opmwModel.write(System.out, "TTL");
             ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
             File file = new File(filepath);
             this.triplesPublisher.setGraphURI(this.transformedExecutionURI);
@@ -482,23 +471,4 @@ public class WorkflowExecutionExport {
 
     private boolean isExecPublished;
 
-    public void setUploadURL(String uploadURL) {
-        this.uploadURL = uploadURL;
-    }
-
-    public void setUploadUsername(String uploadUsername) {
-        this.uploadUsername = uploadUsername;
-    }
-
-    public void setUploadPassword(String uploadPassword) {
-        this.uploadPassword = uploadPassword;
-    }
-
-    public void setUploadMaxSize(long uploadMaxSize) {
-        this.uploadMaxSize = uploadMaxSize;
-    }
-
-    public void setUploadDirectory(String uploadDirectory) {
-        this.uploadDirectory = uploadDirectory;
-    }
 }

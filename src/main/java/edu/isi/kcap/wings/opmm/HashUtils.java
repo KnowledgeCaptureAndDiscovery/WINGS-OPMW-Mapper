@@ -16,7 +16,7 @@ import org.apache.jena.rdf.model.StmtIterator;
  * templates, etc.
  * These are necessary to assess whether two given components are the same or
  * not.
- * 
+ *
  * @author Daniel Garijo
  */
 public class HashUtils {
@@ -31,7 +31,7 @@ public class HashUtils {
    *
    * No full URIs are taken into account when creating hash, as the types
    * may be different in WINGS from local catalog.
-   * 
+   *
    * @param wingsCanonicalInstance the canonical instance defining the
    *                               inputs/outputs of the component.
    * @return
@@ -52,7 +52,7 @@ public class HashUtils {
 
   /**
    * Function for creating an MD5 out of the input text
-   * 
+   *
    * @param text
    * @return MD5 or the component, or null if a problem was found
    */
@@ -79,7 +79,7 @@ public class HashUtils {
   // templates
   /**
    * Method that creates a unique hash for a template
-   * 
+   *
    * @param templateInstance   WINGS template instance (hashes have to be created
    *                           from them)
    * @param wingsTemplateModel Model with the template loaded
@@ -89,7 +89,7 @@ public class HashUtils {
    */
   public static String createMD5ForTemplate(Individual templateInstance, OntModel wingsTemplateModel,
       OntModel wingsTaxonomy) {
-    ArrayList<String> connectionsAndComponents = new ArrayList();
+    ArrayList<String> connectionsAndComponents = new ArrayList<>();
     connectionsAndComponents.add(templateInstance.getLocalName());
     // to do? if 2 templates are the same, should they be published separately?
     // (Expanded templates are different all the time)
@@ -118,7 +118,7 @@ public class HashUtils {
    * Method that, given an arraylist with strings, it serializes them in a single
    * string
    * and returns a MD5 identifier from everything
-   * 
+   *
    * @param arr input arraylist to serialize
    * @return MD5 encoding of the contents arraylist, concatenated
    */

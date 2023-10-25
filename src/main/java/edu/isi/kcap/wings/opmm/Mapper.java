@@ -2,10 +2,6 @@ package edu.isi.kcap.wings.opmm;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-
-import org.apache.commons.lang3.tuple.Triple;
-
 import edu.isi.kcap.wings.opmm.DataTypes.Links;
 import edu.isi.kcap.wings.opmm.DataTypes.ProvenanceResponseSchema;
 import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
@@ -38,7 +34,6 @@ public class Mapper {
                                 domain,
                                 filePublisher, workflowPublisher);
 
-                exportCatalog(catalogRepository, catalogPublisher.serialization, response, catalog);
                 exportExecution(executionDestinationFilePath, workflowPublisher.serialization, response,
                                 executionExport);
                 if (!executionExport.isExecPublished()) {
@@ -48,6 +43,7 @@ public class Mapper {
                         exportAbstractTemplate(abstractFilePath, workflowPublisher.serialization, response,
                                         executionExport);
                 }
+                exportCatalog(catalogRepository, catalogPublisher.serialization, response, catalog);
                 return response;
         }
 
@@ -69,11 +65,9 @@ public class Mapper {
                 String expandedTemplateGraphUri = executionExport.getConcreteTemplateExport().exportAsOPMW(
                                 expandedTemplateDestinationFilePath,
                                 serialization);
-                // TODO: enable publishing of expanded template
-                // if (!executionExport.getConcreteTemplateExport().isTemplatePublished()){
-                // this.publishFile(endpointPostURI, expandedTemplateGraphUri,
-                // expandedTemplateFilePath);
-                // }
+                String concreteTemplateGraphUri = executionExport.getConcreteTemplateExport().exportAsOPMW(
+                                expandedTemplateDestinationFilePath,
+                                serialization);
                 Links links = new Links();
                 links.setFilePath(expandedTemplateDestinationFilePath);
                 links.setFileUrl(expandedTemplateGraphUri);
@@ -84,7 +78,6 @@ public class Mapper {
                         ProvenanceResponseSchema response, WorkflowExecutionExport executionExport)
                         throws IOException, FileNotFoundException {
                 String executionGraphUri = executionExport.exportAsOPMW(executionDestinationFilePath, serialization);
-                // this.publishFile(endpointPostURI, graphUri, executionFilePath);
                 Links links = new Links();
                 links.setFilePath(executionDestinationFilePath);
                 links.setFileUrl(executionGraphUri);

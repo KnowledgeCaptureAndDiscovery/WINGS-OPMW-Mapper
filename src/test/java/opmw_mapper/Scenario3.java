@@ -23,7 +23,7 @@ public class Scenario3 {
 		System.out
 				.println("VALIDATION TESTS FOR SCENARIO-1 (NUMBER OF EXECUTIONS, EXPANDED TEMPLATES AND ABSTRACT TEMPLATES)");
 		// TEST 1: DO WE HAVE ANY SIMILAR NAMED TEMPLATES?
-		result += "#TEST" + (++n) + ":DO WE HAVE ANY SIMILAR NAMED TEMPLATES?\n";
+		result = result + "#TEST" + (++n) + ":DO WE HAVE ANY SIMILAR NAMED TEMPLATES?\n";
 		HashSet<String> hs1names = new HashSet<>();
 
 		hs1names = Utils.queryresult112(Queries.DO_WE_HAVE_ANY_SIMILAR_NAMED_TEMPLATES, m, "t");
