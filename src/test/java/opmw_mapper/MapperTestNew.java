@@ -1,9 +1,12 @@
 package opmw_mapper;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.jena.ontology.OntModel;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,9 +40,10 @@ public class MapperTestNew {
     if (!file.exists()) {
       file.mkdir();
     }
-    String executionFilePath = "tmp/" + serialization + "/execution.ttl";
-    String expandedTemplateFilePath = "tmp/" + serialization + "/expandedTemplate.ttl";
-    String abstractFilePath = "tmp/" + serialization + "/abstractTemplate.ttl";
+    String targetDirectory = "tmp/" + serialization;
+    String executionFilePath = targetDirectory + "/execution.ttl";
+    String expandedTemplateFilePath = targetDirectory + "/expandedTemplate.ttl";
+    String abstractFilePath = targetDirectory + "/abstractTemplate.ttl";
     TriplesPublisher executionTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI, exportUrl,
         exportPrefix, serialization);
     TriplesPublisher catalogTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
@@ -53,6 +57,8 @@ public class MapperTestNew {
       e.printStackTrace();
       Assert.assertTrue(false);
     }
+    OntModel model = Utils.loadDirectory(targetDirectory);
+    validateModel(model);
   }
 
   @Test
@@ -82,6 +88,134 @@ public class MapperTestNew {
     for (String entity : entities) {
       Utils.checkExecutionXML(entity, executionFilePath);
     }
+
+  }
+
+  public void validateModel(OntModel m) {
+    /*
+     * Check that artifact is connected to a:
+     * 1. Account
+     * 2. Location or value
+     * 3. Template artifact
+     * 4. Process
+     */
+    int problems = Integer
+        .parseInt(Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_ACCOUNT, m, "countArt"));
+    assertTrue(problems <= 0);
+    problems = Integer.parseInt(
+        Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_LOCATION_OR_VALUE, m, "countArt"));
+    assertTrue(problems <= 0);
+    problems = Integer.parseInt(
+        Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_BINDING_TO_TEMPLATE_ARTIFACT, m,
+            "countArt"));
+    assertTrue(problems <= 0);
+    problems = Integer
+        .parseInt(Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_BINDING_TO_PROCESS, m,
+            "countArt"));
+    assertTrue(problems <= 0);
+    /**
+     * Check that execution process is connected to a:
+     * 1. Account
+     * 2. Artifact
+     * 3. Execution code
+     * 4. Template process
+     */
+    problems = Integer.parseInt(Utils.getCountOf(Queries.COUNT_PROCESSES_WITHOUT_ACCOUNT, m, "countProc"));
+    assertTrue(problems <= 0);
+    problems = Integer.parseInt(
+        Utils.getCountOf(Queries.COUNT_PROCESSES_NOT_BOUND_TO_ARTIFACT, m, "countProc"));
+    assertTrue(problems <= 0);
+    problems = Integer.parseInt(Utils.getCountOf(Queries.COUNT_PROCESSES_WITHOUT_CODE, m, "countProc"));
+    assertTrue(problems <= 0);
+    problems = Integer
+        .parseInt(Utils.getCountOf(Queries.COUNT_PROCESSES_WITHOUT_CORRECT_TEMPLATE_BINDING, m,
+            "countProc"));
+    assertTrue(problems <= 0);
+    // execution accounts
+    /**
+     * Check that execution account is connected to a:
+     * 1. Template account
+     * 2. Time or status
+     */
+    problems = Integer.parseInt(Utils.getCountOf(Queries.COUNT_EXECUTIONS_WITHOUT_TEMPLATE, m, "countAcc"));
+    assertTrue(problems <= 0);
+    problems = Integer.parseInt(
+        Utils.getCountOf(Queries.COUNT_EXECUTIONS_WITHOUT_TIME_OR_STATUS, m, "countAcc"));
+    assertTrue(problems <= 0);
+    /**
+     * Check that template account is connected to a:
+     * 1. Template
+     * 2. Process
+     * 3. Plan
+     */
+    problems = Integer.parseInt(
+        Utils.getCountOf(Queries.COUNT_TEMPL_ARTIFACTS_WITHOUT_TEMPLATE, m, "countArt"));
+    assertTrue(problems <= 0);
+    problems = Integer
+        .parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_ARTIFACTS_WITHOUT_PROCESS_OPMW, m,
+            "countArt"));
+    assertTrue(problems <= 0);
+    problems = Integer
+        .parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_ARTIFACTS_WITHOUT_PROCESS_P_PLAN, m,
+            "countArt"));
+    assertTrue(problems <= 0);
+    /*
+     * Check that template process is connected to a:
+     * 1. Artifact (OPMW)
+     * 2. Template (OPMW)
+     * 3. Template (P-PLAN)
+     */
+    System.out.println(
+        "Validating: ALL TEMPLATE PROCESSES MUST USE OR GENERATE A TEMPLATE ARTIFACT (test in P-PLAN).");
+    problems = Integer.parseInt(
+        Utils.getCountOf(Queries.COUNT_TEMPL_PROCESS_WITHOUT_BINDING_TO_ARTIFACT_OPMW, m,
+            "countProc"));
+    assertTrue(problems <= 0);
+    System.out.println("Validating: ALL TEMPLATE PROCESSES MUST BELONG TO A TEMPLATE (test in OPMW).");
+    problems = Integer
+        .parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_PROCESSES_WITHOUT_TEMPLATE_OPMW, m,
+            "countProc"));
+    assertTrue(problems <= 0);
+    System.out.println("Validating: ALL TEMPLATE PROCESSES MUST BELONG TO A TEMPLATE (test in PPlan).");
+    problems = Integer
+        .parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_PROCESSES_WITHOUT_TEMPLATE_PPLAN, m,
+            "countProc"));
+    assertTrue(problems <= 0);
+    /**
+     * Check if there are any undeclared workflow template processes
+     */
+    problems = Integer.parseInt(Utils.getCountOf(Queries.COUNT_UNDECLARED_PROCESSES, m, "countProc"));
+    assertTrue(problems <= 0);
+    /**
+     * Check that all template processes must use or generate a template artifact
+     * (OPMW)
+     */
+    problems = Integer.parseInt(
+        Utils.getCountOf(Queries.COUNT_TEMPL_PROCESS_WITHOUT_BINDING_TO_ARTIFACT_OPMW, m,
+            "countProc"));
+    assertTrue(problems <= 0);
+
+    /**
+     * Check that all template processes must use or generate a template artifact
+     * (P-PLAN)
+     */
+    problems = Integer.parseInt(
+        Utils.getCountOf(Queries.COUNT_TEMPL_PROCESS_WITHOUT_BINDING_TO_ARTIFACT_PPLAN, m,
+            "countProc"));
+    assertTrue(problems <= 0);
+
+    // TODO: Test | All expanded template processes should link to a template
+    // process.
+    // TODO: Test | All expanded template should link to a template process.
+    // TODO: Test | All expanded template should like to a template.
+    // TODO: Test | All expanded template variables should link to a template
+    // variable that belong to a template (and and execution).
+    // TODO: Test | All expanded parameter variables should link to a parameter
+    // variable that belong to a template (and and execution).
+    // TODO: Test | All w3id component classes should have a label (otherwise they
+    // are not correctly linked).
+    // TODO: Test | All w3id data classes should have a label (otherwise they are
+    // not correctly linked).
 
   }
 }
