@@ -21,17 +21,17 @@ public class MapperTestNew {
   // w3id.org/opmw/wings/{exportName}/{domain}#Components
   // w3id.org/opmw/wings/{exportName}/{domain}#Data
   String exportPrefix = "exportTest";
-  String exportUrl = "http://www.opmw.org/";
+  String exportUrl = "http://www.opmw.org/exportTest/";
   // catalogRepositoryDirectory: the directory where the catalog will be stored
   String catalogRepositoryDirectory = "domains";
   String endpointQueryURI = "https://endpoint.mint.isi.edu/provenance/query";
-  String endpointPostURI = "https://endpoint.mint.isi.edu/provenance/update";
+  String endpointPostURI = "https://endpoint.mint.isi.edu/provenance/data";
   String componentLibraryFilePath = "src/test/resources/neuro/components.owl";
   String planFilePath = "src/test/resources/neuro/plan.owl";
 
   @Test
   public void testMapperTurtle() throws IOException {
-    String serialization = "turtle";
+    String serialization = "TTL";
     File file = new File("tmp/" + serialization);
     if (!file.exists()) {
       file.mkdir();

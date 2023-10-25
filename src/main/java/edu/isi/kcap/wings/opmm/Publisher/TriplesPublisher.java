@@ -17,29 +17,39 @@ import org.apache.jena.query.DatasetAccessor;
 import org.apache.jena.query.DatasetAccessorFactory;
 import org.apache.jena.query.QuerySolution;
 
+import edu.isi.kcap.wings.opmm.Constants;
 import edu.isi.kcap.wings.opmm.ModelUtils;
 
 public class TriplesPublisher {
   public String updateEndpoint;
   public String queryEndpoint;
-  public String graphURI;
+  public String graphURI = null;
   DatasetAccessor accessor;
+  public String serialization;
+  public String exportUrl;
 
-  public TriplesPublisher(String queryEndpoint, String updateEndpoint, String graph) {
-    this.updateEndpoint = updateEndpoint;
-    this.queryEndpoint = queryEndpoint;
-    this.graphURI = graph;
+  public TriplesPublisher(String endpointQueryURI, String endpointPostURI, String exportBaseUrl,
+      String exportPrefix,
+      String serialization) {
+    this.updateEndpoint = endpointPostURI;
+    this.queryEndpoint = endpointQueryURI;
     this.accessor = DatasetAccessorFactory.createHTTP(updateEndpoint);
+    this.serialization = serialization;
+    if (exportBaseUrl == null)
+      exportBaseUrl = Constants.PREFIX_EXPORT_GENERIC;
+    this.exportUrl = exportBaseUrl + exportPrefix + "/";
   }
 
-  public void publish(File file, String serialization) throws IOException {
+  public void publish(File file) throws IOException {
+    if (this.graphURI == null)
+      throw new IOException("Graph URI not set");
     byte[] data = FileUtils.readFileToByteArray(file);
     HttpPost request = setUpRequest();
     CloseableHttpClient httpClient = HttpClients.createDefault();
-    uploadTriples(data, request, httpClient, serialization);
+    uploadTriples(data, request, httpClient);
   }
 
-  private void uploadTriples(byte[] data, HttpPost request, CloseableHttpClient httpClient, String serialization)
+  private void uploadTriples(byte[] data, HttpPost request, CloseableHttpClient httpClient)
       throws UnsupportedEncodingException, IOException, ClientProtocolException {
     ByteArrayEntity entity = new ByteArrayEntity(data);
     request.setEntity(entity);
@@ -87,4 +97,29 @@ public class TriplesPublisher {
     }
     return false;
   }
+
+  public void setUpdateEndpoint(String updateEndpoint) {
+    this.updateEndpoint = updateEndpoint;
+  }
+
+  public void setQueryEndpoint(String queryEndpoint) {
+    this.queryEndpoint = queryEndpoint;
+  }
+
+  public void setGraphURI(String graphURI) {
+    this.graphURI = graphURI;
+  }
+
+  public void setAccessor(DatasetAccessor accessor) {
+    this.accessor = accessor;
+  }
+
+  public void setSerialization(String serialization) {
+    this.serialization = serialization;
+  }
+
+  public void setExportUrl(String exportUrl) {
+    this.exportUrl = exportUrl;
+  }
+
 }
