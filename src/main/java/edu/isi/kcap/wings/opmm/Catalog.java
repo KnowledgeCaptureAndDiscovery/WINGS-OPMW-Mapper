@@ -52,7 +52,7 @@ public class Catalog {
      * Name of the dataset you are exporting. This name is added for consistency
      * in case different WINGS instances export the same domain.
      */
-    private final String exportName;
+    private final String exportUrl;
     /**
      * Catalog model.
      */
@@ -99,24 +99,23 @@ public class Catalog {
      * Default constructor. Assumption: domains are saved in Turtle.
      *
      * @param domain
-     * @param exportName
+     * @param exportUrl
      * @param defaultRepositoryFolder if does not exist, a new one will be created.
      *                                A repository folder may contain multiple
      *                                domains.
      * @param WINGStaxonomyURL
      */
-    public Catalog(String domain, String exportName, String defaultRepositoryFolder,
+    public Catalog(String domain, String exportUrl, String defaultRepositoryFolder,
             String WINGStaxonomyURL) {
         this.domain = domain;
-        this.exportName = exportName;
+        this.exportUrl = exportUrl;
         this.defaultRepositoryPath = defaultRepositoryFolder;
-        this.domainGraphURI = Constants.CATALOG_URI + this.exportName + "/Domain/" + domain;
-
-        this.componentCatalogURI = Constants.CATALOG_URI + this.exportName + "/" + domain + "/" + "Component#";
-        this.dataCatalogURI = Constants.CATALOG_URI + this.exportName + "/" + domain + "/" + "Data#";
-        this.instanceCatalogURI = Constants.CATALOG_URI + this.exportName + "/" + domain + "/"
+        this.domainGraphURI = this.exportUrl + "/Domain/" + domain;
+        this.componentCatalogURI = this.exportUrl + "/" + domain + "/" + "Component#";
+        this.dataCatalogURI = this.exportUrl + "/" + domain + "/" + "Data#";
+        this.instanceCatalogURI = this.exportUrl + "/" + domain + "/"
                 + "resource/CanonicalInstance/";
-        this.extensionsURI = Constants.CATALOG_URI + this.exportName + "/" + domain + "/" + "extension#";
+        this.extensionsURI = this.exportUrl + "/" + domain + "/" + "extension#";
         // if repo is not null, create it
         File f = new File(defaultRepositoryFolder);
         if (!f.exists()) {
@@ -518,7 +517,7 @@ public class Catalog {
             return this.dataCatalogURI + name;
         }
         // return a generic component/poiter to the catalog
-        return Constants.CATALOG_URI + this.exportName + "/" + this.domain + "/" + name;
+        return Constants.CATALOG_URI + this.exportUrl + "/" + this.domain + "/" + name;
     }
 
     /**

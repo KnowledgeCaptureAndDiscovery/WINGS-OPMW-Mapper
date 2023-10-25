@@ -32,29 +32,17 @@ public class WorkflowTemplateExport {
     private OntModel wingsTemplateModel;
     private OntModel opmwModel;
     private Catalog componentCatalog;
-    private String PREFIX_EXPORT_RESOURCE;
+    private String exportUrl;
     private String endpointURI;// URI of the endpoint where everything is published.
     private Individual transformedTemplate = null;
     public TriplesPublisher triplesPublisher;
-
-    public boolean isTemplatePublished() {
-        return isTemplatePublished;
-    }
-
     private boolean isTemplatePublished;// boolean value to know if the template has already been published on the
                                         // repository
-    private String exportUrl;
     private String exportName;// needed to pass it on to template exports
-
-    public WorkflowTemplateExport getAbstractTemplateExport() {
-        return abstractTemplateExport;
-    }
 
     private WorkflowTemplateExport abstractTemplateExport;// a template may implement a template, and therefore publish
                                                           // its abstract template (on a separate file)
     private String domain;
-    // private OntModel PplanModel;//TO IMPLEMENT AT THE END. Can it be done with
-    // constructs?
 
     /**
      * Basic constructor
@@ -64,8 +52,19 @@ public class WorkflowTemplateExport {
      * @param exportName   name of the dataset to export (will be part of the URI)
      * @param endpointURI
      */
-    public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportUrl, String exportName,
-            String endpointURI, String domain, TriplesPublisher triplesPublisher) {
+    public WorkflowTemplateExport(String templateFile, Catalog catalog, String exportUrl,
+            String domain, TriplesPublisher triplesPublisher) {
+        workaroundLocalhost(templateFile);
+        this.triplesPublisher = triplesPublisher;
+        this.opmwModel = ModelUtils.initializeModel(opmwModel);
+        this.componentCatalog = catalog;
+        this.exportUrl = exportUrl + "resource/";
+        this.endpointURI = this.triplesPublisher.queryEndpoint;
+        isTemplatePublished = false;
+        this.domain = domain;
+    }
+
+    private void workaroundLocalhost(String templateFile) {
         try {
             this.wingsTemplateModel = ModelUtils.loadModel(templateFile);
         } catch (Exception e) {
@@ -78,19 +77,6 @@ public class WorkflowTemplateExport {
         if (this.wingsTemplateModel == null) {
             throw new NullPointerException("Error loading template " + templateFile);
         }
-        this.triplesPublisher = triplesPublisher;
-        endpointURI = triplesPublisher.queryEndpoint;
-        this.opmwModel = ModelUtils.initializeModel(opmwModel);
-        this.componentCatalog = catalog;
-        if (exportUrl == null)
-            exportUrl = Constants.PREFIX_EXPORT_GENERIC;
-        PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
-
-        this.endpointURI = endpointURI;
-        isTemplatePublished = false;
-        this.exportName = exportName;
-        this.exportUrl = exportUrl;
-        this.domain = domain;
     }
 
     /**
@@ -200,7 +186,7 @@ public class WorkflowTemplateExport {
      * @return The URI of the template being generated.
      */
     private String convertTemplateToOPMW(Individual wingsTemplate, int versionNumber) {
-        final String workflowTemplateNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_WORKFLOW_TEMPLATE + "/";
+        final String workflowTemplateNS = this.exportUrl + Constants.CONCEPT_WORKFLOW_TEMPLATE + "/";
         String wt = workflowTemplateNS + wingsTemplate.getLocalName() + "_v" + versionNumber;
         Individual abstractTemplateInstance;
         Individual wtInstance = opmwModel.createClass(Constants.OPMW_WORKFLOW_TEMPLATE).createIndividual(wt);
@@ -237,7 +223,7 @@ public class WorkflowTemplateExport {
             if (contrib != null) {
                 OntClass agentClass = opmwModel.createClass(Constants.PROV_AGENT);
                 try {
-                    Individual contributor = agentClass.createIndividual(Constants.PREFIX_EXPORT_RESOURCE +
+                    Individual contributor = agentClass.createIndividual(this.exportUrl +
                             Constants.CONCEPT_AGENT + "/" + URLEncoder.encode("" + contrib, "UTF-8"));
                     contributor.addLabel(contrib);
                     wtInstance.addProperty(opmwModel.createProperty(Constants.PROP_HAS_CONTRIBUTOR), contributor);
@@ -268,7 +254,7 @@ public class WorkflowTemplateExport {
             // publish abstract template with the URI taken from derivation
             QuerySolution qs = rsD.next();
             this.abstractTemplateExport = new WorkflowTemplateExport(qs.getResource("?dest").getURI(), componentCatalog,
-                    exportUrl, exportName, endpointURI, domain, triplesPublisher);
+                    exportUrl, domain, triplesPublisher);
             abstractTemplateExport.transform();
             abstractTemplateInstance = abstractTemplateExport.getTransformedTemplateIndividual();
             System.out.println("Abstract template: " + abstractTemplateInstance.getURI());
@@ -293,7 +279,7 @@ public class WorkflowTemplateExport {
                 String varNS, varURI;
                 Individual workflowVariable;
                 if (type.getURI().equals(Constants.WINGS_DATA_VARIABLE)) {
-                    varNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_DATA_VARIABLE + "/";
+                    varNS = this.exportUrl + Constants.CONCEPT_DATA_VARIABLE + "/";
                     varURI = varNS + wingsTemplate.getLocalName() + "_v" + versionNumber + "_" + var.getLocalName();
                     workflowVariable = opmwModel.createClass(Constants.OPMW_DATA_VARIABLE).createIndividual(varURI);
                     ModelUtils.addClassesToIndividual(workflowVariable, Constants.PROV_ENTITY, opmwModel);
@@ -330,7 +316,7 @@ public class WorkflowTemplateExport {
                         }
                     }
                 } else {// parameter
-                    varNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_PARAMETER_VARIABLE + "/";
+                    varNS = this.exportUrl + Constants.CONCEPT_PARAMETER_VARIABLE + "/";
                     varURI = varNS + wingsTemplate.getLocalName() + "_v" + versionNumber + "_" + var.getLocalName();
                     workflowVariable = opmwModel.createClass(Constants.OPMW_PARAMETER_VARIABLE)
                             .createIndividual(varURI);
@@ -366,7 +352,7 @@ public class WorkflowTemplateExport {
             Resource derivedFrom = qs.getResource("?derivedFrom");
             Literal isConcrete = qs.getLiteral("?isConcrete");
             Literal rule = qs.getLiteral("?rule");
-            String templateProcessNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS + "/";
+            String templateProcessNS = this.exportUrl + Constants.CONCEPT_WORKFLOW_TEMPLATE_PROCESS + "/";
             String templateProcessURI = templateProcessNS + wingsTemplate.getLocalName() + "_v" + versionNumber + "_"
                     + nodeID.getLocalName();
             // the URI must be the node id, because if a template has 2 nodes that are of
@@ -414,11 +400,11 @@ public class WorkflowTemplateExport {
                 // Since we don't know whether it's a parameter variable or data variable, the
                 // easiest way is to try and retrieve.
                 String varNS, varURI;
-                varNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_DATA_VARIABLE + "/";
+                varNS = this.exportUrl + Constants.CONCEPT_DATA_VARIABLE + "/";
                 varURI = varNS + wingsTemplate.getLocalName() + "_v" + versionNumber + "_" + inVar.getLocalName();
                 Individual inputVariable = this.opmwModel.getIndividual(varURI);
                 if (inputVariable == null) {
-                    varNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_PARAMETER_VARIABLE + "/";
+                    varNS = this.exportUrl + Constants.CONCEPT_PARAMETER_VARIABLE + "/";
                     varURI = varNS + wingsTemplate.getLocalName() + "_v" + versionNumber + "_" + inVar.getLocalName();
                     inputVariable = this.opmwModel.getIndividual(varURI);
                 }
@@ -439,7 +425,7 @@ public class WorkflowTemplateExport {
                 Resource outVar = qsAux.getResource("?var");
                 Literal role = qsAux.getLiteral("role");
                 // System.out.println("OUTPUT of "+nodeID.getLocalName()+" is "+ inputVar);
-                String varNS = PREFIX_EXPORT_RESOURCE + Constants.CONCEPT_DATA_VARIABLE + "/";
+                String varNS = this.exportUrl + Constants.CONCEPT_DATA_VARIABLE + "/";
                 String varURI = varNS + wingsTemplate.getLocalName() + "_v" + versionNumber + "_"
                         + outVar.getLocalName();
                 Individual outputVar = this.opmwModel.getIndividual(varURI);
@@ -479,7 +465,8 @@ public class WorkflowTemplateExport {
             }
             ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
             File file = new File(filepath);
-            this.triplesPublisher.publish(file, serialization);
+            this.triplesPublisher.setGraphURI(this.transformedTemplate.getURI());
+            this.triplesPublisher.publish(file);
         }
         return transformedTemplate.getURI();
     }
@@ -515,4 +502,13 @@ public class WorkflowTemplateExport {
         // this.export_as_PPlan(outFilePath, serialization);
         return exportAsOPMW(outFileDirectory, serialization);
     }
+
+    public boolean isTemplatePublished() {
+        return isTemplatePublished;
+    }
+
+    public WorkflowTemplateExport getAbstractTemplateExport() {
+        return abstractTemplateExport;
+    }
+
 }

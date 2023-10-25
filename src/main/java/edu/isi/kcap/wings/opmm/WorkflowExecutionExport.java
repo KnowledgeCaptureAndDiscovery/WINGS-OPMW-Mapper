@@ -36,7 +36,6 @@ public class WorkflowExecutionExport {
     private final String PREFIX_EXPORT_RESOURCE;
     private final String endpointQueryURI;// URI of the endpoint where everything is published.
     private final String exportUrl;
-    private final String exportName;// needed to pass it on to template exports
     private String transformedExecutionURI;
     private WorkflowTemplateExport concreteTemplateExport;
     private FilePublisher filePublisher;
@@ -69,15 +68,14 @@ public class WorkflowExecutionExport {
      * @param filePublisher: The class to publish the files (e.g. to S3, local,
      *                       remote)
      */
-    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl, String exportName,
-            String domain, FilePublisher filePublisher, TriplesPublisher triplesPublisher, String serialization) {
+    public WorkflowExecutionExport(String executionFile, Catalog catalog, String exportUrl,
+            String domain, FilePublisher filePublisher, TriplesPublisher triplesPublisher) {
         // Store the parameters as fields
-        this.serialization = serialization;
+        this.serialization = triplesPublisher.serialization;
         this.componentCatalog = catalog;
         this.filePublisher = filePublisher;
         this.triplesPublisher = triplesPublisher;
         this.endpointQueryURI = triplesPublisher.queryEndpoint;
-        this.exportName = exportName;
         this.exportUrl = exportUrl;
         this.domain = domain;
 
@@ -89,7 +87,7 @@ public class WorkflowExecutionExport {
         if (exportUrl == null)
             exportUrl = Constants.PREFIX_EXPORT_GENERIC;
 
-        PREFIX_EXPORT_RESOURCE = exportUrl + exportName + "/" + "resource/";
+        PREFIX_EXPORT_RESOURCE = exportUrl + "resource/";
         isExecPublished = false;
     }
 
@@ -191,9 +189,9 @@ public class WorkflowExecutionExport {
             // publish expanded template. The expanded template will publish the template if
             // necessary.
             concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog,
-                    this.exportUrl, this.exportName, this.endpointQueryURI, this.domain, this.triplesPublisher);
-            // concreteTemplateExport.transform();
-            concreteTemplateExport.exportAsOPMW(null, serialization);
+                    this.exportUrl, this.domain, this.triplesPublisher);
+            concreteTemplateExport.transform();
+            // concreteTemplateExport.exportAsOPMW(null, serialization);
             System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
         } else {
             System.out.println("ERROR: Could not find an expanded template!");
@@ -421,7 +419,8 @@ public class WorkflowExecutionExport {
             // opmwModel.write(System.out, "TTL");
             ModelUtils.exportRDFFile(filepath, opmwModel, serialization);
             File file = new File(filepath);
-            this.triplesPublisher.publish(file, serialization);
+            this.triplesPublisher.setGraphURI(this.transformedExecutionURI);
+            this.triplesPublisher.publish(file);
         }
         return transformedExecutionURI;
     }

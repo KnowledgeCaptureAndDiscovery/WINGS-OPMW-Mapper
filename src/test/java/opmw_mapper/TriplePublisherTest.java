@@ -26,18 +26,20 @@ public class TriplePublisherTest {
   @Test
   public void publishTriplesTestTurtle() throws IOException {
     String resourceUri = "http://example.org/example#example";
-    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
+    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph, "", "TTL");
+    tp.setGraphURI(graph);
     File file = createTripleFile(resourceUri, "TTL");
-    tp.publish(file, "TTL");
+    tp.publish(file);
     Assert.assertTrue(TriplesPublisher.findResourceOnRepository(resourceUri, queryEndpoint, graph));
   }
 
   @Test
   public void publishTriplesTestRDFXML() throws IOException {
-    String resourceUri = "http://example.org/example#examplerdf";
-    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph);
+    String resourceUri = "http://example.org/example";
+    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, resourceUri, "test", "RDF/XML");
+    tp.setGraphURI(graph);
     File file = createTripleFile(resourceUri, "RDF/XML");
-    tp.publish(file, "RDF/XML");
+    tp.publish(file);
     Assert.assertTrue(TriplesPublisher.findResourceOnRepository(resourceUri, queryEndpoint, graph));
   }
 
