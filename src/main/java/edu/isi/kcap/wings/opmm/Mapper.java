@@ -33,16 +33,14 @@ public class Mapper {
                                 workflowPublisher.exportUrl,
                                 domain,
                                 filePublisher, workflowPublisher);
-
                 exportExecution(executionDestinationFilePath, workflowPublisher.serialization, response,
                                 executionExport);
-                if (!executionExport.isExecPublished()) {
                         exportExpandedTemplate(expandedTemplateDestinationFilePath, workflowPublisher.serialization,
                                         response,
                                         executionExport);
+                WorkflowTemplateExport templateExport = executionExport.getConcreteTemplateExport();
                         exportAbstractTemplate(abstractFilePath, workflowPublisher.serialization, response,
-                                        executionExport);
-                }
+                                        templateExport);
                 exportCatalog(catalogRepository, catalogPublisher.serialization, response, catalog);
                 return response;
         }
@@ -89,9 +87,7 @@ public class Mapper {
 
         private static void exportAbstractTemplate(String abstractFilePath, String serialization,
                         ProvenanceResponseSchema response,
-                        WorkflowExecutionExport executionExport) throws IOException {
-                WorkflowTemplateExport abstractTemplateExport = executionExport.getConcreteTemplateExport()
-                                .getAbstractTemplateExport();
+                        WorkflowTemplateExport abstractTemplateExport) throws IOException {
                 if (abstractTemplateExport != null) {
                         String abstractGraphUri = abstractTemplateExport.exportAsOPMW(abstractFilePath, serialization);
                         // if (!abstractTemplateExport.isTemplatePublished())

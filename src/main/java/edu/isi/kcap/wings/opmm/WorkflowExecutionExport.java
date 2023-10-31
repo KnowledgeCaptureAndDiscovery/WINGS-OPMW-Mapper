@@ -103,6 +103,7 @@ public class WorkflowExecutionExport {
             if (solution != null) {
                 System.out.println("Execution exists!");
                 this.transformedExecutionURI = (solution.getResource("?exec").getURI());
+                getExpandedTemplateURI();
                 isExecPublished = true;
             } else {
                 System.out.println("Execution does not exist! Publishing new execution");
@@ -168,24 +169,7 @@ public class WorkflowExecutionExport {
         wingsInstance.addProperty(opmwModel.createProperty(Constants.PROV_ACTED_ON_BEHALF_OF), userInstance);
         wingsInstance.addLabel("WINGS", null);
 
-        // get expanded template loaded in local model (for parameter linking)
-        String queryExpandedTemplate = QueriesWorkflowExecutionExport.getWINGSExpandedTemplate();
-        rs = ModelUtils.queryLocalRepository(queryExpandedTemplate, executionModel);
-        String expandedTemplateURI = null;
-        if (rs.hasNext()) {
-            expandedTemplateURI = rs.next().getResource("?expTemplate").getNameSpace();// the namespace is better for
-                                                                                       // later.
-            System.out.println("Execution expanded template " + expandedTemplateURI + " loaded successfully");
-            // publish expanded template. The expanded template will publish the template if
-            // necessary.
-            concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog,
-                    this.exportUrl, this.domain, this.triplesPublisher);
-            concreteTemplateExport.transform();
-            // concreteTemplateExport.exportAsOPMW(null, serialization);
-            System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
-        } else {
-            System.out.println("ERROR: Could not find an expanded template!");
-        }
+        String expandedTemplateURI = getExpandedTemplateURI();
 
         // transform all steps and data dependencies (params are in expanded template)
         String queryExecutionStepMetadata = QueriesWorkflowExecutionExport.getWINGSExecutionStepsAndMetadata();
@@ -390,6 +374,29 @@ public class WorkflowExecutionExport {
         weInstance.addProperty(opmwModel.createProperty(Constants.OPMW_PROP_CORRESPONDS_TO_TEMPLATE),
                 concreteTemplateExport.getTransformedTemplateIndividual());
         return we;
+    }
+
+    private String getExpandedTemplateURI() {
+        ResultSet rs;
+        // get expanded template loaded in local model (for parameter linking)
+        String queryExpandedTemplate = QueriesWorkflowExecutionExport.getWINGSExpandedTemplate();
+        rs = ModelUtils.queryLocalRepository(queryExpandedTemplate, executionModel);
+        String expandedTemplateURI = null;
+        if (rs.hasNext()) {
+            expandedTemplateURI = rs.next().getResource("?expTemplate").getNameSpace();// the namespace is better for
+                                                                                       // later.
+            System.out.println("Execution expanded template " + expandedTemplateURI + " loaded successfully");
+            // publish expanded template. The expanded template will publish the template if
+            // necessary.
+            concreteTemplateExport = new WorkflowTemplateExport(expandedTemplateURI, this.componentCatalog,
+                    this.exportUrl, this.domain, this.triplesPublisher);
+            concreteTemplateExport.transform();
+            // concreteTemplateExport.exportAsOPMW(null, serialization);
+            System.out.println(concreteTemplateExport.getTransformedTemplateIndividual());
+        } else {
+            System.out.println("ERROR: Could not find an expanded template!");
+        }
+        return expandedTemplateURI;
     }
 
     /**

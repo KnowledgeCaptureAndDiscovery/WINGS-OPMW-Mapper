@@ -1,92 +1,162 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package opmw_mapper;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.jena.ontology.OntModel;
-import static org.junit.Assert.*;
+import org.apache.jena.sparql.function.library.e;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * This class performs different tests with different templates and executions
- *
- * @author Daniel Garijo
- */
+import edu.isi.kcap.wings.opmm.Constants;
+import edu.isi.kcap.wings.opmm.FilePublisher;
+import edu.isi.kcap.wings.opmm.Mapper;
+import edu.isi.kcap.wings.opmm.DataTypes.ProvenanceResponseSchema;
+import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
+
 public class MapperTest {
+        private static String webServerDirectory = "tmp/";
+        private static String webServerDomain = "http://localhost";
+        FilePublisher filePublisher = new FilePublisher(FilePublisher.Type.FILE_SYSTEM, webServerDirectory,
+                        webServerDomain);
+        // Domain: it is wings domain concept: it is the name of the domain
+        String domain = "neuroDisk";
+        // exportPrefix: used by the catalog to create the URL:
+        // w3id.org/opmw/wings/{exportName}/{domain}#Components
+        // w3id.org/opmw/wings/{exportName}/{domain}#Data
+        String exportPrefix = "exportTest";
+        String exportUrl = "https://www.opmw.org/";
+        // catalogRepositoryDirectory: the directory where the catalog will be stored
+        String catalogRepositoryDirectory = "domains";
+        String endpointQueryURI = "https://endpoint.mint.isi.edu/provenance/query";
+        String endpointPostURI = "https://endpoint.mint.isi.edu/provenance/data";
+        String componentLibraryFilePath = "src/test/resources/neuro/components.owl";
+        String planFilePath = "src/test/resources/neuro/plan.owl";
 
-        /**
-         * Function to validate an OPMW Model. It includes a set of tests for both
-         * executions and templates
-         *
-         * @param m
-         */
+        @Test
+        public void testMapperTurtle() throws IOException {
+                String serialization = "TTL";
+                File targetDirectory = new File(serialization);
+                if (!targetDirectory.exists()) {
+                        targetDirectory.mkdir();
+                }
+                String executionFilePath = targetDirectory.getAbsolutePath() + File.separator + "execution.ttl";
+                String expandedTemplateFilePath = targetDirectory.getAbsolutePath() + File.separator
+                                + "expandedTemplate.ttl";
+                String abstractFilePath = targetDirectory.getAbsolutePath() + File.separator
+                                + "abstractTemplate.ttl";
+                TriplesPublisher executionTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
+                                exportUrl,
+                                exportPrefix, serialization);
+                TriplesPublisher catalogTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
+                                Constants.CATALOG_URI,
+                                exportPrefix, serialization);
+                ProvenanceResponseSchema response = Mapper.main(domain, catalogRepositoryDirectory,
+                                componentLibraryFilePath, planFilePath, executionFilePath,
+                                expandedTemplateFilePath, abstractFilePath,
+                                filePublisher, executionTriplesPublisher, catalogTriplesPublisher);
+
+                assertTrue(response.getCatalog().getFilePath().contains("domains/neuroDisk"));
+                assertTrue(response.getCatalog().getFileUrl().contains(catalogTriplesPublisher.exportUrl));
+                assertTrue(response.getCatalog().getGraphUrl().contains(catalogTriplesPublisher.exportUrl));
+                // Test that the execution is published
+                assertTrue(response.getWorkflowExecution().getFilePath().contains(targetDirectory.getName()));
+                assertTrue(response.getWorkflowExecution().getFileUrl().contains(executionTriplesPublisher.exportUrl));
+                assertTrue(response.getWorkflowExecution().getGraphUrl().contains(executionTriplesPublisher.exportUrl));
+                assertTrue(response.getWorkflowExpandedTemplate().getFilePath()
+                                .contains(targetDirectory.getName()));
+                assertTrue(response.getWorkflowExpandedTemplate().getFileUrl()
+                                .contains(executionTriplesPublisher.exportUrl));
+                assertTrue(response.getWorkflowExpandedTemplate().getGraphUrl()
+                                .contains(executionTriplesPublisher.exportUrl));
+                assertTrue(response.getWorkflowAbstractTemplate().getFilePath()
+                                .contains(targetDirectory.getName()));
+                assertTrue(response.getWorkflowAbstractTemplate().getFileUrl()
+                                .contains(executionTriplesPublisher.exportUrl));
+                assertTrue(response.getWorkflowAbstractTemplate().getGraphUrl()
+                                .contains(executionTriplesPublisher.exportUrl));
+
+                OntModel model = Utils.loadDirectory(targetDirectory.getAbsolutePath());
+                validateModel(model);
+        }
+
         public void validateModel(OntModel m) {
-                // execution artifacts
-                System.out.println("Validating:  ALL EXECUTION ARTIFACTS SHOULD BELONG TO AN ACCOUNT");
+                /*
+                 * Check that artifact is connected to a:
+                 * 1. Account
+                 * 2. Location or value
+                 * 3. Template artifact
+                 * 4. Process
+                 */
                 int problems = Integer
                                 .parseInt(Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_ACCOUNT, m, "countArt"));
                 assertTrue(problems <= 0);
-                System.out.println(
-                                "Validating: ALL EXECUTION ARTIFACTS SHOULD HAVE A LOCATION (VARIABLES) OR VALUE (PARAMETERS).");
                 problems = Integer.parseInt(
                                 Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_LOCATION_OR_VALUE, m, "countArt"));
                 assertTrue(problems <= 0);
-                System.out.println(
-                                "Validating: ALL EXECUTION ARTIFACTS SHOULD BELONG TO A TEMPLATE VARIABLE OR PARAMETER THAT BELONGS TO A TEMPLATE.");
                 problems = Integer.parseInt(
                                 Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_BINDING_TO_TEMPLATE_ARTIFACT, m,
                                                 "countArt"));
                 assertTrue(problems <= 0);
-                System.out.println("Validating: ALL EXECUTION ARTIFACTS SHOULD BE USED OR GENERATED BY A PROCESS.");
                 problems = Integer
                                 .parseInt(Utils.getCountOf(Queries.COUNT_ARTIFACTS_WITHOUT_BINDING_TO_PROCESS, m,
                                                 "countArt"));
                 assertTrue(problems <= 0);
-                // execution processes
-                System.out.println("Validating: ALL EXECUTION PROCESSES SHOULD BELONG TO AN ACCOUNT.");
+                /**
+                 * Check that execution process is connected to a:
+                 * 1. Account
+                 * 2. Artifact
+                 * 3. Execution code
+                 * 4. Template process
+                 */
                 problems = Integer.parseInt(Utils.getCountOf(Queries.COUNT_PROCESSES_WITHOUT_ACCOUNT, m, "countProc"));
                 assertTrue(problems <= 0);
-                System.out.println("Validating: ALL EXECUTION PROCESSES SHOULD USE OR GENERATE SOME ARTIFACT.");
                 problems = Integer.parseInt(
                                 Utils.getCountOf(Queries.COUNT_PROCESSES_NOT_BOUND_TO_ARTIFACT, m, "countProc"));
                 assertTrue(problems <= 0);
-                System.out.println(
-                                "Validating: ALL EXECUTION PROCESSES SHOULD HAVE AN EXECUTION CODE ASSOCIATED TO THEM.");
                 problems = Integer.parseInt(Utils.getCountOf(Queries.COUNT_PROCESSES_WITHOUT_CODE, m, "countProc"));
                 assertTrue(problems <= 0);
-                System.out.println(
-                                "Validating: ALL EXECUTION PROCESSES SHOULD CORRESPOND TO A TEMPLATE PROCESS THAT BELONGS TO A TEMPLATE.");
                 problems = Integer
                                 .parseInt(Utils.getCountOf(Queries.COUNT_PROCESSES_WITHOUT_CORRECT_TEMPLATE_BINDING, m,
                                                 "countProc"));
                 assertTrue(problems <= 0);
                 // execution accounts
-                System.out.println("Validating:  ALL EXECUTIONS MUST BELONG TO A TEMPLATE OR EXPANDED TEMPLATE.");
+                /**
+                 * Check that execution account is connected to a:
+                 * 1. Template account
+                 * 2. Time or status
+                 */
                 problems = Integer.parseInt(Utils.getCountOf(Queries.COUNT_EXECUTIONS_WITHOUT_TEMPLATE, m, "countAcc"));
                 assertTrue(problems <= 0);
-                System.out.println("Validating:  ALL EXECUTIONS MUST HAVE AN END TIME, A START TIME AND A STATUS.");
                 problems = Integer.parseInt(
                                 Utils.getCountOf(Queries.COUNT_EXECUTIONS_WITHOUT_TIME_OR_STATUS, m, "countAcc"));
                 assertTrue(problems <= 0);
-                // template artifacts
-                System.out.println("Validating:  ALL TEMPLATE ARTIFCATS MUST BELONG TO A TEMPLATE.");
+                /**
+                 * Check that template account is connected to a:
+                 * 1. Template
+                 * 2. Process
+                 * 3. Plan
+                 */
                 problems = Integer.parseInt(
                                 Utils.getCountOf(Queries.COUNT_TEMPL_ARTIFACTS_WITHOUT_TEMPLATE, m, "countArt"));
                 assertTrue(problems <= 0);
-                System.out.println(
-                                "Validating:  ALL TEMPLATE ARTIFACTS MUST BE CONNECTED TO A TEMPLATE PROCESS (testing in  OPMW).");
                 problems = Integer
                                 .parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_ARTIFACTS_WITHOUT_PROCESS_OPMW, m,
                                                 "countArt"));
                 assertTrue(problems <= 0);
-                System.out.println(
-                                "Validating:  ALL TEMPLATE ARTIFACTS MUST BE CONNECTED TO A TEMPLATE PROCESS (testing in P-PLAN).");
                 problems = Integer
                                 .parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_ARTIFACTS_WITHOUT_PROCESS_P_PLAN, m,
                                                 "countArt"));
                 assertTrue(problems <= 0);
-                // template processes
+                /*
+                 * Check that template process is connected to a:
+                 * 1. Artifact (OPMW)
+                 * 2. Template (OPMW)
+                 * 3. Template (P-PLAN)
+                 */
                 System.out.println(
                                 "Validating: ALL TEMPLATE PROCESSES MUST USE OR GENERATE A TEMPLATE ARTIFACT (test in P-PLAN).");
                 problems = Integer.parseInt(
@@ -103,59 +173,41 @@ public class MapperTest {
                                 .parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_PROCESSES_WITHOUT_TEMPLATE_PPLAN, m,
                                                 "countProc"));
                 assertTrue(problems <= 0);
-                System.out.println("Validating: ARE THERE ANY UNDECLARED WORKFLOW TEMPLATE PROCESSES?.");
+                /**
+                 * Check if there are any undeclared workflow template processes
+                 */
                 problems = Integer.parseInt(Utils.getCountOf(Queries.COUNT_UNDECLARED_PROCESSES, m, "countProc"));
                 assertTrue(problems <= 0);
-                System.out.println(
-                                "Validating:  ALL TEMPLATE PROCESSES MUST USE OR GENERATE A TEMPLATE ARTIFACT (test in OPMW).");
+                /**
+                 * Check that all template processes must use or generate a template artifact
+                 * (OPMW)
+                 */
                 problems = Integer.parseInt(
                                 Utils.getCountOf(Queries.COUNT_TEMPL_PROCESS_WITHOUT_BINDING_TO_ARTIFACT_OPMW, m,
                                                 "countProc"));
                 assertTrue(problems <= 0);
-                System.out.println(
-                                "Validating:  ALL TEMPLATE PROCESSES MUST USE OR GENERATE A TEMPLATE ARTIFACT (test in P-PLAN).");
+
+                /**
+                 * Check that all template processes must use or generate a template artifact
+                 * (P-PLAN)
+                 */
                 problems = Integer.parseInt(
                                 Utils.getCountOf(Queries.COUNT_TEMPL_PROCESS_WITHOUT_BINDING_TO_ARTIFACT_PPLAN, m,
                                                 "countProc"));
                 assertTrue(problems <= 0);
 
-                // expanded template (TO DO)
-                System.out.println("Validating:  ALL EXPANDED TEMPLATE PROCESSES SHOULD LINK TO A TEMPLATE.");
-                // TO DO
-                System.out.println(
-                                "Validating:  ALL EXPANDED TEMPLATE PROCESSES SHOULD BE IMPLEMENTATIONS OF A TEMPLATE PROCESS.");
-                // TO DO
-                System.out.println("Validating:  ALL EXPANDED TEMPLATE SHOULD LINK TO A TEMPLATE.");
-                // TO DO
-                System.out.println(
-                                "Validating:  ALL EXPANDED TEMPLATE VARIABLES SHOULD LINK TO A TEMPLATE VARIABLE THAT BELONG TO A TEMPLATE (AND AND EXECUTION).");
-                // TO DO
-                System.out.println(
-                                "Validating:  ALL EXPANDED PARAMETER VARIABLES SHOULD LINK TO A PARAMETER VARIABLE THAT BELONG TO A TEMPLATE (AND AND EXECUTION).");
-                // TO DO
-                // the following won't work at the moment
-                System.out.println(
-                                "Validating:  ALL W3ID COMPONENT CLASSES SHOULD HAVE A LABEL (OTHERWISE THEY ARE NOT CORRECTLY LINKED).");
-                // TO DO
-                // the following won't work at the moment
-                System.out.println(
-                                "Validating:  ALL W3ID DATA CLASSES SHOULD HAVE A LABEL (OTHERWISE THEY ARE NOT CORRECTLY LINKED).");
-                // TO DO
-
-                // Optional tests not included
-                // result+="#TEST"+(++n)+": (OPTIONAL TEST) AN ACCOUNT MAY HAVE A POINTER TO THE
-                // ORIGINAL LOG FILE.\n";
-                // result+="\t"+isTestFailed(Integer.parseInt(Utils.getCountOf(Queries.COUNT_EXECUTIONS_WITHOUT_LOG_FILE,
-                // m, "countAcc")))+"\n";
-                // result+="#TEST"+(++n)+": (OPTIONAL TEST) TEMPLATES SHOULD HAVE A VERSION
-                // NUMBER.\n";
-                // result+="\t"+isTestFailed(Integer.parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_WITHOUT_VERSION_NUMBER,
-                // m, "countT")))+"\n";
-                // result+="#TEST"+(++n)+": (OPTIONAL TEST) TEMPLATES SHOULD HAVE A POINTER TO
-                // THE NATIVE SYSTEM TEMPLATE.\n";
-                // result+="\t"+isTestFailed(Integer.parseInt(Utils.getCountOf(Queries.COUNT_TEMPL_WITHOUT_NATIVE_SYS_TEMPL,
-                // m, "countT")))+"\n";
+                // TODO: Test | All expanded template processes should link to a template
+                // process.
+                // TODO: Test | All expanded template should link to a template process.
+                // TODO: Test | All expanded template should like to a template.
+                // TODO: Test | All expanded template variables should link to a template
+                // variable that belong to a template (and and execution).
+                // TODO: Test | All expanded parameter variables should link to a parameter
+                // variable that belong to a template (and and execution).
+                // TODO: Test | All w3id component classes should have a label (otherwise they
+                // are not correctly linked).
+                // TODO: Test | All w3id data classes should have a label (otherwise they are
+                // not correctly linked).
 
         }
-
 }
