@@ -28,7 +28,7 @@ public class MapperTestNew {
         // w3id.org/opmw/wings/{exportName}/{domain}#Components
         // w3id.org/opmw/wings/{exportName}/{domain}#Data
         String exportPrefix = "exportTest";
-        String exportUrl = "http://www.opmw.org/";
+        String exportUrl = "https://www.opmw.org/";
         // catalogRepositoryDirectory: the directory where the catalog will be stored
         String catalogRepositoryDirectory = "domains";
         String endpointQueryURI = "https://endpoint.mint.isi.edu/provenance/query";
