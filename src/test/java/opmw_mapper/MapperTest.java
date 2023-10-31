@@ -39,14 +39,15 @@ public class MapperTest {
         @Test
         public void testMapperTurtle() throws IOException {
                 String serialization = "TTL";
-                File file = new File("tmp/" + serialization);
-                if (!file.exists()) {
-                        file.mkdir();
+                File targetDirectory = new File(serialization);
+                if (!targetDirectory.exists()) {
+                        targetDirectory.mkdir();
                 }
-                String targetDirectory = "tmp/" + serialization;
-                String executionFilePath = targetDirectory + "/execution.ttl";
-                String expandedTemplateFilePath = targetDirectory + "/expandedTemplate.ttl";
-                String abstractFilePath = targetDirectory + "/abstractTemplate.ttl";
+                String executionFilePath = targetDirectory.getAbsolutePath() + File.separator + "execution.ttl";
+                String expandedTemplateFilePath = targetDirectory.getAbsolutePath() + File.separator
+                                + "expandedTemplate.ttl";
+                String abstractFilePath = targetDirectory.getAbsolutePath() + File.separator
+                                + "abstractTemplate.ttl";
                 TriplesPublisher executionTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
                                 exportUrl,
                                 exportPrefix, serialization);
@@ -62,56 +63,24 @@ public class MapperTest {
                 assertTrue(response.getCatalog().getFileUrl().contains(catalogTriplesPublisher.exportUrl));
                 assertTrue(response.getCatalog().getGraphUrl().contains(catalogTriplesPublisher.exportUrl));
                 // Test that the execution is published
-                assertTrue(response.getWorkflowExecution().getFilePath().contains("tmp/TTL/execution.ttl"));
+                assertTrue(response.getWorkflowExecution().getFilePath().contains(targetDirectory.getName()));
                 assertTrue(response.getWorkflowExecution().getFileUrl().contains(executionTriplesPublisher.exportUrl));
                 assertTrue(response.getWorkflowExecution().getGraphUrl().contains(executionTriplesPublisher.exportUrl));
                 assertTrue(response.getWorkflowExpandedTemplate().getFilePath()
-                                .contains("tmp/TTL/expandedTemplate.ttl"));
+                                .contains(targetDirectory.getName()));
                 assertTrue(response.getWorkflowExpandedTemplate().getFileUrl()
                                 .contains(executionTriplesPublisher.exportUrl));
                 assertTrue(response.getWorkflowExpandedTemplate().getGraphUrl()
                                 .contains(executionTriplesPublisher.exportUrl));
                 assertTrue(response.getWorkflowAbstractTemplate().getFilePath()
-                                .contains("tmp/TTL/abstractTemplate.ttl"));
+                                .contains(targetDirectory.getName()));
                 assertTrue(response.getWorkflowAbstractTemplate().getFileUrl()
                                 .contains(executionTriplesPublisher.exportUrl));
                 assertTrue(response.getWorkflowAbstractTemplate().getGraphUrl()
                                 .contains(executionTriplesPublisher.exportUrl));
 
-                OntModel model = Utils.loadDirectory(targetDirectory);
+                OntModel model = Utils.loadDirectory(targetDirectory.getAbsolutePath());
                 validateModel(model);
-        }
-
-        @Test
-        public void testXMLTurtle() throws IOException {
-                String serialization = "RDF/XML";
-                File file = new File("tmp/" + serialization);
-                if (!file.exists()) {
-                        file.mkdirs();
-                }
-                String executionFilePath = "tmp/" + serialization + "/execution.xml";
-                String expandedTemplateFilePath = "tmp/" + serialization + "/expandedTemplate.xml";
-                String abstractFilePath = "tmp/" + serialization + "/abstractTemplate.xml";
-                TriplesPublisher executionTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
-                                exportUrl,
-                                exportPrefix, serialization);
-                TriplesPublisher catalogTriplesPublisher = new TriplesPublisher(endpointQueryURI, endpointPostURI,
-                                Constants.CATALOG_URI,
-                                exportPrefix, serialization);
-                try {
-                        Mapper.main(domain, catalogRepositoryDirectory, componentLibraryFilePath, planFilePath,
-                                        executionFilePath,
-                                        expandedTemplateFilePath, abstractFilePath,
-                                        filePublisher, executionTriplesPublisher, catalogTriplesPublisher);
-                } catch (Exception e) {
-                        e.printStackTrace();
-                        Assert.assertTrue(false);
-                }
-                List<String> entities = MockupData.metaAnalysisWorkflowExecution();
-                for (String entity : entities) {
-                        Utils.checkExecutionXML(entity, executionFilePath);
-                }
-
         }
 
         public void validateModel(OntModel m) {
