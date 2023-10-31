@@ -57,6 +57,7 @@ public class Mapper {
                 Links links = new Links();
                 links.setFilePath(domainPath);
                 links.setFileUrl(catalog.getDomainGraphURI());
+                links.setGraphUrl(catalog.getDomainGraphURI());
                 response.setCatalog(links);
         }
 
@@ -71,6 +72,7 @@ public class Mapper {
                 Links links = new Links();
                 links.setFilePath(expandedTemplateDestinationFilePath);
                 links.setFileUrl(expandedTemplateGraphUri);
+                links.setGraphUrl(concreteTemplateGraphUri);
                 response.setWorkflowExpandedTemplate(links);
         }
 
@@ -81,6 +83,7 @@ public class Mapper {
                 Links links = new Links();
                 links.setFilePath(executionDestinationFilePath);
                 links.setFileUrl(executionGraphUri);
+                links.setGraphUrl(executionGraphUri);
                 response.setWorkflowExecution(links);
         }
 
@@ -96,6 +99,7 @@ public class Mapper {
                         Links links = new Links();
                         links.setFilePath(abstractFilePath);
                         links.setFileUrl(abstractGraphUri);
+                        links.setGraphUrl(abstractGraphUri);
                         response.setWorkflowAbstractTemplate(links);
                 }
         }
