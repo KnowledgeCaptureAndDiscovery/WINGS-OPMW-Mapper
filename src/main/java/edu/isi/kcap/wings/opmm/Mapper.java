@@ -36,13 +36,11 @@ public class Mapper {
 
                 exportExecution(executionDestinationFilePath, workflowPublisher.serialization, response,
                                 executionExport);
-                if (!executionExport.isExecPublished()) {
                         exportExpandedTemplate(expandedTemplateDestinationFilePath, workflowPublisher.serialization,
                                         response,
                                         executionExport);
                         exportAbstractTemplate(abstractFilePath, workflowPublisher.serialization, response,
                                         executionExport);
-                }
                 exportCatalog(catalogRepository, catalogPublisher.serialization, response, catalog);
                 return response;
         }
