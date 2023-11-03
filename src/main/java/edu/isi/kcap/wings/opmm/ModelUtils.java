@@ -70,7 +70,7 @@ public class ModelUtils {
         }
         OutputStream out;
         out = new FileOutputStream(outFile);
-        model.write(out, mode.toString());
+        model.write(out, mode.getName());
         // model.write(out,"RDF/XML");
         out.close();
     }
