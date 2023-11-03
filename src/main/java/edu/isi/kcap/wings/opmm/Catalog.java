@@ -16,6 +16,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.rdf.model.impl.ResourceImpl;
+import org.apache.jena.riot.Lang;
 
 /**
  * Class designed to deal with the versioning of new catalog entities.
@@ -532,7 +533,7 @@ public class Catalog {
      * @param directory FOLDER path where to export the catalog
      * @throws IOException
      */
-    public String exportCatalog(String directory, String serialization) throws IOException {
+    public String exportCatalog(String directory, Lang serialization) throws IOException {
         String exportPath;
         // create directory if it does not exist
         File dir;
@@ -590,7 +591,7 @@ public class Catalog {
                         " is " + c.getCatalogTypeForComponentInstanceURI(
                                 "http://www.wings-workflows.org/wings-omics-portal/export/users/alyssa/DataAbstractions/components/library.owl#SNPcaller-Polyphred"));
 
-        c.exportCatalog(null, "RDF/XML");
+        c.exportCatalog(null, Lang.RDFXML);
         System.out.println("Catalog exported");
 
         // note: local tests have been performed by modifying the catalog manually.

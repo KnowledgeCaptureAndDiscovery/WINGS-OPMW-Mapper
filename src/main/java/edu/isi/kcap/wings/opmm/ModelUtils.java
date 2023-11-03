@@ -17,6 +17,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.util.FileManager;
 
 /**
@@ -62,14 +63,14 @@ public class ModelUtils {
      * @param mode    serialization to export the model in
      * @throws IOException
      */
-    public static void exportRDFFile(String outFile, OntModel model, String mode)
+    public static void exportRDFFile(String outFile, OntModel model, Lang mode)
             throws IOException, FileNotFoundException {
         if (outFile == null) {
             throw new FileNotFoundException("File not found");
         }
         OutputStream out;
         out = new FileOutputStream(outFile);
-        model.write(out, mode);
+        model.write(out, mode.toString());
         // model.write(out,"RDF/XML");
         out.close();
     }
