@@ -117,7 +117,7 @@ public class TriplesPublisher {
     this.accessor = accessor;
   }
 
-  public void setSerialization(String serialization) {
+  public void setSerialization(Lang serialization) {
     this.serialization = serialization;
   }
 

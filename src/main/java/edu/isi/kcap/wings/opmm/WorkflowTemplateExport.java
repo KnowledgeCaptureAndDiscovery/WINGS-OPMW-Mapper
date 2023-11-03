@@ -496,7 +496,7 @@ public class WorkflowTemplateExport {
      * @return URI of the template
      * @throws IOException
      */
-    public String exportAll(String outFileDirectory, String serialization) throws IOException {
+    public String exportAll(String outFileDirectory, Lang serialization) throws IOException {
         // TO DO
         System.out.println("Not done yet!");
         // this.export_as_OPMW(outFilePath, serialization);
