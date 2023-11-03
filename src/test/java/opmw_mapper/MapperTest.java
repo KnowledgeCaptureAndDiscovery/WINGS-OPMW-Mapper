@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.jena.ontology.OntModel;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.sparql.function.library.e;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,8 +39,8 @@ public class MapperTest {
 
         @Test
         public void testMapperTurtle() throws IOException {
-                String serialization = "TTL";
-                File targetDirectory = new File(serialization);
+                Lang serialization = Lang.TTL;
+                File targetDirectory = new File(serialization.getName());
                 if (!targetDirectory.exists()) {
                         targetDirectory.mkdir();
                 }

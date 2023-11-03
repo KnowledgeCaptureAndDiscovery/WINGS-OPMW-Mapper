@@ -2,6 +2,9 @@ package edu.isi.kcap.wings.opmm;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import org.apache.jena.riot.Lang;
+
 import edu.isi.kcap.wings.opmm.DataTypes.Links;
 import edu.isi.kcap.wings.opmm.DataTypes.ProvenanceResponseSchema;
 import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
@@ -35,17 +38,17 @@ public class Mapper {
                                 filePublisher, workflowPublisher);
                 exportExecution(executionDestinationFilePath, workflowPublisher.serialization, response,
                                 executionExport);
-                        exportExpandedTemplate(expandedTemplateDestinationFilePath, workflowPublisher.serialization,
-                                        response,
-                                        executionExport);
+                exportExpandedTemplate(expandedTemplateDestinationFilePath, workflowPublisher.serialization,
+                                response,
+                                executionExport);
                 WorkflowTemplateExport templateExport = executionExport.getConcreteTemplateExport();
-                        exportAbstractTemplate(abstractFilePath, workflowPublisher.serialization, response,
-                                        templateExport);
+                exportAbstractTemplate(abstractFilePath, workflowPublisher.serialization, response,
+                                templateExport);
                 exportCatalog(catalogRepository, catalogPublisher.serialization, response, catalog);
                 return response;
         }
 
-        private static void exportCatalog(String catalogRepository, String serialization,
+        private static void exportCatalog(String catalogRepository, Lang serialization,
                         ProvenanceResponseSchema response,
                         Catalog catalog) throws IOException {
                 // Export the catalog
@@ -59,7 +62,7 @@ public class Mapper {
                 response.setCatalog(links);
         }
 
-        private static void exportExpandedTemplate(String expandedTemplateDestinationFilePath, String serialization,
+        private static void exportExpandedTemplate(String expandedTemplateDestinationFilePath, Lang serialization,
                         ProvenanceResponseSchema response, WorkflowExecutionExport executionExport) throws IOException {
                 String expandedTemplateGraphUri = executionExport.getConcreteTemplateExport().exportAsOPMW(
                                 expandedTemplateDestinationFilePath,
@@ -74,7 +77,7 @@ public class Mapper {
                 response.setWorkflowExpandedTemplate(links);
         }
 
-        private static void exportExecution(String executionDestinationFilePath, String serialization,
+        private static void exportExecution(String executionDestinationFilePath, Lang serialization,
                         ProvenanceResponseSchema response, WorkflowExecutionExport executionExport)
                         throws IOException, FileNotFoundException {
                 String executionGraphUri = executionExport.exportAsOPMW(executionDestinationFilePath, serialization);
@@ -85,7 +88,7 @@ public class Mapper {
                 response.setWorkflowExecution(links);
         }
 
-        private static void exportAbstractTemplate(String abstractFilePath, String serialization,
+        private static void exportAbstractTemplate(String abstractFilePath, Lang serialization,
                         ProvenanceResponseSchema response,
                         WorkflowTemplateExport abstractTemplateExport) throws IOException {
                 if (abstractTemplateExport != null) {

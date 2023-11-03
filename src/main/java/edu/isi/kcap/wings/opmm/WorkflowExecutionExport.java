@@ -12,6 +12,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
 
 import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
 
@@ -408,7 +409,7 @@ public class WorkflowExecutionExport {
      * @param serialization serialization of choice: RDF/XML, TTL, etc.
      * @throws IOException
      */
-    public String exportAsOPMW(String filepath, String serialization) throws IOException, FileNotFoundException {
+    public String exportAsOPMW(String filepath, Lang serialization) throws IOException, FileNotFoundException {
         if (transformedExecutionURI == null) {
             this.transform();
         }

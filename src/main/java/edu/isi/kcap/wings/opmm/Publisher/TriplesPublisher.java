@@ -13,9 +13,12 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.jena.datatypes.xsd.impl.RDFLangString;
 import org.apache.jena.query.DatasetAccessor;
 import org.apache.jena.query.DatasetAccessorFactory;
 import org.apache.jena.query.QuerySolution;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.vocabulary.RDF;
 
 import edu.isi.kcap.wings.opmm.Constants;
 import edu.isi.kcap.wings.opmm.ModelUtils;
@@ -25,12 +28,12 @@ public class TriplesPublisher {
   public String queryEndpoint;
   public String graphURI = null;
   DatasetAccessor accessor;
-  public String serialization;
+  public Lang serialization;
   public String exportUrl;
 
   public TriplesPublisher(String endpointQueryURI, String endpointPostURI, String exportBaseUrl,
       String exportPrefix,
-      String serialization) {
+      Lang serialization) {
     this.updateEndpoint = endpointPostURI;
     this.queryEndpoint = endpointQueryURI;
     this.accessor = DatasetAccessorFactory.createHTTP(updateEndpoint);
@@ -53,9 +56,9 @@ public class TriplesPublisher {
       throws UnsupportedEncodingException, IOException, ClientProtocolException {
     ByteArrayEntity entity = new ByteArrayEntity(data);
     request.setEntity(entity);
-    if (serialization == "TTL")
+    if (serialization == Lang.TURTLE || serialization == Lang.TTL)
       request.setHeader("Content-Type", "text/turtle");
-    else if (serialization == "RDF/XML")
+    else if (serialization == Lang.RDFXML)
       request.setHeader("Content-Type", "application/rdf+xml");
     else
       throw new UnsupportedEncodingException("Serialization not supported");
@@ -114,7 +117,7 @@ public class TriplesPublisher {
     this.accessor = accessor;
   }
 
-  public void setSerialization(String serialization) {
+  public void setSerialization(Lang serialization) {
     this.serialization = serialization;
   }
 

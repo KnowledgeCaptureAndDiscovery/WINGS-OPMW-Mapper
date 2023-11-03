@@ -14,6 +14,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
 
 import edu.isi.kcap.wings.opmm.Publisher.TriplesPublisher;
 
@@ -454,7 +455,7 @@ public class WorkflowTemplateExport {
      * @return
      * @throws IOException
      */
-    public String exportAsOPMW(String filepath, String serialization) throws IOException {
+    public String exportAsOPMW(String filepath, Lang serialization) throws IOException {
         if (transformedTemplate == null) {
             this.transform();
         }
@@ -495,7 +496,7 @@ public class WorkflowTemplateExport {
      * @return URI of the template
      * @throws IOException
      */
-    public String exportAll(String outFileDirectory, String serialization) throws IOException {
+    public String exportAll(String outFileDirectory, Lang serialization) throws IOException {
         // TO DO
         System.out.println("Not done yet!");
         // this.export_as_OPMW(outFilePath, serialization);

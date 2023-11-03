@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -23,7 +24,8 @@ public class TriplePublisherTest {
   @Test
   public void publishTriplesTestTurtle() throws IOException {
     String resourceUri = "http://example.org/example#example";
-    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph, "", "TTL");
+    Lang serialization = Lang.TTL;
+    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, graph, "", Lang.TTL);
     tp.setGraphURI(graph);
     File file = createTripleFile(resourceUri, "TTL");
     tp.publish(file);
@@ -33,7 +35,8 @@ public class TriplePublisherTest {
   @Test
   public void publishTriplesTestRDFXML() throws IOException {
     String resourceUri = "http://example.org/example";
-    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, resourceUri, "test", "RDF/XML");
+    Lang serialization = Lang.RDFXML;
+    TriplesPublisher tp = new TriplesPublisher(queryEndpoint, updateEndpoint, resourceUri, "test", serialization);
     tp.setGraphURI(graph);
     File file = createTripleFile(resourceUri, "RDF/XML");
     tp.publish(file);
