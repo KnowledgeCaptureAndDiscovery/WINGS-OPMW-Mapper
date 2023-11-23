@@ -36,7 +36,7 @@ public class ModelUtils {
      */
     public static OntModel loadModel(String path) throws IllegalArgumentException {
         OntModel m = ModelFactory.createOntologyModel();
-        if (path.startsWith("http://")) {
+        if (path.startsWith("http://") || path.startsWith("https://")) {
             m.read(path);
             return m;
         }

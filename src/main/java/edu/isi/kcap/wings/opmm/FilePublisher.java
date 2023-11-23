@@ -44,7 +44,8 @@ public class FilePublisher {
         String filePathClear = filePath.replaceAll("\\s", "");
         File file = new File(filePathClear);
         if (!file.exists()) {
-            throw new IOException("File " + filePath + " does not exist");
+            System.err.println("File " + filePath + " does not exist");
+            // throw new IOException("File " + filePath + " does not exist");
         }
         switch (this.type) {
             case FILE_SYSTEM:
